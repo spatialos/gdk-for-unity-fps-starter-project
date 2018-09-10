@@ -8,16 +8,17 @@ namespace Improbable.Gdk.Guns
         [Require] private GunComponent.Requirable.Reader gun;
 
         public GunSettings CurrentGunSettings { get; private set; }
+        public int GunSlots => gun != null ? gun.Data.GunSlots.Count : 0;
 
         private void OnEnable()
         {
-            gun.GunIdUpdated += OnGunChanged;
-            OnGunChanged(gun.Data.GunId);
+            gun.CurrentSlotUpdated += OnGunChanged;
+            OnGunChanged(gun.Data.CurrentSlot);
         }
 
         private void OnGunChanged(int gunId)
         {
-            CurrentGunSettings = GunDictionary.Get(gunId);
+            CurrentGunSettings = GunDictionary.GetCurrentGun(gun.Data);
             SetGunSettings();
         }
 

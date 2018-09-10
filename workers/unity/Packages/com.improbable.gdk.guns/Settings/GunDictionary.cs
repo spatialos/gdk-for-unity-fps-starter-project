@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Improbable.Gdk.Guns
 {
@@ -27,5 +27,11 @@ namespace Improbable.Gdk.Guns
         }
 
         public static int Count => Instance.gunsList.Length;
+
+        public static GunSettings GetCurrentGun(GunComponent.Component gunComponent)
+        {
+            var gunId = gunComponent.GunSlots[gunComponent.CurrentSlot];
+            return GunDictionary.Get(gunId);
+        }
     }
 }

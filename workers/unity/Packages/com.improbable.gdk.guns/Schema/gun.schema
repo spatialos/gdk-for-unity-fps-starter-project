@@ -1,10 +1,24 @@
 package improbable.gdk.guns;
+import "from_gdk_packages/com.improbable.gdk.standardtypes/standardtypes.schema";
+
+type ChangeCurrentSlotRequest {
+  int32 new_gun_slot = 1;
+}
+
+type PickUpGunRequest {
+  int32 new_gun_id = 1;
+}
 
 component GunComponent {
   id = 2051;
 
-  int32 gun_id = 1;
+  list<int32> gun_slots = 1;
+  int32 current_slot = 2;
+  
+  command improbable.gdk.standardtypes.Unit change_slot(ChangeCurrentSlotRequest);
+  command improbable.gdk.standardtypes.Unit pick_up_gun(PickUpGunRequest);
 }
+
 component GunStateComponent {
   id = 2052;
 

@@ -25,8 +25,8 @@ namespace Improbable.Gdk.Guns
             {
                 var commandSender = playersShooting.ModifyHealthCommandSenders[i];
                 var commandSent = false;
-                var gunId = playersShooting.Gun[i].GunId;
-                var gunSettings = GunDictionary.Get(gunId);
+                var gunComponent = playersShooting.Gun[i];
+                var gunSettings = GunDictionary.GetCurrentGun(gunComponent);
                 var damage = gunSettings.ShotDamage;
 
                 foreach (var shot in playersShooting.Shots[i].Events)

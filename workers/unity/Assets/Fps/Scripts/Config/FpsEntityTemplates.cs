@@ -61,7 +61,7 @@ namespace Fps
             var clientRotation = ClientRotation.Component.CreateSchemaComponentData(rotationUpdate);
             var shootingComponent = ShootingComponent.Component.CreateSchemaComponentData();
             var gunStateComponent = GunStateComponent.Component.CreateSchemaComponentData(false);
-            var gunComponent = GunComponent.Component.CreateSchemaComponentData(PlayerGunSettings.DefaultGunIndex);
+            var gunComponent = GunComponent.Component.CreateSchemaComponentData(new List<int>(PlayerGunSettings.DefaultGunLoadout), 0);
             var maxHealth = PlayerHealthSettings.MaxHealth;
 
             var healthComponent = HealthComponent.Component.CreateSchemaComponentData(maxHealth, maxHealth);

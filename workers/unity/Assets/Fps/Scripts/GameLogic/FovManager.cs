@@ -27,7 +27,7 @@ namespace Fps
 
         private void OnEnable()
         {
-            gun.GunIdUpdated += OnGunChanged;
+            gun.CurrentSlotUpdated += OnGunChanged;
             gunState.IsAimingUpdated += OnAimingChanged;
             health.OnHealthModified += CheckForDeathModifier;
             health.OnRespawn += OnRespawn;
@@ -59,7 +59,7 @@ namespace Fps
 
         private void RecalculateFov()
         {
-            var currentGun = GunDictionary.Get(gun.Data.GunId);
+            var currentGun = GunDictionary.GetCurrentGun(gun.Data);
 
             var newFov = health.Data.Health > 0 && gunState.Data.IsAiming ? currentGun.AimFov : defaultFov;
 

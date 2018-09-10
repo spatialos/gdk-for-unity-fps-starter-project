@@ -29,16 +29,18 @@ namespace Fps
 
         private ClientMovementDriver movement;
         private ClientShooting shooting;
+        private ClientGunChanging changingGun;
         private ShotRayProvider shotRayProvider;
         private FpsAnimator fpsAnimator;
-        private GunManager currentGun;
+        private GunManager gunManager;
         private SpatialOSComponent spatialComponent;
 
         private readonly Vector3[] cachedDirectionVectors = new Vector3[16];
         [SerializeField] private Transform pitchTransform;
         [SerializeField] private new Camera camera;
 
-        [SerializeField] private CameraSettings cameraSettings = new CameraSettings
+        [SerializeField]
+        private CameraSettings cameraSettings = new CameraSettings
         {
             PitchSpeed = 1.0f,
             YawSpeed = 1.0f,
@@ -53,9 +55,10 @@ namespace Fps
         {
             movement = GetComponent<ClientMovementDriver>();
             shooting = GetComponent<ClientShooting>();
+            changingGun = GetComponent<ClientGunChanging>();
             shotRayProvider = GetComponent<ShotRayProvider>();
             fpsAnimator = GetComponent<FpsAnimator>();
-            currentGun = GetComponent<GunManager>();
+            gunManager = GetComponent<GunManager>();
             CreateDirectionCache();
         }
 
@@ -118,13 +121,33 @@ namespace Fps
             var shootPressed = Input.GetMouseButtonDown(0);
             var shootHeld = Input.GetMouseButton(0);
 
+            // Debug gun pickup inputs            
+            // Change gun slots
+            for (int n = 0; n < gunManager.GunSlots; n++)
+            {
+                var keyForSlot = "" + (n + 1);
+                if (Input.GetKeyDown(keyForSlot))
+                {
+                    changingGun.AttemptChangeSlot(n);
+                }
+            }
+            // Pick up guns
+            if (UnityEngine.Input.GetKeyDown("o"))
+            {
+                changingGun.AttemptPickUpGun(1);
+            }
+            if (UnityEngine.Input.GetKeyDown("p"))
+            {
+                changingGun.AttemptPickUpGun(2);
+            }
+
             // Update the pitch speed with that of the gun if aiming.
             var yawSpeed = cameraSettings.YawSpeed;
             var pitchSpeed = cameraSettings.PitchSpeed;
             if (isAiming)
             {
-                yawSpeed = currentGun.CurrentGunSettings.AimYawSpeed;
-                pitchSpeed = currentGun.CurrentGunSettings.AimPitchSpeed;
+                yawSpeed = gunManager.CurrentGunSettings.AimYawSpeed;
+                pitchSpeed = gunManager.CurrentGunSettings.AimPitchSpeed;
             }
 
             //Mediator
@@ -186,7 +209,7 @@ namespace Fps
             var isShooting = shooting.IsShooting(shootingHeld);
             if (isShooting)
             {
-                FireShot(currentGun.CurrentGunSettings);
+                FireShot(gunManager.CurrentGunSettings);
             }
         }
 
