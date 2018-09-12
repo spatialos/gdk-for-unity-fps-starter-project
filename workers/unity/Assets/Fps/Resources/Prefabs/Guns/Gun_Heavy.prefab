@@ -56,6 +56,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1554116748319684
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4789513229834254}
+  m_Layer: 0
+  m_Name: Scope
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1762620482911742
 GameObject:
   m_ObjectHideFlags: 0
@@ -88,6 +103,19 @@ Transform:
   m_Father: {fileID: 4826651344670048}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 54.011, y: 128.7, z: 79.935}
+--- !u!4 &4789513229834254
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1554116748319684}
+  m_LocalRotation: {x: -0.5, y: 0.5, z: -0.5, w: 0.5}
+  m_LocalPosition: {x: 0.0201, y: 0.0346, z: -0.1795}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4826651344670048}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: -90}
 --- !u!4 &4826651344670048
 Transform:
   m_ObjectHideFlags: 1
@@ -101,6 +129,7 @@ Transform:
   - {fileID: 4908793560611878}
   - {fileID: 4381301373313972}
   - {fileID: 4872414617770398}
+  - {fileID: 4789513229834254}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -198,3 +227,4 @@ MonoBehaviour:
   Handle: {fileID: 4872414617770398}
   Barrel: {fileID: 4908793560611878}
   Grip: {fileID: 4381301373313972}
+  Scope: {fileID: 4789513229834254}
