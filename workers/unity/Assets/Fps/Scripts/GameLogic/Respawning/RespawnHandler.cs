@@ -1,7 +1,9 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using Improbable;
 using Improbable.Common;
 using Improbable.Gdk.GameObjectRepresentation;
+using Improbable.Gdk.Guns;
 using Improbable.Gdk.Health;
 using Improbable.Gdk.Movement;
 using Improbable.Gdk.StandardTypes;
@@ -13,6 +15,7 @@ namespace Fps
     {
         [Require] private HealthComponent.Requirable.CommandRequestHandler respawnRequests;
         [Require] private HealthComponent.Requirable.Writer health;
+        [Require] private GunComponent.Requirable.Writer gun;
         [Require] private ServerMovement.Requirable.Writer serverMovement;
         [Require] private Position.Requirable.Writer spatialPosition;
 
@@ -37,6 +40,13 @@ namespace Fps
                 Health = health.Data.MaxHealth
             };
             health.Send(healthUpdate);
+            
+            var gunUpdate = new GunComponent.Update
+            {
+                GunSlots = new List<int>(PlayerGunSettings.DefaultGunLoadout),
+                CurrentSlot = 0
+            };
+            gun.Send(gunUpdate);
 
             // Move to a spawn point (position and rotation)
             var (spawnPosition, spawnYaw, spawnPitch) = SpawnPoints.GetRandomSpawnPoint();
