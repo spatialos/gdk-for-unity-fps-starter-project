@@ -1,0 +1,22 @@
+package improbable.gdk.interaction;
+
+enum InteractionType {
+  Trigger = 0;
+  Raycast = 1;
+  Proximity = 2;
+}
+
+type InteractRequest {
+  int64 user_entity_id = 1;
+}
+
+type InteractResponse {
+
+}
+
+component InteractableComponent {
+  id = 2090;
+  InteractionType interaction_type = 1;
+
+  command InteractResponse interact(InteractRequest);
+}
