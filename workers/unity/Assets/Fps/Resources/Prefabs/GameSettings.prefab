@@ -1,0 +1,120 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1989496521981992}
+  m_IsPrefabAsset: 1
+--- !u!1 &1989496521981992
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4599106417802648}
+  - component: {fileID: 114798883881147238}
+  - component: {fileID: 114687957939981664}
+  - component: {fileID: 114005399054740008}
+  - component: {fileID: 114311289899116282}
+  - component: {fileID: 114934730421269926}
+  m_Layer: 0
+  m_Name: GameSettings
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4599106417802648
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1989496521981992}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114005399054740008
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1989496521981992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbc178a31ef805f4ab272c520fc2e879, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraSettings: {fileID: 11400000, guid: 959fe8e31f5830141bdb0a02c5d5aabd, type: 2}
+  movementSettings: {fileID: 11400000, guid: 37e1b98d6384c0d4db3913772bd79d75, type: 2}
+  playerHealthSettings: {fileID: 11400000, guid: 0f51a05c0adcc47488da734a7abb5e84,
+    type: 2}
+  ragdollSettings: {fileID: 11400000, guid: 21e87454350a82a4da3dc7f89285f3e3, type: 2}
+  animationSettings: {fileID: 11400000, guid: f8ba3a1f37c85d344a400dcba87f3161, type: 2}
+  gunPickupSettings: {fileID: 11400000, guid: a242cabcebea4c64395cb156a89ab530, type: 2}
+  defaultGunSlots: 00000000ffffffff
+--- !u!114 &114311289899116282
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1989496521981992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3588832c85336ba4b988bf2edf69ba92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementUpdateSettings: {fileID: 11400000, guid: 68062cb6ea580b1448599ac963ca212b,
+    type: 2}
+  rotationUpdateSettings: {fileID: 11400000, guid: f06256cf26b88bc489d05e659bf110bf,
+    type: 2}
+--- !u!114 &114687957939981664
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1989496521981992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8de4acb07105e244960e1b597720df0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gunDictionary: {fileID: 11400000, guid: 6e7dc78b3b6e75d4995c805a5c415a50, type: 2}
+--- !u!114 &114798883881147238
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1989496521981992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64ab551b61661e0409faeba3012920a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114934730421269926
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1989496521981992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 281ebb7a746608e42b0195482cace141, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerPrefabSettings: {fileID: 11400000, guid: 309704120030631438d1dcf82513dfd5,
+    type: 2}
+  parentPrefabSettings: {fileID: 11400000, guid: 33a35099b6425e24c924b31aac6050df,
+    type: 2}
+  movementPrefabSettings: {fileID: 11400000, guid: 883dd5395dc2c1648bb32b81adf8da4c,
+    type: 2}

@@ -1,4 +1,3 @@
-using Generated.Improbable.Gdk.Interaction;
 using UnityEngine;
 
 namespace Improbable.Gdk.Interaction

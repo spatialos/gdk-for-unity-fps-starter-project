@@ -121,24 +121,19 @@ namespace Fps
             var shootPressed = Input.GetMouseButtonDown(0);
             var shootHeld = Input.GetMouseButton(0);
 
-            // Debug gun pickup inputs            
-            // Change gun slots
-            for (int n = 0; n < gunManager.GunSlots; n++)
+            var isInteractPressed = Input.GetKeyDown(KeyCode.E);
+            var isSlot1Pressed = Input.GetKeyDown(KeyCode.Alpha1);
+            var isSlot2Pressed = Input.GetKeyDown(KeyCode.Alpha2);
+
+            // Gun equipping
+            if (isSlot1Pressed)
             {
-                var keyForSlot = "" + (n + 1);
-                if (Input.GetKeyDown(keyForSlot))
-                {
-                    changingGun.AttemptChangeSlot(n);
-                }
+                changingGun.AttemptChangeSlot(1);
             }
-            // Pick up guns
-            if (UnityEngine.Input.GetKeyDown("o"))
+            
+            if (isSlot2Pressed)
             {
-                changingGun.AttemptPickUpGun(1);
-            }
-            if (UnityEngine.Input.GetKeyDown("p"))
-            {
-                changingGun.AttemptPickUpGun(2);
+                changingGun.AttemptChangeSlot(2);
             }
 
             // Update the pitch speed with that of the gun if aiming.

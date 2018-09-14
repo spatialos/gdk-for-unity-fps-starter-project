@@ -1,4 +1,3 @@
-using Generated.Improbable.Gdk.Interaction;
 using Improbable.Gdk.Core;
 using Unity.Collections;
 using Unity.Entities;

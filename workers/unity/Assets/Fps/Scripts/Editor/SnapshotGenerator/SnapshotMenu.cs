@@ -1,4 +1,5 @@
 using System.IO;
+using Fps.GunPickups;
 using Improbable.Gdk.Core;
 using UnityEditor;
 using UnityEngine;
@@ -21,7 +22,17 @@ namespace Fps
             var SimulatedPlayerCoordinatorTrigger = FpsEntityTemplates.SimulatedPlayerCoordinatorTrigger();
             snapshot.AddEntity(SimulatedPlayerCoordinatorTrigger);
 
+            AddGunPickups(snapshot);
+
             SaveSnapshot(snapshot);
+        }
+
+        private static void AddGunPickups(Snapshot snapshot)
+        {
+            foreach (var gun in FindObjectsOfType<SpatialGun>())
+            {
+                snapshot.AddEntity(FpsEntityTemplates.GunPickupTemplate(gun));
+            }
         }
 
         private static void SaveSnapshot(Snapshot snapshot)

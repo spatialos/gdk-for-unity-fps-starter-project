@@ -1,8 +1,12 @@
 using System.Collections.Generic;
+using System.Linq;
+using Fps.GunPickups;
+using Fps.Schema.Shooting;
 using Improbable;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.Guns;
 using Improbable.Gdk.Health;
+using Improbable.Gdk.Interaction;
 using Improbable.Gdk.Movement;
 using Improbable.Gdk.PlayerLifecycle;
 using Improbable.Gdk.StandardTypes;
@@ -87,6 +91,25 @@ namespace Fps
                 .AddComponent(healthRegenComponent, gameLogic)
                 .AddPlayerLifecycleComponents(workerId, client, gameLogic)
                 .Build();
+        }
+
+        public static EntityTemplate GunPickupTemplate(SpatialGun gun)
+        {
+            const string gameLogic = WorkerUtils.UnityGameLogic;
+
+            var pickupComponent = GunPickupComponent.Component.CreateSchemaComponentData(gun.GunId, true);
+            var interactComponent = InteractableComponent.Component.CreateSchemaComponentData(InteractionType.Proximity);
+
+            var gunTemplate = EntityBuilder.Begin()
+                .AddPosition(gun.SpawnPosition.x, gun.SpawnPosition.y, gun.SpawnPosition.z, gameLogic)
+                .AddMetadata("GunPickup", gameLogic)
+                .SetPersistence(true)
+                .SetReadAcl(AllWorkerAttributes)
+                .AddComponent(pickupComponent, gameLogic)
+                .AddComponent(interactComponent, gameLogic)
+                .Build();
+
+            return gunTemplate;
         }
     }
 }

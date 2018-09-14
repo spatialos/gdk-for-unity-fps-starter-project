@@ -5,7 +5,7 @@ namespace Improbable.Gdk.Guns
     [CreateAssetMenu(menuName = "Improbable/Gun Config/Gun Dictionary", order = 0)]
     public class GunDictionary : ScriptableObject
     {
-        public static GunDictionary Instance { private get; set; }
+        public static GunDictionary Instance { get; set; }
 
         [SerializeField] private GunSettings[] gunsList;
 

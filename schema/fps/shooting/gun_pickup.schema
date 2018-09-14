@@ -1,0 +1,8 @@
+package fps.schema.shooting;
+
+component GunPickupComponent {
+  id = 2043;
+  
+  int32 gun_id = 1;
+  bool is_enabled = 2;
+}
