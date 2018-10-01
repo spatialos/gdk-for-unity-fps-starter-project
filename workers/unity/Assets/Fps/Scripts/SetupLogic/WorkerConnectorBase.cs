@@ -7,8 +7,8 @@ namespace Fps
 {
     public abstract class WorkerConnectorBase : WorkerConnector
     {
-        public const string Small = "small";
-        public const string Large = "large";
+        private const string Small = "small";
+        private const string Large = "large";
 
         public GameObject SmallLevelPrefab;
         public GameObject LargeLevelPrefab;
@@ -71,8 +71,8 @@ namespace Fps
                 return;
             }
 
-            levelInstance = Instantiate(levelToLoad, transform);
-            levelInstance.transform.SetParent(null);
+            levelInstance = Instantiate(levelToLoad, transform.position, transform.rotation);
+            levelInstance.name = $"{levelToLoad.name}({Worker.WorkerType})";
         }
     }
 }
