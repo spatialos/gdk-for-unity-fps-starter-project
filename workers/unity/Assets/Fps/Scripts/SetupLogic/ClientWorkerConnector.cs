@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.PlayerLifecycle;
@@ -48,17 +47,12 @@ namespace Fps
             world.GetOrCreateManager<HandlePlayerHeartbeatRequestSystem>();
 
             GameObjectRepresentationHelper.AddSystems(world);
-            var workerSystem = world.GetOrCreateManager<WorkerSystem>();
-            var fallback = new GameObjectCreatorFromMetadata(workerSystem.WorkerType,
-                workerSystem.Origin, workerSystem.LogDispatcher);
-            var workerId = workerSystem.Connection.GetWorkerId();
+            var fallback = new GameObjectCreatorFromMetadata(Worker.WorkerType, Worker.Origin, Worker.LogDispatcher);
 
             // Set the Worker gameObject to the ClientWorker so it can access PlayerCreater reader/writers
             GameObjectCreationHelper.EnableStandardGameObjectCreation(
                 world,
-                new AdvancedEntityPipeline(workerSystem.WorkerType, workerId,
-                    AuthPlayer,
-                    NonAuthPlayer, fallback),
+                new AdvancedEntityPipeline(Worker, AuthPlayer, NonAuthPlayer, fallback),
                 gameObject);
 
             base.HandleWorkerConnectionEstablished();
