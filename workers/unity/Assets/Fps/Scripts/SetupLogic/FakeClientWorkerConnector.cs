@@ -1,5 +1,4 @@
 ﻿using Fps;
-using Fps.WorldSetup;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.GameObjectRepresentation;
@@ -13,7 +12,7 @@ public class FakeClientWorkerConnector : WorkerConnector
 
     private async void Start()
     {
-        await Connect(WorkerUtils.FakeClient, new ForwardingDispatcher()).ConfigureAwait(false);
+        await Connect(WorkerUtils.FakeClient, new ForwardingDispatcher());
     }
 
     protected override void HandleWorkerConnectionEstablished()
@@ -34,8 +33,5 @@ public class FakeClientWorkerConnector : WorkerConnector
 
         // Death and Visibility
         Worker.World.GetOrCreateManager<DeathEventSystem>();
-
-        // World Setup
-        Worker.World.GetOrCreateManager<WorldSetupSystem>();
     }
 }

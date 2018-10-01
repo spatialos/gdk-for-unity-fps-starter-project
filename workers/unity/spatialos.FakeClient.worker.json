@@ -1,0 +1,36 @@
+{
+  "bridge": {
+    "worker_attribute_set": {
+      "attributes": [
+        "FakeClient"
+      ]
+    },
+    "entity_interest": {
+      "range_entity_interest": {
+        "radius": 500
+      }
+    },
+    "component_delivery": {
+      "default": "RELIABLE_ORDERED",
+      "checkoutAllInitially": true
+    }
+  },
+  "external": {
+    "default": {
+      "run_type": "EXECUTABLE",
+      "windows": {
+        "command": "build/worker/FakeClient@Windows/FakeClient@Windows.exe",
+        "arguments": [
+          "+workerType",
+          "FakeClient",
+          "+infraServicesUrl",
+          "http://127.0.0.1:21000",
+          "+projectName",
+          "${IMPROBABLE_PROJECT_NAME}",
+          "-logfile",
+          "../../logs/external-default-unityclient.log"
+        ]
+      }
+    }
+  }
+}
