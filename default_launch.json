@@ -52,6 +52,23 @@
       }
     },
     {
+      "worker_type": "FakeClient",
+      "flags": [
+        {
+          "name": "world_size",
+          "value": "small"
+        }
+      ],
+      "permissions": [
+        {
+          "all": {}
+        }
+      ],
+      "load_balancing": {
+        "singleton_worker": {}
+      }
+    },
+    {
       "worker_type": "FakeClientCoordinator",
       "flags": [
         {

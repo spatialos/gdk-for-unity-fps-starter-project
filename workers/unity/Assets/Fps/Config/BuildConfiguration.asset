@@ -30,4 +30,13 @@ MonoBehaviour:
     CloudBuildConfig:
       BuildPlatforms: 8
       BuildOptions: 16384
+  - WorkerType: FakeClientCoordinator
+    ScenesForWorker:
+    - {fileID: 102900000, guid: 5f67e56c31a050744bb24ba0ecaad1da, type: 3}
+    LocalBuildConfig:
+      BuildPlatforms: 1
+      BuildOptions: 1
+    CloudBuildConfig:
+      BuildPlatforms: 8
+      BuildOptions: 16384
   isInitialised: 1

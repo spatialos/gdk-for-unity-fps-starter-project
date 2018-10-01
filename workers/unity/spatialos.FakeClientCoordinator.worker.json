@@ -1,0 +1,98 @@
+{
+  "build": {
+    "tasks": [
+      {
+        "name": "Codegen",
+        "steps": [{"name": "** Run ci/codegen.sh instead **", "command": "echo", "arguments": ["No-op."]}]
+      },
+      {
+        "name": "build",
+        "steps": [{"name": "** Run ci/build-gamelogic.sh instead **", "command": "echo", "arguments": ["No-op."]}]
+      },
+      {
+        "name": "clean",
+        "steps": [{"name": "No-op", "command": "echo", "arguments": ["No-op."]}]
+      }
+    ]
+  },
+  "bridge": {
+    "worker_attribute_set": {
+      "attributes": [
+          "FakeClientCoordinator"
+      ]
+    },
+    "entity_interest": {
+      "range_entity_interest": {
+        "radius": 500
+      }
+    },
+    "component_delivery": {
+      "default": "RELIABLE_ORDERED",
+      "checkoutAllInitially": true
+    }
+  },
+  "external": {
+    "default": {
+      "run_type": "EXECUTABLE",
+      "windows": {
+        "command": "build/worker/FakeClientCoordinator@Windows/FakeClientCoordinator@Windows.exe",
+        "arguments": [
+          "+workerType",
+          "FakeClientCoordinator",
+          "+infraServicesUrl",
+          "http://127.0.0.1:21000",
+          "+projectName",
+          "${IMPROBABLE_PROJECT_NAME}",
+          "-logfile",
+          "../../logs/external-default-fakeclientcoordinator.log"
+        ]
+      }
+    }
+  },
+  "managed": {
+    "windows": {
+      "artifact_name": "FakeClientCoordinator@Windows.zip",
+      "command": "FakeClientCoordinator@Windows.exe",
+      "arguments": [
+        "+workerType",
+        "FakeClientCoordinator",
+        "+workerId",
+        "${IMPROBABLE_WORKER_ID}",
+        "+projectName",
+        "${IMPROBABLE_PROJECT_NAME}",
+        "+receptionistHost",
+        "${IMPROBABLE_RECEPTIONIST_HOST}",
+        "+receptionistPort",
+        "${IMPROBABLE_RECEPTIONIST_PORT}",
+        "+linkProtocol",
+        "RakNet",
+        "-batchmode",
+        "-nographics",
+        "-logfile",
+        "${IMPROBABLE_LOG_FILE}"
+      ]
+    },
+    "linux": {
+      "artifact_name": "FakeClientCoordinator@Linux.zip",
+      "command": "FakeClientCoordinator@Linux",
+      "arguments": [
+        "+workerType",
+        "FakeClientCoordinator",
+        "+workerId",
+        "${IMPROBABLE_WORKER_ID}",
+        "+projectName",
+        "${IMPROBABLE_PROJECT_NAME}",
+        "+receptionistHost",
+        "${IMPROBABLE_RECEPTIONIST_HOST}",
+        "+receptionistPort",
+        "${IMPROBABLE_RECEPTIONIST_PORT}",
+        "+linkProtocol",
+        "RakNet",
+        "-batchmode",
+        "-nographics",
+        "-logfile",
+        "${IMPROBABLE_LOG_FILE}"
+      ]
+    }
+  }
+}
