@@ -16,7 +16,7 @@ namespace Fps
     public static class FpsEntityTemplates
     {
         private static readonly List<string> AllWorkerAttributes =
-            new List<string> { WorkerUtils.UnityGameLogic, WorkerUtils.UnityClient };
+            new List<string> { WorkerUtils.UnityGameLogic, WorkerUtils.UnityClient, WorkerUtils.FakeClient };
 
         public static EntityTemplate Spawner()
         {
