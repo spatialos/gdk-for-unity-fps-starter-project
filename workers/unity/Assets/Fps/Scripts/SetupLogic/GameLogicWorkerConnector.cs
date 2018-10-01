@@ -1,4 +1,11 @@
-﻿using UnityEngine;
+using UnityEngine;
+using Fps;
+using Improbable.Gdk.GameObjectCreation;
+using Improbable.Gdk.GameObjectRepresentation;
+using Improbable.Gdk.Guns;
+using Improbable.Gdk.Health;
+using Improbable.Gdk.PlayerLifecycle;
+using UnityEngine;
 
 namespace Fps
 {
@@ -19,7 +26,19 @@ namespace Fps
 
         protected override void HandleWorkerConnectionEstablished()
         {
-            WorkerUtils.AddGameLogicSystems(Worker.World);
+            var world = Worker.World;
+
+            PlayerLifecycleHelper.AddServerSystems(world);
+            GameObjectRepresentationHelper.AddSystems(world);
+            GameObjectCreationHelper.EnableStandardGameObjectCreation(world);
+
+            // Shooting
+            world.GetOrCreateManager<ServerShootingSystem>();
+
+            // Health
+            world.GetOrCreateManager<ServerHealthModifierSystem>();
+            world.GetOrCreateManager<HealthRegenSystem>();
+
             base.HandleWorkerConnectionEstablished();
         }
 
