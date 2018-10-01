@@ -1,5 +1,5 @@
 {
-  "template": "small_bridge_v2",
+  "template": "small",
   "world": {
     "chunkEdgeLengthMeters": 50,
     "snapshots": {
@@ -36,6 +36,23 @@
     },
     {
       "worker_type": "UnityClient",
+      "flags": [
+        {
+          "name": "world_size",
+          "value": "small"
+        }
+      ],
+      "permissions": [
+        {
+          "all": {}
+        }
+      ],
+      "load_balancing": {
+        "singleton_worker": {}
+      }
+    },
+    {
+      "worker_type": "FakeClientCoordinator",
       "flags": [
         {
           "name": "world_size",

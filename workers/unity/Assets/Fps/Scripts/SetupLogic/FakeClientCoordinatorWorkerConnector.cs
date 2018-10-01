@@ -39,14 +39,15 @@ public class FakeClientCoordinatorWorkerConnector : WorkerConnectorBase
         }
     }
 
-    public void RegisterProxyPrefabForEntity(EntityId entity, GameObject proxy)
+
+    public void RegisterProxyPrefabForEntity(EntityId entityId, GameObject proxy)
     {
-        if (!proxies.ContainsKey(entity))
+        if (!proxies.ContainsKey(entityId))
         {
-            proxies[entity] = new List<GameObject>();
+            proxies[entityId] = new List<GameObject>();
         }
 
-        var entityProxies = proxies[entity];
+        var entityProxies = proxies[entityId];
 
         entityProxies.Add(proxy);
 
@@ -55,28 +56,25 @@ public class FakeClientCoordinatorWorkerConnector : WorkerConnectorBase
         {
             proxy.SetActive(false);
         }
-        else if (localFakeClients.Contains(entity))
+        else if (localFakeClients.Contains(entityId))
         {
             proxy.SetActive(false);
         }
     }
 
     // Can only be called from the active proxy
-    public void UnregisterProxyPrefabForEntity(EntityId entity, GameObject proxy)
+    public void UnregisterProxyPrefabForEntity(EntityId entityId, GameObject proxy)
     {
-        if (!proxies.ContainsKey(entity) || proxies[entity].Count == 0)
+        if (!proxies.ContainsKey(entityId) || proxies[entityId].Count == 0)
         {
             return;
         }
 
-        var entityProxies = proxies[entity];
-
+        var entityProxies = proxies[entityId];
         entityProxies.Remove(proxy);
-
-        // remove null game objects from list.
         entityProxies.RemoveAll(p => p == null);
 
-        if (entityProxies.Count > 0)
+        if (!localFakeClients.Contains(entityId) && entityProxies.Count > 0)
         {
             entityProxies[0].SetActive(true);
         }
@@ -87,7 +85,10 @@ public class FakeClientCoordinatorWorkerConnector : WorkerConnectorBase
         localFakeClients.Add(entityId);
         if (proxies.ContainsKey(entityId))
         {
-            foreach (var proxy in proxies[entityId])
+            var entityProxies = proxies[entityId];
+            entityProxies.RemoveAll(p => p == null);
+
+            foreach (var proxy in entityProxies)
             {
                 proxy.SetActive(false);
             }
