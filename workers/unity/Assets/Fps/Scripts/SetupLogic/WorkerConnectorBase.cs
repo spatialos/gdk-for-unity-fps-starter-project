@@ -10,6 +10,8 @@ namespace Fps
         private const string Small = "small";
         private const string Large = "large";
 
+        public int TargetFrameRate = 60;
+
         public GameObject SmallLevelPrefab;
         public GameObject LargeLevelPrefab;
 
