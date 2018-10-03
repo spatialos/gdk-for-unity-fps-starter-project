@@ -31,6 +31,16 @@ namespace Fps
                 .Build();
         }
 
+        public static Entity FakeClientCoordinatorTrigger()
+        {
+            return EntityBuilder.Begin()
+                .AddPosition(0, 0, 0, WorkerUtils.FakeClientCoorindator)
+                .AddMetadata("FakeClientCoordinatorTrigger", WorkerUtils.FakeClientCoorindator)
+                .SetPersistence(true)
+                .SetReadAcl(WorkerUtils.FakeClientCoorindator)
+                .Build();
+        }
+
         public static EntityTemplate Player(string workerId, Vector3f position)
         {
             const string gameLogic = WorkerUtils.UnityGameLogic;

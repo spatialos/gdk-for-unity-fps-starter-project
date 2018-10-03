@@ -1,25 +1,14 @@
 {
-  "template": "large_bridge_v2",
+  "template": "medium",
   "world": {
     "chunkEdgeLengthMeters": 50,
     "snapshots": {
       "snapshotWritePeriodSeconds": 0
     },
     "dimensions": {
-      "xMeters": 16000,
-      "zMeters": 16000
+      "xMeters": 1000,
+      "zMeters": 1000
     }
-  },
-  "load_balancing": {
-    "layer_configurations": [
-      {
-        "layer": "UnityGameLogic",
-        "rectangle_grid": {
-            "cols": 4,
-            "rows": 4
-        }
-      }
-    ]
   },
   "workers": [
     {
@@ -34,10 +23,56 @@
         {
           "all": {}
         }
-      ]
+      ],
+      "load_balancing": {
+        "auto_hex_grid": {
+          "num_workers": 4
+        }
+      }
+    },
+    {
+      "worker_type": "FakeClientCoordinator",
+      "flags": [
+        {
+          "name": "world_size",
+          "value": "large"
+        },
+        {
+          "name": "fake_client_count",
+          "value": "1"
+        },
+        {
+          "name": "creation_interval",
+          "value": "2"
+        }
+      ],
+      "permissions": [
+        {
+          "all": {}
+        }
+      ],
+      "load_balancing": {
+        "auto_hex_grid": {
+          "num_workers": 20
+        }
+      }
     },
     {
       "worker_type": "UnityClient",
+      "flags": [
+        {
+          "name": "world_size",
+          "value": "large"
+        }
+      ],
+      "permissions": [
+        {
+          "all": {}
+        }
+      ]
+    },
+    {
+      "worker_type": "FakeClient",
       "flags": [
         {
           "name": "world_size",

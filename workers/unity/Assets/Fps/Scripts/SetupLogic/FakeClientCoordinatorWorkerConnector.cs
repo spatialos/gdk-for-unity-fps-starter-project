@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using Fps;
 using UnityEngine;
 using System.Collections.Generic;
@@ -7,12 +8,17 @@ using Improbable.Worker;
 
 public class FakeClientCoordinatorWorkerConnector : WorkerConnectorBase
 {
+    private const string FlagClientCount = "fake_client_count";
+    private const string FlagCreationInterval = "creation_interval";
+
     public GameObject FakeClientWorkerConnector;
     public int FakeClientCount = 1;
     public int FakeClientCreationInterval = 5;
 
     private readonly Dictionary<EntityId, List<GameObject>> proxies = new Dictionary<EntityId, List<GameObject>>();
     private readonly List<EntityId> localFakeClients = new List<EntityId>();
+
+    private readonly List<GameObject> FakeClientConnectors = new List<GameObject>();
 
     protected override async void Start()
     {
@@ -29,16 +35,66 @@ public class FakeClientCoordinatorWorkerConnector : WorkerConnectorBase
     {
         base.HandleWorkerConnectionEstablished();
 
+        Worker.World.GetOrCreateManager<MetricSendSystem>();
+
+        CheckWorkerFlags();
+
         if (FakeClientWorkerConnector != null)
         {
-            for (var i = 0; i < FakeClientCount; i++)
+            while (FakeClientConnectors.Count < FakeClientCount)
             {
                 await Task.Delay(TimeSpan.FromSeconds(FakeClientCreationInterval));
-                Instantiate(FakeClientWorkerConnector, transform.position, transform.rotation);
+                var fakeClient = Instantiate(FakeClientWorkerConnector, transform.position, transform.rotation);
+                FakeClientConnectors.Add(fakeClient);
+            }
+
+            StartCoroutine(MonitorFakeClients());
+        }
+    }
+
+    private IEnumerator MonitorFakeClients()
+    {
+        while (Worker.Connection?.IsConnected == true)
+        {
+            yield return new WaitForSeconds(5);
+
+            if (CheckWorkerFlags())
+            {
+                while (FakeClientConnectors.Count < FakeClientCount)
+                {
+                    yield return new WaitForSeconds(FakeClientCreationInterval);
+                    var fakeClient = Instantiate(FakeClientWorkerConnector, transform.position, transform.rotation);
+                    FakeClientConnectors.Add(fakeClient);
+                }
+
+                while (FakeClientConnectors.Count > FakeClientCount)
+                {
+                    var fakeClient = FakeClientConnectors[0];
+                    FakeClientConnectors.Remove(fakeClient);
+                    Destroy(fakeClient);
+                }
             }
         }
     }
 
+    private bool CheckWorkerFlags()
+    {
+        if (int.TryParse(Worker.Connection.GetWorkerFlag(FlagCreationInterval), out var newInterval))
+        {
+            FakeClientCreationInterval = newInterval;
+        }
+
+        if (int.TryParse(Worker.Connection.GetWorkerFlag(FlagClientCount), out var newCount))
+        {
+            if (FakeClientCount != newCount)
+            {
+                FakeClientCount = newCount;
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     public void RegisterProxyPrefabForEntity(EntityId entityId, GameObject proxy)
     {

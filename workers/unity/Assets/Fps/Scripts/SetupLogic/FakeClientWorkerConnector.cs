@@ -1,4 +1,5 @@
-﻿using Fps;
+﻿using System;
+using Fps;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.GameObjectRepresentation;
@@ -33,5 +34,15 @@ public class FakeClientWorkerConnector : WorkerConnector
 
         // Death and Visibility
         Worker.World.GetOrCreateManager<DeathEventSystem>();
+    }
+
+    protected override ReceptionistConfig GetReceptionistConfig(string workerType)
+    {
+        var config = base.GetReceptionistConfig(workerType);
+
+        // Force WorkerId to unique and not one from command line, since that will be the id of the coordinator.
+        config.WorkerId = $"{workerType}-{Guid.NewGuid()}";
+
+        return config;
     }
 }

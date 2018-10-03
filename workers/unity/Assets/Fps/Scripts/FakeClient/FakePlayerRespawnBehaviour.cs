@@ -21,12 +21,18 @@ public class FakePlayerRespawnBehaviour : MonoBehaviour
     private void OnEnable()
     {
         Health.OnDeath += OnDeath;
+        Health.OnRespawn += OnRespawn;
+    }
+
+    private void OnRespawn(Empty empty)
+    {
+        driver.SetMovementSpeed(MovementSpeed.Run);
+        driver.SetRandomDestination();
     }
 
     private async void OnDeath(DeathInfo info)
     {
         driver.Stop();
-        driver.SetMovementSpeed(MovementSpeed.Run);
         await Task.Delay(TimeSpan.FromSeconds(5));
         Commands?.SendRequestRespawnRequest(GetComponent<SpatialOSComponent>().SpatialEntityId, new Empty());
     }

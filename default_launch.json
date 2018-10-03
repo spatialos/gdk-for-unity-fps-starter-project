@@ -6,8 +6,8 @@
       "snapshotWritePeriodSeconds": 0
     },
     "dimensions": {
-      "xMeters": 500,
-      "zMeters": 500
+      "xMeters": 1000,
+      "zMeters": 1000
     },
     "legacy_flags": [
       {
@@ -22,7 +22,7 @@
       "flags": [
         {
           "name": "world_size",
-          "value": "small"
+          "value": "large"
         }
       ],
       "permissions": [
@@ -39,7 +39,7 @@
       "flags": [
         {
           "name": "world_size",
-          "value": "small"
+          "value": "large"
         }
       ],
       "permissions": [
@@ -56,7 +56,7 @@
       "flags": [
         {
           "name": "world_size",
-          "value": "small"
+          "value": "large"
         }
       ],
       "permissions": [
@@ -73,7 +73,11 @@
       "flags": [
         {
           "name": "world_size",
-          "value": "small"
+          "value": "large"
+        },
+        {
+          "name": "fake_client_count",
+          "value": "5"
         }
       ],
       "permissions": [
