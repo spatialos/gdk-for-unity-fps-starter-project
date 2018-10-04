@@ -86,6 +86,7 @@ public class FakePlayerDriver : MonoBehaviour
         var destination = anchorPoint + Random.insideUnitSphere * MovementRadius;
         destination.z = anchorPoint.z;
         agent.isStopped = false;
+        agent.nextPosition = transform.position;
         agent.SetDestination(destination);
     }
 

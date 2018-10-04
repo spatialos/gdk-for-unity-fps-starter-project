@@ -28,12 +28,6 @@ public class FakeClientWorkerConnector : WorkerConnector
         GameObjectCreationHelper.EnableStandardGameObjectCreation(
             Worker.World,
             new AdvancedEntityPipeline(Worker, AuthPlayer, NonAuthPlayer, fallback));
-
-        // Health Systems
-        Worker.World.GetOrCreateManager<HealthInitializationSystem>();
-
-        // Death and Visibility
-        Worker.World.GetOrCreateManager<DeathEventSystem>();
     }
 
     protected override ReceptionistConfig GetReceptionistConfig(string workerType)

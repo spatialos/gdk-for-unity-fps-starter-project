@@ -19,7 +19,7 @@ public class FakePlayerRespawnBehaviour : MonoBehaviour
 
     private void OnEnable()
     {
-        Health.OnDeath += OnDeath;
+        Health.OnHealthModified += OnHealthModified;
         Health.OnRespawn += OnRespawn;
     }
 
@@ -30,10 +30,13 @@ public class FakePlayerRespawnBehaviour : MonoBehaviour
         driver.SetRandomDestination();
     }
 
-    private void OnDeath(DeathInfo info)
+    private void OnHealthModified(HealthModifiedInfo info)
     {
-        driver.Stop();
-        StartCoroutine(TryRespawn());
+        if (info.Died)
+        {
+            driver.Stop();
+            StartCoroutine(TryRespawn());
+        }
     }
 
     private IEnumerator TryRespawn()

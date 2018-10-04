@@ -21,9 +21,9 @@ public class FakePlayerRunAwayBehaviour : MonoBehaviour
         Health.OnHealthModified += OnHealthModified;
     }
 
-    private async void OnHealthModified(HealthModifier modifier)
+    private async void OnHealthModified(HealthModifiedInfo info)
     {
-        if (modifier.Amount < 0)
+        if (!info.Died && info.HealthAfter < info.HealthBefore)
         {
             driver.SetRandomDestination();
             driver.SetMovementSpeed(MovementSpeed.Sprint);

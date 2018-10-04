@@ -22,7 +22,6 @@ public class FakePlayerShootingBehaviour : MonoBehaviour
     private void OnEnable()
     {
         Health.OnHealthModified += OnHealthModified;
-        Health.OnDeath += OnDeath;
         Health.OnRespawn += OnRespawn;
         driver = GetComponent<FakePlayerDriver>();
         shooting = GetComponent<ClientShooting>();
@@ -97,28 +96,22 @@ public class FakePlayerShootingBehaviour : MonoBehaviour
         }
     }
 
-    private void OnDeath(DeathInfo info)
-    {
-        target = null;
-        StopAllCoroutines();
-    }
-
     private void OnRespawn(Empty empty)
     {
         StartCoroutine(CheckForNearbyTargets());
         StartCoroutine(CheckTargetLineOfSight());
     }
 
-    private void OnHealthModified(HealthModifier modifier)
+    private void OnHealthModified(HealthModifiedInfo info)
     {
-        if (Health.Data.Health == 0)
+        if (info.Died)
         {
-            // We are dead.
             target = null;
+            StopAllCoroutines();
             return;
         }
 
-        var shotOrigin = modifier.Origin.ToVector3() + spatial.Worker.Origin;
+        var shotOrigin = info.Modifier.Origin.ToVector3() + spatial.Worker.Origin;
         var gunPosition = transform.position + new Vector3(0, 1f, 0);
         if (Physics.Linecast(gunPosition, shotOrigin, out var hit))
         {
