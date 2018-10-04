@@ -137,7 +137,7 @@ public class FakePlayerShootingBehaviour : MonoBehaviour
             var rotationAmount = Quaternion.RotateTowards(transform.rotation, targetRotation, 10f);
 
             GetComponent<ClientMovementDriver>().ApplyMovement(
-                strafeRight ? transform.right : -transform.right, rotationAmount, MovementSpeed.Walk, false);
+                strafeRight ? transform.right : -transform.right, rotationAmount, MovementSpeed.Run, false);
 
             if (shooting.IsShooting(true) && Mathf.Abs(Quaternion.Angle(targetRotation, transform.rotation)) < 5)
             {

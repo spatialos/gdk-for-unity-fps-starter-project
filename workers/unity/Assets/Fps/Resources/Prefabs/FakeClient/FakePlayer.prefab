@@ -193,6 +193,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   teleportDistanceSqrd: 25
+  transformUpdateHz: 15
+  rotationUpdateHz: 15
+  transformUpdateDelta: 0.06666667
+  rotationUpdateDelta: 0.06666667
+  groundedDistance: 0.2
+  groundLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
 --- !u!114 &114780642311106078
 MonoBehaviour:
   m_ObjectHideFlags: 1
