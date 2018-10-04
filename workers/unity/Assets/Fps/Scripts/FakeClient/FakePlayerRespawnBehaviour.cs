@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Collections;
 using Improbable.Common;
 using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.Health;
@@ -26,14 +25,20 @@ public class FakePlayerRespawnBehaviour : MonoBehaviour
 
     private void OnRespawn(Empty empty)
     {
+        StopCoroutine(TryRespawn());
         driver.SetMovementSpeed(MovementSpeed.Run);
         driver.SetRandomDestination();
     }
 
-    private async void OnDeath(DeathInfo info)
+    private void OnDeath(DeathInfo info)
     {
         driver.Stop();
-        await Task.Delay(TimeSpan.FromSeconds(5));
+        StartCoroutine(TryRespawn());
+    }
+
+    private IEnumerator TryRespawn()
+    {
+        yield return new WaitForSeconds(5);
         Commands?.SendRequestRespawnRequest(GetComponent<SpatialOSComponent>().SpatialEntityId, new Empty());
     }
 }

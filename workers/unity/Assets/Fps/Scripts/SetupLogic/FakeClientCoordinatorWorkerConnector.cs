@@ -5,6 +5,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Improbable.Worker;
+using Random = UnityEngine.Random;
 
 public class FakeClientCoordinatorWorkerConnector : WorkerConnectorBase
 {
@@ -43,7 +44,8 @@ public class FakeClientCoordinatorWorkerConnector : WorkerConnectorBase
         {
             while (FakeClientConnectors.Count < FakeClientCount)
             {
-                await Task.Delay(TimeSpan.FromSeconds(FakeClientCreationInterval));
+                await Task.Delay(TimeSpan.FromSeconds(
+                    Random.Range(FakeClientCreationInterval, 1.25f * FakeClientCreationInterval)));
                 var fakeClient = Instantiate(FakeClientWorkerConnector, transform.position, transform.rotation);
                 FakeClientConnectors.Add(fakeClient);
             }
@@ -62,7 +64,8 @@ public class FakeClientCoordinatorWorkerConnector : WorkerConnectorBase
             {
                 while (FakeClientConnectors.Count < FakeClientCount)
                 {
-                    yield return new WaitForSeconds(FakeClientCreationInterval);
+                    yield return new WaitForSeconds(
+                        Random.Range(FakeClientCreationInterval, 1.25f * FakeClientCreationInterval));
                     var fakeClient = Instantiate(FakeClientWorkerConnector, transform.position, transform.rotation);
                     FakeClientConnectors.Add(fakeClient);
                 }

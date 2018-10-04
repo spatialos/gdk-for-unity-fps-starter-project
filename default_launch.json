@@ -22,7 +22,7 @@
       "flags": [
         {
           "name": "world_size",
-          "value": "large"
+          "value": "small"
         }
       ],
       "permissions": [
@@ -39,7 +39,7 @@
       "flags": [
         {
           "name": "world_size",
-          "value": "large"
+          "value": "small"
         }
       ],
       "permissions": [
@@ -56,7 +56,7 @@
       "flags": [
         {
           "name": "world_size",
-          "value": "large"
+          "value": "small"
         }
       ],
       "permissions": [
@@ -73,11 +73,15 @@
       "flags": [
         {
           "name": "world_size",
-          "value": "large"
+          "value": "small"
         },
         {
           "name": "fake_client_count",
-          "value": "5"
+          "value": "10"
+        },
+        {
+          "name": "creation_interval",
+          "value": "30"
         }
       ],
       "permissions": [

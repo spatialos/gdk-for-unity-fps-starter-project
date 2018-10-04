@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Improbable.Common;
 using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.Guns;
 using Improbable.Gdk.Health;
@@ -22,12 +23,13 @@ public class FakePlayerShootingBehaviour : MonoBehaviour
     {
         Health.OnHealthModified += OnHealthModified;
         Health.OnDeath += OnDeath;
+        Health.OnRespawn += OnRespawn;
         driver = GetComponent<FakePlayerDriver>();
         shooting = GetComponent<ClientShooting>();
         spatial = GetComponent<SpatialOSComponent>();
 
-        StartCoroutine(nameof(CheckForNearbyTargets));
-        StartCoroutine(nameof(CheckTargetLineOfSight));
+        StartCoroutine(CheckForNearbyTargets());
+        StartCoroutine(CheckTargetLineOfSight());
     }
 
     private void OnDisable()
@@ -40,6 +42,7 @@ public class FakePlayerShootingBehaviour : MonoBehaviour
     {
         while (true)
         {
+            yield return new WaitForSeconds(3);
             if (target != null)
             {
                 var gunPosition = transform.position + Vector3.up;
@@ -63,8 +66,6 @@ public class FakePlayerShootingBehaviour : MonoBehaviour
                     driver.SetRandomDestination();
                 }
             }
-
-            yield return new WaitForSeconds(3);
         }
     }
 
@@ -72,6 +73,7 @@ public class FakePlayerShootingBehaviour : MonoBehaviour
     {
         while (true)
         {
+            yield return new WaitForSeconds(3);
             if (target == null)
             {
                 var gunPosition = transform.position + Vector3.up;
@@ -92,14 +94,19 @@ public class FakePlayerShootingBehaviour : MonoBehaviour
                     }
                 }
             }
-
-            yield return new WaitForSeconds(3);
         }
     }
 
     private void OnDeath(DeathInfo info)
     {
         target = null;
+        StopAllCoroutines();
+    }
+
+    private void OnRespawn(Empty empty)
+    {
+        StartCoroutine(CheckForNearbyTargets());
+        StartCoroutine(CheckTargetLineOfSight());
     }
 
     private void OnHealthModified(HealthModifier modifier)
