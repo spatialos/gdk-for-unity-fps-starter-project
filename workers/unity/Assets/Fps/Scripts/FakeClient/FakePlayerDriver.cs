@@ -1,11 +1,9 @@
 ﻿using System.Collections;
-using System.Runtime.Serialization;
 using Improbable.Common;
 using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.Guns;
 using Improbable.Gdk.Health;
 using Improbable.Gdk.Movement;
-using Improbable.Gdk.StandardTypes;
 using Unity.Entities;
 using UnityEngine;
 using UnityEngine.AI;
@@ -138,6 +136,7 @@ public class FakePlayerDriver : MonoBehaviour
             {
                 var rotation = Quaternion.LookRotation(velocity, Vector3.up);
                 movementDriver.ApplyMovement(velocity, rotation, movementSpeed, jumpNext);
+                jumpNext = false;
             }
         }
     }
@@ -165,7 +164,6 @@ public class FakePlayerDriver : MonoBehaviour
 
             if (lastShotTime < Time.time - 10f)
             {
-                Debug.LogFormat("{0} Giving up shooting {1}", name, target.name);
                 target = null;
                 SetPlayerState(PlayerState.LookingForTarget);
             }
@@ -201,7 +199,7 @@ public class FakePlayerDriver : MonoBehaviour
 
     public void SetPlayerState(PlayerState newState)
     {
-        Debug.LogFormat("{0} {1} -> {2}", transform.name, state, newState);
+        // Debug.LogFormat("{0} {1} -> {2}", transform.name, state, newState);
         if (state != newState)
         {
             StopAllCoroutines();

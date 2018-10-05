@@ -1,5 +1,5 @@
 {
-  "template": "medium",
+  "template": "medium_gdk",
   "world": {
     "chunkEdgeLengthMeters": 50,
     "snapshots": {
@@ -8,7 +8,13 @@
     "dimensions": {
       "xMeters": 1000,
       "zMeters": 1000
-    }
+    },
+    "legacy_flags": [
+      {
+        "name": "max_bridge_module_load",
+        "value": "500"
+      }
+    ]
   },
   "workers": [
     {
@@ -25,8 +31,26 @@
         }
       ],
       "load_balancing": {
-        "auto_hex_grid": {
-          "num_workers": 8
+        "points_of_interest": {
+          "num_workers": 4,
+          "points": [
+            {
+              "x": -250,
+              "z": -250
+            },
+            {
+              "x": 250,
+              "z": -250
+            },
+            {
+              "x": 250,
+              "z": 250
+            },
+            {
+              "x": -250,
+              "z": 250
+            }
+          ]
         }
       }
     },
@@ -52,8 +76,90 @@
         }
       ],
       "load_balancing": {
-        "auto_hex_grid": {
-          "num_workers": 20
+        "points_of_interest": {
+          "num_workers": 20,
+          "points": [
+            {
+              "x": 10,
+              "z": 0
+            },
+            {
+              "x": 20,
+              "z": 0
+            },
+            {
+              "x": 30,
+              "z": 0
+            },
+            {
+              "x": 40,
+              "z": 0
+            },
+            {
+              "x": 50,
+              "z": 0
+            },
+            {
+              "x": 60,
+              "z": 0
+            },
+            {
+              "x": 70,
+              "z": 0
+            },
+            {
+              "x": 80,
+              "z": 0
+            },
+            {
+              "x": 90,
+              "z": 0
+            },
+            {
+              "x": 100,
+              "z": 0
+            },
+            {
+              "x": 10,
+              "z": 10
+            },
+            {
+              "x": 20,
+              "z": 10
+            },
+            {
+              "x": 30,
+              "z": 10
+            },
+            {
+              "x": 40,
+              "z": 10
+            },
+            {
+              "x": 50,
+              "z": 10
+            },
+            {
+              "x": 60,
+              "z": 10
+            },
+            {
+              "x": 70,
+              "z": 10
+            },
+            {
+              "x": 80,
+              "z": 10
+            },
+            {
+              "x": 90,
+              "z": 10
+            },
+            {
+              "x": 100,
+              "z": 10
+            }
+          ]
         }
       }
     },
