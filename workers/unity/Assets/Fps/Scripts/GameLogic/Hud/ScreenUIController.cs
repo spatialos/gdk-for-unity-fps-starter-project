@@ -37,6 +37,7 @@ namespace Fps
                 && ConnectScreen.activeInHierarchy)
             {
                 ClientWorkerHandler.ConnectionController.ConnectAction();
+                Reticle.SetActive(true);
             }
         }
 
@@ -59,6 +60,7 @@ namespace Fps
             InGameHud.SetActive(false);
             RespawnScreen.SetActive(false);
             EscapeScreen.SetActive(false);
+            Reticle.SetActive(false);
 
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.Confined;
