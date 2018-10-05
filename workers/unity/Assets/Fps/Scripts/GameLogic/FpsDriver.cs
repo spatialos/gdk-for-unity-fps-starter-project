@@ -1,5 +1,6 @@
 ﻿using System.Collections;
-using Improbable.Common;
+﻿using Improbable.Common;
+using Fps.GameLogic.Audio;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.Guns;
