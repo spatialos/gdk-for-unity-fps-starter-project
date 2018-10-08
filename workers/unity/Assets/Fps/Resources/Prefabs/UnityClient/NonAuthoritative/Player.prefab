@@ -353,6 +353,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4252341126964728}
+  - component: {fileID: 114324567678049346}
   m_Layer: 10
   m_Name: Hips
   m_TagString: Untagged
@@ -2638,6 +2639,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   renderersToIgnore: []
+--- !u!114 &114324567678049346
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1234481403839220}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bbc23c6416312e45bf565dc32b579eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LeftFoot: {fileID: 4985030110394588}
+  RightFoot: {fileID: 4346636744342344}
 --- !u!114 &114518501515610296
 MonoBehaviour:
   m_ObjectHideFlags: 1
