@@ -27,18 +27,13 @@ namespace Fps
             Instance = this;
         }
 
-        private void Start()
-        {
-            CreateClientWorker();
-        }
-
         private void Update()
         {
             // Check if the Client worker has been disconnected, and remove it if so.
             DisconnectCheck();
         }
 
-        private void CreateClientWorker()
+        public void CreateClientWorker()
         {
             if (currentClientWorker != null)
             {

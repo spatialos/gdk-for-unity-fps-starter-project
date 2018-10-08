@@ -1,3 +1,4 @@
+using Improbable.Gdk.PlayerLifecycle;
 using UnityEngine;
 
 namespace Fps
@@ -34,7 +35,21 @@ namespace Fps
             }
 
             if (Input.GetKeyDown(KeyCode.Space)
-                && ConnectScreen.activeInHierarchy)
+                && ConnectScreen.activeInHierarchy
+                && connectAnimator.GetCurrentAnimatorStateInfo(0).IsName("ReadyState"))
+            {
+                // Create Client Worker
+                connectAnimator.SetTrigger("Connecting");
+                ClientWorkerHandler.CreateClient();
+            }
+            else if (Input.GetKeyDown(KeyCode.Space)
+                && connectAnimator.GetCurrentAnimatorStateInfo(0).IsName("WorkerDisconnected"))
+            {
+                connectAnimator.SetTrigger("Retry");
+            }
+            else if (Input.GetKeyDown(KeyCode.Space)
+                && ConnectScreen.activeInHierarchy
+                && ClientWorkerHandler.ConnectionController != null)
             {
                 ClientWorkerHandler.ConnectionController.ConnectAction();
             }

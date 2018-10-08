@@ -1,5 +1,6 @@
 using Improbable;
 using Improbable.Gdk.GameObjectRepresentation;
+using Improbable.Gdk.PlayerLifecycle;
 using Improbable.PlayerLifecycle;
 using Improbable.Worker;
 using Improbable.Worker.Core;
@@ -39,6 +40,7 @@ namespace Fps
 
         private void OnCreatePlayerResponse(PlayerCreator.CreatePlayer.ReceivedResponse obj)
         {
+            // Detect successful player creation, hide loadscreen UI in response.
             if (obj.StatusCode == StatusCode.Success)
             {
                 canvasCameraObj.SetActive(false);
@@ -59,15 +61,6 @@ namespace Fps
             }
 
             clientWorkerConnector = clientWorkerConnector ?? ClientWorkerHandler.ClientWorkerConnector;
-
-            if (clientWorkerConnector != null && clientWorkerConnector.Worker != null)
-            {
-                // Worker successfully connected
-                if (connectButton.GetCurrentAnimatorStateInfo(0).IsName("ConnectingState"))
-                {
-                    connectButton.SetTrigger("Ready");
-                }
-            }
         }
 
         public void OnFailedToConnect()
@@ -76,27 +69,14 @@ namespace Fps
             connectButton.SetTrigger("FailedToConnect");
         }
 
-
-        private void SpawnPlayer()
-        {
-            var request = new CreatePlayerRequestType(new Vector3f { X = 0, Y = 0, Z = 0 });
-            commandSender.SendCreatePlayerRequest(new EntityId(1), request);
-        }
-
         public void ConnectAction()
         {
-            if (connectButton.GetCurrentAnimatorStateInfo(0).IsName("ReadyState"))
-            {
-                connectButton.SetTrigger("Connecting");
-                SpawnPlayer();
-            }
-            else if (connectButton.GetCurrentAnimatorStateInfo(0).IsName("FailedToSpawn"))
+            if (connectButton.GetCurrentAnimatorStateInfo(0).IsName("FailedToSpawn"))
             {
                 connectButton.SetTrigger("Retry");
-                SpawnPlayer();
+                //SpawnPlayer();
             }
-            else if (connectButton.GetCurrentAnimatorStateInfo(0).IsName("FailedToConnect")
-                || connectButton.GetCurrentAnimatorStateInfo(0).IsName("WorkerDisconnected"))
+            else if (connectButton.GetCurrentAnimatorStateInfo(0).IsName("FailedToConnect"))
             {
                 connectButton.SetTrigger("Retry");
                 ClientWorkerHandler.CreateClient();

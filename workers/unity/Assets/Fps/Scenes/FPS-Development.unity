@@ -914,7 +914,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1275767668}
   - component: {fileID: 1275767667}
-  - component: {fileID: 1275767666}
   - component: {fileID: 1275767665}
   m_Layer: 0
   m_Name: UICamera
@@ -980,13 +979,6 @@ MonoBehaviour:
       enableFptlForForwardOpaque: 1
       enableBigTilePrepass: 1
       isFptlEnabled: 1
---- !u!81 &1275767666
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1275767664}
-  m_Enabled: 1
 --- !u!20 &1275767667
 Camera:
   m_ObjectHideFlags: 0
@@ -1260,6 +1252,11 @@ Prefab:
       propertyPath: ConnectScreen
       value: 
       objectReference: {fileID: 1345553517}
+    - target: {fileID: 224844994874949388, guid: d52364553e6842940944c62b73e5e1b1,
+        type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: 774.89844
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d52364553e6842940944c62b73e5e1b1, type: 2}
   m_IsPrefabAsset: 0
