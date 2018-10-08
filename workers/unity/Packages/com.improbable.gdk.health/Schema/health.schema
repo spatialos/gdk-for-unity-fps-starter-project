@@ -1,0 +1,31 @@
+package improbable.gdk.health;
+
+import "from_gdk_packages/com.improbable.gdk.core/common.schema";
+import "from_gdk_packages/com.improbable.gdk.standardtypes/standardtypes.schema";
+
+type HealthModifier {
+  uint32 type = 1;
+  float amount = 2;
+  improbable.gdk.standardtypes.IntAbsolute applied_location = 3;
+  improbable.gdk.standardtypes.IntAbsolute origin = 4;
+}
+
+type HealthModifiedInfo {
+  HealthModifier modifier = 1;
+  float health_before = 2;
+  float health_after = 3;
+  bool died = 4;
+}
+
+component HealthComponent {
+  id = 2040;
+
+  float health = 1;
+  float max_health = 2;
+
+  command improbable.common.Empty modify_health(HealthModifier);
+  event HealthModifiedInfo health_modified;
+
+  command improbable.common.Empty request_respawn(improbable.common.Empty);
+  event improbable.common.Empty respawn;
+}

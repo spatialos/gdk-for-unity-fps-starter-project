@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Spatial_Floor_Light
+  m_Shader: {fileID: 4800000, guid: fda5b2defa0dc2947a0a80bb9afbdf69, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _Triplanar_63EE2C5_Texture:
+        m_Texture: {fileID: 2800000, guid: 344e82c3f8c38814493a68ebdd13a446, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Triplanar_A196A454_Texture:
+        m_Texture: {fileID: 2800000, guid: 44c4899883df42548bfbcc4119521f8d, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - Vector1_E12D33C: 2
+    - _Emissive_Brightness: 0
+    - _Step_On_Brightness: 1
+    - _Step_On_Radius: 1
+    m_Colors:
+    - Vector3_FB729223: {r: 2, g: 0, b: 2, a: 0}
+    - _Colour_Tint: {r: 1, g: 1, b: 1, a: 0}
+    - _Emissive_Colour: {r: 0.3018868, g: 0.3018868, b: 0.3018868, a: 0}

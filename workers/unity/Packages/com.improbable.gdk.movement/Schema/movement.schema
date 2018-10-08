@@ -1,0 +1,45 @@
+package improbable.gdk.movement;
+
+import "from_gdk_packages/com.improbable.gdk.core/common.schema";
+import "from_gdk_packages/com.improbable.gdk.standardtypes/standardtypes.schema";
+
+type ClientRequest {
+	improbable.gdk.standardtypes.IntDelta movement = 1;
+	int32 timestamp = 2;
+	float time_delta = 3;
+	bool includes_jump = 4;
+}
+
+type ServerResponse {
+	improbable.gdk.standardtypes.IntAbsolute position = 1;
+	int32 timestamp = 2;
+	float time_delta = 3;
+	bool includes_jump = 4;
+}
+
+type RotationUpdate {
+	int32 yaw = 1;
+	int32 pitch = 2;
+	int32 roll = 3;
+	float time_delta = 4;
+}
+
+component ClientMovement {
+  id = 2020;
+
+  ClientRequest latest = 1;
+}
+
+component ServerMovement {
+  id = 2021;
+
+  ServerResponse latest = 1;
+}
+
+component ClientRotation {
+  id = 2022;
+
+  RotationUpdate latest = 1;
+
+  command improbable.common.Empty force_rotation(RotationUpdate);
+}
