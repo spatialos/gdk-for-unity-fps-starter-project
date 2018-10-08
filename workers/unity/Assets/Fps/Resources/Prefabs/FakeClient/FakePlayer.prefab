@@ -173,7 +173,23 @@ MonoBehaviour:
   rotationUpdateHz: 15
   transformUpdateDelta: 0.06666667
   rotationUpdateDelta: 0.06666667
-  groundedDistance: 0.2
+  movementSettings:
+    MovementSpeed:
+      WalkSpeed: 2.5
+      RunSpeed: 4
+      SprintSpeed: 6
+    SprintCooldown: 0.1
+    Gravity: 9.81
+    StartingJumpSpeed: 10
+    TerminalVelocity: 100
+    GroundedFallSpeed: 1
+    AirControlModifier: 0
+    InAirDamping: 1
+  rotationConstraints:
+    XAxisRotation: 1
+    YAxisRotation: 1
+    ZAxisRotation: 1
+  groundedRadius: 0.1
   groundLayerMask:
     serializedVersion: 2
     m_Bits: 1
@@ -217,7 +233,7 @@ CharacterController:
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0.9, z: 0}
+  m_Center: {x: 0, y: 0.95, z: 0}
 --- !u!195 &195516011689417046
 NavMeshAgent:
   m_ObjectHideFlags: 1
