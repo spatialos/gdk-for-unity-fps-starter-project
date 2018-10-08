@@ -1,0 +1,16 @@
+package improbable.gdk.guns;
+
+import "from_gdk_packages/com.improbable.gdk.standardtypes/standardtypes.schema";
+
+type ShotInfo {
+  bool hit_something = 1;
+  int64 entity_id = 2;
+  improbable.gdk.standardtypes.IntAbsolute hit_location = 3;
+  improbable.gdk.standardtypes.IntAbsolute hit_origin = 4;
+}
+
+component ShootingComponent {
+  id = 2050;
+
+  event ShotInfo shots;
+}

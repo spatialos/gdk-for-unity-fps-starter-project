@@ -1,0 +1,3808 @@
+fileFormatVersion: 2
+guid: 4d197055ceea92347ba821842ef85958
+ModelImporter:
+  serializedVersion: 23
+  fileIDToRecycleName:
+    100000: Chest
+    100002: grpL_magnet_locZERO
+    100004: grpR_magnet_locZERO
+    100006: Head
+    100008: Hips
+    100010: //RootNode
+    100012: improbable_COG_Ctrl
+    100014: improbable_COG_Ctrl_RestPoseGrp
+    100016: improbable_COG_CtrlGrp
+    100018: improbable_Eye_LookAt_Ctrl
+    100020: improbable_Eye_LookAt_Ctrl_RestPoseGrp
+    100022: improbable_Eye_LookAt_CtrlGrp
+    100024: improbable_Head_Jaw_Ctrl
+    100026: improbable_Head_Jaw_Ctrl_RestPoseGrp
+    100028: improbable_Head_Jaw_CtrlGrp
+    100030: improbable_Head_JawEndJnt
+    100032: improbable_Head_JawJnt
+    100034: improbable_Head_Master_Ctrl
+    100036: improbable_Head_Master_Ctrl_RestPoseGrp
+    100038: improbable_Head_Master_CtrlGrp
+    100040: improbable_Head_Master_CtrlScaleGrp
+    100042: improbable_Head_Module
+    100044: improbable_Head_OffsetLctr
+    100046: improbable_Head_ScaleGrp
+    100048: improbable_Head_TopJnt
+    100050: improbable_HeadGrp
+    100052: improbable_l_Arm_ArmIkHandle
+    100054: improbable_l_Arm_Clavicle_Ctrl
+    100056: improbable_l_Arm_Clavicle_Ctrl_RestPoseGrp
+    100058: improbable_l_Arm_Clavicle_CtrlGrp
+    100060: improbable_l_Arm_ClavicleJnt
+    100062: improbable_l_Arm_curveNodesGrp
+    100064: improbable_l_Arm_Elbow_Curve_Ctrl
+    100066: improbable_l_Arm_Elbow_Curve_Ctrl_RestPoseGrp
+    100068: improbable_l_Arm_Elbow_Curve_CtrlGrp
+    100070: improbable_l_Arm_Elbow_CurveJnt
+    100072: improbable_l_Arm_Elbow_FkAimLctr
+    100074: improbable_l_Arm_Elbow_TwistJntExtra
+    100076: improbable_l_Arm_Elbow_TwistJointsGrp
+    100078: improbable_l_Arm_Elbow_TwistSplineIk_Up1Lctr
+    100080: improbable_l_Arm_Elbow_TwistSplineIk_Up2Lctr
+    100082: improbable_l_Arm_Elbow_TwistSplineIkCurve
+    100084: improbable_l_Arm_Elbow_TwistSplineIkHandle
+    100086: improbable_l_Arm_Elbow_TwistStartJnt
+    100088: improbable_l_Arm_ElbowFk_Ctrl
+    100090: improbable_l_Arm_ElbowFk_Ctrl_RestPoseGrp
+    100092: improbable_l_Arm_ElbowFk_CtrlGrp
+    100094: improbable_l_Arm_ElbowIk_Ctrl
+    100096: improbable_l_Arm_ElbowIk_Ctrl_RestPoseGrp
+    100098: improbable_l_Arm_ElbowIk_Ctrl_ShoulderLctr
+    100100: improbable_l_Arm_ElbowIk_Ctrl_TargetLctr
+    100102: improbable_l_Arm_ElbowIk_Ctrl_WristLctr
+    100104: improbable_l_Arm_ElbowIk_CtrlGrp
+    100106: improbable_l_Arm_ElbowIkAimConnectorLctr
+    100108: improbable_l_Arm_ElbowIkConnector_Curve
+    100110: improbable_l_Arm_ElbowIkLockLctr
+    100112: improbable_l_Arm_ElbowIkTargetConnectorLctr
+    100114: improbable_l_Arm_ElbowIkToFkAimLctr
+    100116: improbable_l_Arm_ElbowJnt
+    100118: improbable_l_Arm_ElbowJntFk
+    100120: improbable_l_Arm_ElbowJntFkGrp1
+    100122: improbable_l_Arm_ElbowJntFkGrp2
+    100124: improbable_l_Arm_ElbowJntIk
+    100126: improbable_l_Arm_extraCurveNodesGrp
+    100128: improbable_l_Arm_LimbLengthAttachLctr
+    100130: improbable_l_Arm_LimbLengthEndLctr
+    100132: improbable_l_Arm_LimbLengthOriginLctr
+    100134: improbable_l_Arm_LimbLengthSoftLctr
+    100136: improbable_l_Arm_Lower_Curve1_Ctrl
+    100138: improbable_l_Arm_Lower_Curve1_Ctrl_RestPoseGrp
+    100140: improbable_l_Arm_Lower_Curve1_CtrlGrp
+    100142: improbable_l_Arm_Lower_Curve1Jnt
+    100144: improbable_l_Arm_Lower_Curve_Ctrl
+    100146: improbable_l_Arm_Lower_Curve_Ctrl_RestPoseGrp
+    100148: improbable_l_Arm_Lower_Curve_CtrlGrp
+    100150: improbable_l_Arm_Lower_Elbow_NoFlipIkHandle
+    100152: improbable_l_Arm_Lower_Elbow_NoFlipJnt
+    100154: improbable_l_Arm_Lower_Elbow_NoFlipJntGrp
+    100156: improbable_l_Arm_Lower_Twist1Jnt
+    100158: improbable_l_Arm_Lower_Twist_Ctrl
+    100160: improbable_l_Arm_Lower_Twist_Ctrl_RestPoseGrp
+    100162: improbable_l_Arm_Lower_Twist_CtrlGrp
+    100164: improbable_l_Arm_Lower_TwistJntEnd
+    100166: improbable_l_Arm_Lower_Wrist_NoFlipJnt
+    100168: improbable_l_Arm_Lower_Wrist_TwistGrp
+    100170: improbable_l_Arm_Lower_Wrist_TwistLctr
+    100172: improbable_l_Arm_LowerBtmClstr
+    100174: improbable_l_Arm_LowerBtmClstrGrp
+    100176: improbable_l_Arm_LowerBtmGuideClstr
+    100178: improbable_l_Arm_LowerBtmGuideClstrGrp
+    100180: improbable_l_Arm_LowerCurveAttach
+    100182: improbable_l_Arm_LowerCurveGuide
+    100184: improbable_l_Arm_LowerMidClstr
+    100186: improbable_l_Arm_LowerTopClstr
+    100188: improbable_l_Arm_LowerTopClstrGrp
+    100190: improbable_l_Arm_LowerTopGuideClstr
+    100192: improbable_l_Arm_LowerTopGuideClstrGrp
+    100194: improbable_l_Arm_MiddleBtmGuideClstr
+    100196: improbable_l_Arm_MiddleCurveAttach
+    100198: improbable_l_Arm_MiddleTopGuideClstr
+    100200: improbable_l_Arm_Module
+    100202: improbable_l_Arm_OffsetLctr
+    100204: improbable_l_Arm_ScaleGrp
+    100206: improbable_l_Arm_ShoulderFk_Ctrl
+    100208: improbable_l_Arm_ShoulderFk_Ctrl_RestPoseGrp
+    100210: improbable_l_Arm_ShoulderFk_CtrlGrp
+    100212: improbable_l_Arm_ShoulderFk_CtrlGrp2
+    100214: improbable_l_Arm_ShoulderFkOrientLctr
+    100216: improbable_l_Arm_ShoulderIkLockLctr
+    100218: improbable_l_Arm_ShoulderJnt
+    100220: improbable_l_Arm_ShoulderJntFk
+    100222: improbable_l_Arm_ShoulderJntIk
+    100224: improbable_l_Arm_Switch_Ctrl
+    100226: improbable_l_Arm_Switch_CtrlGrp
+    100228: improbable_l_Arm_UpperBtmGuideClstr
+    100230: improbable_l_Arm_UpperCurveAttach
+    100232: improbable_l_Arm_UpperTopGuideClstr
+    100234: improbable_l_Arm_Wrist_NoFlipBtmEndJnt
+    100236: improbable_l_Arm_Wrist_NoFlipBtmIkHandle
+    100238: improbable_l_Arm_Wrist_NoFlipBtmStartJnt
+    100240: improbable_l_Arm_Wrist_NoFlipBtmStartJntGrp
+    100242: improbable_l_Arm_Wrist_SplineIkBtmEndJnt
+    100244: improbable_l_Arm_Wrist_SplineIkBtmIkCurve
+    100246: improbable_l_Arm_Wrist_SplineIkBtmIkHandle
+    100248: improbable_l_Arm_Wrist_SplineIkBtmStartJnt
+    100250: improbable_l_Arm_Wrist_SplineIkBtmStartJntGrp
+    100252: improbable_l_Arm_Wrist_SplineIkBtmTwistValJnt
+    100254: improbable_l_Arm_Wrist_SplineIkUpLctr1
+    100256: improbable_l_Arm_Wrist_SplineIkUpLctr2
+    100258: improbable_l_Arm_Wrist_TwistBtmEndJnt
+    100260: improbable_l_Arm_Wrist_TwistBtmStartJnt
+    100262: improbable_l_Arm_Wrist_TwistBtmStartJntGrp
+    100264: improbable_l_Arm_WristFk_Ctrl
+    100266: improbable_l_Arm_WristFk_Ctrl_RestPoseGrp
+    100268: improbable_l_Arm_WristFk_CtrlGrp
+    100270: improbable_l_Arm_WristFkLctr
+    100272: improbable_l_Arm_WristIk_Ctrl
+    100274: improbable_l_Arm_WristIk_Ctrl_RestPoseGrp
+    100276: improbable_l_Arm_WristIk_CtrlGrp
+    100278: improbable_l_Arm_WristIkLctr
+    100280: improbable_l_Arm_WristIkLockLctr
+    100282: improbable_l_Arm_WristIkToFkLctr
+    100284: improbable_l_Arm_WristJnt
+    100286: improbable_l_Arm_WristJntDummy
+    100288: improbable_l_Arm_WristJntFk
+    100290: improbable_l_Arm_WristJntFkGrp1
+    100292: improbable_l_Arm_WristJntFkGrp2
+    100294: improbable_l_Arm_WristJntGrp1
+    100296: improbable_l_Arm_WristJntGrp2
+    100298: improbable_l_Arm_WristJntIk
+    100300: improbable_l_Arm_WristJntIkDummy
+    100302: improbable_l_Arm_WristJntIkDummyGrp1
+    100304: improbable_l_Arm_WristJntIkDummyGrp2
+    100306: improbable_l_Arm_WristPivot_Ctrl
+    100308: improbable_l_Arm_WristPivot_Ctrl_RestPoseGrp
+    100310: improbable_l_Arm_WristPivot_CtrlGrp
+    100312: improbable_l_Arm_WristPivot_Lctr
+    100314: improbable_l_ArmGrp
+    100316: improbable_l_Eye_01_Ctrl
+    100318: improbable_l_Eye_01_Ctrl_RestPoseGrp
+    100320: improbable_l_Eye_01Connector_Curve
+    100322: improbable_l_Eye_01Connector_Curve_Cluster1
+    100324: improbable_l_Eye_01Connector_Curve_Cluster2
+    100326: improbable_l_Eye_01Grp1
+    100328: improbable_l_Eye_01Grp2
+    100330: improbable_l_Eye_01Jnt
+    100332: improbable_l_Eye_Master_Ctrl
+    100334: improbable_l_Eye_Master_Ctrl_RestPoseGrp
+    100336: improbable_l_Eye_Master_CtrlGrp
+    100338: improbable_l_Eye_Module
+    100340: improbable_l_Eye_OffsetLctr
+    100342: improbable_l_Eye_ScaleGrp
+    100344: improbable_l_EyeGrp
+    100346: improbable_l_Finger_01_01_Ctrl
+    100348: improbable_l_Finger_01_01_Ctrl_RestPoseGrp
+    100350: improbable_l_Finger_01_01_CtrlGrp
+    100352: improbable_l_Finger_01_01_CtrlSdkGrp
+    100354: improbable_l_Finger_01_01_Spline_Ctrl
+    100356: improbable_l_Finger_01_01_Spline_Ctrl_RestPoseGrp
+    100358: improbable_l_Finger_01_01_Spline_CtrlGrp
+    100360: improbable_l_Finger_01_01_Spline_CtrlGrp2
+    100362: improbable_l_Finger_01_01Jnt
+    100364: improbable_l_Finger_01_01JntFk
+    100366: improbable_l_Finger_01_01JntIk
+    100368: improbable_l_Finger_01_02_Ctrl
+    100370: improbable_l_Finger_01_02_Ctrl_RestPoseGrp
+    100372: improbable_l_Finger_01_02_CtrlGrp
+    100374: improbable_l_Finger_01_02_CtrlSdkGrp
+    100376: improbable_l_Finger_01_02_Spline_Ctrl
+    100378: improbable_l_Finger_01_02_Spline_Ctrl_RestPoseGrp
+    100380: improbable_l_Finger_01_02_Spline_CtrlGrp
+    100382: improbable_l_Finger_01_02_Spline_CtrlGrp2
+    100384: improbable_l_Finger_01_02Jnt
+    100386: improbable_l_Finger_01_02JntFk
+    100388: improbable_l_Finger_01_02JntIk
+    100390: improbable_l_Finger_01_03_Ctrl
+    100392: improbable_l_Finger_01_03_Ctrl_RestPoseGrp
+    100394: improbable_l_Finger_01_03_CtrlGrp
+    100396: improbable_l_Finger_01_03_CtrlSdkGrp
+    100398: improbable_l_Finger_01_03_Spline_Ctrl
+    100400: improbable_l_Finger_01_03_Spline_Ctrl_RestPoseGrp
+    100402: improbable_l_Finger_01_03_Spline_CtrlGrp
+    100404: improbable_l_Finger_01_03_Spline_CtrlGrp2
+    100406: improbable_l_Finger_01_03Jnt
+    100408: improbable_l_Finger_01_03JntFk
+    100410: improbable_l_Finger_01_03JntIk
+    100412: improbable_l_Finger_01_04_Ctrl
+    100414: improbable_l_Finger_01_04_Ctrl_RestPoseGrp
+    100416: improbable_l_Finger_01_04_CtrlGrp
+    100418: improbable_l_Finger_01_04_CtrlSdkGrp
+    100420: improbable_l_Finger_01_04_Spline_Ctrl
+    100422: improbable_l_Finger_01_04_Spline_Ctrl_RestPoseGrp
+    100424: improbable_l_Finger_01_04_Spline_CtrlGrp
+    100426: improbable_l_Finger_01_04_Spline_CtrlGrp2
+    100428: improbable_l_Finger_01_04Jnt
+    100430: improbable_l_Finger_01_04JntFk
+    100432: improbable_l_Finger_01_04JntIk
+    100434: improbable_l_Finger_01_Ctrl
+    100436: improbable_l_Finger_01_IkHandle
+    100438: improbable_l_Finger_01_IkTwistEndLctr
+    100440: improbable_l_Finger_01_IkTwistStartLctr
+    100442: improbable_l_Finger_01_SplineCurve
+    100444: improbable_l_Finger_01_SplineCurve2Clstr
+    100446: improbable_l_Finger_01_SplineCurve3Clstr
+    100448: improbable_l_Finger_01_SplineCurveEndClstr
+    100450: improbable_l_Finger_01_SplineCurveStartClstr
+    100452: improbable_l_Finger_01JntFkGrp
+    100454: improbable_l_Finger_01JntFkGrp2
+    100456: improbable_l_Finger_01JntGrp
+    100458: improbable_l_Finger_01JntGrp2
+    100460: improbable_l_Finger_01JntIkGrp
+    100462: improbable_l_Finger_01JntIkGrp2
+    100464: improbable_l_Finger_02_01_Ctrl
+    100466: improbable_l_Finger_02_01_Ctrl_RestPoseGrp
+    100468: improbable_l_Finger_02_01_CtrlGrp
+    100470: improbable_l_Finger_02_01_CtrlOffsetGrp
+    100472: improbable_l_Finger_02_01_CtrlSdkGrp
+    100474: improbable_l_Finger_02_01_Spline_Ctrl
+    100476: improbable_l_Finger_02_01_Spline_Ctrl_RestPoseGrp
+    100478: improbable_l_Finger_02_01_Spline_CtrlGrp
+    100480: improbable_l_Finger_02_01_Spline_CtrlGrp2
+    100482: improbable_l_Finger_02_01_Spline_CtrlOffsetGrp
+    100484: improbable_l_Finger_02_01Jnt
+    100486: improbable_l_Finger_02_01JntFk
+    100488: improbable_l_Finger_02_01JntIk
+    100490: improbable_l_Finger_02_02_Ctrl
+    100492: improbable_l_Finger_02_02_Ctrl_RestPoseGrp
+    100494: improbable_l_Finger_02_02_CtrlGrp
+    100496: improbable_l_Finger_02_02_CtrlOffsetGrp
+    100498: improbable_l_Finger_02_02_CtrlSdkGrp
+    100500: improbable_l_Finger_02_02_Spline_Ctrl
+    100502: improbable_l_Finger_02_02_Spline_Ctrl_RestPoseGrp
+    100504: improbable_l_Finger_02_02_Spline_CtrlGrp
+    100506: improbable_l_Finger_02_02_Spline_CtrlGrp2
+    100508: improbable_l_Finger_02_02_Spline_CtrlOffsetGrp
+    100510: improbable_l_Finger_02_02Jnt
+    100512: improbable_l_Finger_02_02JntFk
+    100514: improbable_l_Finger_02_02JntIk
+    100516: improbable_l_Finger_02_03_Ctrl
+    100518: improbable_l_Finger_02_03_Ctrl_RestPoseGrp
+    100520: improbable_l_Finger_02_03_CtrlGrp
+    100522: improbable_l_Finger_02_03_CtrlOffsetGrp
+    100524: improbable_l_Finger_02_03_CtrlSdkGrp
+    100526: improbable_l_Finger_02_03_Spline_Ctrl
+    100528: improbable_l_Finger_02_03_Spline_Ctrl_RestPoseGrp
+    100530: improbable_l_Finger_02_03_Spline_CtrlGrp
+    100532: improbable_l_Finger_02_03_Spline_CtrlGrp2
+    100534: improbable_l_Finger_02_03_Spline_CtrlOffsetGrp
+    100536: improbable_l_Finger_02_03Jnt
+    100538: improbable_l_Finger_02_03JntFk
+    100540: improbable_l_Finger_02_03JntIk
+    100542: improbable_l_Finger_02_04_Ctrl
+    100544: improbable_l_Finger_02_04_Ctrl_RestPoseGrp
+    100546: improbable_l_Finger_02_04_CtrlGrp
+    100548: improbable_l_Finger_02_04_CtrlOffsetGrp
+    100550: improbable_l_Finger_02_04_CtrlSdkGrp
+    100552: improbable_l_Finger_02_04_Spline_Ctrl
+    100554: improbable_l_Finger_02_04_Spline_Ctrl_RestPoseGrp
+    100556: improbable_l_Finger_02_04_Spline_CtrlGrp
+    100558: improbable_l_Finger_02_04_Spline_CtrlGrp2
+    100560: improbable_l_Finger_02_04_Spline_CtrlOffsetGrp
+    100562: improbable_l_Finger_02_04Jnt
+    100564: improbable_l_Finger_02_04JntFk
+    100566: improbable_l_Finger_02_04JntIk
+    100568: improbable_l_Finger_02_Ctrl
+    100570: improbable_l_Finger_02_IkHandle
+    100572: improbable_l_Finger_02_IkTwistEndLctr
+    100574: improbable_l_Finger_02_IkTwistStartLctr
+    100576: improbable_l_Finger_02_SplineCurve
+    100578: improbable_l_Finger_02_SplineCurve2Clstr
+    100580: improbable_l_Finger_02_SplineCurve3Clstr
+    100582: improbable_l_Finger_02_SplineCurveEndClstr
+    100584: improbable_l_Finger_02_SplineCurveStartClstr
+    100586: improbable_l_Finger_02JntFkGrp
+    100588: improbable_l_Finger_02JntFkGrp2
+    100590: improbable_l_Finger_02JntGrp
+    100592: improbable_l_Finger_02JntGrp2
+    100594: improbable_l_Finger_02JntIkGrp
+    100596: improbable_l_Finger_02JntIkGrp2
+    100598: improbable_l_Finger_03_01_Ctrl
+    100600: improbable_l_Finger_03_01_Ctrl_RestPoseGrp
+    100602: improbable_l_Finger_03_01_CtrlGrp
+    100604: improbable_l_Finger_03_01_CtrlOffsetGrp
+    100606: improbable_l_Finger_03_01_CtrlSdkGrp
+    100608: improbable_l_Finger_03_01_Spline_Ctrl
+    100610: improbable_l_Finger_03_01_Spline_Ctrl_RestPoseGrp
+    100612: improbable_l_Finger_03_01_Spline_CtrlGrp
+    100614: improbable_l_Finger_03_01_Spline_CtrlGrp2
+    100616: improbable_l_Finger_03_01_Spline_CtrlOffsetGrp
+    100618: improbable_l_Finger_03_01Jnt
+    100620: improbable_l_Finger_03_01JntFk
+    100622: improbable_l_Finger_03_01JntIk
+    100624: improbable_l_Finger_03_02_Ctrl
+    100626: improbable_l_Finger_03_02_Ctrl_RestPoseGrp
+    100628: improbable_l_Finger_03_02_CtrlGrp
+    100630: improbable_l_Finger_03_02_CtrlOffsetGrp
+    100632: improbable_l_Finger_03_02_CtrlSdkGrp
+    100634: improbable_l_Finger_03_02_Spline_Ctrl
+    100636: improbable_l_Finger_03_02_Spline_Ctrl_RestPoseGrp
+    100638: improbable_l_Finger_03_02_Spline_CtrlGrp
+    100640: improbable_l_Finger_03_02_Spline_CtrlGrp2
+    100642: improbable_l_Finger_03_02_Spline_CtrlOffsetGrp
+    100644: improbable_l_Finger_03_02Jnt
+    100646: improbable_l_Finger_03_02JntFk
+    100648: improbable_l_Finger_03_02JntIk
+    100650: improbable_l_Finger_03_03_Ctrl
+    100652: improbable_l_Finger_03_03_Ctrl_RestPoseGrp
+    100654: improbable_l_Finger_03_03_CtrlGrp
+    100656: improbable_l_Finger_03_03_CtrlOffsetGrp
+    100658: improbable_l_Finger_03_03_CtrlSdkGrp
+    100660: improbable_l_Finger_03_03_Spline_Ctrl
+    100662: improbable_l_Finger_03_03_Spline_Ctrl_RestPoseGrp
+    100664: improbable_l_Finger_03_03_Spline_CtrlGrp
+    100666: improbable_l_Finger_03_03_Spline_CtrlGrp2
+    100668: improbable_l_Finger_03_03_Spline_CtrlOffsetGrp
+    100670: improbable_l_Finger_03_03Jnt
+    100672: improbable_l_Finger_03_03JntFk
+    100674: improbable_l_Finger_03_03JntIk
+    100676: improbable_l_Finger_03_04_Ctrl
+    100678: improbable_l_Finger_03_04_Ctrl_RestPoseGrp
+    100680: improbable_l_Finger_03_04_CtrlGrp
+    100682: improbable_l_Finger_03_04_CtrlOffsetGrp
+    100684: improbable_l_Finger_03_04_CtrlSdkGrp
+    100686: improbable_l_Finger_03_04_Spline_Ctrl
+    100688: improbable_l_Finger_03_04_Spline_Ctrl_RestPoseGrp
+    100690: improbable_l_Finger_03_04_Spline_CtrlGrp
+    100692: improbable_l_Finger_03_04_Spline_CtrlGrp2
+    100694: improbable_l_Finger_03_04_Spline_CtrlOffsetGrp
+    100696: improbable_l_Finger_03_04Jnt
+    100698: improbable_l_Finger_03_04JntFk
+    100700: improbable_l_Finger_03_04JntIk
+    100702: improbable_l_Finger_03_Ctrl
+    100704: improbable_l_Finger_03_IkHandle
+    100706: improbable_l_Finger_03_IkTwistEndLctr
+    100708: improbable_l_Finger_03_IkTwistStartLctr
+    100710: improbable_l_Finger_03_SplineCurve
+    100712: improbable_l_Finger_03_SplineCurve2Clstr
+    100714: improbable_l_Finger_03_SplineCurve3Clstr
+    100716: improbable_l_Finger_03_SplineCurveEndClstr
+    100718: improbable_l_Finger_03_SplineCurveStartClstr
+    100720: improbable_l_Finger_03JntFkGrp
+    100722: improbable_l_Finger_03JntFkGrp2
+    100724: improbable_l_Finger_03JntGrp
+    100726: improbable_l_Finger_03JntGrp2
+    100728: improbable_l_Finger_03JntIkGrp
+    100730: improbable_l_Finger_03JntIkGrp2
+    100732: improbable_l_Finger_04_01_Ctrl
+    100734: improbable_l_Finger_04_01_Ctrl_RestPoseGrp
+    100736: improbable_l_Finger_04_01_CtrlGrp
+    100738: improbable_l_Finger_04_01_CtrlSdkGrp
+    100740: improbable_l_Finger_04_01_Spline_Ctrl
+    100742: improbable_l_Finger_04_01_Spline_Ctrl_RestPoseGrp
+    100744: improbable_l_Finger_04_01_Spline_CtrlGrp
+    100746: improbable_l_Finger_04_01_Spline_CtrlGrp2
+    100748: improbable_l_Finger_04_01Jnt
+    100750: improbable_l_Finger_04_01JntFk
+    100752: improbable_l_Finger_04_01JntIk
+    100754: improbable_l_Finger_04_02_Ctrl
+    100756: improbable_l_Finger_04_02_Ctrl_RestPoseGrp
+    100758: improbable_l_Finger_04_02_CtrlGrp
+    100760: improbable_l_Finger_04_02_CtrlSdkGrp
+    100762: improbable_l_Finger_04_02_Spline_Ctrl
+    100764: improbable_l_Finger_04_02_Spline_Ctrl_RestPoseGrp
+    100766: improbable_l_Finger_04_02_Spline_CtrlGrp
+    100768: improbable_l_Finger_04_02_Spline_CtrlGrp2
+    100770: improbable_l_Finger_04_02Jnt
+    100772: improbable_l_Finger_04_02JntFk
+    100774: improbable_l_Finger_04_02JntIk
+    100776: improbable_l_Finger_04_03_Ctrl
+    100778: improbable_l_Finger_04_03_Ctrl_RestPoseGrp
+    100780: improbable_l_Finger_04_03_CtrlGrp
+    100782: improbable_l_Finger_04_03_CtrlSdkGrp
+    100784: improbable_l_Finger_04_03_Spline_Ctrl
+    100786: improbable_l_Finger_04_03_Spline_Ctrl_RestPoseGrp
+    100788: improbable_l_Finger_04_03_Spline_CtrlGrp
+    100790: improbable_l_Finger_04_03_Spline_CtrlGrp2
+    100792: improbable_l_Finger_04_03Jnt
+    100794: improbable_l_Finger_04_03JntFk
+    100796: improbable_l_Finger_04_03JntIk
+    100798: improbable_l_Finger_04_04_Ctrl
+    100800: improbable_l_Finger_04_04_Ctrl_RestPoseGrp
+    100802: improbable_l_Finger_04_04_CtrlGrp
+    100804: improbable_l_Finger_04_04_CtrlSdkGrp
+    100806: improbable_l_Finger_04_04_Spline_Ctrl
+    100808: improbable_l_Finger_04_04_Spline_Ctrl_RestPoseGrp
+    100810: improbable_l_Finger_04_04_Spline_CtrlGrp
+    100812: improbable_l_Finger_04_04_Spline_CtrlGrp2
+    100814: improbable_l_Finger_04_04Jnt
+    100816: improbable_l_Finger_04_04JntFk
+    100818: improbable_l_Finger_04_04JntIk
+    100820: improbable_l_Finger_04_Ctrl
+    100822: improbable_l_Finger_04_IkHandle
+    100824: improbable_l_Finger_04_IkTwistEndLctr
+    100826: improbable_l_Finger_04_IkTwistStartLctr
+    100828: improbable_l_Finger_04_SplineCurve
+    100830: improbable_l_Finger_04_SplineCurve2Clstr
+    100832: improbable_l_Finger_04_SplineCurve3Clstr
+    100834: improbable_l_Finger_04_SplineCurveEndClstr
+    100836: improbable_l_Finger_04_SplineCurveStartClstr
+    100838: improbable_l_Finger_04JntFkGrp
+    100840: improbable_l_Finger_04JntFkGrp2
+    100842: improbable_l_Finger_04JntGrp
+    100844: improbable_l_Finger_04JntGrp2
+    100846: improbable_l_Finger_04JntIkGrp
+    100848: improbable_l_Finger_04JntIkGrp2
+    100850: improbable_l_Finger_curveNodesGrp
+    100852: improbable_l_Finger_extraCurveNodesGrp
+    100854: improbable_l_Finger_MainChain_CtrlGrp
+    100856: improbable_l_Finger_Master_Ctrl
+    100858: improbable_l_Finger_Master_CtrlGrp
+    100860: improbable_l_Finger_Module
+    100862: improbable_l_Finger_OffsetLctr
+    100864: improbable_l_Finger_ScaleGrp
+    100866: improbable_l_FingerGrp
+    100868: improbable_l_Leg_AnkleFk_Ctrl
+    100870: improbable_l_Leg_AnkleFk_Ctrl_RestPoseGrp
+    100872: improbable_l_Leg_AnkleFk_CtrlGrp
+    100874: improbable_l_Leg_AnkleIkLctr
+    100876: improbable_l_Leg_AnkleIkLockLctr
+    100878: improbable_l_Leg_AnkleIkToFkLctr
+    100880: improbable_l_Leg_AnkleJnt
+    100882: improbable_l_Leg_AnkleJntDummy
+    100884: improbable_l_Leg_AnkleJntFk
+    100886: improbable_l_Leg_AnkleJntFkGrp1
+    100888: improbable_l_Leg_AnkleJntFkGrp2
+    100890: improbable_l_Leg_AnkleJntIk
+    100892: improbable_l_Leg_BallFk_Ctrl
+    100894: improbable_l_Leg_BallFk_Ctrl_RestPoseGrp
+    100896: improbable_l_Leg_BallFk_CtrlGrp
+    100898: improbable_l_Leg_BallIk_Ctrl
+    100900: improbable_l_Leg_BallIk_Ctrl_RestPoseGrp
+    100902: improbable_l_Leg_BallIk_CtrlGrp
+    100904: improbable_l_Leg_BallIk_CtrlSdkGrp
+    100906: improbable_l_Leg_BallIkHandle
+    100908: improbable_l_Leg_BallJnt
+    100910: improbable_l_Leg_BallJntFk
+    100912: improbable_l_Leg_BallJntIk
+    100914: improbable_l_Leg_BallSwivelLctr
+    100916: improbable_l_Leg_FootBankInLctr
+    100918: improbable_l_Leg_FootBankInLctrGrp
+    100920: improbable_l_Leg_FootBankOutLctr
+    100922: improbable_l_Leg_FootBankOutLctrGrp
+    100924: improbable_l_Leg_FootIk_Ctrl
+    100926: improbable_l_Leg_FootIk_Ctrl_RestPoseGrp
+    100928: improbable_l_Leg_FootIk_CtrlGrp
+    100930: improbable_l_Leg_FootPivot_Ctrl
+    100932: improbable_l_Leg_FootPivot_Ctrl_RestPoseGrp
+    100934: improbable_l_Leg_FootPivot_CtrlGrp
+    100936: improbable_l_Leg_FootToePivotLctr
+    100938: improbable_l_Leg_HeelIk_Ctrl
+    100940: improbable_l_Leg_HeelIk_Ctrl_RestPoseGrp
+    100942: improbable_l_Leg_HeelIk_CtrlGrp
+    100944: improbable_l_Leg_HeelIk_CtrlSdkGrp
+    100946: improbable_l_Leg_HipFk_Ctrl
+    100948: improbable_l_Leg_HipFk_Ctrl_RestPoseGrp
+    100950: improbable_l_Leg_HipFk_CtrlGrp
+    100952: improbable_l_Leg_HipFkOrientLctr
+    100954: improbable_l_Leg_HipIkLockLctr
+    100956: improbable_l_Leg_HipJnt
+    100958: improbable_l_Leg_HipJntFk
+    100960: improbable_l_Leg_HipJntIk
+    100962: improbable_l_Leg_Knee_FkAimLctr
+    100964: improbable_l_Leg_KneeFk_Ctrl
+    100966: improbable_l_Leg_KneeFk_Ctrl_RestPoseGrp
+    100968: improbable_l_Leg_KneeFk_CtrlGrp
+    100970: improbable_l_Leg_KneeIk_Ctrl
+    100972: improbable_l_Leg_KneeIk_Ctrl_AnkleLctr
+    100974: improbable_l_Leg_KneeIk_Ctrl_HipLctr
+    100976: improbable_l_Leg_KneeIk_Ctrl_RestPoseGrp
+    100978: improbable_l_Leg_KneeIk_Ctrl_TargetLctr
+    100980: improbable_l_Leg_KneeIk_CtrlGrp
+    100982: improbable_l_Leg_KneeIkAimConnectorLctr
+    100984: improbable_l_Leg_KneeIkConnector_Curve
+    100986: improbable_l_Leg_KneeIkLockLctr
+    100988: improbable_l_Leg_KneeIkTargetConnectorLctr
+    100990: improbable_l_Leg_KneeIkToFkAimLctr
+    100992: improbable_l_Leg_KneeJnt
+    100994: improbable_l_Leg_KneeJntFk
+    100996: improbable_l_Leg_KneeJntFkGrp1
+    100998: improbable_l_Leg_KneeJntFkGrp2
+    101000: improbable_l_Leg_KneeJntIk
+    101002: improbable_l_Leg_LegIkHandle
+    101004: improbable_l_Leg_LimbLengthAttachLctr
+    101006: improbable_l_Leg_LimbLengthEndLctr
+    101008: improbable_l_Leg_LimbLengthOriginLctr
+    101010: improbable_l_Leg_LimbLengthSoftLctr
+    101012: improbable_l_Leg_Module
+    101014: improbable_l_Leg_OffsetLctr
+    101016: improbable_l_Leg_ScaleGrp
+    101018: improbable_l_Leg_Switch_Ctrl
+    101020: improbable_l_Leg_Switch_CtrlGrp
+    101022: improbable_l_Leg_ToeFk_Ctrl
+    101024: improbable_l_Leg_ToeFk_Ctrl_RestPoseGrp
+    101026: improbable_l_Leg_ToeFk_CtrlGrp
+    101028: improbable_l_Leg_ToeIk_Ctrl
+    101030: improbable_l_Leg_ToeIk_Ctrl_RestPoseGrp
+    101032: improbable_l_Leg_ToeIk_CtrlSdkGrp
+    101034: improbable_l_Leg_ToeIkHandle
+    101036: improbable_l_Leg_ToeJnt
+    101038: improbable_l_Leg_ToeJntFk
+    101040: improbable_l_Leg_ToeJntIk
+    101042: improbable_l_Leg_ToePivotIk_Ctrl
+    101044: improbable_l_Leg_ToePivotIk_Ctrl_RestPoseGrp
+    101046: improbable_l_Leg_ToePivotIk_CtrlGrp
+    101048: improbable_l_Leg_ToePivotIk_CtrlSdkGrp
+    101050: improbable_l_LegGrp
+    101052: improbable_l_LegToeIk_CtrlGrp
+    101054: improbable_l_Thumb_01_01_Ctrl
+    101056: improbable_l_Thumb_01_01_Ctrl_RestPoseGrp
+    101058: improbable_l_Thumb_01_01_CtrlGrp
+    101060: improbable_l_Thumb_01_01_CtrlSdkGrp
+    101062: improbable_l_Thumb_01_01_Spline_Ctrl
+    101064: improbable_l_Thumb_01_01_Spline_Ctrl_RestPoseGrp
+    101066: improbable_l_Thumb_01_01_Spline_CtrlGrp
+    101068: improbable_l_Thumb_01_01_Spline_CtrlGrp2
+    101070: improbable_l_Thumb_01_01Jnt
+    101072: improbable_l_Thumb_01_01JntFk
+    101074: improbable_l_Thumb_01_01JntIk
+    101076: improbable_l_Thumb_01_02_Ctrl
+    101078: improbable_l_Thumb_01_02_Ctrl_RestPoseGrp
+    101080: improbable_l_Thumb_01_02_CtrlGrp
+    101082: improbable_l_Thumb_01_02_CtrlSdkGrp
+    101084: improbable_l_Thumb_01_02_Spline_Ctrl
+    101086: improbable_l_Thumb_01_02_Spline_Ctrl_RestPoseGrp
+    101088: improbable_l_Thumb_01_02_Spline_CtrlGrp
+    101090: improbable_l_Thumb_01_02_Spline_CtrlGrp2
+    101092: improbable_l_Thumb_01_02Jnt
+    101094: improbable_l_Thumb_01_02JntFk
+    101096: improbable_l_Thumb_01_02JntIk
+    101098: improbable_l_Thumb_01_03_Ctrl
+    101100: improbable_l_Thumb_01_03_Ctrl_RestPoseGrp
+    101102: improbable_l_Thumb_01_03_CtrlGrp
+    101104: improbable_l_Thumb_01_03_CtrlSdkGrp
+    101106: improbable_l_Thumb_01_03_Spline_Ctrl
+    101108: improbable_l_Thumb_01_03_Spline_Ctrl_RestPoseGrp
+    101110: improbable_l_Thumb_01_03_Spline_CtrlGrp
+    101112: improbable_l_Thumb_01_03_Spline_CtrlGrp2
+    101114: improbable_l_Thumb_01_03Jnt
+    101116: improbable_l_Thumb_01_03JntFk
+    101118: improbable_l_Thumb_01_03JntIk
+    101120: improbable_l_Thumb_01_04_Ctrl
+    101122: improbable_l_Thumb_01_04_Ctrl_RestPoseGrp
+    101124: improbable_l_Thumb_01_04_CtrlGrp
+    101126: improbable_l_Thumb_01_04_CtrlSdkGrp
+    101128: improbable_l_Thumb_01_04_Spline_Ctrl
+    101130: improbable_l_Thumb_01_04_Spline_Ctrl_RestPoseGrp
+    101132: improbable_l_Thumb_01_04_Spline_CtrlGrp
+    101134: improbable_l_Thumb_01_04_Spline_CtrlGrp2
+    101136: improbable_l_Thumb_01_04Jnt
+    101138: improbable_l_Thumb_01_04JntFk
+    101140: improbable_l_Thumb_01_04JntIk
+    101142: improbable_l_Thumb_01_Ctrl
+    101144: improbable_l_Thumb_01_IkHandle
+    101146: improbable_l_Thumb_01_IkTwistEndLctr
+    101148: improbable_l_Thumb_01_IkTwistStartLctr
+    101150: improbable_l_Thumb_01_SplineCurve
+    101152: improbable_l_Thumb_01_SplineCurve2Clstr
+    101154: improbable_l_Thumb_01_SplineCurve3Clstr
+    101156: improbable_l_Thumb_01_SplineCurveEndClstr
+    101158: improbable_l_Thumb_01_SplineCurveStartClstr
+    101160: improbable_l_Thumb_01JntFkGrp
+    101162: improbable_l_Thumb_01JntFkGrp2
+    101164: improbable_l_Thumb_01JntGrp
+    101166: improbable_l_Thumb_01JntGrp2
+    101168: improbable_l_Thumb_01JntIkGrp
+    101170: improbable_l_Thumb_01JntIkGrp2
+    101172: improbable_l_Thumb_curveNodesGrp
+    101174: improbable_l_Thumb_extraCurveNodesGrp
+    101176: improbable_l_Thumb_MainChain_CtrlGrp
+    101178: improbable_l_Thumb_Master_Ctrl
+    101180: improbable_l_Thumb_Master_CtrlGrp
+    101182: improbable_l_Thumb_Module
+    101184: improbable_l_Thumb_OffsetLctr
+    101186: improbable_l_Thumb_ScaleGrp
+    101188: improbable_l_ThumbGrp
+    101190: improbable_MAIN_Ctrl
+    101192: improbable_MAIN_Ctrl_RestPoseGrp
+    101194: improbable_MAIN_Inner_Ctrl
+    101196: improbable_MAIN_Inner_Ctrl_RestPoseGrp
+    101198: improbable_MAIN_Offset_Ctrl
+    101200: improbable_MAIN_Offset_Ctrl_RestPoseGrp
+    101202: improbable_Neck_01Curve_Ctrl
+    101204: improbable_Neck_01Curve_Ctrl_RestPoseGrp
+    101206: improbable_Neck_01Curve_CtrlGrp
+    101208: improbable_Neck_01CurveLctr
+    101210: improbable_Neck_01CurveLctrGrp
+    101212: improbable_Neck_01CurveLctrTangentGrp
+    101214: improbable_Neck_01F
+    101216: improbable_Neck_01Fk_Ctrl
+    101218: improbable_Neck_01Fk_Ctrl_RestPoseGrp
+    101220: improbable_Neck_01Fk_CtrlGrp
+    101222: improbable_Neck_01FkCFlipLctr
+    101224: improbable_Neck_01Jnt
+    101226: improbable_Neck_02Curve_Ctrl
+    101228: improbable_Neck_02Curve_Ctrl_RestPoseGrp
+    101230: improbable_Neck_02Curve_CtrlGrp
+    101232: improbable_Neck_02CurveLctr
+    101234: improbable_Neck_02CurveLctrGrp
+    101236: improbable_Neck_02CurveLctrTangentGrp
+    101238: improbable_Neck_02F
+    101240: improbable_Neck_02Fk_Ctrl
+    101242: improbable_Neck_02Fk_Ctrl_RestPoseGrp
+    101244: improbable_Neck_02Fk_CtrlGrp
+    101246: improbable_Neck_02FkCFlipLctr
+    101248: improbable_Neck_02Jnt
+    101250: improbable_Neck_BtmAimLctr
+    101252: improbable_Neck_BtmJntIk
+    101254: improbable_Neck_BtmTargetLctr
+    101256: improbable_Neck_BtmTX_Lctr
+    101258: improbable_Neck_EndLctr
+    101260: improbable_Neck_hairSystemFollicles
+    101262: improbable_Neck_LengthCurve
+    101264: improbable_Neck_MidIk_Ctrl
+    101266: improbable_Neck_MidIk_Ctrl_RestPoseGrp
+    101268: improbable_Neck_MidIk_CtrlGrp
+    101270: improbable_Neck_MidIk_CtrlGrp2
+    101272: improbable_Neck_MidIk_CtrlLctr
+    101274: improbable_Neck_MidIk_CtrlLctrGrp
+    101276: improbable_Neck_MidIk_CtrlLctrGrp2
+    101278: improbable_Neck_MidIk_CtrlLctrGrp_InfLctr
+    101280: improbable_Neck_MidIk_CtrlLctrGrp_InfLctrGrp
+    101282: improbable_Neck_MidIk_CtrlWSLctr
+    101284: improbable_Neck_MidJntIk
+    101286: improbable_Neck_MidSplineAimLctr
+    101288: improbable_Neck_MidSplineLctrGrp
+    101290: improbable_Neck_MidSplineTargetLctr
+    101292: improbable_Neck_Module
+    101294: improbable_Neck_OffsetLctr
+    101296: improbable_Neck_ribbon
+    101298: improbable_Neck_ribbonSplineGrp
+    101300: improbable_Neck_ScaleGrp
+    101302: improbable_Neck_StartLctr
+    101304: improbable_Neck_TopAimLctr
+    101306: improbable_Neck_TopIk_Ctrl
+    101308: improbable_Neck_TopIk_Ctrl_FlipLctr1
+    101310: improbable_Neck_TopIk_Ctrl_FlipLctr2
+    101312: improbable_Neck_TopIk_Ctrl_RestPoseGrp
+    101314: improbable_Neck_TopIk_CtrlGrp
+    101316: improbable_Neck_TopJnt
+    101318: improbable_Neck_TopJntIk
+    101320: improbable_Neck_TopTargetLctr
+    101322: improbable_Neck_TopTX_Lctr
+    101324: improbable_NeckGrp
+    101326: improbable_Pivot_Ctrl
+    101328: improbable_Pivot_Ctrl_RestPoseGrp
+    101330: improbable_Pivot_CtrlGrp
+    101332: improbable_r_Arm_ArmIkHandle
+    101334: improbable_r_Arm_Clavicle_Ctrl
+    101336: improbable_r_Arm_Clavicle_Ctrl_RestPoseGrp
+    101338: improbable_r_Arm_Clavicle_CtrlGrp
+    101340: improbable_r_Arm_ClavicleJnt
+    101342: improbable_r_Arm_curveNodesGrp
+    101344: improbable_r_Arm_Elbow_Curve_Ctrl
+    101346: improbable_r_Arm_Elbow_Curve_Ctrl_RestPoseGrp
+    101348: improbable_r_Arm_Elbow_Curve_CtrlGrp
+    101350: improbable_r_Arm_Elbow_CurveJnt
+    101352: improbable_r_Arm_Elbow_FkAimLctr
+    101354: improbable_r_Arm_Elbow_TwistJntExtra
+    101356: improbable_r_Arm_Elbow_TwistJntExtraGuide
+    101358: improbable_r_Arm_Elbow_TwistJointsGrp
+    101360: improbable_r_Arm_Elbow_TwistSplineIk_Up1Lctr
+    101362: improbable_r_Arm_Elbow_TwistSplineIk_Up2Lctr
+    101364: improbable_r_Arm_Elbow_TwistSplineIkCurve
+    101366: improbable_r_Arm_Elbow_TwistSplineIkHandle
+    101368: improbable_r_Arm_Elbow_TwistStartJnt
+    101370: improbable_r_Arm_Elbow_TwistStartJntGuide
+    101372: improbable_r_Arm_ElbowFk_Ctrl
+    101374: improbable_r_Arm_ElbowFk_Ctrl_RestPoseGrp
+    101376: improbable_r_Arm_ElbowFk_CtrlGrp
+    101378: improbable_r_Arm_ElbowIk_Ctrl
+    101380: improbable_r_Arm_ElbowIk_Ctrl_RestPoseGrp
+    101382: improbable_r_Arm_ElbowIk_Ctrl_ShoulderLctr
+    101384: improbable_r_Arm_ElbowIk_Ctrl_TargetLctr
+    101386: improbable_r_Arm_ElbowIk_Ctrl_WristLctr
+    101388: improbable_r_Arm_ElbowIk_CtrlGrp
+    101390: improbable_r_Arm_ElbowIkAimConnectorLctr
+    101392: improbable_r_Arm_ElbowIkConnector_Curve
+    101394: improbable_r_Arm_ElbowIkLockLctr
+    101396: improbable_r_Arm_ElbowIkTargetConnectorLctr
+    101398: improbable_r_Arm_ElbowIkToFkAimLctr
+    101400: improbable_r_Arm_ElbowJnt
+    101402: improbable_r_Arm_ElbowJntFk
+    101404: improbable_r_Arm_ElbowJntFkGrp1
+    101406: improbable_r_Arm_ElbowJntFkGrp2
+    101408: improbable_r_Arm_ElbowJntIk
+    101410: improbable_r_Arm_extraCurveNodesGrp
+    101412: improbable_r_Arm_LimbLengthAttachLctr
+    101414: improbable_r_Arm_LimbLengthEndLctr
+    101416: improbable_r_Arm_LimbLengthOriginLctr
+    101418: improbable_r_Arm_LimbLengthSoftLctr
+    101420: improbable_r_Arm_Lower_Curve1_Ctrl
+    101422: improbable_r_Arm_Lower_Curve1_Ctrl_RestPoseGrp
+    101424: improbable_r_Arm_Lower_Curve1_CtrlGrp
+    101426: improbable_r_Arm_Lower_Curve1Jnt
+    101428: improbable_r_Arm_Lower_Curve_Ctrl
+    101430: improbable_r_Arm_Lower_Curve_Ctrl_RestPoseGrp
+    101432: improbable_r_Arm_Lower_Curve_CtrlGrp
+    101434: improbable_r_Arm_Lower_Elbow_NoFlipIkHandle
+    101436: improbable_r_Arm_Lower_Elbow_NoFlipJnt
+    101438: improbable_r_Arm_Lower_Elbow_NoFlipJntGrp
+    101440: improbable_r_Arm_Lower_Twist1Jnt
+    101442: improbable_r_Arm_Lower_Twist1JntGuide
+    101444: improbable_r_Arm_Lower_Twist_Ctrl
+    101446: improbable_r_Arm_Lower_Twist_Ctrl_RestPoseGrp
+    101448: improbable_r_Arm_Lower_Twist_CtrlGrp
+    101450: improbable_r_Arm_Lower_TwistJntEnd
+    101452: improbable_r_Arm_Lower_TwistJntEndGuide
+    101454: improbable_r_Arm_Lower_Wrist_NoFlipJnt
+    101456: improbable_r_Arm_Lower_Wrist_TwistGrp
+    101458: improbable_r_Arm_Lower_Wrist_TwistLctr
+    101460: improbable_r_Arm_LowerBtmClstr
+    101462: improbable_r_Arm_LowerBtmClstrGrp
+    101464: improbable_r_Arm_LowerBtmGuideClstr
+    101466: improbable_r_Arm_LowerBtmGuideClstrGrp
+    101468: improbable_r_Arm_LowerCurveAttach
+    101470: improbable_r_Arm_LowerCurveGuide
+    101472: improbable_r_Arm_LowerMidClstr
+    101474: improbable_r_Arm_LowerTopClstr
+    101476: improbable_r_Arm_LowerTopClstrGrp
+    101478: improbable_r_Arm_LowerTopGuideClstr
+    101480: improbable_r_Arm_LowerTopGuideClstrGrp
+    101482: improbable_r_Arm_MiddleBtmGuideClstr
+    101484: improbable_r_Arm_MiddleCurveAttach
+    101486: improbable_r_Arm_MiddleTopGuideClstr
+    101488: improbable_r_Arm_Module
+    101490: improbable_r_Arm_OffsetLctr
+    101492: improbable_r_Arm_ScaleGrp
+    101494: improbable_r_Arm_ShoulderFk_Ctrl
+    101496: improbable_r_Arm_ShoulderFk_Ctrl_RestPoseGrp
+    101498: improbable_r_Arm_ShoulderFk_CtrlGrp
+    101500: improbable_r_Arm_ShoulderFk_CtrlGrp2
+    101502: improbable_r_Arm_ShoulderFkOrientLctr
+    101504: improbable_r_Arm_ShoulderIkLockLctr
+    101506: improbable_r_Arm_ShoulderJnt
+    101508: improbable_r_Arm_ShoulderJntFk
+    101510: improbable_r_Arm_ShoulderJntIk
+    101512: improbable_r_Arm_Switch_Ctrl
+    101514: improbable_r_Arm_Switch_CtrlGrp
+    101516: improbable_r_Arm_UpperBtmGuideClstr
+    101518: improbable_r_Arm_UpperCurveAttach
+    101520: improbable_r_Arm_UpperTopGuideClstr
+    101522: improbable_r_Arm_Wrist_NoFlipBtmEndJnt
+    101524: improbable_r_Arm_Wrist_NoFlipBtmIkHandle
+    101526: improbable_r_Arm_Wrist_NoFlipBtmStartJnt
+    101528: improbable_r_Arm_Wrist_NoFlipBtmStartJntGrp
+    101530: improbable_r_Arm_Wrist_SplineIkBtmEndJnt
+    101532: improbable_r_Arm_Wrist_SplineIkBtmIkCurve
+    101534: improbable_r_Arm_Wrist_SplineIkBtmIkHandle
+    101536: improbable_r_Arm_Wrist_SplineIkBtmStartJnt
+    101538: improbable_r_Arm_Wrist_SplineIkBtmStartJntGrp
+    101540: improbable_r_Arm_Wrist_SplineIkBtmTwistValJnt
+    101542: improbable_r_Arm_Wrist_SplineIkUpLctr1
+    101544: improbable_r_Arm_Wrist_SplineIkUpLctr2
+    101546: improbable_r_Arm_Wrist_TwistBtmEndJnt
+    101548: improbable_r_Arm_Wrist_TwistBtmStartJnt
+    101550: improbable_r_Arm_Wrist_TwistBtmStartJntGrp
+    101552: improbable_r_Arm_WristFk_Ctrl
+    101554: improbable_r_Arm_WristFk_Ctrl_RestPoseGrp
+    101556: improbable_r_Arm_WristFk_CtrlGrp
+    101558: improbable_r_Arm_WristFkLctr
+    101560: improbable_r_Arm_WristIk_Ctrl
+    101562: improbable_r_Arm_WristIk_Ctrl_RestPoseGrp
+    101564: improbable_r_Arm_WristIk_CtrlGrp
+    101566: improbable_r_Arm_WristIkLctr
+    101568: improbable_r_Arm_WristIkLockLctr
+    101570: improbable_r_Arm_WristIkToFkLctr
+    101572: improbable_r_Arm_WristJnt
+    101574: improbable_r_Arm_WristJntDummy
+    101576: improbable_r_Arm_WristJntFk
+    101578: improbable_r_Arm_WristJntFkGrp1
+    101580: improbable_r_Arm_WristJntFkGrp2
+    101582: improbable_r_Arm_WristJntGrp1
+    101584: improbable_r_Arm_WristJntGrp2
+    101586: improbable_r_Arm_WristJntIk
+    101588: improbable_r_Arm_WristJntIkDummy
+    101590: improbable_r_Arm_WristJntIkDummyGrp1
+    101592: improbable_r_Arm_WristJntIkDummyGrp2
+    101594: improbable_r_Arm_WristPivot_Ctrl
+    101596: improbable_r_Arm_WristPivot_Ctrl_RestPoseGrp
+    101598: improbable_r_Arm_WristPivot_CtrlGrp
+    101600: improbable_r_Arm_WristPivot_Lctr
+    101602: improbable_r_ArmGrp
+    101604: improbable_r_Eye_01_Ctrl
+    101606: improbable_r_Eye_01_Ctrl_RestPoseGrp
+    101608: improbable_r_Eye_01Connector_Curve
+    101610: improbable_r_Eye_01Connector_Curve_Cluster1
+    101612: improbable_r_Eye_01Connector_Curve_Cluster2
+    101614: improbable_r_Eye_01Grp1
+    101616: improbable_r_Eye_01Grp2
+    101618: improbable_r_Eye_01Jnt
+    101620: improbable_r_Eye_Master_Ctrl
+    101622: improbable_r_Eye_Master_Ctrl_RestPoseGrp
+    101624: improbable_r_Eye_Master_CtrlGrp
+    101626: improbable_r_Eye_Module
+    101628: improbable_r_Eye_OffsetLctr
+    101630: improbable_r_Eye_ScaleGrp
+    101632: improbable_r_EyeGrp
+    101634: improbable_r_Finger_01_01_Ctrl
+    101636: improbable_r_Finger_01_01_Ctrl_RestPoseGrp
+    101638: improbable_r_Finger_01_01_CtrlGrp
+    101640: improbable_r_Finger_01_01_CtrlSdkGrp
+    101642: improbable_r_Finger_01_01_Spline_Ctrl
+    101644: improbable_r_Finger_01_01_Spline_Ctrl_RestPoseGrp
+    101646: improbable_r_Finger_01_01_Spline_CtrlGrp
+    101648: improbable_r_Finger_01_01_Spline_CtrlGrp2
+    101650: improbable_r_Finger_01_01Jnt
+    101652: improbable_r_Finger_01_01JntFk
+    101654: improbable_r_Finger_01_01JntIk
+    101656: improbable_r_Finger_01_01JntIkGuide
+    101658: improbable_r_Finger_01_02_Ctrl
+    101660: improbable_r_Finger_01_02_Ctrl_RestPoseGrp
+    101662: improbable_r_Finger_01_02_CtrlGrp
+    101664: improbable_r_Finger_01_02_CtrlSdkGrp
+    101666: improbable_r_Finger_01_02_Spline_Ctrl
+    101668: improbable_r_Finger_01_02_Spline_Ctrl_RestPoseGrp
+    101670: improbable_r_Finger_01_02_Spline_CtrlGrp
+    101672: improbable_r_Finger_01_02_Spline_CtrlGrp2
+    101674: improbable_r_Finger_01_02Jnt
+    101676: improbable_r_Finger_01_02JntFk
+    101678: improbable_r_Finger_01_02JntIk
+    101680: improbable_r_Finger_01_02JntIkGuide
+    101682: improbable_r_Finger_01_03_Ctrl
+    101684: improbable_r_Finger_01_03_Ctrl_RestPoseGrp
+    101686: improbable_r_Finger_01_03_CtrlGrp
+    101688: improbable_r_Finger_01_03_CtrlSdkGrp
+    101690: improbable_r_Finger_01_03_Spline_Ctrl
+    101692: improbable_r_Finger_01_03_Spline_Ctrl_RestPoseGrp
+    101694: improbable_r_Finger_01_03_Spline_CtrlGrp
+    101696: improbable_r_Finger_01_03_Spline_CtrlGrp2
+    101698: improbable_r_Finger_01_03Jnt
+    101700: improbable_r_Finger_01_03JntFk
+    101702: improbable_r_Finger_01_03JntIk
+    101704: improbable_r_Finger_01_03JntIkGuide
+    101706: improbable_r_Finger_01_04_Ctrl
+    101708: improbable_r_Finger_01_04_Ctrl_RestPoseGrp
+    101710: improbable_r_Finger_01_04_CtrlGrp
+    101712: improbable_r_Finger_01_04_CtrlSdkGrp
+    101714: improbable_r_Finger_01_04_Spline_Ctrl
+    101716: improbable_r_Finger_01_04_Spline_Ctrl_RestPoseGrp
+    101718: improbable_r_Finger_01_04_Spline_CtrlGrp
+    101720: improbable_r_Finger_01_04_Spline_CtrlGrp2
+    101722: improbable_r_Finger_01_04Jnt
+    101724: improbable_r_Finger_01_04JntFk
+    101726: improbable_r_Finger_01_04JntIk
+    101728: improbable_r_Finger_01_04JntIkGuide
+    101730: improbable_r_Finger_01_Ctrl
+    101732: improbable_r_Finger_01_IkHandle
+    101734: improbable_r_Finger_01_IkTwistEndLctr
+    101736: improbable_r_Finger_01_IkTwistStartLctr
+    101738: improbable_r_Finger_01_SplineCurve
+    101740: improbable_r_Finger_01_SplineCurve2Clstr
+    101742: improbable_r_Finger_01_SplineCurve3Clstr
+    101744: improbable_r_Finger_01_SplineCurveEndClstr
+    101746: improbable_r_Finger_01_SplineCurveStartClstr
+    101748: improbable_r_Finger_01JntFkGrp
+    101750: improbable_r_Finger_01JntFkGrp2
+    101752: improbable_r_Finger_01JntGrp
+    101754: improbable_r_Finger_01JntGrp2
+    101756: improbable_r_Finger_01JntIkGrp
+    101758: improbable_r_Finger_01JntIkGrp2
+    101760: improbable_r_Finger_02_01_Ctrl
+    101762: improbable_r_Finger_02_01_Ctrl_RestPoseGrp
+    101764: improbable_r_Finger_02_01_CtrlGrp
+    101766: improbable_r_Finger_02_01_CtrlOffsetGrp
+    101768: improbable_r_Finger_02_01_CtrlSdkGrp
+    101770: improbable_r_Finger_02_01_Spline_Ctrl
+    101772: improbable_r_Finger_02_01_Spline_Ctrl_RestPoseGrp
+    101774: improbable_r_Finger_02_01_Spline_CtrlGrp
+    101776: improbable_r_Finger_02_01_Spline_CtrlGrp2
+    101778: improbable_r_Finger_02_01_Spline_CtrlOffsetGrp
+    101780: improbable_r_Finger_02_01Jnt
+    101782: improbable_r_Finger_02_01JntFk
+    101784: improbable_r_Finger_02_01JntIk
+    101786: improbable_r_Finger_02_01JntIkGuide
+    101788: improbable_r_Finger_02_02_Ctrl
+    101790: improbable_r_Finger_02_02_Ctrl_RestPoseGrp
+    101792: improbable_r_Finger_02_02_CtrlGrp
+    101794: improbable_r_Finger_02_02_CtrlOffsetGrp
+    101796: improbable_r_Finger_02_02_CtrlSdkGrp
+    101798: improbable_r_Finger_02_02_Spline_Ctrl
+    101800: improbable_r_Finger_02_02_Spline_Ctrl_RestPoseGrp
+    101802: improbable_r_Finger_02_02_Spline_CtrlGrp
+    101804: improbable_r_Finger_02_02_Spline_CtrlGrp2
+    101806: improbable_r_Finger_02_02_Spline_CtrlOffsetGrp
+    101808: improbable_r_Finger_02_02Jnt
+    101810: improbable_r_Finger_02_02JntFk
+    101812: improbable_r_Finger_02_02JntIk
+    101814: improbable_r_Finger_02_02JntIkGuide
+    101816: improbable_r_Finger_02_03_Ctrl
+    101818: improbable_r_Finger_02_03_Ctrl_RestPoseGrp
+    101820: improbable_r_Finger_02_03_CtrlGrp
+    101822: improbable_r_Finger_02_03_CtrlOffsetGrp
+    101824: improbable_r_Finger_02_03_CtrlSdkGrp
+    101826: improbable_r_Finger_02_03_Spline_Ctrl
+    101828: improbable_r_Finger_02_03_Spline_Ctrl_RestPoseGrp
+    101830: improbable_r_Finger_02_03_Spline_CtrlGrp
+    101832: improbable_r_Finger_02_03_Spline_CtrlGrp2
+    101834: improbable_r_Finger_02_03_Spline_CtrlOffsetGrp
+    101836: improbable_r_Finger_02_03Jnt
+    101838: improbable_r_Finger_02_03JntFk
+    101840: improbable_r_Finger_02_03JntIk
+    101842: improbable_r_Finger_02_03JntIkGuide
+    101844: improbable_r_Finger_02_04_Ctrl
+    101846: improbable_r_Finger_02_04_Ctrl_RestPoseGrp
+    101848: improbable_r_Finger_02_04_CtrlGrp
+    101850: improbable_r_Finger_02_04_CtrlOffsetGrp
+    101852: improbable_r_Finger_02_04_CtrlSdkGrp
+    101854: improbable_r_Finger_02_04_Spline_Ctrl
+    101856: improbable_r_Finger_02_04_Spline_Ctrl_RestPoseGrp
+    101858: improbable_r_Finger_02_04_Spline_CtrlGrp
+    101860: improbable_r_Finger_02_04_Spline_CtrlGrp2
+    101862: improbable_r_Finger_02_04_Spline_CtrlOffsetGrp
+    101864: improbable_r_Finger_02_04Jnt
+    101866: improbable_r_Finger_02_04JntFk
+    101868: improbable_r_Finger_02_04JntIk
+    101870: improbable_r_Finger_02_04JntIkGuide
+    101872: improbable_r_Finger_02_Ctrl
+    101874: improbable_r_Finger_02_IkHandle
+    101876: improbable_r_Finger_02_IkTwistEndLctr
+    101878: improbable_r_Finger_02_IkTwistStartLctr
+    101880: improbable_r_Finger_02_SplineCurve
+    101882: improbable_r_Finger_02_SplineCurve2Clstr
+    101884: improbable_r_Finger_02_SplineCurve3Clstr
+    101886: improbable_r_Finger_02_SplineCurveEndClstr
+    101888: improbable_r_Finger_02_SplineCurveStartClstr
+    101890: improbable_r_Finger_02JntFkGrp
+    101892: improbable_r_Finger_02JntFkGrp2
+    101894: improbable_r_Finger_02JntGrp
+    101896: improbable_r_Finger_02JntGrp2
+    101898: improbable_r_Finger_02JntIkGrp
+    101900: improbable_r_Finger_02JntIkGrp2
+    101902: improbable_r_Finger_03_01_Ctrl
+    101904: improbable_r_Finger_03_01_Ctrl_RestPoseGrp
+    101906: improbable_r_Finger_03_01_CtrlGrp
+    101908: improbable_r_Finger_03_01_CtrlOffsetGrp
+    101910: improbable_r_Finger_03_01_CtrlSdkGrp
+    101912: improbable_r_Finger_03_01_Spline_Ctrl
+    101914: improbable_r_Finger_03_01_Spline_Ctrl_RestPoseGrp
+    101916: improbable_r_Finger_03_01_Spline_CtrlGrp
+    101918: improbable_r_Finger_03_01_Spline_CtrlGrp2
+    101920: improbable_r_Finger_03_01_Spline_CtrlOffsetGrp
+    101922: improbable_r_Finger_03_01Jnt
+    101924: improbable_r_Finger_03_01JntFk
+    101926: improbable_r_Finger_03_01JntIk
+    101928: improbable_r_Finger_03_01JntIkGuide
+    101930: improbable_r_Finger_03_02_Ctrl
+    101932: improbable_r_Finger_03_02_Ctrl_RestPoseGrp
+    101934: improbable_r_Finger_03_02_CtrlGrp
+    101936: improbable_r_Finger_03_02_CtrlOffsetGrp
+    101938: improbable_r_Finger_03_02_CtrlSdkGrp
+    101940: improbable_r_Finger_03_02_Spline_Ctrl
+    101942: improbable_r_Finger_03_02_Spline_Ctrl_RestPoseGrp
+    101944: improbable_r_Finger_03_02_Spline_CtrlGrp
+    101946: improbable_r_Finger_03_02_Spline_CtrlGrp2
+    101948: improbable_r_Finger_03_02_Spline_CtrlOffsetGrp
+    101950: improbable_r_Finger_03_02Jnt
+    101952: improbable_r_Finger_03_02JntFk
+    101954: improbable_r_Finger_03_02JntIk
+    101956: improbable_r_Finger_03_02JntIkGuide
+    101958: improbable_r_Finger_03_03_Ctrl
+    101960: improbable_r_Finger_03_03_Ctrl_RestPoseGrp
+    101962: improbable_r_Finger_03_03_CtrlGrp
+    101964: improbable_r_Finger_03_03_CtrlOffsetGrp
+    101966: improbable_r_Finger_03_03_CtrlSdkGrp
+    101968: improbable_r_Finger_03_03_Spline_Ctrl
+    101970: improbable_r_Finger_03_03_Spline_Ctrl_RestPoseGrp
+    101972: improbable_r_Finger_03_03_Spline_CtrlGrp
+    101974: improbable_r_Finger_03_03_Spline_CtrlGrp2
+    101976: improbable_r_Finger_03_03_Spline_CtrlOffsetGrp
+    101978: improbable_r_Finger_03_03Jnt
+    101980: improbable_r_Finger_03_03JntFk
+    101982: improbable_r_Finger_03_03JntIk
+    101984: improbable_r_Finger_03_03JntIkGuide
+    101986: improbable_r_Finger_03_04_Ctrl
+    101988: improbable_r_Finger_03_04_Ctrl_RestPoseGrp
+    101990: improbable_r_Finger_03_04_CtrlGrp
+    101992: improbable_r_Finger_03_04_CtrlOffsetGrp
+    101994: improbable_r_Finger_03_04_CtrlSdkGrp
+    101996: improbable_r_Finger_03_04_Spline_Ctrl
+    101998: improbable_r_Finger_03_04_Spline_Ctrl_RestPoseGrp
+    102000: improbable_r_Finger_03_04_Spline_CtrlGrp
+    102002: improbable_r_Finger_03_04_Spline_CtrlGrp2
+    102004: improbable_r_Finger_03_04_Spline_CtrlOffsetGrp
+    102006: improbable_r_Finger_03_04Jnt
+    102008: improbable_r_Finger_03_04JntFk
+    102010: improbable_r_Finger_03_04JntIk
+    102012: improbable_r_Finger_03_04JntIkGuide
+    102014: improbable_r_Finger_03_Ctrl
+    102016: improbable_r_Finger_03_IkHandle
+    102018: improbable_r_Finger_03_IkTwistEndLctr
+    102020: improbable_r_Finger_03_IkTwistStartLctr
+    102022: improbable_r_Finger_03_SplineCurve
+    102024: improbable_r_Finger_03_SplineCurve2Clstr
+    102026: improbable_r_Finger_03_SplineCurve3Clstr
+    102028: improbable_r_Finger_03_SplineCurveEndClstr
+    102030: improbable_r_Finger_03_SplineCurveStartClstr
+    102032: improbable_r_Finger_03JntFkGrp
+    102034: improbable_r_Finger_03JntFkGrp2
+    102036: improbable_r_Finger_03JntGrp
+    102038: improbable_r_Finger_03JntGrp2
+    102040: improbable_r_Finger_03JntIkGrp
+    102042: improbable_r_Finger_03JntIkGrp2
+    102044: improbable_r_Finger_04_01_Ctrl
+    102046: improbable_r_Finger_04_01_Ctrl_RestPoseGrp
+    102048: improbable_r_Finger_04_01_CtrlGrp
+    102050: improbable_r_Finger_04_01_CtrlSdkGrp
+    102052: improbable_r_Finger_04_01_Spline_Ctrl
+    102054: improbable_r_Finger_04_01_Spline_Ctrl_RestPoseGrp
+    102056: improbable_r_Finger_04_01_Spline_CtrlGrp
+    102058: improbable_r_Finger_04_01_Spline_CtrlGrp2
+    102060: improbable_r_Finger_04_01Jnt
+    102062: improbable_r_Finger_04_01JntFk
+    102064: improbable_r_Finger_04_01JntIk
+    102066: improbable_r_Finger_04_01JntIkGuide
+    102068: improbable_r_Finger_04_02_Ctrl
+    102070: improbable_r_Finger_04_02_Ctrl_RestPoseGrp
+    102072: improbable_r_Finger_04_02_CtrlGrp
+    102074: improbable_r_Finger_04_02_CtrlSdkGrp
+    102076: improbable_r_Finger_04_02_Spline_Ctrl
+    102078: improbable_r_Finger_04_02_Spline_Ctrl_RestPoseGrp
+    102080: improbable_r_Finger_04_02_Spline_CtrlGrp
+    102082: improbable_r_Finger_04_02_Spline_CtrlGrp2
+    102084: improbable_r_Finger_04_02Jnt
+    102086: improbable_r_Finger_04_02JntFk
+    102088: improbable_r_Finger_04_02JntIk
+    102090: improbable_r_Finger_04_02JntIkGuide
+    102092: improbable_r_Finger_04_03_Ctrl
+    102094: improbable_r_Finger_04_03_Ctrl_RestPoseGrp
+    102096: improbable_r_Finger_04_03_CtrlGrp
+    102098: improbable_r_Finger_04_03_CtrlSdkGrp
+    102100: improbable_r_Finger_04_03_Spline_Ctrl
+    102102: improbable_r_Finger_04_03_Spline_Ctrl_RestPoseGrp
+    102104: improbable_r_Finger_04_03_Spline_CtrlGrp
+    102106: improbable_r_Finger_04_03_Spline_CtrlGrp2
+    102108: improbable_r_Finger_04_03Jnt
+    102110: improbable_r_Finger_04_03JntFk
+    102112: improbable_r_Finger_04_03JntIk
+    102114: improbable_r_Finger_04_03JntIkGuide
+    102116: improbable_r_Finger_04_04_Ctrl
+    102118: improbable_r_Finger_04_04_Ctrl_RestPoseGrp
+    102120: improbable_r_Finger_04_04_CtrlGrp
+    102122: improbable_r_Finger_04_04_CtrlSdkGrp
+    102124: improbable_r_Finger_04_04_Spline_Ctrl
+    102126: improbable_r_Finger_04_04_Spline_Ctrl_RestPoseGrp
+    102128: improbable_r_Finger_04_04_Spline_CtrlGrp
+    102130: improbable_r_Finger_04_04_Spline_CtrlGrp2
+    102132: improbable_r_Finger_04_04Jnt
+    102134: improbable_r_Finger_04_04JntFk
+    102136: improbable_r_Finger_04_04JntIk
+    102138: improbable_r_Finger_04_04JntIkGuide
+    102140: improbable_r_Finger_04_Ctrl
+    102142: improbable_r_Finger_04_IkHandle
+    102144: improbable_r_Finger_04_IkTwistEndLctr
+    102146: improbable_r_Finger_04_IkTwistStartLctr
+    102148: improbable_r_Finger_04_SplineCurve
+    102150: improbable_r_Finger_04_SplineCurve2Clstr
+    102152: improbable_r_Finger_04_SplineCurve3Clstr
+    102154: improbable_r_Finger_04_SplineCurveEndClstr
+    102156: improbable_r_Finger_04_SplineCurveStartClstr
+    102158: improbable_r_Finger_04JntFkGrp
+    102160: improbable_r_Finger_04JntFkGrp2
+    102162: improbable_r_Finger_04JntGrp
+    102164: improbable_r_Finger_04JntGrp2
+    102166: improbable_r_Finger_04JntIkGrp
+    102168: improbable_r_Finger_04JntIkGrp2
+    102170: improbable_r_Finger_curveNodesGrp
+    102172: improbable_r_Finger_extraCurveNodesGrp
+    102174: improbable_r_Finger_MainChain_CtrlGrp
+    102176: improbable_r_Finger_Master_Ctrl
+    102178: improbable_r_Finger_Master_CtrlGrp
+    102180: improbable_r_Finger_Module
+    102182: improbable_r_Finger_OffsetLctr
+    102184: improbable_r_Finger_ScaleGrp
+    102186: improbable_r_FingerGrp
+    102188: improbable_r_Leg_AnkleFk_Ctrl
+    102190: improbable_r_Leg_AnkleFk_Ctrl_RestPoseGrp
+    102192: improbable_r_Leg_AnkleFk_CtrlGrp
+    102194: improbable_r_Leg_AnkleIkLctr
+    102196: improbable_r_Leg_AnkleIkLockLctr
+    102198: improbable_r_Leg_AnkleIkToFkLctr
+    102200: improbable_r_Leg_AnkleJnt
+    102202: improbable_r_Leg_AnkleJntDummy
+    102204: improbable_r_Leg_AnkleJntFk
+    102206: improbable_r_Leg_AnkleJntFkGrp1
+    102208: improbable_r_Leg_AnkleJntFkGrp2
+    102210: improbable_r_Leg_AnkleJntIk
+    102212: improbable_r_Leg_BallFk_Ctrl
+    102214: improbable_r_Leg_BallFk_Ctrl_RestPoseGrp
+    102216: improbable_r_Leg_BallFk_CtrlGrp
+    102218: improbable_r_Leg_BallIk_Ctrl
+    102220: improbable_r_Leg_BallIk_Ctrl_RestPoseGrp
+    102222: improbable_r_Leg_BallIk_CtrlGrp
+    102224: improbable_r_Leg_BallIk_CtrlSdkGrp
+    102226: improbable_r_Leg_BallIkHandle
+    102228: improbable_r_Leg_BallJnt
+    102230: improbable_r_Leg_BallJntFk
+    102232: improbable_r_Leg_BallJntIk
+    102234: improbable_r_Leg_BallSwivelLctr
+    102236: improbable_r_Leg_FootBankInLctr
+    102238: improbable_r_Leg_FootBankInLctrGrp
+    102240: improbable_r_Leg_FootBankOutLctr
+    102242: improbable_r_Leg_FootBankOutLctrGrp
+    102244: improbable_r_Leg_FootIk_Ctrl
+    102246: improbable_r_Leg_FootIk_Ctrl_RestPoseGrp
+    102248: improbable_r_Leg_FootIk_CtrlGrp
+    102250: improbable_r_Leg_FootPivot_Ctrl
+    102252: improbable_r_Leg_FootPivot_Ctrl_RestPoseGrp
+    102254: improbable_r_Leg_FootPivot_CtrlGrp
+    102256: improbable_r_Leg_FootToePivotLctr
+    102258: improbable_r_Leg_HeelIk_Ctrl
+    102260: improbable_r_Leg_HeelIk_Ctrl_RestPoseGrp
+    102262: improbable_r_Leg_HeelIk_CtrlGrp
+    102264: improbable_r_Leg_HeelIk_CtrlSdkGrp
+    102266: improbable_r_Leg_HipFk_Ctrl
+    102268: improbable_r_Leg_HipFk_Ctrl_RestPoseGrp
+    102270: improbable_r_Leg_HipFk_CtrlGrp
+    102272: improbable_r_Leg_HipFkOrientLctr
+    102274: improbable_r_Leg_HipIkLockLctr
+    102276: improbable_r_Leg_HipJnt
+    102278: improbable_r_Leg_HipJntFk
+    102280: improbable_r_Leg_HipJntIk
+    102282: improbable_r_Leg_Knee_FkAimLctr
+    102284: improbable_r_Leg_KneeFk_Ctrl
+    102286: improbable_r_Leg_KneeFk_Ctrl_RestPoseGrp
+    102288: improbable_r_Leg_KneeFk_CtrlGrp
+    102290: improbable_r_Leg_KneeIk_Ctrl
+    102292: improbable_r_Leg_KneeIk_Ctrl_AnkleLctr
+    102294: improbable_r_Leg_KneeIk_Ctrl_HipLctr
+    102296: improbable_r_Leg_KneeIk_Ctrl_RestPoseGrp
+    102298: improbable_r_Leg_KneeIk_Ctrl_TargetLctr
+    102300: improbable_r_Leg_KneeIk_CtrlGrp
+    102302: improbable_r_Leg_KneeIkAimConnectorLctr
+    102304: improbable_r_Leg_KneeIkConnector_Curve
+    102306: improbable_r_Leg_KneeIkLockLctr
+    102308: improbable_r_Leg_KneeIkTargetConnectorLctr
+    102310: improbable_r_Leg_KneeIkToFkAimLctr
+    102312: improbable_r_Leg_KneeJnt
+    102314: improbable_r_Leg_KneeJntFk
+    102316: improbable_r_Leg_KneeJntFkGrp1
+    102318: improbable_r_Leg_KneeJntFkGrp2
+    102320: improbable_r_Leg_KneeJntIk
+    102322: improbable_r_Leg_LegIkHandle
+    102324: improbable_r_Leg_LimbLengthAttachLctr
+    102326: improbable_r_Leg_LimbLengthEndLctr
+    102328: improbable_r_Leg_LimbLengthOriginLctr
+    102330: improbable_r_Leg_LimbLengthSoftLctr
+    102332: improbable_r_Leg_Module
+    102334: improbable_r_Leg_OffsetLctr
+    102336: improbable_r_Leg_ScaleGrp
+    102338: improbable_r_Leg_Switch_Ctrl
+    102340: improbable_r_Leg_Switch_CtrlGrp
+    102342: improbable_r_Leg_ToeFk_Ctrl
+    102344: improbable_r_Leg_ToeFk_Ctrl_RestPoseGrp
+    102346: improbable_r_Leg_ToeFk_CtrlGrp
+    102348: improbable_r_Leg_ToeIk_Ctrl
+    102350: improbable_r_Leg_ToeIk_Ctrl_RestPoseGrp
+    102352: improbable_r_Leg_ToeIk_CtrlSdkGrp
+    102354: improbable_r_Leg_ToeIkHandle
+    102356: improbable_r_Leg_ToeJnt
+    102358: improbable_r_Leg_ToeJntFk
+    102360: improbable_r_Leg_ToeJntIk
+    102362: improbable_r_Leg_ToePivotIk_Ctrl
+    102364: improbable_r_Leg_ToePivotIk_Ctrl_RestPoseGrp
+    102366: improbable_r_Leg_ToePivotIk_CtrlGrp
+    102368: improbable_r_Leg_ToePivotIk_CtrlSdkGrp
+    102370: improbable_r_LegGrp
+    102372: improbable_r_LegToeIk_CtrlGrp
+    102374: improbable_r_Thumb_01_01_Ctrl
+    102376: improbable_r_Thumb_01_01_Ctrl_RestPoseGrp
+    102378: improbable_r_Thumb_01_01_CtrlGrp
+    102380: improbable_r_Thumb_01_01_CtrlSdkGrp
+    102382: improbable_r_Thumb_01_01_Spline_Ctrl
+    102384: improbable_r_Thumb_01_01_Spline_Ctrl_RestPoseGrp
+    102386: improbable_r_Thumb_01_01_Spline_CtrlGrp
+    102388: improbable_r_Thumb_01_01_Spline_CtrlGrp2
+    102390: improbable_r_Thumb_01_01Jnt
+    102392: improbable_r_Thumb_01_01JntFk
+    102394: improbable_r_Thumb_01_01JntIk
+    102396: improbable_r_Thumb_01_01JntIkGuide
+    102398: improbable_r_Thumb_01_02_Ctrl
+    102400: improbable_r_Thumb_01_02_Ctrl_RestPoseGrp
+    102402: improbable_r_Thumb_01_02_CtrlGrp
+    102404: improbable_r_Thumb_01_02_CtrlSdkGrp
+    102406: improbable_r_Thumb_01_02_Spline_Ctrl
+    102408: improbable_r_Thumb_01_02_Spline_Ctrl_RestPoseGrp
+    102410: improbable_r_Thumb_01_02_Spline_CtrlGrp
+    102412: improbable_r_Thumb_01_02_Spline_CtrlGrp2
+    102414: improbable_r_Thumb_01_02Jnt
+    102416: improbable_r_Thumb_01_02JntFk
+    102418: improbable_r_Thumb_01_02JntIk
+    102420: improbable_r_Thumb_01_02JntIkGuide
+    102422: improbable_r_Thumb_01_03_Ctrl
+    102424: improbable_r_Thumb_01_03_Ctrl_RestPoseGrp
+    102426: improbable_r_Thumb_01_03_CtrlGrp
+    102428: improbable_r_Thumb_01_03_CtrlSdkGrp
+    102430: improbable_r_Thumb_01_03_Spline_Ctrl
+    102432: improbable_r_Thumb_01_03_Spline_Ctrl_RestPoseGrp
+    102434: improbable_r_Thumb_01_03_Spline_CtrlGrp
+    102436: improbable_r_Thumb_01_03_Spline_CtrlGrp2
+    102438: improbable_r_Thumb_01_03Jnt
+    102440: improbable_r_Thumb_01_03JntFk
+    102442: improbable_r_Thumb_01_03JntIk
+    102444: improbable_r_Thumb_01_03JntIkGuide
+    102446: improbable_r_Thumb_01_04_Ctrl
+    102448: improbable_r_Thumb_01_04_Ctrl_RestPoseGrp
+    102450: improbable_r_Thumb_01_04_CtrlGrp
+    102452: improbable_r_Thumb_01_04_CtrlSdkGrp
+    102454: improbable_r_Thumb_01_04_Spline_Ctrl
+    102456: improbable_r_Thumb_01_04_Spline_Ctrl_RestPoseGrp
+    102458: improbable_r_Thumb_01_04_Spline_CtrlGrp
+    102460: improbable_r_Thumb_01_04_Spline_CtrlGrp2
+    102462: improbable_r_Thumb_01_04Jnt
+    102464: improbable_r_Thumb_01_04JntFk
+    102466: improbable_r_Thumb_01_04JntIk
+    102468: improbable_r_Thumb_01_04JntIkGuide
+    102470: improbable_r_Thumb_01_Ctrl
+    102472: improbable_r_Thumb_01_IkHandle
+    102474: improbable_r_Thumb_01_IkTwistEndLctr
+    102476: improbable_r_Thumb_01_IkTwistStartLctr
+    102478: improbable_r_Thumb_01_SplineCurve
+    102480: improbable_r_Thumb_01_SplineCurve2Clstr
+    102482: improbable_r_Thumb_01_SplineCurve3Clstr
+    102484: improbable_r_Thumb_01_SplineCurveEndClstr
+    102486: improbable_r_Thumb_01_SplineCurveStartClstr
+    102488: improbable_r_Thumb_01JntFkGrp
+    102490: improbable_r_Thumb_01JntFkGrp2
+    102492: improbable_r_Thumb_01JntGrp
+    102494: improbable_r_Thumb_01JntGrp2
+    102496: improbable_r_Thumb_01JntIkGrp
+    102498: improbable_r_Thumb_01JntIkGrp2
+    102500: improbable_r_Thumb_curveNodesGrp
+    102502: improbable_r_Thumb_extraCurveNodesGrp
+    102504: improbable_r_Thumb_MainChain_CtrlGrp
+    102506: improbable_r_Thumb_Master_Ctrl
+    102508: improbable_r_Thumb_Master_CtrlGrp
+    102510: improbable_r_Thumb_Module
+    102512: improbable_r_Thumb_OffsetLctr
+    102514: improbable_r_Thumb_ScaleGrp
+    102516: improbable_r_ThumbGrp
+    102518: improbable_ROOT_Ctrl
+    102520: improbable_ROOT_Ctrl_RestPoseGrp
+    102522: improbable_ROOT_CtrlGrp
+    102524: improbable_ROOT_Jnt_Spine_Lctr
+    102526: improbable_ROOT_Jnt_Spine_LctrGrp
+    102528: improbable_ROOTGrp
+    102530: improbable_ROOTJnt
+    102532: improbable_ROOTLocLctr
+    102534: improbable_ROOTParent_Ctrl
+    102536: improbable_ROOTParent_Ctrl_RestPoseGrp
+    102538: improbable_ROOTParent_CtrlGrp
+    102540: improbable_ROOTParent_CtrlGrp2
+    102542: improbable_ROOTSecondary_Ctrl
+    102544: improbable_ROOTSecondary_Ctrl_RestPoseGrp
+    102546: improbable_Spine_01Curve_Ctrl
+    102548: improbable_Spine_01Curve_Ctrl_RestPoseGrp
+    102550: improbable_Spine_01Curve_CtrlGrp
+    102552: improbable_Spine_01CurveLctr
+    102554: improbable_Spine_01CurveLctrGrp
+    102556: improbable_Spine_01CurveLctrTangentGrp
+    102558: improbable_Spine_01F
+    102560: improbable_Spine_01Fk_Ctrl
+    102562: improbable_Spine_01Fk_Ctrl_RestPoseGrp
+    102564: improbable_Spine_01Fk_CtrlGrp
+    102566: improbable_Spine_01FkCFlipLctr
+    102568: improbable_Spine_01Jnt
+    102570: improbable_Spine_02Curve_Ctrl
+    102572: improbable_Spine_02Curve_Ctrl_RestPoseGrp
+    102574: improbable_Spine_02Curve_CtrlGrp
+    102576: improbable_Spine_02CurveLctr
+    102578: improbable_Spine_02CurveLctrGrp
+    102580: improbable_Spine_02CurveLctrTangentGrp
+    102582: improbable_Spine_02F
+    102584: improbable_Spine_02Fk_Ctrl
+    102586: improbable_Spine_02Fk_Ctrl_RestPoseGrp
+    102588: improbable_Spine_02Fk_CtrlGrp
+    102590: improbable_Spine_02FkCFlipLctr
+    102592: improbable_Spine_02Jnt
+    102594: improbable_Spine_03Curve_Ctrl
+    102596: improbable_Spine_03Curve_Ctrl_RestPoseGrp
+    102598: improbable_Spine_03Curve_CtrlGrp
+    102600: improbable_Spine_03CurveLctr
+    102602: improbable_Spine_03CurveLctrGrp
+    102604: improbable_Spine_03CurveLctrTangentGrp
+    102606: improbable_Spine_03F
+    102608: improbable_Spine_03Fk_Ctrl
+    102610: improbable_Spine_03Fk_Ctrl_RestPoseGrp
+    102612: improbable_Spine_03Fk_CtrlGrp
+    102614: improbable_Spine_03FkCFlipLctr
+    102616: improbable_Spine_03Jnt
+    102618: improbable_Spine_04Curve_Ctrl
+    102620: improbable_Spine_04Curve_Ctrl_RestPoseGrp
+    102622: improbable_Spine_04Curve_CtrlGrp
+    102624: improbable_Spine_04CurveLctr
+    102626: improbable_Spine_04CurveLctrGrp
+    102628: improbable_Spine_04CurveLctrTangentGrp
+    102630: improbable_Spine_04F
+    102632: improbable_Spine_04Fk_Ctrl
+    102634: improbable_Spine_04Fk_Ctrl_RestPoseGrp
+    102636: improbable_Spine_04Fk_CtrlGrp
+    102638: improbable_Spine_04FkCFlipLctr
+    102640: improbable_Spine_04Jnt
+    102642: improbable_Spine_BtmAimLctr
+    102644: improbable_Spine_BtmJntIk
+    102646: improbable_Spine_BtmTargetLctr
+    102648: improbable_Spine_BtmTX_Lctr
+    102650: improbable_Spine_EndLctr
+    102652: improbable_Spine_hairSystemFollicles
+    102654: improbable_Spine_LengthCurve
+    102656: improbable_Spine_MidIk_Ctrl
+    102658: improbable_Spine_MidIk_Ctrl_RestPoseGrp
+    102660: improbable_Spine_MidIk_CtrlGrp
+    102662: improbable_Spine_MidIk_CtrlGrp2
+    102664: improbable_Spine_MidIk_CtrlLctr
+    102666: improbable_Spine_MidIk_CtrlLctrGrp
+    102668: improbable_Spine_MidIk_CtrlLctrGrp2
+    102670: improbable_Spine_MidIk_CtrlLctrGrp_InfLctr
+    102672: improbable_Spine_MidIk_CtrlLctrGrp_InfLctrGrp
+    102674: improbable_Spine_MidIk_CtrlWSLctr
+    102676: improbable_Spine_MidJntIk
+    102678: improbable_Spine_MidSplineAimLctr
+    102680: improbable_Spine_MidSplineLctrGrp
+    102682: improbable_Spine_MidSplineTargetLctr
+    102684: improbable_Spine_Module
+    102686: improbable_Spine_OffsetLctr
+    102688: improbable_Spine_ribbon
+    102690: improbable_Spine_ribbonSplineGrp
+    102692: improbable_Spine_ScaleGrp
+    102694: improbable_Spine_StartLctr
+    102696: improbable_Spine_Top_Jnt_Neck_Lctr
+    102698: improbable_Spine_Top_Jnt_Neck_LctrGrp
+    102700: improbable_Spine_TopAimLctr
+    102702: improbable_Spine_TopIk_Ctrl
+    102704: improbable_Spine_TopIk_Ctrl_FlipLctr1
+    102706: improbable_Spine_TopIk_Ctrl_FlipLctr2
+    102708: improbable_Spine_TopIk_Ctrl_RestPoseGrp
+    102710: improbable_Spine_TopIk_CtrlGrp
+    102712: improbable_Spine_TopJnt
+    102714: improbable_Spine_TopJntIk
+    102716: improbable_Spine_TopTargetLctr
+    102718: improbable_Spine_TopTX_Lctr
+    102720: improbable_SpineGrp
+    102722: improbable_Trajectory_Ctrl
+    102724: improbable_TrajectorySHJnt
+    102726: Jaw
+    102728: JawEnd
+    102730: l_magnet_loc
+    102732: LeftEye
+    102734: LeftFoot
+    102736: LeftHand
+    102738: LeftIndexDistal
+    102740: LeftIndexEnd
+    102742: LeftIndexIntermediate
+    102744: LeftIndexProximal
+    102746: LeftLittleDistal
+    102748: LeftLittleEnd
+    102750: LeftLittleIntermediate
+    102752: LeftLittleProximal
+    102754: LeftLowerArm1
+    102756: LeftLowerArm2
+    102758: LeftLowerLeg
+    102760: LeftMiddleDistal
+    102762: LeftMiddleEnd
+    102764: LeftMiddleIntermediate
+    102766: LeftMiddleProximal
+    102768: LeftRingDistal
+    102770: LeftRingEnd
+    102772: LeftRingIntermediate
+    102774: LeftRingProximal
+    102776: LeftShoulder
+    102778: LeftThumbDistal
+    102780: LeftThumbEnd
+    102782: LeftThumbIntermediate
+    102784: LeftThumbProximal
+    102786: LeftToes
+    102788: LeftToesEnd
+    102790: LeftUpperArm
+    102792: LeftUpperArmEnd
+    102794: LeftUpperLeg
+    102796: Neck1
+    102798: Neck2
+    102800: r_magnet_loc
+    102802: RightEye
+    102804: RightFoot
+    102806: RightHand
+    102808: RightIndexDistal
+    102810: RightIndexEnd
+    102812: RightIndexIntermediate
+    102814: RightIndexProximal
+    102816: RightLittleDistal
+    102818: RightLittleEnd
+    102820: RightLittleIntermediate
+    102822: RightLittleProximal
+    102824: RightLowerArm1
+    102826: RightLowerArm2
+    102828: RightLowerLeg
+    102830: RightMiddleDistal
+    102832: RightMiddleEnd
+    102834: RightMiddleIntermediate
+    102836: RightMiddleProximal
+    102838: RightRingDistal
+    102840: RightRingEnd
+    102842: RightRingIntermediate
+    102844: RightRingProximal
+    102846: RightShoulder
+    102848: RightThumbDistal
+    102850: RightThumbEnd
+    102852: RightThumbIntermediate
+    102854: RightThumbProximal
+    102856: RightToes
+    102858: RightToesEnd
+    102860: RightUpperArm
+    102862: RightUpperArmEnd
+    102864: RightUpperLeg
+    102866: Spine1
+    102868: Spine2
+    102870: Spine3
+    102872: Spine4
+    102874: UpperChest
+    400000: Chest
+    400002: grpL_magnet_locZERO
+    400004: grpR_magnet_locZERO
+    400006: Head
+    400008: Hips
+    400010: //RootNode
+    400012: improbable_COG_Ctrl
+    400014: improbable_COG_Ctrl_RestPoseGrp
+    400016: improbable_COG_CtrlGrp
+    400018: improbable_Eye_LookAt_Ctrl
+    400020: improbable_Eye_LookAt_Ctrl_RestPoseGrp
+    400022: improbable_Eye_LookAt_CtrlGrp
+    400024: improbable_Head_Jaw_Ctrl
+    400026: improbable_Head_Jaw_Ctrl_RestPoseGrp
+    400028: improbable_Head_Jaw_CtrlGrp
+    400030: improbable_Head_JawEndJnt
+    400032: improbable_Head_JawJnt
+    400034: improbable_Head_Master_Ctrl
+    400036: improbable_Head_Master_Ctrl_RestPoseGrp
+    400038: improbable_Head_Master_CtrlGrp
+    400040: improbable_Head_Master_CtrlScaleGrp
+    400042: improbable_Head_Module
+    400044: improbable_Head_OffsetLctr
+    400046: improbable_Head_ScaleGrp
+    400048: improbable_Head_TopJnt
+    400050: improbable_HeadGrp
+    400052: improbable_l_Arm_ArmIkHandle
+    400054: improbable_l_Arm_Clavicle_Ctrl
+    400056: improbable_l_Arm_Clavicle_Ctrl_RestPoseGrp
+    400058: improbable_l_Arm_Clavicle_CtrlGrp
+    400060: improbable_l_Arm_ClavicleJnt
+    400062: improbable_l_Arm_curveNodesGrp
+    400064: improbable_l_Arm_Elbow_Curve_Ctrl
+    400066: improbable_l_Arm_Elbow_Curve_Ctrl_RestPoseGrp
+    400068: improbable_l_Arm_Elbow_Curve_CtrlGrp
+    400070: improbable_l_Arm_Elbow_CurveJnt
+    400072: improbable_l_Arm_Elbow_FkAimLctr
+    400074: improbable_l_Arm_Elbow_TwistJntExtra
+    400076: improbable_l_Arm_Elbow_TwistJointsGrp
+    400078: improbable_l_Arm_Elbow_TwistSplineIk_Up1Lctr
+    400080: improbable_l_Arm_Elbow_TwistSplineIk_Up2Lctr
+    400082: improbable_l_Arm_Elbow_TwistSplineIkCurve
+    400084: improbable_l_Arm_Elbow_TwistSplineIkHandle
+    400086: improbable_l_Arm_Elbow_TwistStartJnt
+    400088: improbable_l_Arm_ElbowFk_Ctrl
+    400090: improbable_l_Arm_ElbowFk_Ctrl_RestPoseGrp
+    400092: improbable_l_Arm_ElbowFk_CtrlGrp
+    400094: improbable_l_Arm_ElbowIk_Ctrl
+    400096: improbable_l_Arm_ElbowIk_Ctrl_RestPoseGrp
+    400098: improbable_l_Arm_ElbowIk_Ctrl_ShoulderLctr
+    400100: improbable_l_Arm_ElbowIk_Ctrl_TargetLctr
+    400102: improbable_l_Arm_ElbowIk_Ctrl_WristLctr
+    400104: improbable_l_Arm_ElbowIk_CtrlGrp
+    400106: improbable_l_Arm_ElbowIkAimConnectorLctr
+    400108: improbable_l_Arm_ElbowIkConnector_Curve
+    400110: improbable_l_Arm_ElbowIkLockLctr
+    400112: improbable_l_Arm_ElbowIkTargetConnectorLctr
+    400114: improbable_l_Arm_ElbowIkToFkAimLctr
+    400116: improbable_l_Arm_ElbowJnt
+    400118: improbable_l_Arm_ElbowJntFk
+    400120: improbable_l_Arm_ElbowJntFkGrp1
+    400122: improbable_l_Arm_ElbowJntFkGrp2
+    400124: improbable_l_Arm_ElbowJntIk
+    400126: improbable_l_Arm_extraCurveNodesGrp
+    400128: improbable_l_Arm_LimbLengthAttachLctr
+    400130: improbable_l_Arm_LimbLengthEndLctr
+    400132: improbable_l_Arm_LimbLengthOriginLctr
+    400134: improbable_l_Arm_LimbLengthSoftLctr
+    400136: improbable_l_Arm_Lower_Curve1_Ctrl
+    400138: improbable_l_Arm_Lower_Curve1_Ctrl_RestPoseGrp
+    400140: improbable_l_Arm_Lower_Curve1_CtrlGrp
+    400142: improbable_l_Arm_Lower_Curve1Jnt
+    400144: improbable_l_Arm_Lower_Curve_Ctrl
+    400146: improbable_l_Arm_Lower_Curve_Ctrl_RestPoseGrp
+    400148: improbable_l_Arm_Lower_Curve_CtrlGrp
+    400150: improbable_l_Arm_Lower_Elbow_NoFlipIkHandle
+    400152: improbable_l_Arm_Lower_Elbow_NoFlipJnt
+    400154: improbable_l_Arm_Lower_Elbow_NoFlipJntGrp
+    400156: improbable_l_Arm_Lower_Twist1Jnt
+    400158: improbable_l_Arm_Lower_Twist_Ctrl
+    400160: improbable_l_Arm_Lower_Twist_Ctrl_RestPoseGrp
+    400162: improbable_l_Arm_Lower_Twist_CtrlGrp
+    400164: improbable_l_Arm_Lower_TwistJntEnd
+    400166: improbable_l_Arm_Lower_Wrist_NoFlipJnt
+    400168: improbable_l_Arm_Lower_Wrist_TwistGrp
+    400170: improbable_l_Arm_Lower_Wrist_TwistLctr
+    400172: improbable_l_Arm_LowerBtmClstr
+    400174: improbable_l_Arm_LowerBtmClstrGrp
+    400176: improbable_l_Arm_LowerBtmGuideClstr
+    400178: improbable_l_Arm_LowerBtmGuideClstrGrp
+    400180: improbable_l_Arm_LowerCurveAttach
+    400182: improbable_l_Arm_LowerCurveGuide
+    400184: improbable_l_Arm_LowerMidClstr
+    400186: improbable_l_Arm_LowerTopClstr
+    400188: improbable_l_Arm_LowerTopClstrGrp
+    400190: improbable_l_Arm_LowerTopGuideClstr
+    400192: improbable_l_Arm_LowerTopGuideClstrGrp
+    400194: improbable_l_Arm_MiddleBtmGuideClstr
+    400196: improbable_l_Arm_MiddleCurveAttach
+    400198: improbable_l_Arm_MiddleTopGuideClstr
+    400200: improbable_l_Arm_Module
+    400202: improbable_l_Arm_OffsetLctr
+    400204: improbable_l_Arm_ScaleGrp
+    400206: improbable_l_Arm_ShoulderFk_Ctrl
+    400208: improbable_l_Arm_ShoulderFk_Ctrl_RestPoseGrp
+    400210: improbable_l_Arm_ShoulderFk_CtrlGrp
+    400212: improbable_l_Arm_ShoulderFk_CtrlGrp2
+    400214: improbable_l_Arm_ShoulderFkOrientLctr
+    400216: improbable_l_Arm_ShoulderIkLockLctr
+    400218: improbable_l_Arm_ShoulderJnt
+    400220: improbable_l_Arm_ShoulderJntFk
+    400222: improbable_l_Arm_ShoulderJntIk
+    400224: improbable_l_Arm_Switch_Ctrl
+    400226: improbable_l_Arm_Switch_CtrlGrp
+    400228: improbable_l_Arm_UpperBtmGuideClstr
+    400230: improbable_l_Arm_UpperCurveAttach
+    400232: improbable_l_Arm_UpperTopGuideClstr
+    400234: improbable_l_Arm_Wrist_NoFlipBtmEndJnt
+    400236: improbable_l_Arm_Wrist_NoFlipBtmIkHandle
+    400238: improbable_l_Arm_Wrist_NoFlipBtmStartJnt
+    400240: improbable_l_Arm_Wrist_NoFlipBtmStartJntGrp
+    400242: improbable_l_Arm_Wrist_SplineIkBtmEndJnt
+    400244: improbable_l_Arm_Wrist_SplineIkBtmIkCurve
+    400246: improbable_l_Arm_Wrist_SplineIkBtmIkHandle
+    400248: improbable_l_Arm_Wrist_SplineIkBtmStartJnt
+    400250: improbable_l_Arm_Wrist_SplineIkBtmStartJntGrp
+    400252: improbable_l_Arm_Wrist_SplineIkBtmTwistValJnt
+    400254: improbable_l_Arm_Wrist_SplineIkUpLctr1
+    400256: improbable_l_Arm_Wrist_SplineIkUpLctr2
+    400258: improbable_l_Arm_Wrist_TwistBtmEndJnt
+    400260: improbable_l_Arm_Wrist_TwistBtmStartJnt
+    400262: improbable_l_Arm_Wrist_TwistBtmStartJntGrp
+    400264: improbable_l_Arm_WristFk_Ctrl
+    400266: improbable_l_Arm_WristFk_Ctrl_RestPoseGrp
+    400268: improbable_l_Arm_WristFk_CtrlGrp
+    400270: improbable_l_Arm_WristFkLctr
+    400272: improbable_l_Arm_WristIk_Ctrl
+    400274: improbable_l_Arm_WristIk_Ctrl_RestPoseGrp
+    400276: improbable_l_Arm_WristIk_CtrlGrp
+    400278: improbable_l_Arm_WristIkLctr
+    400280: improbable_l_Arm_WristIkLockLctr
+    400282: improbable_l_Arm_WristIkToFkLctr
+    400284: improbable_l_Arm_WristJnt
+    400286: improbable_l_Arm_WristJntDummy
+    400288: improbable_l_Arm_WristJntFk
+    400290: improbable_l_Arm_WristJntFkGrp1
+    400292: improbable_l_Arm_WristJntFkGrp2
+    400294: improbable_l_Arm_WristJntGrp1
+    400296: improbable_l_Arm_WristJntGrp2
+    400298: improbable_l_Arm_WristJntIk
+    400300: improbable_l_Arm_WristJntIkDummy
+    400302: improbable_l_Arm_WristJntIkDummyGrp1
+    400304: improbable_l_Arm_WristJntIkDummyGrp2
+    400306: improbable_l_Arm_WristPivot_Ctrl
+    400308: improbable_l_Arm_WristPivot_Ctrl_RestPoseGrp
+    400310: improbable_l_Arm_WristPivot_CtrlGrp
+    400312: improbable_l_Arm_WristPivot_Lctr
+    400314: improbable_l_ArmGrp
+    400316: improbable_l_Eye_01_Ctrl
+    400318: improbable_l_Eye_01_Ctrl_RestPoseGrp
+    400320: improbable_l_Eye_01Connector_Curve
+    400322: improbable_l_Eye_01Connector_Curve_Cluster1
+    400324: improbable_l_Eye_01Connector_Curve_Cluster2
+    400326: improbable_l_Eye_01Grp1
+    400328: improbable_l_Eye_01Grp2
+    400330: improbable_l_Eye_01Jnt
+    400332: improbable_l_Eye_Master_Ctrl
+    400334: improbable_l_Eye_Master_Ctrl_RestPoseGrp
+    400336: improbable_l_Eye_Master_CtrlGrp
+    400338: improbable_l_Eye_Module
+    400340: improbable_l_Eye_OffsetLctr
+    400342: improbable_l_Eye_ScaleGrp
+    400344: improbable_l_EyeGrp
+    400346: improbable_l_Finger_01_01_Ctrl
+    400348: improbable_l_Finger_01_01_Ctrl_RestPoseGrp
+    400350: improbable_l_Finger_01_01_CtrlGrp
+    400352: improbable_l_Finger_01_01_CtrlSdkGrp
+    400354: improbable_l_Finger_01_01_Spline_Ctrl
+    400356: improbable_l_Finger_01_01_Spline_Ctrl_RestPoseGrp
+    400358: improbable_l_Finger_01_01_Spline_CtrlGrp
+    400360: improbable_l_Finger_01_01_Spline_CtrlGrp2
+    400362: improbable_l_Finger_01_01Jnt
+    400364: improbable_l_Finger_01_01JntFk
+    400366: improbable_l_Finger_01_01JntIk
+    400368: improbable_l_Finger_01_02_Ctrl
+    400370: improbable_l_Finger_01_02_Ctrl_RestPoseGrp
+    400372: improbable_l_Finger_01_02_CtrlGrp
+    400374: improbable_l_Finger_01_02_CtrlSdkGrp
+    400376: improbable_l_Finger_01_02_Spline_Ctrl
+    400378: improbable_l_Finger_01_02_Spline_Ctrl_RestPoseGrp
+    400380: improbable_l_Finger_01_02_Spline_CtrlGrp
+    400382: improbable_l_Finger_01_02_Spline_CtrlGrp2
+    400384: improbable_l_Finger_01_02Jnt
+    400386: improbable_l_Finger_01_02JntFk
+    400388: improbable_l_Finger_01_02JntIk
+    400390: improbable_l_Finger_01_03_Ctrl
+    400392: improbable_l_Finger_01_03_Ctrl_RestPoseGrp
+    400394: improbable_l_Finger_01_03_CtrlGrp
+    400396: improbable_l_Finger_01_03_CtrlSdkGrp
+    400398: improbable_l_Finger_01_03_Spline_Ctrl
+    400400: improbable_l_Finger_01_03_Spline_Ctrl_RestPoseGrp
+    400402: improbable_l_Finger_01_03_Spline_CtrlGrp
+    400404: improbable_l_Finger_01_03_Spline_CtrlGrp2
+    400406: improbable_l_Finger_01_03Jnt
+    400408: improbable_l_Finger_01_03JntFk
+    400410: improbable_l_Finger_01_03JntIk
+    400412: improbable_l_Finger_01_04_Ctrl
+    400414: improbable_l_Finger_01_04_Ctrl_RestPoseGrp
+    400416: improbable_l_Finger_01_04_CtrlGrp
+    400418: improbable_l_Finger_01_04_CtrlSdkGrp
+    400420: improbable_l_Finger_01_04_Spline_Ctrl
+    400422: improbable_l_Finger_01_04_Spline_Ctrl_RestPoseGrp
+    400424: improbable_l_Finger_01_04_Spline_CtrlGrp
+    400426: improbable_l_Finger_01_04_Spline_CtrlGrp2
+    400428: improbable_l_Finger_01_04Jnt
+    400430: improbable_l_Finger_01_04JntFk
+    400432: improbable_l_Finger_01_04JntIk
+    400434: improbable_l_Finger_01_Ctrl
+    400436: improbable_l_Finger_01_IkHandle
+    400438: improbable_l_Finger_01_IkTwistEndLctr
+    400440: improbable_l_Finger_01_IkTwistStartLctr
+    400442: improbable_l_Finger_01_SplineCurve
+    400444: improbable_l_Finger_01_SplineCurve2Clstr
+    400446: improbable_l_Finger_01_SplineCurve3Clstr
+    400448: improbable_l_Finger_01_SplineCurveEndClstr
+    400450: improbable_l_Finger_01_SplineCurveStartClstr
+    400452: improbable_l_Finger_01JntFkGrp
+    400454: improbable_l_Finger_01JntFkGrp2
+    400456: improbable_l_Finger_01JntGrp
+    400458: improbable_l_Finger_01JntGrp2
+    400460: improbable_l_Finger_01JntIkGrp
+    400462: improbable_l_Finger_01JntIkGrp2
+    400464: improbable_l_Finger_02_01_Ctrl
+    400466: improbable_l_Finger_02_01_Ctrl_RestPoseGrp
+    400468: improbable_l_Finger_02_01_CtrlGrp
+    400470: improbable_l_Finger_02_01_CtrlOffsetGrp
+    400472: improbable_l_Finger_02_01_CtrlSdkGrp
+    400474: improbable_l_Finger_02_01_Spline_Ctrl
+    400476: improbable_l_Finger_02_01_Spline_Ctrl_RestPoseGrp
+    400478: improbable_l_Finger_02_01_Spline_CtrlGrp
+    400480: improbable_l_Finger_02_01_Spline_CtrlGrp2
+    400482: improbable_l_Finger_02_01_Spline_CtrlOffsetGrp
+    400484: improbable_l_Finger_02_01Jnt
+    400486: improbable_l_Finger_02_01JntFk
+    400488: improbable_l_Finger_02_01JntIk
+    400490: improbable_l_Finger_02_02_Ctrl
+    400492: improbable_l_Finger_02_02_Ctrl_RestPoseGrp
+    400494: improbable_l_Finger_02_02_CtrlGrp
+    400496: improbable_l_Finger_02_02_CtrlOffsetGrp
+    400498: improbable_l_Finger_02_02_CtrlSdkGrp
+    400500: improbable_l_Finger_02_02_Spline_Ctrl
+    400502: improbable_l_Finger_02_02_Spline_Ctrl_RestPoseGrp
+    400504: improbable_l_Finger_02_02_Spline_CtrlGrp
+    400506: improbable_l_Finger_02_02_Spline_CtrlGrp2
+    400508: improbable_l_Finger_02_02_Spline_CtrlOffsetGrp
+    400510: improbable_l_Finger_02_02Jnt
+    400512: improbable_l_Finger_02_02JntFk
+    400514: improbable_l_Finger_02_02JntIk
+    400516: improbable_l_Finger_02_03_Ctrl
+    400518: improbable_l_Finger_02_03_Ctrl_RestPoseGrp
+    400520: improbable_l_Finger_02_03_CtrlGrp
+    400522: improbable_l_Finger_02_03_CtrlOffsetGrp
+    400524: improbable_l_Finger_02_03_CtrlSdkGrp
+    400526: improbable_l_Finger_02_03_Spline_Ctrl
+    400528: improbable_l_Finger_02_03_Spline_Ctrl_RestPoseGrp
+    400530: improbable_l_Finger_02_03_Spline_CtrlGrp
+    400532: improbable_l_Finger_02_03_Spline_CtrlGrp2
+    400534: improbable_l_Finger_02_03_Spline_CtrlOffsetGrp
+    400536: improbable_l_Finger_02_03Jnt
+    400538: improbable_l_Finger_02_03JntFk
+    400540: improbable_l_Finger_02_03JntIk
+    400542: improbable_l_Finger_02_04_Ctrl
+    400544: improbable_l_Finger_02_04_Ctrl_RestPoseGrp
+    400546: improbable_l_Finger_02_04_CtrlGrp
+    400548: improbable_l_Finger_02_04_CtrlOffsetGrp
+    400550: improbable_l_Finger_02_04_CtrlSdkGrp
+    400552: improbable_l_Finger_02_04_Spline_Ctrl
+    400554: improbable_l_Finger_02_04_Spline_Ctrl_RestPoseGrp
+    400556: improbable_l_Finger_02_04_Spline_CtrlGrp
+    400558: improbable_l_Finger_02_04_Spline_CtrlGrp2
+    400560: improbable_l_Finger_02_04_Spline_CtrlOffsetGrp
+    400562: improbable_l_Finger_02_04Jnt
+    400564: improbable_l_Finger_02_04JntFk
+    400566: improbable_l_Finger_02_04JntIk
+    400568: improbable_l_Finger_02_Ctrl
+    400570: improbable_l_Finger_02_IkHandle
+    400572: improbable_l_Finger_02_IkTwistEndLctr
+    400574: improbable_l_Finger_02_IkTwistStartLctr
+    400576: improbable_l_Finger_02_SplineCurve
+    400578: improbable_l_Finger_02_SplineCurve2Clstr
+    400580: improbable_l_Finger_02_SplineCurve3Clstr
+    400582: improbable_l_Finger_02_SplineCurveEndClstr
+    400584: improbable_l_Finger_02_SplineCurveStartClstr
+    400586: improbable_l_Finger_02JntFkGrp
+    400588: improbable_l_Finger_02JntFkGrp2
+    400590: improbable_l_Finger_02JntGrp
+    400592: improbable_l_Finger_02JntGrp2
+    400594: improbable_l_Finger_02JntIkGrp
+    400596: improbable_l_Finger_02JntIkGrp2
+    400598: improbable_l_Finger_03_01_Ctrl
+    400600: improbable_l_Finger_03_01_Ctrl_RestPoseGrp
+    400602: improbable_l_Finger_03_01_CtrlGrp
+    400604: improbable_l_Finger_03_01_CtrlOffsetGrp
+    400606: improbable_l_Finger_03_01_CtrlSdkGrp
+    400608: improbable_l_Finger_03_01_Spline_Ctrl
+    400610: improbable_l_Finger_03_01_Spline_Ctrl_RestPoseGrp
+    400612: improbable_l_Finger_03_01_Spline_CtrlGrp
+    400614: improbable_l_Finger_03_01_Spline_CtrlGrp2
+    400616: improbable_l_Finger_03_01_Spline_CtrlOffsetGrp
+    400618: improbable_l_Finger_03_01Jnt
+    400620: improbable_l_Finger_03_01JntFk
+    400622: improbable_l_Finger_03_01JntIk
+    400624: improbable_l_Finger_03_02_Ctrl
+    400626: improbable_l_Finger_03_02_Ctrl_RestPoseGrp
+    400628: improbable_l_Finger_03_02_CtrlGrp
+    400630: improbable_l_Finger_03_02_CtrlOffsetGrp
+    400632: improbable_l_Finger_03_02_CtrlSdkGrp
+    400634: improbable_l_Finger_03_02_Spline_Ctrl
+    400636: improbable_l_Finger_03_02_Spline_Ctrl_RestPoseGrp
+    400638: improbable_l_Finger_03_02_Spline_CtrlGrp
+    400640: improbable_l_Finger_03_02_Spline_CtrlGrp2
+    400642: improbable_l_Finger_03_02_Spline_CtrlOffsetGrp
+    400644: improbable_l_Finger_03_02Jnt
+    400646: improbable_l_Finger_03_02JntFk
+    400648: improbable_l_Finger_03_02JntIk
+    400650: improbable_l_Finger_03_03_Ctrl
+    400652: improbable_l_Finger_03_03_Ctrl_RestPoseGrp
+    400654: improbable_l_Finger_03_03_CtrlGrp
+    400656: improbable_l_Finger_03_03_CtrlOffsetGrp
+    400658: improbable_l_Finger_03_03_CtrlSdkGrp
+    400660: improbable_l_Finger_03_03_Spline_Ctrl
+    400662: improbable_l_Finger_03_03_Spline_Ctrl_RestPoseGrp
+    400664: improbable_l_Finger_03_03_Spline_CtrlGrp
+    400666: improbable_l_Finger_03_03_Spline_CtrlGrp2
+    400668: improbable_l_Finger_03_03_Spline_CtrlOffsetGrp
+    400670: improbable_l_Finger_03_03Jnt
+    400672: improbable_l_Finger_03_03JntFk
+    400674: improbable_l_Finger_03_03JntIk
+    400676: improbable_l_Finger_03_04_Ctrl
+    400678: improbable_l_Finger_03_04_Ctrl_RestPoseGrp
+    400680: improbable_l_Finger_03_04_CtrlGrp
+    400682: improbable_l_Finger_03_04_CtrlOffsetGrp
+    400684: improbable_l_Finger_03_04_CtrlSdkGrp
+    400686: improbable_l_Finger_03_04_Spline_Ctrl
+    400688: improbable_l_Finger_03_04_Spline_Ctrl_RestPoseGrp
+    400690: improbable_l_Finger_03_04_Spline_CtrlGrp
+    400692: improbable_l_Finger_03_04_Spline_CtrlGrp2
+    400694: improbable_l_Finger_03_04_Spline_CtrlOffsetGrp
+    400696: improbable_l_Finger_03_04Jnt
+    400698: improbable_l_Finger_03_04JntFk
+    400700: improbable_l_Finger_03_04JntIk
+    400702: improbable_l_Finger_03_Ctrl
+    400704: improbable_l_Finger_03_IkHandle
+    400706: improbable_l_Finger_03_IkTwistEndLctr
+    400708: improbable_l_Finger_03_IkTwistStartLctr
+    400710: improbable_l_Finger_03_SplineCurve
+    400712: improbable_l_Finger_03_SplineCurve2Clstr
+    400714: improbable_l_Finger_03_SplineCurve3Clstr
+    400716: improbable_l_Finger_03_SplineCurveEndClstr
+    400718: improbable_l_Finger_03_SplineCurveStartClstr
+    400720: improbable_l_Finger_03JntFkGrp
+    400722: improbable_l_Finger_03JntFkGrp2
+    400724: improbable_l_Finger_03JntGrp
+    400726: improbable_l_Finger_03JntGrp2
+    400728: improbable_l_Finger_03JntIkGrp
+    400730: improbable_l_Finger_03JntIkGrp2
+    400732: improbable_l_Finger_04_01_Ctrl
+    400734: improbable_l_Finger_04_01_Ctrl_RestPoseGrp
+    400736: improbable_l_Finger_04_01_CtrlGrp
+    400738: improbable_l_Finger_04_01_CtrlSdkGrp
+    400740: improbable_l_Finger_04_01_Spline_Ctrl
+    400742: improbable_l_Finger_04_01_Spline_Ctrl_RestPoseGrp
+    400744: improbable_l_Finger_04_01_Spline_CtrlGrp
+    400746: improbable_l_Finger_04_01_Spline_CtrlGrp2
+    400748: improbable_l_Finger_04_01Jnt
+    400750: improbable_l_Finger_04_01JntFk
+    400752: improbable_l_Finger_04_01JntIk
+    400754: improbable_l_Finger_04_02_Ctrl
+    400756: improbable_l_Finger_04_02_Ctrl_RestPoseGrp
+    400758: improbable_l_Finger_04_02_CtrlGrp
+    400760: improbable_l_Finger_04_02_CtrlSdkGrp
+    400762: improbable_l_Finger_04_02_Spline_Ctrl
+    400764: improbable_l_Finger_04_02_Spline_Ctrl_RestPoseGrp
+    400766: improbable_l_Finger_04_02_Spline_CtrlGrp
+    400768: improbable_l_Finger_04_02_Spline_CtrlGrp2
+    400770: improbable_l_Finger_04_02Jnt
+    400772: improbable_l_Finger_04_02JntFk
+    400774: improbable_l_Finger_04_02JntIk
+    400776: improbable_l_Finger_04_03_Ctrl
+    400778: improbable_l_Finger_04_03_Ctrl_RestPoseGrp
+    400780: improbable_l_Finger_04_03_CtrlGrp
+    400782: improbable_l_Finger_04_03_CtrlSdkGrp
+    400784: improbable_l_Finger_04_03_Spline_Ctrl
+    400786: improbable_l_Finger_04_03_Spline_Ctrl_RestPoseGrp
+    400788: improbable_l_Finger_04_03_Spline_CtrlGrp
+    400790: improbable_l_Finger_04_03_Spline_CtrlGrp2
+    400792: improbable_l_Finger_04_03Jnt
+    400794: improbable_l_Finger_04_03JntFk
+    400796: improbable_l_Finger_04_03JntIk
+    400798: improbable_l_Finger_04_04_Ctrl
+    400800: improbable_l_Finger_04_04_Ctrl_RestPoseGrp
+    400802: improbable_l_Finger_04_04_CtrlGrp
+    400804: improbable_l_Finger_04_04_CtrlSdkGrp
+    400806: improbable_l_Finger_04_04_Spline_Ctrl
+    400808: improbable_l_Finger_04_04_Spline_Ctrl_RestPoseGrp
+    400810: improbable_l_Finger_04_04_Spline_CtrlGrp
+    400812: improbable_l_Finger_04_04_Spline_CtrlGrp2
+    400814: improbable_l_Finger_04_04Jnt
+    400816: improbable_l_Finger_04_04JntFk
+    400818: improbable_l_Finger_04_04JntIk
+    400820: improbable_l_Finger_04_Ctrl
+    400822: improbable_l_Finger_04_IkHandle
+    400824: improbable_l_Finger_04_IkTwistEndLctr
+    400826: improbable_l_Finger_04_IkTwistStartLctr
+    400828: improbable_l_Finger_04_SplineCurve
+    400830: improbable_l_Finger_04_SplineCurve2Clstr
+    400832: improbable_l_Finger_04_SplineCurve3Clstr
+    400834: improbable_l_Finger_04_SplineCurveEndClstr
+    400836: improbable_l_Finger_04_SplineCurveStartClstr
+    400838: improbable_l_Finger_04JntFkGrp
+    400840: improbable_l_Finger_04JntFkGrp2
+    400842: improbable_l_Finger_04JntGrp
+    400844: improbable_l_Finger_04JntGrp2
+    400846: improbable_l_Finger_04JntIkGrp
+    400848: improbable_l_Finger_04JntIkGrp2
+    400850: improbable_l_Finger_curveNodesGrp
+    400852: improbable_l_Finger_extraCurveNodesGrp
+    400854: improbable_l_Finger_MainChain_CtrlGrp
+    400856: improbable_l_Finger_Master_Ctrl
+    400858: improbable_l_Finger_Master_CtrlGrp
+    400860: improbable_l_Finger_Module
+    400862: improbable_l_Finger_OffsetLctr
+    400864: improbable_l_Finger_ScaleGrp
+    400866: improbable_l_FingerGrp
+    400868: improbable_l_Leg_AnkleFk_Ctrl
+    400870: improbable_l_Leg_AnkleFk_Ctrl_RestPoseGrp
+    400872: improbable_l_Leg_AnkleFk_CtrlGrp
+    400874: improbable_l_Leg_AnkleIkLctr
+    400876: improbable_l_Leg_AnkleIkLockLctr
+    400878: improbable_l_Leg_AnkleIkToFkLctr
+    400880: improbable_l_Leg_AnkleJnt
+    400882: improbable_l_Leg_AnkleJntDummy
+    400884: improbable_l_Leg_AnkleJntFk
+    400886: improbable_l_Leg_AnkleJntFkGrp1
+    400888: improbable_l_Leg_AnkleJntFkGrp2
+    400890: improbable_l_Leg_AnkleJntIk
+    400892: improbable_l_Leg_BallFk_Ctrl
+    400894: improbable_l_Leg_BallFk_Ctrl_RestPoseGrp
+    400896: improbable_l_Leg_BallFk_CtrlGrp
+    400898: improbable_l_Leg_BallIk_Ctrl
+    400900: improbable_l_Leg_BallIk_Ctrl_RestPoseGrp
+    400902: improbable_l_Leg_BallIk_CtrlGrp
+    400904: improbable_l_Leg_BallIk_CtrlSdkGrp
+    400906: improbable_l_Leg_BallIkHandle
+    400908: improbable_l_Leg_BallJnt
+    400910: improbable_l_Leg_BallJntFk
+    400912: improbable_l_Leg_BallJntIk
+    400914: improbable_l_Leg_BallSwivelLctr
+    400916: improbable_l_Leg_FootBankInLctr
+    400918: improbable_l_Leg_FootBankInLctrGrp
+    400920: improbable_l_Leg_FootBankOutLctr
+    400922: improbable_l_Leg_FootBankOutLctrGrp
+    400924: improbable_l_Leg_FootIk_Ctrl
+    400926: improbable_l_Leg_FootIk_Ctrl_RestPoseGrp
+    400928: improbable_l_Leg_FootIk_CtrlGrp
+    400930: improbable_l_Leg_FootPivot_Ctrl
+    400932: improbable_l_Leg_FootPivot_Ctrl_RestPoseGrp
+    400934: improbable_l_Leg_FootPivot_CtrlGrp
+    400936: improbable_l_Leg_FootToePivotLctr
+    400938: improbable_l_Leg_HeelIk_Ctrl
+    400940: improbable_l_Leg_HeelIk_Ctrl_RestPoseGrp
+    400942: improbable_l_Leg_HeelIk_CtrlGrp
+    400944: improbable_l_Leg_HeelIk_CtrlSdkGrp
+    400946: improbable_l_Leg_HipFk_Ctrl
+    400948: improbable_l_Leg_HipFk_Ctrl_RestPoseGrp
+    400950: improbable_l_Leg_HipFk_CtrlGrp
+    400952: improbable_l_Leg_HipFkOrientLctr
+    400954: improbable_l_Leg_HipIkLockLctr
+    400956: improbable_l_Leg_HipJnt
+    400958: improbable_l_Leg_HipJntFk
+    400960: improbable_l_Leg_HipJntIk
+    400962: improbable_l_Leg_Knee_FkAimLctr
+    400964: improbable_l_Leg_KneeFk_Ctrl
+    400966: improbable_l_Leg_KneeFk_Ctrl_RestPoseGrp
+    400968: improbable_l_Leg_KneeFk_CtrlGrp
+    400970: improbable_l_Leg_KneeIk_Ctrl
+    400972: improbable_l_Leg_KneeIk_Ctrl_AnkleLctr
+    400974: improbable_l_Leg_KneeIk_Ctrl_HipLctr
+    400976: improbable_l_Leg_KneeIk_Ctrl_RestPoseGrp
+    400978: improbable_l_Leg_KneeIk_Ctrl_TargetLctr
+    400980: improbable_l_Leg_KneeIk_CtrlGrp
+    400982: improbable_l_Leg_KneeIkAimConnectorLctr
+    400984: improbable_l_Leg_KneeIkConnector_Curve
+    400986: improbable_l_Leg_KneeIkLockLctr
+    400988: improbable_l_Leg_KneeIkTargetConnectorLctr
+    400990: improbable_l_Leg_KneeIkToFkAimLctr
+    400992: improbable_l_Leg_KneeJnt
+    400994: improbable_l_Leg_KneeJntFk
+    400996: improbable_l_Leg_KneeJntFkGrp1
+    400998: improbable_l_Leg_KneeJntFkGrp2
+    401000: improbable_l_Leg_KneeJntIk
+    401002: improbable_l_Leg_LegIkHandle
+    401004: improbable_l_Leg_LimbLengthAttachLctr
+    401006: improbable_l_Leg_LimbLengthEndLctr
+    401008: improbable_l_Leg_LimbLengthOriginLctr
+    401010: improbable_l_Leg_LimbLengthSoftLctr
+    401012: improbable_l_Leg_Module
+    401014: improbable_l_Leg_OffsetLctr
+    401016: improbable_l_Leg_ScaleGrp
+    401018: improbable_l_Leg_Switch_Ctrl
+    401020: improbable_l_Leg_Switch_CtrlGrp
+    401022: improbable_l_Leg_ToeFk_Ctrl
+    401024: improbable_l_Leg_ToeFk_Ctrl_RestPoseGrp
+    401026: improbable_l_Leg_ToeFk_CtrlGrp
+    401028: improbable_l_Leg_ToeIk_Ctrl
+    401030: improbable_l_Leg_ToeIk_Ctrl_RestPoseGrp
+    401032: improbable_l_Leg_ToeIk_CtrlSdkGrp
+    401034: improbable_l_Leg_ToeIkHandle
+    401036: improbable_l_Leg_ToeJnt
+    401038: improbable_l_Leg_ToeJntFk
+    401040: improbable_l_Leg_ToeJntIk
+    401042: improbable_l_Leg_ToePivotIk_Ctrl
+    401044: improbable_l_Leg_ToePivotIk_Ctrl_RestPoseGrp
+    401046: improbable_l_Leg_ToePivotIk_CtrlGrp
+    401048: improbable_l_Leg_ToePivotIk_CtrlSdkGrp
+    401050: improbable_l_LegGrp
+    401052: improbable_l_LegToeIk_CtrlGrp
+    401054: improbable_l_Thumb_01_01_Ctrl
+    401056: improbable_l_Thumb_01_01_Ctrl_RestPoseGrp
+    401058: improbable_l_Thumb_01_01_CtrlGrp
+    401060: improbable_l_Thumb_01_01_CtrlSdkGrp
+    401062: improbable_l_Thumb_01_01_Spline_Ctrl
+    401064: improbable_l_Thumb_01_01_Spline_Ctrl_RestPoseGrp
+    401066: improbable_l_Thumb_01_01_Spline_CtrlGrp
+    401068: improbable_l_Thumb_01_01_Spline_CtrlGrp2
+    401070: improbable_l_Thumb_01_01Jnt
+    401072: improbable_l_Thumb_01_01JntFk
+    401074: improbable_l_Thumb_01_01JntIk
+    401076: improbable_l_Thumb_01_02_Ctrl
+    401078: improbable_l_Thumb_01_02_Ctrl_RestPoseGrp
+    401080: improbable_l_Thumb_01_02_CtrlGrp
+    401082: improbable_l_Thumb_01_02_CtrlSdkGrp
+    401084: improbable_l_Thumb_01_02_Spline_Ctrl
+    401086: improbable_l_Thumb_01_02_Spline_Ctrl_RestPoseGrp
+    401088: improbable_l_Thumb_01_02_Spline_CtrlGrp
+    401090: improbable_l_Thumb_01_02_Spline_CtrlGrp2
+    401092: improbable_l_Thumb_01_02Jnt
+    401094: improbable_l_Thumb_01_02JntFk
+    401096: improbable_l_Thumb_01_02JntIk
+    401098: improbable_l_Thumb_01_03_Ctrl
+    401100: improbable_l_Thumb_01_03_Ctrl_RestPoseGrp
+    401102: improbable_l_Thumb_01_03_CtrlGrp
+    401104: improbable_l_Thumb_01_03_CtrlSdkGrp
+    401106: improbable_l_Thumb_01_03_Spline_Ctrl
+    401108: improbable_l_Thumb_01_03_Spline_Ctrl_RestPoseGrp
+    401110: improbable_l_Thumb_01_03_Spline_CtrlGrp
+    401112: improbable_l_Thumb_01_03_Spline_CtrlGrp2
+    401114: improbable_l_Thumb_01_03Jnt
+    401116: improbable_l_Thumb_01_03JntFk
+    401118: improbable_l_Thumb_01_03JntIk
+    401120: improbable_l_Thumb_01_04_Ctrl
+    401122: improbable_l_Thumb_01_04_Ctrl_RestPoseGrp
+    401124: improbable_l_Thumb_01_04_CtrlGrp
+    401126: improbable_l_Thumb_01_04_CtrlSdkGrp
+    401128: improbable_l_Thumb_01_04_Spline_Ctrl
+    401130: improbable_l_Thumb_01_04_Spline_Ctrl_RestPoseGrp
+    401132: improbable_l_Thumb_01_04_Spline_CtrlGrp
+    401134: improbable_l_Thumb_01_04_Spline_CtrlGrp2
+    401136: improbable_l_Thumb_01_04Jnt
+    401138: improbable_l_Thumb_01_04JntFk
+    401140: improbable_l_Thumb_01_04JntIk
+    401142: improbable_l_Thumb_01_Ctrl
+    401144: improbable_l_Thumb_01_IkHandle
+    401146: improbable_l_Thumb_01_IkTwistEndLctr
+    401148: improbable_l_Thumb_01_IkTwistStartLctr
+    401150: improbable_l_Thumb_01_SplineCurve
+    401152: improbable_l_Thumb_01_SplineCurve2Clstr
+    401154: improbable_l_Thumb_01_SplineCurve3Clstr
+    401156: improbable_l_Thumb_01_SplineCurveEndClstr
+    401158: improbable_l_Thumb_01_SplineCurveStartClstr
+    401160: improbable_l_Thumb_01JntFkGrp
+    401162: improbable_l_Thumb_01JntFkGrp2
+    401164: improbable_l_Thumb_01JntGrp
+    401166: improbable_l_Thumb_01JntGrp2
+    401168: improbable_l_Thumb_01JntIkGrp
+    401170: improbable_l_Thumb_01JntIkGrp2
+    401172: improbable_l_Thumb_curveNodesGrp
+    401174: improbable_l_Thumb_extraCurveNodesGrp
+    401176: improbable_l_Thumb_MainChain_CtrlGrp
+    401178: improbable_l_Thumb_Master_Ctrl
+    401180: improbable_l_Thumb_Master_CtrlGrp
+    401182: improbable_l_Thumb_Module
+    401184: improbable_l_Thumb_OffsetLctr
+    401186: improbable_l_Thumb_ScaleGrp
+    401188: improbable_l_ThumbGrp
+    401190: improbable_MAIN_Ctrl
+    401192: improbable_MAIN_Ctrl_RestPoseGrp
+    401194: improbable_MAIN_Inner_Ctrl
+    401196: improbable_MAIN_Inner_Ctrl_RestPoseGrp
+    401198: improbable_MAIN_Offset_Ctrl
+    401200: improbable_MAIN_Offset_Ctrl_RestPoseGrp
+    401202: improbable_Neck_01Curve_Ctrl
+    401204: improbable_Neck_01Curve_Ctrl_RestPoseGrp
+    401206: improbable_Neck_01Curve_CtrlGrp
+    401208: improbable_Neck_01CurveLctr
+    401210: improbable_Neck_01CurveLctrGrp
+    401212: improbable_Neck_01CurveLctrTangentGrp
+    401214: improbable_Neck_01F
+    401216: improbable_Neck_01Fk_Ctrl
+    401218: improbable_Neck_01Fk_Ctrl_RestPoseGrp
+    401220: improbable_Neck_01Fk_CtrlGrp
+    401222: improbable_Neck_01FkCFlipLctr
+    401224: improbable_Neck_01Jnt
+    401226: improbable_Neck_02Curve_Ctrl
+    401228: improbable_Neck_02Curve_Ctrl_RestPoseGrp
+    401230: improbable_Neck_02Curve_CtrlGrp
+    401232: improbable_Neck_02CurveLctr
+    401234: improbable_Neck_02CurveLctrGrp
+    401236: improbable_Neck_02CurveLctrTangentGrp
+    401238: improbable_Neck_02F
+    401240: improbable_Neck_02Fk_Ctrl
+    401242: improbable_Neck_02Fk_Ctrl_RestPoseGrp
+    401244: improbable_Neck_02Fk_CtrlGrp
+    401246: improbable_Neck_02FkCFlipLctr
+    401248: improbable_Neck_02Jnt
+    401250: improbable_Neck_BtmAimLctr
+    401252: improbable_Neck_BtmJntIk
+    401254: improbable_Neck_BtmTargetLctr
+    401256: improbable_Neck_BtmTX_Lctr
+    401258: improbable_Neck_EndLctr
+    401260: improbable_Neck_hairSystemFollicles
+    401262: improbable_Neck_LengthCurve
+    401264: improbable_Neck_MidIk_Ctrl
+    401266: improbable_Neck_MidIk_Ctrl_RestPoseGrp
+    401268: improbable_Neck_MidIk_CtrlGrp
+    401270: improbable_Neck_MidIk_CtrlGrp2
+    401272: improbable_Neck_MidIk_CtrlLctr
+    401274: improbable_Neck_MidIk_CtrlLctrGrp
+    401276: improbable_Neck_MidIk_CtrlLctrGrp2
+    401278: improbable_Neck_MidIk_CtrlLctrGrp_InfLctr
+    401280: improbable_Neck_MidIk_CtrlLctrGrp_InfLctrGrp
+    401282: improbable_Neck_MidIk_CtrlWSLctr
+    401284: improbable_Neck_MidJntIk
+    401286: improbable_Neck_MidSplineAimLctr
+    401288: improbable_Neck_MidSplineLctrGrp
+    401290: improbable_Neck_MidSplineTargetLctr
+    401292: improbable_Neck_Module
+    401294: improbable_Neck_OffsetLctr
+    401296: improbable_Neck_ribbon
+    401298: improbable_Neck_ribbonSplineGrp
+    401300: improbable_Neck_ScaleGrp
+    401302: improbable_Neck_StartLctr
+    401304: improbable_Neck_TopAimLctr
+    401306: improbable_Neck_TopIk_Ctrl
+    401308: improbable_Neck_TopIk_Ctrl_FlipLctr1
+    401310: improbable_Neck_TopIk_Ctrl_FlipLctr2
+    401312: improbable_Neck_TopIk_Ctrl_RestPoseGrp
+    401314: improbable_Neck_TopIk_CtrlGrp
+    401316: improbable_Neck_TopJnt
+    401318: improbable_Neck_TopJntIk
+    401320: improbable_Neck_TopTargetLctr
+    401322: improbable_Neck_TopTX_Lctr
+    401324: improbable_NeckGrp
+    401326: improbable_Pivot_Ctrl
+    401328: improbable_Pivot_Ctrl_RestPoseGrp
+    401330: improbable_Pivot_CtrlGrp
+    401332: improbable_r_Arm_ArmIkHandle
+    401334: improbable_r_Arm_Clavicle_Ctrl
+    401336: improbable_r_Arm_Clavicle_Ctrl_RestPoseGrp
+    401338: improbable_r_Arm_Clavicle_CtrlGrp
+    401340: improbable_r_Arm_ClavicleJnt
+    401342: improbable_r_Arm_curveNodesGrp
+    401344: improbable_r_Arm_Elbow_Curve_Ctrl
+    401346: improbable_r_Arm_Elbow_Curve_Ctrl_RestPoseGrp
+    401348: improbable_r_Arm_Elbow_Curve_CtrlGrp
+    401350: improbable_r_Arm_Elbow_CurveJnt
+    401352: improbable_r_Arm_Elbow_FkAimLctr
+    401354: improbable_r_Arm_Elbow_TwistJntExtra
+    401356: improbable_r_Arm_Elbow_TwistJntExtraGuide
+    401358: improbable_r_Arm_Elbow_TwistJointsGrp
+    401360: improbable_r_Arm_Elbow_TwistSplineIk_Up1Lctr
+    401362: improbable_r_Arm_Elbow_TwistSplineIk_Up2Lctr
+    401364: improbable_r_Arm_Elbow_TwistSplineIkCurve
+    401366: improbable_r_Arm_Elbow_TwistSplineIkHandle
+    401368: improbable_r_Arm_Elbow_TwistStartJnt
+    401370: improbable_r_Arm_Elbow_TwistStartJntGuide
+    401372: improbable_r_Arm_ElbowFk_Ctrl
+    401374: improbable_r_Arm_ElbowFk_Ctrl_RestPoseGrp
+    401376: improbable_r_Arm_ElbowFk_CtrlGrp
+    401378: improbable_r_Arm_ElbowIk_Ctrl
+    401380: improbable_r_Arm_ElbowIk_Ctrl_RestPoseGrp
+    401382: improbable_r_Arm_ElbowIk_Ctrl_ShoulderLctr
+    401384: improbable_r_Arm_ElbowIk_Ctrl_TargetLctr
+    401386: improbable_r_Arm_ElbowIk_Ctrl_WristLctr
+    401388: improbable_r_Arm_ElbowIk_CtrlGrp
+    401390: improbable_r_Arm_ElbowIkAimConnectorLctr
+    401392: improbable_r_Arm_ElbowIkConnector_Curve
+    401394: improbable_r_Arm_ElbowIkLockLctr
+    401396: improbable_r_Arm_ElbowIkTargetConnectorLctr
+    401398: improbable_r_Arm_ElbowIkToFkAimLctr
+    401400: improbable_r_Arm_ElbowJnt
+    401402: improbable_r_Arm_ElbowJntFk
+    401404: improbable_r_Arm_ElbowJntFkGrp1
+    401406: improbable_r_Arm_ElbowJntFkGrp2
+    401408: improbable_r_Arm_ElbowJntIk
+    401410: improbable_r_Arm_extraCurveNodesGrp
+    401412: improbable_r_Arm_LimbLengthAttachLctr
+    401414: improbable_r_Arm_LimbLengthEndLctr
+    401416: improbable_r_Arm_LimbLengthOriginLctr
+    401418: improbable_r_Arm_LimbLengthSoftLctr
+    401420: improbable_r_Arm_Lower_Curve1_Ctrl
+    401422: improbable_r_Arm_Lower_Curve1_Ctrl_RestPoseGrp
+    401424: improbable_r_Arm_Lower_Curve1_CtrlGrp
+    401426: improbable_r_Arm_Lower_Curve1Jnt
+    401428: improbable_r_Arm_Lower_Curve_Ctrl
+    401430: improbable_r_Arm_Lower_Curve_Ctrl_RestPoseGrp
+    401432: improbable_r_Arm_Lower_Curve_CtrlGrp
+    401434: improbable_r_Arm_Lower_Elbow_NoFlipIkHandle
+    401436: improbable_r_Arm_Lower_Elbow_NoFlipJnt
+    401438: improbable_r_Arm_Lower_Elbow_NoFlipJntGrp
+    401440: improbable_r_Arm_Lower_Twist1Jnt
+    401442: improbable_r_Arm_Lower_Twist1JntGuide
+    401444: improbable_r_Arm_Lower_Twist_Ctrl
+    401446: improbable_r_Arm_Lower_Twist_Ctrl_RestPoseGrp
+    401448: improbable_r_Arm_Lower_Twist_CtrlGrp
+    401450: improbable_r_Arm_Lower_TwistJntEnd
+    401452: improbable_r_Arm_Lower_TwistJntEndGuide
+    401454: improbable_r_Arm_Lower_Wrist_NoFlipJnt
+    401456: improbable_r_Arm_Lower_Wrist_TwistGrp
+    401458: improbable_r_Arm_Lower_Wrist_TwistLctr
+    401460: improbable_r_Arm_LowerBtmClstr
+    401462: improbable_r_Arm_LowerBtmClstrGrp
+    401464: improbable_r_Arm_LowerBtmGuideClstr
+    401466: improbable_r_Arm_LowerBtmGuideClstrGrp
+    401468: improbable_r_Arm_LowerCurveAttach
+    401470: improbable_r_Arm_LowerCurveGuide
+    401472: improbable_r_Arm_LowerMidClstr
+    401474: improbable_r_Arm_LowerTopClstr
+    401476: improbable_r_Arm_LowerTopClstrGrp
+    401478: improbable_r_Arm_LowerTopGuideClstr
+    401480: improbable_r_Arm_LowerTopGuideClstrGrp
+    401482: improbable_r_Arm_MiddleBtmGuideClstr
+    401484: improbable_r_Arm_MiddleCurveAttach
+    401486: improbable_r_Arm_MiddleTopGuideClstr
+    401488: improbable_r_Arm_Module
+    401490: improbable_r_Arm_OffsetLctr
+    401492: improbable_r_Arm_ScaleGrp
+    401494: improbable_r_Arm_ShoulderFk_Ctrl
+    401496: improbable_r_Arm_ShoulderFk_Ctrl_RestPoseGrp
+    401498: improbable_r_Arm_ShoulderFk_CtrlGrp
+    401500: improbable_r_Arm_ShoulderFk_CtrlGrp2
+    401502: improbable_r_Arm_ShoulderFkOrientLctr
+    401504: improbable_r_Arm_ShoulderIkLockLctr
+    401506: improbable_r_Arm_ShoulderJnt
+    401508: improbable_r_Arm_ShoulderJntFk
+    401510: improbable_r_Arm_ShoulderJntIk
+    401512: improbable_r_Arm_Switch_Ctrl
+    401514: improbable_r_Arm_Switch_CtrlGrp
+    401516: improbable_r_Arm_UpperBtmGuideClstr
+    401518: improbable_r_Arm_UpperCurveAttach
+    401520: improbable_r_Arm_UpperTopGuideClstr
+    401522: improbable_r_Arm_Wrist_NoFlipBtmEndJnt
+    401524: improbable_r_Arm_Wrist_NoFlipBtmIkHandle
+    401526: improbable_r_Arm_Wrist_NoFlipBtmStartJnt
+    401528: improbable_r_Arm_Wrist_NoFlipBtmStartJntGrp
+    401530: improbable_r_Arm_Wrist_SplineIkBtmEndJnt
+    401532: improbable_r_Arm_Wrist_SplineIkBtmIkCurve
+    401534: improbable_r_Arm_Wrist_SplineIkBtmIkHandle
+    401536: improbable_r_Arm_Wrist_SplineIkBtmStartJnt
+    401538: improbable_r_Arm_Wrist_SplineIkBtmStartJntGrp
+    401540: improbable_r_Arm_Wrist_SplineIkBtmTwistValJnt
+    401542: improbable_r_Arm_Wrist_SplineIkUpLctr1
+    401544: improbable_r_Arm_Wrist_SplineIkUpLctr2
+    401546: improbable_r_Arm_Wrist_TwistBtmEndJnt
+    401548: improbable_r_Arm_Wrist_TwistBtmStartJnt
+    401550: improbable_r_Arm_Wrist_TwistBtmStartJntGrp
+    401552: improbable_r_Arm_WristFk_Ctrl
+    401554: improbable_r_Arm_WristFk_Ctrl_RestPoseGrp
+    401556: improbable_r_Arm_WristFk_CtrlGrp
+    401558: improbable_r_Arm_WristFkLctr
+    401560: improbable_r_Arm_WristIk_Ctrl
+    401562: improbable_r_Arm_WristIk_Ctrl_RestPoseGrp
+    401564: improbable_r_Arm_WristIk_CtrlGrp
+    401566: improbable_r_Arm_WristIkLctr
+    401568: improbable_r_Arm_WristIkLockLctr
+    401570: improbable_r_Arm_WristIkToFkLctr
+    401572: improbable_r_Arm_WristJnt
+    401574: improbable_r_Arm_WristJntDummy
+    401576: improbable_r_Arm_WristJntFk
+    401578: improbable_r_Arm_WristJntFkGrp1
+    401580: improbable_r_Arm_WristJntFkGrp2
+    401582: improbable_r_Arm_WristJntGrp1
+    401584: improbable_r_Arm_WristJntGrp2
+    401586: improbable_r_Arm_WristJntIk
+    401588: improbable_r_Arm_WristJntIkDummy
+    401590: improbable_r_Arm_WristJntIkDummyGrp1
+    401592: improbable_r_Arm_WristJntIkDummyGrp2
+    401594: improbable_r_Arm_WristPivot_Ctrl
+    401596: improbable_r_Arm_WristPivot_Ctrl_RestPoseGrp
+    401598: improbable_r_Arm_WristPivot_CtrlGrp
+    401600: improbable_r_Arm_WristPivot_Lctr
+    401602: improbable_r_ArmGrp
+    401604: improbable_r_Eye_01_Ctrl
+    401606: improbable_r_Eye_01_Ctrl_RestPoseGrp
+    401608: improbable_r_Eye_01Connector_Curve
+    401610: improbable_r_Eye_01Connector_Curve_Cluster1
+    401612: improbable_r_Eye_01Connector_Curve_Cluster2
+    401614: improbable_r_Eye_01Grp1
+    401616: improbable_r_Eye_01Grp2
+    401618: improbable_r_Eye_01Jnt
+    401620: improbable_r_Eye_Master_Ctrl
+    401622: improbable_r_Eye_Master_Ctrl_RestPoseGrp
+    401624: improbable_r_Eye_Master_CtrlGrp
+    401626: improbable_r_Eye_Module
+    401628: improbable_r_Eye_OffsetLctr
+    401630: improbable_r_Eye_ScaleGrp
+    401632: improbable_r_EyeGrp
+    401634: improbable_r_Finger_01_01_Ctrl
+    401636: improbable_r_Finger_01_01_Ctrl_RestPoseGrp
+    401638: improbable_r_Finger_01_01_CtrlGrp
+    401640: improbable_r_Finger_01_01_CtrlSdkGrp
+    401642: improbable_r_Finger_01_01_Spline_Ctrl
+    401644: improbable_r_Finger_01_01_Spline_Ctrl_RestPoseGrp
+    401646: improbable_r_Finger_01_01_Spline_CtrlGrp
+    401648: improbable_r_Finger_01_01_Spline_CtrlGrp2
+    401650: improbable_r_Finger_01_01Jnt
+    401652: improbable_r_Finger_01_01JntFk
+    401654: improbable_r_Finger_01_01JntIk
+    401656: improbable_r_Finger_01_01JntIkGuide
+    401658: improbable_r_Finger_01_02_Ctrl
+    401660: improbable_r_Finger_01_02_Ctrl_RestPoseGrp
+    401662: improbable_r_Finger_01_02_CtrlGrp
+    401664: improbable_r_Finger_01_02_CtrlSdkGrp
+    401666: improbable_r_Finger_01_02_Spline_Ctrl
+    401668: improbable_r_Finger_01_02_Spline_Ctrl_RestPoseGrp
+    401670: improbable_r_Finger_01_02_Spline_CtrlGrp
+    401672: improbable_r_Finger_01_02_Spline_CtrlGrp2
+    401674: improbable_r_Finger_01_02Jnt
+    401676: improbable_r_Finger_01_02JntFk
+    401678: improbable_r_Finger_01_02JntIk
+    401680: improbable_r_Finger_01_02JntIkGuide
+    401682: improbable_r_Finger_01_03_Ctrl
+    401684: improbable_r_Finger_01_03_Ctrl_RestPoseGrp
+    401686: improbable_r_Finger_01_03_CtrlGrp
+    401688: improbable_r_Finger_01_03_CtrlSdkGrp
+    401690: improbable_r_Finger_01_03_Spline_Ctrl
+    401692: improbable_r_Finger_01_03_Spline_Ctrl_RestPoseGrp
+    401694: improbable_r_Finger_01_03_Spline_CtrlGrp
+    401696: improbable_r_Finger_01_03_Spline_CtrlGrp2
+    401698: improbable_r_Finger_01_03Jnt
+    401700: improbable_r_Finger_01_03JntFk
+    401702: improbable_r_Finger_01_03JntIk
+    401704: improbable_r_Finger_01_03JntIkGuide
+    401706: improbable_r_Finger_01_04_Ctrl
+    401708: improbable_r_Finger_01_04_Ctrl_RestPoseGrp
+    401710: improbable_r_Finger_01_04_CtrlGrp
+    401712: improbable_r_Finger_01_04_CtrlSdkGrp
+    401714: improbable_r_Finger_01_04_Spline_Ctrl
+    401716: improbable_r_Finger_01_04_Spline_Ctrl_RestPoseGrp
+    401718: improbable_r_Finger_01_04_Spline_CtrlGrp
+    401720: improbable_r_Finger_01_04_Spline_CtrlGrp2
+    401722: improbable_r_Finger_01_04Jnt
+    401724: improbable_r_Finger_01_04JntFk
+    401726: improbable_r_Finger_01_04JntIk
+    401728: improbable_r_Finger_01_04JntIkGuide
+    401730: improbable_r_Finger_01_Ctrl
+    401732: improbable_r_Finger_01_IkHandle
+    401734: improbable_r_Finger_01_IkTwistEndLctr
+    401736: improbable_r_Finger_01_IkTwistStartLctr
+    401738: improbable_r_Finger_01_SplineCurve
+    401740: improbable_r_Finger_01_SplineCurve2Clstr
+    401742: improbable_r_Finger_01_SplineCurve3Clstr
+    401744: improbable_r_Finger_01_SplineCurveEndClstr
+    401746: improbable_r_Finger_01_SplineCurveStartClstr
+    401748: improbable_r_Finger_01JntFkGrp
+    401750: improbable_r_Finger_01JntFkGrp2
+    401752: improbable_r_Finger_01JntGrp
+    401754: improbable_r_Finger_01JntGrp2
+    401756: improbable_r_Finger_01JntIkGrp
+    401758: improbable_r_Finger_01JntIkGrp2
+    401760: improbable_r_Finger_02_01_Ctrl
+    401762: improbable_r_Finger_02_01_Ctrl_RestPoseGrp
+    401764: improbable_r_Finger_02_01_CtrlGrp
+    401766: improbable_r_Finger_02_01_CtrlOffsetGrp
+    401768: improbable_r_Finger_02_01_CtrlSdkGrp
+    401770: improbable_r_Finger_02_01_Spline_Ctrl
+    401772: improbable_r_Finger_02_01_Spline_Ctrl_RestPoseGrp
+    401774: improbable_r_Finger_02_01_Spline_CtrlGrp
+    401776: improbable_r_Finger_02_01_Spline_CtrlGrp2
+    401778: improbable_r_Finger_02_01_Spline_CtrlOffsetGrp
+    401780: improbable_r_Finger_02_01Jnt
+    401782: improbable_r_Finger_02_01JntFk
+    401784: improbable_r_Finger_02_01JntIk
+    401786: improbable_r_Finger_02_01JntIkGuide
+    401788: improbable_r_Finger_02_02_Ctrl
+    401790: improbable_r_Finger_02_02_Ctrl_RestPoseGrp
+    401792: improbable_r_Finger_02_02_CtrlGrp
+    401794: improbable_r_Finger_02_02_CtrlOffsetGrp
+    401796: improbable_r_Finger_02_02_CtrlSdkGrp
+    401798: improbable_r_Finger_02_02_Spline_Ctrl
+    401800: improbable_r_Finger_02_02_Spline_Ctrl_RestPoseGrp
+    401802: improbable_r_Finger_02_02_Spline_CtrlGrp
+    401804: improbable_r_Finger_02_02_Spline_CtrlGrp2
+    401806: improbable_r_Finger_02_02_Spline_CtrlOffsetGrp
+    401808: improbable_r_Finger_02_02Jnt
+    401810: improbable_r_Finger_02_02JntFk
+    401812: improbable_r_Finger_02_02JntIk
+    401814: improbable_r_Finger_02_02JntIkGuide
+    401816: improbable_r_Finger_02_03_Ctrl
+    401818: improbable_r_Finger_02_03_Ctrl_RestPoseGrp
+    401820: improbable_r_Finger_02_03_CtrlGrp
+    401822: improbable_r_Finger_02_03_CtrlOffsetGrp
+    401824: improbable_r_Finger_02_03_CtrlSdkGrp
+    401826: improbable_r_Finger_02_03_Spline_Ctrl
+    401828: improbable_r_Finger_02_03_Spline_Ctrl_RestPoseGrp
+    401830: improbable_r_Finger_02_03_Spline_CtrlGrp
+    401832: improbable_r_Finger_02_03_Spline_CtrlGrp2
+    401834: improbable_r_Finger_02_03_Spline_CtrlOffsetGrp
+    401836: improbable_r_Finger_02_03Jnt
+    401838: improbable_r_Finger_02_03JntFk
+    401840: improbable_r_Finger_02_03JntIk
+    401842: improbable_r_Finger_02_03JntIkGuide
+    401844: improbable_r_Finger_02_04_Ctrl
+    401846: improbable_r_Finger_02_04_Ctrl_RestPoseGrp
+    401848: improbable_r_Finger_02_04_CtrlGrp
+    401850: improbable_r_Finger_02_04_CtrlOffsetGrp
+    401852: improbable_r_Finger_02_04_CtrlSdkGrp
+    401854: improbable_r_Finger_02_04_Spline_Ctrl
+    401856: improbable_r_Finger_02_04_Spline_Ctrl_RestPoseGrp
+    401858: improbable_r_Finger_02_04_Spline_CtrlGrp
+    401860: improbable_r_Finger_02_04_Spline_CtrlGrp2
+    401862: improbable_r_Finger_02_04_Spline_CtrlOffsetGrp
+    401864: improbable_r_Finger_02_04Jnt
+    401866: improbable_r_Finger_02_04JntFk
+    401868: improbable_r_Finger_02_04JntIk
+    401870: improbable_r_Finger_02_04JntIkGuide
+    401872: improbable_r_Finger_02_Ctrl
+    401874: improbable_r_Finger_02_IkHandle
+    401876: improbable_r_Finger_02_IkTwistEndLctr
+    401878: improbable_r_Finger_02_IkTwistStartLctr
+    401880: improbable_r_Finger_02_SplineCurve
+    401882: improbable_r_Finger_02_SplineCurve2Clstr
+    401884: improbable_r_Finger_02_SplineCurve3Clstr
+    401886: improbable_r_Finger_02_SplineCurveEndClstr
+    401888: improbable_r_Finger_02_SplineCurveStartClstr
+    401890: improbable_r_Finger_02JntFkGrp
+    401892: improbable_r_Finger_02JntFkGrp2
+    401894: improbable_r_Finger_02JntGrp
+    401896: improbable_r_Finger_02JntGrp2
+    401898: improbable_r_Finger_02JntIkGrp
+    401900: improbable_r_Finger_02JntIkGrp2
+    401902: improbable_r_Finger_03_01_Ctrl
+    401904: improbable_r_Finger_03_01_Ctrl_RestPoseGrp
+    401906: improbable_r_Finger_03_01_CtrlGrp
+    401908: improbable_r_Finger_03_01_CtrlOffsetGrp
+    401910: improbable_r_Finger_03_01_CtrlSdkGrp
+    401912: improbable_r_Finger_03_01_Spline_Ctrl
+    401914: improbable_r_Finger_03_01_Spline_Ctrl_RestPoseGrp
+    401916: improbable_r_Finger_03_01_Spline_CtrlGrp
+    401918: improbable_r_Finger_03_01_Spline_CtrlGrp2
+    401920: improbable_r_Finger_03_01_Spline_CtrlOffsetGrp
+    401922: improbable_r_Finger_03_01Jnt
+    401924: improbable_r_Finger_03_01JntFk
+    401926: improbable_r_Finger_03_01JntIk
+    401928: improbable_r_Finger_03_01JntIkGuide
+    401930: improbable_r_Finger_03_02_Ctrl
+    401932: improbable_r_Finger_03_02_Ctrl_RestPoseGrp
+    401934: improbable_r_Finger_03_02_CtrlGrp
+    401936: improbable_r_Finger_03_02_CtrlOffsetGrp
+    401938: improbable_r_Finger_03_02_CtrlSdkGrp
+    401940: improbable_r_Finger_03_02_Spline_Ctrl
+    401942: improbable_r_Finger_03_02_Spline_Ctrl_RestPoseGrp
+    401944: improbable_r_Finger_03_02_Spline_CtrlGrp
+    401946: improbable_r_Finger_03_02_Spline_CtrlGrp2
+    401948: improbable_r_Finger_03_02_Spline_CtrlOffsetGrp
+    401950: improbable_r_Finger_03_02Jnt
+    401952: improbable_r_Finger_03_02JntFk
+    401954: improbable_r_Finger_03_02JntIk
+    401956: improbable_r_Finger_03_02JntIkGuide
+    401958: improbable_r_Finger_03_03_Ctrl
+    401960: improbable_r_Finger_03_03_Ctrl_RestPoseGrp
+    401962: improbable_r_Finger_03_03_CtrlGrp
+    401964: improbable_r_Finger_03_03_CtrlOffsetGrp
+    401966: improbable_r_Finger_03_03_CtrlSdkGrp
+    401968: improbable_r_Finger_03_03_Spline_Ctrl
+    401970: improbable_r_Finger_03_03_Spline_Ctrl_RestPoseGrp
+    401972: improbable_r_Finger_03_03_Spline_CtrlGrp
+    401974: improbable_r_Finger_03_03_Spline_CtrlGrp2
+    401976: improbable_r_Finger_03_03_Spline_CtrlOffsetGrp
+    401978: improbable_r_Finger_03_03Jnt
+    401980: improbable_r_Finger_03_03JntFk
+    401982: improbable_r_Finger_03_03JntIk
+    401984: improbable_r_Finger_03_03JntIkGuide
+    401986: improbable_r_Finger_03_04_Ctrl
+    401988: improbable_r_Finger_03_04_Ctrl_RestPoseGrp
+    401990: improbable_r_Finger_03_04_CtrlGrp
+    401992: improbable_r_Finger_03_04_CtrlOffsetGrp
+    401994: improbable_r_Finger_03_04_CtrlSdkGrp
+    401996: improbable_r_Finger_03_04_Spline_Ctrl
+    401998: improbable_r_Finger_03_04_Spline_Ctrl_RestPoseGrp
+    402000: improbable_r_Finger_03_04_Spline_CtrlGrp
+    402002: improbable_r_Finger_03_04_Spline_CtrlGrp2
+    402004: improbable_r_Finger_03_04_Spline_CtrlOffsetGrp
+    402006: improbable_r_Finger_03_04Jnt
+    402008: improbable_r_Finger_03_04JntFk
+    402010: improbable_r_Finger_03_04JntIk
+    402012: improbable_r_Finger_03_04JntIkGuide
+    402014: improbable_r_Finger_03_Ctrl
+    402016: improbable_r_Finger_03_IkHandle
+    402018: improbable_r_Finger_03_IkTwistEndLctr
+    402020: improbable_r_Finger_03_IkTwistStartLctr
+    402022: improbable_r_Finger_03_SplineCurve
+    402024: improbable_r_Finger_03_SplineCurve2Clstr
+    402026: improbable_r_Finger_03_SplineCurve3Clstr
+    402028: improbable_r_Finger_03_SplineCurveEndClstr
+    402030: improbable_r_Finger_03_SplineCurveStartClstr
+    402032: improbable_r_Finger_03JntFkGrp
+    402034: improbable_r_Finger_03JntFkGrp2
+    402036: improbable_r_Finger_03JntGrp
+    402038: improbable_r_Finger_03JntGrp2
+    402040: improbable_r_Finger_03JntIkGrp
+    402042: improbable_r_Finger_03JntIkGrp2
+    402044: improbable_r_Finger_04_01_Ctrl
+    402046: improbable_r_Finger_04_01_Ctrl_RestPoseGrp
+    402048: improbable_r_Finger_04_01_CtrlGrp
+    402050: improbable_r_Finger_04_01_CtrlSdkGrp
+    402052: improbable_r_Finger_04_01_Spline_Ctrl
+    402054: improbable_r_Finger_04_01_Spline_Ctrl_RestPoseGrp
+    402056: improbable_r_Finger_04_01_Spline_CtrlGrp
+    402058: improbable_r_Finger_04_01_Spline_CtrlGrp2
+    402060: improbable_r_Finger_04_01Jnt
+    402062: improbable_r_Finger_04_01JntFk
+    402064: improbable_r_Finger_04_01JntIk
+    402066: improbable_r_Finger_04_01JntIkGuide
+    402068: improbable_r_Finger_04_02_Ctrl
+    402070: improbable_r_Finger_04_02_Ctrl_RestPoseGrp
+    402072: improbable_r_Finger_04_02_CtrlGrp
+    402074: improbable_r_Finger_04_02_CtrlSdkGrp
+    402076: improbable_r_Finger_04_02_Spline_Ctrl
+    402078: improbable_r_Finger_04_02_Spline_Ctrl_RestPoseGrp
+    402080: improbable_r_Finger_04_02_Spline_CtrlGrp
+    402082: improbable_r_Finger_04_02_Spline_CtrlGrp2
+    402084: improbable_r_Finger_04_02Jnt
+    402086: improbable_r_Finger_04_02JntFk
+    402088: improbable_r_Finger_04_02JntIk
+    402090: improbable_r_Finger_04_02JntIkGuide
+    402092: improbable_r_Finger_04_03_Ctrl
+    402094: improbable_r_Finger_04_03_Ctrl_RestPoseGrp
+    402096: improbable_r_Finger_04_03_CtrlGrp
+    402098: improbable_r_Finger_04_03_CtrlSdkGrp
+    402100: improbable_r_Finger_04_03_Spline_Ctrl
+    402102: improbable_r_Finger_04_03_Spline_Ctrl_RestPoseGrp
+    402104: improbable_r_Finger_04_03_Spline_CtrlGrp
+    402106: improbable_r_Finger_04_03_Spline_CtrlGrp2
+    402108: improbable_r_Finger_04_03Jnt
+    402110: improbable_r_Finger_04_03JntFk
+    402112: improbable_r_Finger_04_03JntIk
+    402114: improbable_r_Finger_04_03JntIkGuide
+    402116: improbable_r_Finger_04_04_Ctrl
+    402118: improbable_r_Finger_04_04_Ctrl_RestPoseGrp
+    402120: improbable_r_Finger_04_04_CtrlGrp
+    402122: improbable_r_Finger_04_04_CtrlSdkGrp
+    402124: improbable_r_Finger_04_04_Spline_Ctrl
+    402126: improbable_r_Finger_04_04_Spline_Ctrl_RestPoseGrp
+    402128: improbable_r_Finger_04_04_Spline_CtrlGrp
+    402130: improbable_r_Finger_04_04_Spline_CtrlGrp2
+    402132: improbable_r_Finger_04_04Jnt
+    402134: improbable_r_Finger_04_04JntFk
+    402136: improbable_r_Finger_04_04JntIk
+    402138: improbable_r_Finger_04_04JntIkGuide
+    402140: improbable_r_Finger_04_Ctrl
+    402142: improbable_r_Finger_04_IkHandle
+    402144: improbable_r_Finger_04_IkTwistEndLctr
+    402146: improbable_r_Finger_04_IkTwistStartLctr
+    402148: improbable_r_Finger_04_SplineCurve
+    402150: improbable_r_Finger_04_SplineCurve2Clstr
+    402152: improbable_r_Finger_04_SplineCurve3Clstr
+    402154: improbable_r_Finger_04_SplineCurveEndClstr
+    402156: improbable_r_Finger_04_SplineCurveStartClstr
+    402158: improbable_r_Finger_04JntFkGrp
+    402160: improbable_r_Finger_04JntFkGrp2
+    402162: improbable_r_Finger_04JntGrp
+    402164: improbable_r_Finger_04JntGrp2
+    402166: improbable_r_Finger_04JntIkGrp
+    402168: improbable_r_Finger_04JntIkGrp2
+    402170: improbable_r_Finger_curveNodesGrp
+    402172: improbable_r_Finger_extraCurveNodesGrp
+    402174: improbable_r_Finger_MainChain_CtrlGrp
+    402176: improbable_r_Finger_Master_Ctrl
+    402178: improbable_r_Finger_Master_CtrlGrp
+    402180: improbable_r_Finger_Module
+    402182: improbable_r_Finger_OffsetLctr
+    402184: improbable_r_Finger_ScaleGrp
+    402186: improbable_r_FingerGrp
+    402188: improbable_r_Leg_AnkleFk_Ctrl
+    402190: improbable_r_Leg_AnkleFk_Ctrl_RestPoseGrp
+    402192: improbable_r_Leg_AnkleFk_CtrlGrp
+    402194: improbable_r_Leg_AnkleIkLctr
+    402196: improbable_r_Leg_AnkleIkLockLctr
+    402198: improbable_r_Leg_AnkleIkToFkLctr
+    402200: improbable_r_Leg_AnkleJnt
+    402202: improbable_r_Leg_AnkleJntDummy
+    402204: improbable_r_Leg_AnkleJntFk
+    402206: improbable_r_Leg_AnkleJntFkGrp1
+    402208: improbable_r_Leg_AnkleJntFkGrp2
+    402210: improbable_r_Leg_AnkleJntIk
+    402212: improbable_r_Leg_BallFk_Ctrl
+    402214: improbable_r_Leg_BallFk_Ctrl_RestPoseGrp
+    402216: improbable_r_Leg_BallFk_CtrlGrp
+    402218: improbable_r_Leg_BallIk_Ctrl
+    402220: improbable_r_Leg_BallIk_Ctrl_RestPoseGrp
+    402222: improbable_r_Leg_BallIk_CtrlGrp
+    402224: improbable_r_Leg_BallIk_CtrlSdkGrp
+    402226: improbable_r_Leg_BallIkHandle
+    402228: improbable_r_Leg_BallJnt
+    402230: improbable_r_Leg_BallJntFk
+    402232: improbable_r_Leg_BallJntIk
+    402234: improbable_r_Leg_BallSwivelLctr
+    402236: improbable_r_Leg_FootBankInLctr
+    402238: improbable_r_Leg_FootBankInLctrGrp
+    402240: improbable_r_Leg_FootBankOutLctr
+    402242: improbable_r_Leg_FootBankOutLctrGrp
+    402244: improbable_r_Leg_FootIk_Ctrl
+    402246: improbable_r_Leg_FootIk_Ctrl_RestPoseGrp
+    402248: improbable_r_Leg_FootIk_CtrlGrp
+    402250: improbable_r_Leg_FootPivot_Ctrl
+    402252: improbable_r_Leg_FootPivot_Ctrl_RestPoseGrp
+    402254: improbable_r_Leg_FootPivot_CtrlGrp
+    402256: improbable_r_Leg_FootToePivotLctr
+    402258: improbable_r_Leg_HeelIk_Ctrl
+    402260: improbable_r_Leg_HeelIk_Ctrl_RestPoseGrp
+    402262: improbable_r_Leg_HeelIk_CtrlGrp
+    402264: improbable_r_Leg_HeelIk_CtrlSdkGrp
+    402266: improbable_r_Leg_HipFk_Ctrl
+    402268: improbable_r_Leg_HipFk_Ctrl_RestPoseGrp
+    402270: improbable_r_Leg_HipFk_CtrlGrp
+    402272: improbable_r_Leg_HipFkOrientLctr
+    402274: improbable_r_Leg_HipIkLockLctr
+    402276: improbable_r_Leg_HipJnt
+    402278: improbable_r_Leg_HipJntFk
+    402280: improbable_r_Leg_HipJntIk
+    402282: improbable_r_Leg_Knee_FkAimLctr
+    402284: improbable_r_Leg_KneeFk_Ctrl
+    402286: improbable_r_Leg_KneeFk_Ctrl_RestPoseGrp
+    402288: improbable_r_Leg_KneeFk_CtrlGrp
+    402290: improbable_r_Leg_KneeIk_Ctrl
+    402292: improbable_r_Leg_KneeIk_Ctrl_AnkleLctr
+    402294: improbable_r_Leg_KneeIk_Ctrl_HipLctr
+    402296: improbable_r_Leg_KneeIk_Ctrl_RestPoseGrp
+    402298: improbable_r_Leg_KneeIk_Ctrl_TargetLctr
+    402300: improbable_r_Leg_KneeIk_CtrlGrp
+    402302: improbable_r_Leg_KneeIkAimConnectorLctr
+    402304: improbable_r_Leg_KneeIkConnector_Curve
+    402306: improbable_r_Leg_KneeIkLockLctr
+    402308: improbable_r_Leg_KneeIkTargetConnectorLctr
+    402310: improbable_r_Leg_KneeIkToFkAimLctr
+    402312: improbable_r_Leg_KneeJnt
+    402314: improbable_r_Leg_KneeJntFk
+    402316: improbable_r_Leg_KneeJntFkGrp1
+    402318: improbable_r_Leg_KneeJntFkGrp2
+    402320: improbable_r_Leg_KneeJntIk
+    402322: improbable_r_Leg_LegIkHandle
+    402324: improbable_r_Leg_LimbLengthAttachLctr
+    402326: improbable_r_Leg_LimbLengthEndLctr
+    402328: improbable_r_Leg_LimbLengthOriginLctr
+    402330: improbable_r_Leg_LimbLengthSoftLctr
+    402332: improbable_r_Leg_Module
+    402334: improbable_r_Leg_OffsetLctr
+    402336: improbable_r_Leg_ScaleGrp
+    402338: improbable_r_Leg_Switch_Ctrl
+    402340: improbable_r_Leg_Switch_CtrlGrp
+    402342: improbable_r_Leg_ToeFk_Ctrl
+    402344: improbable_r_Leg_ToeFk_Ctrl_RestPoseGrp
+    402346: improbable_r_Leg_ToeFk_CtrlGrp
+    402348: improbable_r_Leg_ToeIk_Ctrl
+    402350: improbable_r_Leg_ToeIk_Ctrl_RestPoseGrp
+    402352: improbable_r_Leg_ToeIk_CtrlSdkGrp
+    402354: improbable_r_Leg_ToeIkHandle
+    402356: improbable_r_Leg_ToeJnt
+    402358: improbable_r_Leg_ToeJntFk
+    402360: improbable_r_Leg_ToeJntIk
+    402362: improbable_r_Leg_ToePivotIk_Ctrl
+    402364: improbable_r_Leg_ToePivotIk_Ctrl_RestPoseGrp
+    402366: improbable_r_Leg_ToePivotIk_CtrlGrp
+    402368: improbable_r_Leg_ToePivotIk_CtrlSdkGrp
+    402370: improbable_r_LegGrp
+    402372: improbable_r_LegToeIk_CtrlGrp
+    402374: improbable_r_Thumb_01_01_Ctrl
+    402376: improbable_r_Thumb_01_01_Ctrl_RestPoseGrp
+    402378: improbable_r_Thumb_01_01_CtrlGrp
+    402380: improbable_r_Thumb_01_01_CtrlSdkGrp
+    402382: improbable_r_Thumb_01_01_Spline_Ctrl
+    402384: improbable_r_Thumb_01_01_Spline_Ctrl_RestPoseGrp
+    402386: improbable_r_Thumb_01_01_Spline_CtrlGrp
+    402388: improbable_r_Thumb_01_01_Spline_CtrlGrp2
+    402390: improbable_r_Thumb_01_01Jnt
+    402392: improbable_r_Thumb_01_01JntFk
+    402394: improbable_r_Thumb_01_01JntIk
+    402396: improbable_r_Thumb_01_01JntIkGuide
+    402398: improbable_r_Thumb_01_02_Ctrl
+    402400: improbable_r_Thumb_01_02_Ctrl_RestPoseGrp
+    402402: improbable_r_Thumb_01_02_CtrlGrp
+    402404: improbable_r_Thumb_01_02_CtrlSdkGrp
+    402406: improbable_r_Thumb_01_02_Spline_Ctrl
+    402408: improbable_r_Thumb_01_02_Spline_Ctrl_RestPoseGrp
+    402410: improbable_r_Thumb_01_02_Spline_CtrlGrp
+    402412: improbable_r_Thumb_01_02_Spline_CtrlGrp2
+    402414: improbable_r_Thumb_01_02Jnt
+    402416: improbable_r_Thumb_01_02JntFk
+    402418: improbable_r_Thumb_01_02JntIk
+    402420: improbable_r_Thumb_01_02JntIkGuide
+    402422: improbable_r_Thumb_01_03_Ctrl
+    402424: improbable_r_Thumb_01_03_Ctrl_RestPoseGrp
+    402426: improbable_r_Thumb_01_03_CtrlGrp
+    402428: improbable_r_Thumb_01_03_CtrlSdkGrp
+    402430: improbable_r_Thumb_01_03_Spline_Ctrl
+    402432: improbable_r_Thumb_01_03_Spline_Ctrl_RestPoseGrp
+    402434: improbable_r_Thumb_01_03_Spline_CtrlGrp
+    402436: improbable_r_Thumb_01_03_Spline_CtrlGrp2
+    402438: improbable_r_Thumb_01_03Jnt
+    402440: improbable_r_Thumb_01_03JntFk
+    402442: improbable_r_Thumb_01_03JntIk
+    402444: improbable_r_Thumb_01_03JntIkGuide
+    402446: improbable_r_Thumb_01_04_Ctrl
+    402448: improbable_r_Thumb_01_04_Ctrl_RestPoseGrp
+    402450: improbable_r_Thumb_01_04_CtrlGrp
+    402452: improbable_r_Thumb_01_04_CtrlSdkGrp
+    402454: improbable_r_Thumb_01_04_Spline_Ctrl
+    402456: improbable_r_Thumb_01_04_Spline_Ctrl_RestPoseGrp
+    402458: improbable_r_Thumb_01_04_Spline_CtrlGrp
+    402460: improbable_r_Thumb_01_04_Spline_CtrlGrp2
+    402462: improbable_r_Thumb_01_04Jnt
+    402464: improbable_r_Thumb_01_04JntFk
+    402466: improbable_r_Thumb_01_04JntIk
+    402468: improbable_r_Thumb_01_04JntIkGuide
+    402470: improbable_r_Thumb_01_Ctrl
+    402472: improbable_r_Thumb_01_IkHandle
+    402474: improbable_r_Thumb_01_IkTwistEndLctr
+    402476: improbable_r_Thumb_01_IkTwistStartLctr
+    402478: improbable_r_Thumb_01_SplineCurve
+    402480: improbable_r_Thumb_01_SplineCurve2Clstr
+    402482: improbable_r_Thumb_01_SplineCurve3Clstr
+    402484: improbable_r_Thumb_01_SplineCurveEndClstr
+    402486: improbable_r_Thumb_01_SplineCurveStartClstr
+    402488: improbable_r_Thumb_01JntFkGrp
+    402490: improbable_r_Thumb_01JntFkGrp2
+    402492: improbable_r_Thumb_01JntGrp
+    402494: improbable_r_Thumb_01JntGrp2
+    402496: improbable_r_Thumb_01JntIkGrp
+    402498: improbable_r_Thumb_01JntIkGrp2
+    402500: improbable_r_Thumb_curveNodesGrp
+    402502: improbable_r_Thumb_extraCurveNodesGrp
+    402504: improbable_r_Thumb_MainChain_CtrlGrp
+    402506: improbable_r_Thumb_Master_Ctrl
+    402508: improbable_r_Thumb_Master_CtrlGrp
+    402510: improbable_r_Thumb_Module
+    402512: improbable_r_Thumb_OffsetLctr
+    402514: improbable_r_Thumb_ScaleGrp
+    402516: improbable_r_ThumbGrp
+    402518: improbable_ROOT_Ctrl
+    402520: improbable_ROOT_Ctrl_RestPoseGrp
+    402522: improbable_ROOT_CtrlGrp
+    402524: improbable_ROOT_Jnt_Spine_Lctr
+    402526: improbable_ROOT_Jnt_Spine_LctrGrp
+    402528: improbable_ROOTGrp
+    402530: improbable_ROOTJnt
+    402532: improbable_ROOTLocLctr
+    402534: improbable_ROOTParent_Ctrl
+    402536: improbable_ROOTParent_Ctrl_RestPoseGrp
+    402538: improbable_ROOTParent_CtrlGrp
+    402540: improbable_ROOTParent_CtrlGrp2
+    402542: improbable_ROOTSecondary_Ctrl
+    402544: improbable_ROOTSecondary_Ctrl_RestPoseGrp
+    402546: improbable_Spine_01Curve_Ctrl
+    402548: improbable_Spine_01Curve_Ctrl_RestPoseGrp
+    402550: improbable_Spine_01Curve_CtrlGrp
+    402552: improbable_Spine_01CurveLctr
+    402554: improbable_Spine_01CurveLctrGrp
+    402556: improbable_Spine_01CurveLctrTangentGrp
+    402558: improbable_Spine_01F
+    402560: improbable_Spine_01Fk_Ctrl
+    402562: improbable_Spine_01Fk_Ctrl_RestPoseGrp
+    402564: improbable_Spine_01Fk_CtrlGrp
+    402566: improbable_Spine_01FkCFlipLctr
+    402568: improbable_Spine_01Jnt
+    402570: improbable_Spine_02Curve_Ctrl
+    402572: improbable_Spine_02Curve_Ctrl_RestPoseGrp
+    402574: improbable_Spine_02Curve_CtrlGrp
+    402576: improbable_Spine_02CurveLctr
+    402578: improbable_Spine_02CurveLctrGrp
+    402580: improbable_Spine_02CurveLctrTangentGrp
+    402582: improbable_Spine_02F
+    402584: improbable_Spine_02Fk_Ctrl
+    402586: improbable_Spine_02Fk_Ctrl_RestPoseGrp
+    402588: improbable_Spine_02Fk_CtrlGrp
+    402590: improbable_Spine_02FkCFlipLctr
+    402592: improbable_Spine_02Jnt
+    402594: improbable_Spine_03Curve_Ctrl
+    402596: improbable_Spine_03Curve_Ctrl_RestPoseGrp
+    402598: improbable_Spine_03Curve_CtrlGrp
+    402600: improbable_Spine_03CurveLctr
+    402602: improbable_Spine_03CurveLctrGrp
+    402604: improbable_Spine_03CurveLctrTangentGrp
+    402606: improbable_Spine_03F
+    402608: improbable_Spine_03Fk_Ctrl
+    402610: improbable_Spine_03Fk_Ctrl_RestPoseGrp
+    402612: improbable_Spine_03Fk_CtrlGrp
+    402614: improbable_Spine_03FkCFlipLctr
+    402616: improbable_Spine_03Jnt
+    402618: improbable_Spine_04Curve_Ctrl
+    402620: improbable_Spine_04Curve_Ctrl_RestPoseGrp
+    402622: improbable_Spine_04Curve_CtrlGrp
+    402624: improbable_Spine_04CurveLctr
+    402626: improbable_Spine_04CurveLctrGrp
+    402628: improbable_Spine_04CurveLctrTangentGrp
+    402630: improbable_Spine_04F
+    402632: improbable_Spine_04Fk_Ctrl
+    402634: improbable_Spine_04Fk_Ctrl_RestPoseGrp
+    402636: improbable_Spine_04Fk_CtrlGrp
+    402638: improbable_Spine_04FkCFlipLctr
+    402640: improbable_Spine_04Jnt
+    402642: improbable_Spine_BtmAimLctr
+    402644: improbable_Spine_BtmJntIk
+    402646: improbable_Spine_BtmTargetLctr
+    402648: improbable_Spine_BtmTX_Lctr
+    402650: improbable_Spine_EndLctr
+    402652: improbable_Spine_hairSystemFollicles
+    402654: improbable_Spine_LengthCurve
+    402656: improbable_Spine_MidIk_Ctrl
+    402658: improbable_Spine_MidIk_Ctrl_RestPoseGrp
+    402660: improbable_Spine_MidIk_CtrlGrp
+    402662: improbable_Spine_MidIk_CtrlGrp2
+    402664: improbable_Spine_MidIk_CtrlLctr
+    402666: improbable_Spine_MidIk_CtrlLctrGrp
+    402668: improbable_Spine_MidIk_CtrlLctrGrp2
+    402670: improbable_Spine_MidIk_CtrlLctrGrp_InfLctr
+    402672: improbable_Spine_MidIk_CtrlLctrGrp_InfLctrGrp
+    402674: improbable_Spine_MidIk_CtrlWSLctr
+    402676: improbable_Spine_MidJntIk
+    402678: improbable_Spine_MidSplineAimLctr
+    402680: improbable_Spine_MidSplineLctrGrp
+    402682: improbable_Spine_MidSplineTargetLctr
+    402684: improbable_Spine_Module
+    402686: improbable_Spine_OffsetLctr
+    402688: improbable_Spine_ribbon
+    402690: improbable_Spine_ribbonSplineGrp
+    402692: improbable_Spine_ScaleGrp
+    402694: improbable_Spine_StartLctr
+    402696: improbable_Spine_Top_Jnt_Neck_Lctr
+    402698: improbable_Spine_Top_Jnt_Neck_LctrGrp
+    402700: improbable_Spine_TopAimLctr
+    402702: improbable_Spine_TopIk_Ctrl
+    402704: improbable_Spine_TopIk_Ctrl_FlipLctr1
+    402706: improbable_Spine_TopIk_Ctrl_FlipLctr2
+    402708: improbable_Spine_TopIk_Ctrl_RestPoseGrp
+    402710: improbable_Spine_TopIk_CtrlGrp
+    402712: improbable_Spine_TopJnt
+    402714: improbable_Spine_TopJntIk
+    402716: improbable_Spine_TopTargetLctr
+    402718: improbable_Spine_TopTX_Lctr
+    402720: improbable_SpineGrp
+    402722: improbable_Trajectory_Ctrl
+    402724: improbable_TrajectorySHJnt
+    402726: Jaw
+    402728: JawEnd
+    402730: l_magnet_loc
+    402732: LeftEye
+    402734: LeftFoot
+    402736: LeftHand
+    402738: LeftIndexDistal
+    402740: LeftIndexEnd
+    402742: LeftIndexIntermediate
+    402744: LeftIndexProximal
+    402746: LeftLittleDistal
+    402748: LeftLittleEnd
+    402750: LeftLittleIntermediate
+    402752: LeftLittleProximal
+    402754: LeftLowerArm1
+    402756: LeftLowerArm2
+    402758: LeftLowerLeg
+    402760: LeftMiddleDistal
+    402762: LeftMiddleEnd
+    402764: LeftMiddleIntermediate
+    402766: LeftMiddleProximal
+    402768: LeftRingDistal
+    402770: LeftRingEnd
+    402772: LeftRingIntermediate
+    402774: LeftRingProximal
+    402776: LeftShoulder
+    402778: LeftThumbDistal
+    402780: LeftThumbEnd
+    402782: LeftThumbIntermediate
+    402784: LeftThumbProximal
+    402786: LeftToes
+    402788: LeftToesEnd
+    402790: LeftUpperArm
+    402792: LeftUpperArmEnd
+    402794: LeftUpperLeg
+    402796: Neck1
+    402798: Neck2
+    402800: r_magnet_loc
+    402802: RightEye
+    402804: RightFoot
+    402806: RightHand
+    402808: RightIndexDistal
+    402810: RightIndexEnd
+    402812: RightIndexIntermediate
+    402814: RightIndexProximal
+    402816: RightLittleDistal
+    402818: RightLittleEnd
+    402820: RightLittleIntermediate
+    402822: RightLittleProximal
+    402824: RightLowerArm1
+    402826: RightLowerArm2
+    402828: RightLowerLeg
+    402830: RightMiddleDistal
+    402832: RightMiddleEnd
+    402834: RightMiddleIntermediate
+    402836: RightMiddleProximal
+    402838: RightRingDistal
+    402840: RightRingEnd
+    402842: RightRingIntermediate
+    402844: RightRingProximal
+    402846: RightShoulder
+    402848: RightThumbDistal
+    402850: RightThumbEnd
+    402852: RightThumbIntermediate
+    402854: RightThumbProximal
+    402856: RightToes
+    402858: RightToesEnd
+    402860: RightUpperArm
+    402862: RightUpperArmEnd
+    402864: RightUpperLeg
+    402866: Spine1
+    402868: Spine2
+    402870: Spine3
+    402872: Spine4
+    402874: UpperChest
+    7400000: Take 001
+    9500000: //RootNode
+    2186277476908879412: ImportLogs
+  externalObjects: {}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: "\nClip 'Take 001' has import animation warnings that
+      might lower retargeting quality:\nNote: Activate translation DOF on avatar to
+      improve retargeting quality.\n\t'Spine1' has translation animation that will
+      be discarded.\n\t'Spine2' has translation animation that will be discarded.\n\t'Spine3'
+      has translation animation that will be discarded.\n\t'Spine3' is inbetween humanoid
+      transforms and has rotation animation that will be discarded.\n\t'Spine4' has
+      translation animation that will be discarded.\n\t'Chest' has translation animation
+      that will be discarded.\n\t'Chest' is inbetween humanoid transforms and has
+      rotation animation that will be discarded.\n\t'Neck2' is inbetween humanoid
+      transforms and has rotation animation that will be discarded.\n\t'Head' has
+      translation animation that will be discarded.\n"
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 0
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    previousCalculatedGlobalScale: 0.01
+    hasPreviousCalculatedGlobalScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 1
+  humanDescription:
+    serializedVersion: 2
+    human:
+    - boneName: Hips
+      humanName: Hips
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: LeftUpperLeg
+      humanName: LeftUpperLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: RightUpperLeg
+      humanName: RightUpperLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: LeftLowerLeg
+      humanName: LeftLowerLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: RightLowerLeg
+      humanName: RightLowerLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: LeftFoot
+      humanName: LeftFoot
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: RightFoot
+      humanName: RightFoot
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Spine1
+      humanName: Spine
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Spine2
+      humanName: Chest
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Neck1
+      humanName: Neck
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Head
+      humanName: Head
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: LeftShoulder
+      humanName: LeftShoulder
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: RightShoulder
+      humanName: RightShoulder
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: LeftUpperArm
+      humanName: LeftUpperArm
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: RightUpperArm
+      humanName: RightUpperArm
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: LeftLowerArm1
+      humanName: LeftLowerArm
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: RightLowerArm1
+      humanName: RightLowerArm
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: LeftHand
+      humanName: LeftHand
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: RightHand
+      humanName: RightHand
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: LeftToes
+      humanName: LeftToes
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: RightToes
+      humanName: RightToes
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: LeftEye
+      humanName: LeftEye
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: RightEye
+      humanName: RightEye
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Jaw
+      humanName: Jaw
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: LeftThumbProximal
+      humanName: Left Thumb Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: LeftThumbIntermediate
+      humanName: Left Thumb Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: LeftThumbDistal
+      humanName: Left Thumb Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: LeftIndexProximal
+      humanName: Left Index Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: LeftIndexIntermediate
+      humanName: Left Index Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: LeftIndexDistal
+      humanName: Left Index Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: LeftMiddleProximal
+      humanName: Left Middle Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: LeftMiddleIntermediate
+      humanName: Left Middle Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: LeftMiddleDistal
+      humanName: Left Middle Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: LeftRingProximal
+      humanName: Left Ring Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: LeftRingIntermediate
+      humanName: Left Ring Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: LeftRingDistal
+      humanName: Left Ring Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: LeftLittleProximal
+      humanName: Left Little Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: LeftLittleIntermediate
+      humanName: Left Little Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: LeftLittleDistal
+      humanName: Left Little Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: RightThumbProximal
+      humanName: Right Thumb Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: RightThumbIntermediate
+      humanName: Right Thumb Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: RightThumbDistal
+      humanName: Right Thumb Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: RightIndexProximal
+      humanName: Right Index Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: RightIndexIntermediate
+      humanName: Right Index Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: RightIndexDistal
+      humanName: Right Index Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: RightMiddleProximal
+      humanName: Right Middle Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: RightMiddleIntermediate
+      humanName: Right Middle Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: RightMiddleDistal
+      humanName: Right Middle Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: RightRingProximal
+      humanName: Right Ring Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: RightRingIntermediate
+      humanName: Right Ring Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: RightRingDistal
+      humanName: Right Ring Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: RightLittleProximal
+      humanName: Right Little Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: RightLittleIntermediate
+      humanName: Right Little Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: RightLittleDistal
+      humanName: Right Little Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Spine4
+      humanName: UpperChest
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    skeleton:
+    - name: BindPose(Clone)
+      parentName: 
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: improbable_TrajectorySHJnt
+      parentName: BindPose(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Hips
+      parentName: improbable_TrajectorySHJnt
+      position: {x: -0, y: 0.99270684, z: 0}
+      rotation: {x: -0.5, y: 0.5, z: -0.5, w: 0.5}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftUpperLeg
+      parentName: Hips
+      position: {x: 0.08821106, y: -2.093662e-17, z: -0.12435509}
+      rotation: {x: 0.014065195, y: -0.69603217, z: 0.717244, w: 0.030041154}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftLowerLeg
+      parentName: LeftUpperLeg
+      position: {x: -0.43529838, y: -3.552714e-17, z: -0.0000000014442489}
+      rotation: {x: 0, y: -0.07066308, z: -0, w: 0.99750024}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftFoot
+      parentName: LeftLowerLeg
+      position: {x: -0.3730783, y: 9.237056e-16, z: 0.00000000144683}
+      rotation: {x: -0.012758113, y: 0.05933774, z: 0.03216957, w: 0.9976379}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftToes
+      parentName: LeftFoot
+      position: {x: -0.07592284, y: 0.000000114430705, z: 0.112936094}
+      rotation: {x: 0.000000157041, y: 0.7071118, z: 0.00000072198276, w: 0.70710176}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftToesEnd
+      parentName: LeftToes
+      position: {x: -0.07759431, y: 5.961454e-14, z: -0.02455111}
+      rotation: {x: 1.9893124e-11, y: -2.2204463e-16, z: -1.7067375e-17, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightUpperLeg
+      parentName: Hips
+      position: {x: 0.08821106, y: 2.539349e-17, z: 0.12435509}
+      rotation: {x: -0.6960321, y: -0.014065201, z: -0.030041149, w: 0.717244}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightLowerLeg
+      parentName: RightUpperLeg
+      position: {x: 0.43529838, y: -7.4606985e-16, z: 3.1086238e-17}
+      rotation: {x: 1.6080256e-16, y: -0.070662946, z: 3.5955625e-17, w: 0.99750024}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightFoot
+      parentName: RightLowerLeg
+      position: {x: 0.3730783, y: -1.598721e-15, z: 1.5099029e-16}
+      rotation: {x: -0.012758115, y: 0.059337694, z: 0.03216957, w: 0.9976379}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightToes
+      parentName: RightFoot
+      position: {x: 0.07592285, y: -0.0000001144437, z: -0.112936094}
+      rotation: {x: 0.000000157041, y: 0.7071118, z: 0.00000072198276, w: 0.70710176}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightToesEnd
+      parentName: RightToes
+      position: {x: 0.07759431, y: 6.494361e-14, z: 0.02455111}
+      rotation: {x: -3.0175862e-13, y: -4.2351647e-22, z: 3.786443e-17, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Spine1
+      parentName: Hips
+      position: {x: -0.06926782, y: 0.0037850658, z: 1.454009e-17}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Spine2
+      parentName: Spine1
+      position: {x: -0.06926782, y: 0.0037850658, z: 1.454009e-17}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Spine3
+      parentName: Spine2
+      position: {x: -0.06926783, y: 0.0037850658, z: 1.454009e-17}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Spine4
+      parentName: Spine3
+      position: {x: -0.06926782, y: 0.0037850668, z: 1.454009e-17}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Chest
+      parentName: Spine4
+      position: {x: -0.06926783, y: 0.0037850651, z: 1.454009e-17}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftShoulder
+      parentName: Chest
+      position: {x: -0.07068954, y: 0.010155261, z: -0.061741598}
+      rotation: {x: 0.5, y: -0.5, z: 0.5, w: 0.5}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftUpperArm
+      parentName: LeftShoulder
+      position: {x: -0.121354, y: 0.01875351, z: -0.01508147}
+      rotation: {x: 0.0035381468, y: -0.0008142144, z: 0.024271654, w: 0.9996988}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftLowerArm1
+      parentName: LeftUpperArm
+      position: {x: -0.2761711, y: -7.1054264e-16, z: 7.1054265e-17}
+      rotation: {x: -0.00652318, y: 0.029656805, z: -0.021908076, w: 0.9992988}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftHand
+      parentName: LeftLowerArm1
+      position: {x: -0.23295349, y: -5.2580163e-15, z: 0}
+      rotation: {x: 0.013198816, y: -0.020023493, z: -0.0017401584, w: 0.9997109}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftIndexProximal
+      parentName: LeftHand
+      position: {x: -0.106257096, y: -0.008473299, z: 0.021854889}
+      rotation: {x: 0.11799395, y: 0.008141724, z: -0.04172946, w: 0.99210376}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftIndexIntermediate
+      parentName: LeftIndexProximal
+      position: {x: -0.030574579, y: -0.0064583123, z: -0.00009433691}
+      rotation: {x: 0.00093045796, y: -0.0077059288, z: -0.031379834, w: 0.99947745}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftIndexDistal
+      parentName: LeftIndexIntermediate
+      position: {x: -0.02308273, y: -0.008039209, z: 0.0003621716}
+      rotation: {x: -0.028906839, y: 0.005319361, z: 0.17882216, w: 0.98344237}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftIndexEnd
+      parentName: LeftIndexDistal
+      position: {x: -0.04560366, y: -0.002467663, z: -6.3948854e-16}
+      rotation: {x: -2.4980015e-16, y: -7.979728e-17, z: -9.679753e-16, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftLittleProximal
+      parentName: LeftHand
+      position: {x: -0.090540655, y: 0.00019336228, z: -0.04155066}
+      rotation: {x: -0.018253516, y: -0.04385935, z: -0.010043057, w: 0.9988205}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftLittleIntermediate
+      parentName: LeftLittleProximal
+      position: {x: -0.03060444, y: -0.00317523, z: -1.687539e-16}
+      rotation: {x: -0.0000002048909, y: 0.0000018849962, z: 0.005726606, w: 0.99998367}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftLittleDistal
+      parentName: LeftLittleIntermediate
+      position: {x: -0.02072016, y: -0.003192312, z: -1.776357e-16}
+      rotation: {x: -0.00000002083856, y: -0.000000010906769, z: 0.11699455, w: 0.99313253}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftLittleEnd
+      parentName: LeftLittleDistal
+      position: {x: -0.04173327, y: 2.4869e-16, z: 6.0396133e-16}
+      rotation: {x: 3.816392e-16, y: 2.63678e-16, z: -3.9204745e-16, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftMiddleProximal
+      parentName: LeftHand
+      position: {x: -0.1059663, y: 0.0023950709, z: 0.0007055629}
+      rotation: {x: 0.037494667, y: -0.0077114673, z: -0.13788483, w: 0.98970824}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftMiddleIntermediate
+      parentName: LeftMiddleProximal
+      position: {x: -0.03606119, y: -0.0149501795, z: -0.0001694739}
+      rotation: {x: -0.000506036, y: 0.008068258, z: 0.16513109, w: 0.98623854}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftMiddleDistal
+      parentName: LeftMiddleIntermediate
+      position: {x: -0.02762975, y: -0.003721363, z: -0.0007117816}
+      rotation: {x: 0.00014717827, y: -0.0013177317, z: 0.106456704, w: 0.9943165}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftMiddleEnd
+      parentName: LeftMiddleDistal
+      position: {x: -0.03945329, y: 1.634248e-15, z: -3.730349e-16}
+      rotation: {x: 2.7755578e-16, y: -2.0816682e-16, z: -9.818533e-16, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftRingProximal
+      parentName: LeftHand
+      position: {x: -0.10143639, y: 0.0035949578, z: -0.022679428}
+      rotation: {x: 0.007853563, y: -0.03132427, z: 0.00032406786, w: 0.99947834}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftRingIntermediate
+      parentName: LeftRingProximal
+      position: {x: -0.03611339, y: -0.0036430422, z: -1.953993e-16}
+      rotation: {x: -0.000000049360086, y: 0.00000059232104, z: 0.055251233, w: 0.9984725}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftRingDistal
+      parentName: LeftRingIntermediate
+      position: {x: -0.0264099, y: -0.001553112, z: -1.332268e-16}
+      rotation: {x: 0.00000005292363, y: -0.00000055523, z: 0.06714081, w: 0.9977436}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftRingEnd
+      parentName: LeftRingDistal
+      position: {x: -0.03844022, y: -1.776357e-16, z: 0}
+      rotation: {x: 1.6653348e-16, y: -2.5240227e-16, z: -8.309325e-16, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftThumbProximal
+      parentName: LeftHand
+      position: {x: -0.02207217, y: -0.01763323, z: 0.029809378}
+      rotation: {x: 0.6543566, y: 0.30197257, z: -0.26832202, w: 0.6392444}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftThumbIntermediate
+      parentName: LeftThumbProximal
+      position: {x: -0.03237993, y: -0.00325189, z: 0.00074491394}
+      rotation: {x: 1.311686e-15, y: -5.4734565e-16, z: 0.05956192, w: 0.9982246}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftThumbDistal
+      parentName: LeftThumbIntermediate
+      position: {x: -0.037620958, y: 0.00071868487, z: 0.00086126756}
+      rotation: {x: 1.0269561e-15, y: -5.689893e-16, z: 6.1062277e-16, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftThumbEnd
+      parentName: LeftThumbDistal
+      position: {x: -0.032130267, y: -1.3855581e-15, z: 8.5265126e-16}
+      rotation: {x: 1.0269561e-15, y: -5.689893e-16, z: 6.1062277e-16, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftLowerArm2
+      parentName: LeftLowerArm1
+      position: {x: -0.11647669, y: -2.273737e-15, z: 1.776357e-16}
+      rotation: {x: 5.2692226e-17, y: -1.94289e-16, z: -1.1188965e-16, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftUpperArmEnd
+      parentName: LeftUpperArm
+      position: {x: -0.2761711, y: -1.4210849e-16, z: 2.664535e-17}
+      rotation: {x: 5.102113e-17, y: 0.2853763, z: -1.7514994e-16, w: 0.95841557}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightShoulder
+      parentName: Chest
+      position: {x: -0.07068954, y: 0.010155261, z: 0.061741598}
+      rotation: {x: -0.5, y: -0.5, z: -0.5, w: 0.5}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightUpperArm
+      parentName: RightShoulder
+      position: {x: 0.121354, y: -0.01875351, z: 0.01508147}
+      rotation: {x: 0.0035381317, y: -0.00081419945, z: 0.024271667, w: 0.9996988}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightLowerArm1
+      parentName: RightUpperArm
+      position: {x: 0.2761711, y: -8.5265126e-16, z: 7.132073e-15}
+      rotation: {x: -0.006523255, y: 0.029656747, z: -0.021908134, w: 0.9992988}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightHand
+      parentName: RightLowerArm1
+      position: {x: 0.23295349, y: 7.389643e-15, z: 0}
+      rotation: {x: 0.013198816, y: -0.020023493, z: -0.0017401594, w: 0.9997109}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightIndexProximal
+      parentName: RightHand
+      position: {x: 0.106257096, y: 0.008473299, z: -0.021854889}
+      rotation: {x: 0.11799401, y: 0.008141558, z: -0.041729376, w: 0.9921038}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightIndexIntermediate
+      parentName: RightIndexProximal
+      position: {x: 0.030574579, y: 0.0064583123, z: 0.00009433691}
+      rotation: {x: 0.00092994364, y: -0.00770519, z: -0.031380128, w: 0.9994774}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightIndexDistal
+      parentName: RightIndexIntermediate
+      position: {x: 0.02308273, y: 0.008039209, z: -0.0003621716}
+      rotation: {x: -0.028906694, y: 0.0053190803, z: 0.17882222, w: 0.9834423}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightIndexEnd
+      parentName: RightIndexDistal
+      position: {x: 0.04560366, y: 0.002467663, z: 6.750156e-16}
+      rotation: {x: 3.053113e-16, y: 3.9898637e-16, z: 5.3082544e-16, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightLittleProximal
+      parentName: RightHand
+      position: {x: 0.090540655, y: -0.0001933622, z: 0.04155066}
+      rotation: {x: -0.018253468, y: -0.04385961, z: -0.010042938, w: 0.99882054}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightLittleIntermediate
+      parentName: RightLittleProximal
+      position: {x: 0.03060444, y: 0.00317523, z: 2.220446e-16}
+      rotation: {x: 0.000000044703462, y: 0.0000013075763, z: 0.0057212417, w: 0.9999836}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightLittleDistal
+      parentName: RightLittleIntermediate
+      position: {x: 0.02072016, y: 0.003192312, z: 3.9968028e-16}
+      rotation: {x: -0.0000000039988866, y: -0.0000003843794, z: 0.11699576, w: 0.9931324}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightLittleEnd
+      parentName: RightLittleDistal
+      position: {x: 0.04173327, y: 7.4606985e-16, z: -1.953993e-16}
+      rotation: {x: -2.2898353e-16, y: 2.1857517e-16, z: -3.456436e-16, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightMiddleProximal
+      parentName: RightHand
+      position: {x: 0.1059663, y: -0.0023950709, z: -0.0007055629}
+      rotation: {x: 0.037494767, y: -0.0077116797, z: -0.13788475, w: 0.98970836}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightMiddleIntermediate
+      parentName: RightMiddleProximal
+      position: {x: 0.03606119, y: 0.0149501795, z: 0.0001694739}
+      rotation: {x: -0.0005064195, y: 0.00806954, z: 0.16513093, w: 0.98623854}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightMiddleDistal
+      parentName: RightMiddleIntermediate
+      position: {x: 0.02762975, y: 0.003721363, z: 0.0007117816}
+      rotation: {x: 0.00014715901, y: -0.0013171314, z: 0.10645867, w: 0.9943163}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightMiddleEnd
+      parentName: RightMiddleDistal
+      position: {x: 0.03945329, y: -8.5265126e-16, z: -1.4210849e-16}
+      rotation: {x: -9.629649e-33, y: 1.3877785e-16, z: 6.9388946e-17, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightRingProximal
+      parentName: RightHand
+      position: {x: 0.10143639, y: -0.0035949568, z: 0.022679428}
+      rotation: {x: 0.007853668, y: -0.0313238, z: 0.0003241359, w: 0.9994784}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightRingIntermediate
+      parentName: RightRingProximal
+      position: {x: 0.03611339, y: 0.0036430422, z: -1.154632e-16}
+      rotation: {x: -0.000000005587934, y: -0.0000003539025, z: 0.05525085, w: 0.9984726}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightRingDistal
+      parentName: RightRingIntermediate
+      position: {x: 0.0264099, y: 0.001553112, z: -6.217249e-17}
+      rotation: {x: 0.000000028034723, y: 0.000000017793544, z: 0.067142144, w: 0.9977434}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightRingEnd
+      parentName: RightRingDistal
+      position: {x: 0.03844022, y: 7.4606985e-16, z: -2.575717e-16}
+      rotation: {x: 2.9600735e-31, y: 5.919744e-16, z: -5.0003404e-16, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightThumbProximal
+      parentName: RightHand
+      position: {x: 0.02207217, y: 0.01763323, z: -0.029809378}
+      rotation: {x: 0.6543568, y: 0.30197245, z: -0.2683217, w: 0.63924426}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightThumbIntermediate
+      parentName: RightThumbProximal
+      position: {x: 0.03237993, y: 0.00325189, z: -0.00074491394}
+      rotation: {x: 2.1639686e-15, y: -3.8527204e-16, z: 0.05956192, w: 0.9982246}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightThumbDistal
+      parentName: RightThumbIntermediate
+      position: {x: 0.037620958, y: -0.00071868487, z: -0.00086126756}
+      rotation: {x: 1.998401e-15, y: -4.996003e-16, z: -4.857226e-16, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightThumbEnd
+      parentName: RightThumbDistal
+      position: {x: 0.032130267, y: 1.1013409e-15, z: 1.4210849e-16}
+      rotation: {x: 1.998401e-15, y: -4.996003e-16, z: -4.857226e-16, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightLowerArm2
+      parentName: RightLowerArm1
+      position: {x: 0.11647669, y: 4.2632557e-15, z: -7.1054265e-17}
+      rotation: {x: 1.2246469e-16, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightUpperArmEnd
+      parentName: RightUpperArm
+      position: {x: 0.2761711, y: -4.263256e-16, z: 7.132073e-15}
+      rotation: {x: -2.7220293e-16, y: 0.2853763, z: 3.3897446e-16, w: 0.95841557}
+      scale: {x: 1, y: 1, z: 1}
+    - name: UpperChest
+      parentName: Chest
+      position: {x: -0.08416453, y: 0.002268247, z: 3.659565e-17}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Neck1
+      parentName: UpperChest
+      position: {x: -0.08416453, y: 0.002268247, z: 3.659565e-17}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Neck2
+      parentName: Neck1
+      position: {x: -0.08416453, y: 0.002268247, z: 3.830102e-17}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Head
+      parentName: Neck2
+      position: {x: -0.1296645, y: 0.01776377, z: 2.48416e-17}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Jaw
+      parentName: Head
+      position: {x: 0.1031793, y: -0.05633172, z: 2.580194e-16}
+      rotation: {x: 2.1648905e-17, y: 2.1648905e-17, z: 0.7071068, w: 0.7071068}
+      scale: {x: 1, y: 1, z: 1}
+    - name: JawEnd
+      parentName: Jaw
+      position: {x: -0.0874581, y: -0.06019226, z: -2.074584e-17}
+      rotation: {x: 1.4791141e-31, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftEye
+      parentName: Head
+      position: {x: 0.055187985, y: -0.1216881, z: -0.03312809}
+      rotation: {x: 2.1648905e-17, y: 2.1648905e-17, z: 0.7071068, w: 0.7071068}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightEye
+      parentName: Head
+      position: {x: 0.055187985, y: -0.1216881, z: 0.03312809}
+      rotation: {x: 2.1648905e-17, y: 2.1648905e-17, z: 0.7071068, w: 0.7071068}
+      scale: {x: 1, y: 1, z: 1}
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 61b490b9b6ef86a43a60842469a23e93,
+    type: 3}
+  animationType: 3
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

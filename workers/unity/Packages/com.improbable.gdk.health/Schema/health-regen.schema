@@ -1,0 +1,14 @@
+package improbable.gdk.health;
+
+component HealthRegenComponent {
+  id = 2041;
+
+  bool damaged_recently = 1;
+
+  float regen_cooldown_timer = 2;
+  float cooldown_sync_interval = 3;
+
+  float regen_pause_time = 4;
+  float regen_interval = 5;
+  float regen_amount = 6;
+}
