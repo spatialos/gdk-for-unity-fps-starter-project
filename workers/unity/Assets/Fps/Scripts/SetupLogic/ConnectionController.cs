@@ -43,6 +43,7 @@ namespace Fps
             {
                 canvasCameraObj.SetActive(false);
                 screenUIController.ConnectScreen.SetActive(false);
+                screenUIController.Reticle.SetActive(true);
                 screenUIController.InGameHud.SetActive(true);
             }
             else

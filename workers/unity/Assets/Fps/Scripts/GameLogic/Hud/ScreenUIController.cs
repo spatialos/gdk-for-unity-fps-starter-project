@@ -37,7 +37,6 @@ namespace Fps
                 && ConnectScreen.activeInHierarchy)
             {
                 ClientWorkerHandler.ConnectionController.ConnectAction();
-                Reticle.SetActive(true);
             }
         }
 
