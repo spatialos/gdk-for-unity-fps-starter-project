@@ -9,10 +9,10 @@ namespace Fps
         private struct AnimationSettings
         {
             [Tooltip("The speed at which the animator changes pitch.")]
-            public float InterpolatePitchSpeed;
+            public float InterpolatePitchDuration;
 
             [Tooltip("The speed at which the animator changes movement speed.")]
-            public float InterpolateMovementSpeed;
+            public float InterpolateMovementDuration;
 
             public float JumpCrossFadeDuration;
         }
@@ -20,8 +20,10 @@ namespace Fps
         private class AnimationFloatParameter
         {
             public string Name;
+            public float OldValue;
             public float CurrentValue;
             public float TargetValue;
+            public float LerpTimeElapsed;
         }
 
         private class AnimationBoolParameter
@@ -32,8 +34,8 @@ namespace Fps
 
         [SerializeField] private AnimationSettings animationSettings = new AnimationSettings
         {
-            InterpolatePitchSpeed = 100.0f,
-            InterpolateMovementSpeed = 10.0f,
+            InterpolatePitchDuration = 0.1f,
+            InterpolateMovementDuration = 0.1f,
             JumpCrossFadeDuration = 0.1f
         };
 
@@ -94,7 +96,7 @@ namespace Fps
                 pitch -= 360;
             }
 
-            pitchParameter.TargetValue = pitch;
+            SetFloatParameter(pitchParameter, pitch);
         }
 
         public void StopMovement()
@@ -148,7 +150,7 @@ namespace Fps
 
         private void SetMoving(float moving)
         {
-            movementParameter.TargetValue = moving;
+            SetFloatParameter(movementParameter, moving);
             SetBoolParameter(sprintingParameter, moving >= 2.4f);
         }
 
@@ -182,8 +184,8 @@ namespace Fps
 
         private void SetXAndZ(Vector2 position)
         {
-            xParameter.TargetValue = position.x;
-            zParameter.TargetValue = position.y;
+            SetFloatParameter(xParameter, position.x);
+            SetFloatParameter(zParameter, position.y);
         }
 
         private static float CalculateAngle(Transform from, Vector3 direction)
@@ -195,33 +197,59 @@ namespace Fps
 
         private void SetBoolParameter(AnimationBoolParameter parameter, bool newValue)
         {
-            if (parameter.LastValue != newValue)
+            if (parameter.LastValue == newValue)
             {
-                parameter.LastValue = newValue;
-                foreach (var animator in animators)
-                {
-                    animator.SetBool(parameter.Name, newValue);
-                }
+                return;
+            }
+
+            parameter.LastValue = newValue;
+            foreach (var animator in animators)
+            {
+                animator.SetBool(parameter.Name, newValue);
             }
         }
 
         private void Update()
         {
-            LerpFloatParameter(pitchParameter, animationSettings.InterpolatePitchSpeed);
-            LerpFloatParameter(xParameter, animationSettings.InterpolateMovementSpeed);
-            LerpFloatParameter(zParameter, animationSettings.InterpolateMovementSpeed);
-            LerpFloatParameter(movementParameter, animationSettings.InterpolateMovementSpeed);
+            LerpFloatParameter(pitchParameter, animationSettings.InterpolatePitchDuration);
+            LerpFloatParameter(xParameter, animationSettings.InterpolateMovementDuration);
+            LerpFloatParameter(zParameter, animationSettings.InterpolateMovementDuration);
+            LerpFloatParameter(movementParameter, animationSettings.InterpolateMovementDuration);
         }
 
-        private void LerpFloatParameter(AnimationFloatParameter parameter, float interpolateSpeed)
+        private static void SetFloatParameter(AnimationFloatParameter parameter, float newValue)
         {
-            if (parameter.CurrentValue == parameter.TargetValue)
+            parameter.OldValue = parameter.CurrentValue;
+            parameter.TargetValue = newValue;
+            parameter.LerpTimeElapsed = 0;
+        }
+
+        private void LerpFloatParameter(AnimationFloatParameter parameter, float lerpTime)
+        {
+            if (parameter.CurrentValue == parameter.TargetValue || parameter.LerpTimeElapsed >= lerpTime)
             {
+                if (parameter.CurrentValue == parameter.TargetValue)
+                {
+                    return;
+                }
+
+                parameter.CurrentValue = parameter.TargetValue;
+
+                foreach (var animator in animators)
+                {
+                    animator.SetFloat(parameter.Name, parameter.TargetValue);
+                }
+
                 return;
             }
 
-            parameter.CurrentValue = Mathf.MoveTowards(parameter.CurrentValue, parameter.TargetValue,
-                interpolateSpeed * Time.deltaTime);
+            parameter.LerpTimeElapsed = Mathf.Clamp(parameter.LerpTimeElapsed + Time.deltaTime, 0, lerpTime);
+
+            parameter.CurrentValue = lerpTime > 0.0f
+                ? Mathf.Lerp(parameter.CurrentValue, parameter.TargetValue,
+                    parameter.LerpTimeElapsed / lerpTime)
+                : parameter.TargetValue;
+
             foreach (var animator in animators)
             {
                 animator.SetFloat(parameter.Name, parameter.CurrentValue);
