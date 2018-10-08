@@ -27,6 +27,7 @@ public class FakePlayerDriver : MonoBehaviour
     private ClientShooting shooting;
     private SpatialOSComponent spatial;
     private NavMeshAgent agent;
+    private FakeClientCoordinatorWorkerConnector coordinator;
 
     private Vector3 anchorPoint;
     private MovementSpeed movementSpeed = MovementSpeed.Run;
@@ -43,6 +44,7 @@ public class FakePlayerDriver : MonoBehaviour
         movementDriver = GetComponent<ClientMovementDriver>();
         shooting = GetComponent<ClientShooting>();
         agent = GetComponent<NavMeshAgent>();
+        coordinator = FindObjectOfType<FakeClientCoordinatorWorkerConnector>();
         agent.updatePosition = false;
         agent.updateRotation = false;
         agent.updateUpAxis = false;
@@ -53,6 +55,7 @@ public class FakePlayerDriver : MonoBehaviour
     {
         HealthReader.OnHealthModified += OnHealthModified;
         HealthReader.OnRespawn += OnRespawn;
+        spatial = GetComponent<SpatialOSComponent>();
         SetPlayerState(PlayerState.LookingForTarget);
     }
 
@@ -135,7 +138,8 @@ public class FakePlayerDriver : MonoBehaviour
             if (velocity != Vector3.zero)
             {
                 var rotation = Quaternion.LookRotation(velocity, Vector3.up);
-                movementDriver.ApplyMovement(velocity, rotation, movementSpeed, jumpNext);
+                var speed = sprintNext ? MovementSpeed.Sprint : MovementSpeed.Run;
+                movementDriver.ApplyMovement(velocity, rotation, speed, jumpNext);
                 jumpNext = false;
             }
         }
@@ -199,7 +203,6 @@ public class FakePlayerDriver : MonoBehaviour
 
     public void SetPlayerState(PlayerState newState)
     {
-        // Debug.LogFormat("{0} {1} -> {2}", transform.name, state, newState);
         if (state != newState)
         {
             StopAllCoroutines();
@@ -236,7 +239,6 @@ public class FakePlayerDriver : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(5);
-            var spatial = GetComponent<SpatialOSComponent>();
             if (HealthCommands != null && spatial != null)
             {
                 HealthCommands.SendRequestRespawnRequest(spatial.SpatialEntityId, new Empty());
