@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 114389791648868850}
   - component: {fileID: 208799741926572794}
   m_Layer: 10
-  m_Name: FakePlayerProxy
+  m_Name: SimulatedPlayerProxy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -129,6 +129,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   teleportDistanceSqrd: 25
+  rotationConstraints:
+    XAxisRotation: 1
+    YAxisRotation: 1
+    ZAxisRotation: 1
 --- !u!114 &114389791648868850
 MonoBehaviour:
   m_ObjectHideFlags: 1

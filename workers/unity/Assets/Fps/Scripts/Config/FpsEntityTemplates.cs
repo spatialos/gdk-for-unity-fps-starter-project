@@ -16,7 +16,7 @@ namespace Fps
     public static class FpsEntityTemplates
     {
         private static readonly List<string> AllWorkerAttributes =
-            new List<string> { WorkerUtils.UnityGameLogic, WorkerUtils.UnityClient, WorkerUtils.FakeClient };
+            new List<string> { WorkerUtils.UnityGameLogic, WorkerUtils.UnityClient, WorkerUtils.SimulatedPlayer };
 
         public static EntityTemplate Spawner()
         {
@@ -31,13 +31,13 @@ namespace Fps
                 .Build();
         }
 
-        public static EntityTemplate FakeClientCoordinatorTrigger()
+        public static EntityTemplate SimulatedPlayerCoordinatorTrigger()
         {
             return EntityBuilder.Begin()
-                .AddPosition(0, 0, 0, WorkerUtils.FakeClientCoorindator)
-                .AddMetadata("FakeClientCoordinatorTrigger", WorkerUtils.FakeClientCoorindator)
+                .AddPosition(0, 0, 0, WorkerUtils.SimulatedPlayerCoorindator)
+                .AddMetadata("SimulatedPlayerCoordinatorTrigger", WorkerUtils.SimulatedPlayerCoorindator)
                 .SetPersistence(true)
-                .SetReadAcl(WorkerUtils.FakeClientCoorindator)
+                .SetReadAcl(WorkerUtils.SimulatedPlayerCoorindator)
                 .Build();
         }
 

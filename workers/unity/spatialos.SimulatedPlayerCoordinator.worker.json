@@ -18,7 +18,7 @@
   "bridge": {
     "worker_attribute_set": {
       "attributes": [
-          "FakeClientCoordinator"
+          "SimulatedPlayerCoordinator"
       ]
     },
     "entity_interest": {
@@ -35,10 +35,10 @@
     "default": {
       "run_type": "EXECUTABLE",
       "windows": {
-        "command": "build/worker/FakeClientCoordinator@Windows/FakeClientCoordinator@Windows.exe",
+        "command": "build/worker/SimulatedPlayerCoordinator@Windows/SimulatedPlayerCoordinator@Windows.exe",
         "arguments": [
           "+workerType",
-          "FakeClientCoordinator",
+          "SimulatedPlayerCoordinator",
           "+infraServicesUrl",
           "http://127.0.0.1:21000",
           "+projectName",
@@ -51,11 +51,11 @@
   },
   "managed": {
     "windows": {
-      "artifact_name": "FakeClientCoordinator@Windows.zip",
-      "command": "FakeClientCoordinator@Windows.exe",
+      "artifact_name": "SimulatedPlayerCoordinator@Windows.zip",
+      "command": "SimulatedPlayerCoordinator@Windows.exe",
       "arguments": [
         "+workerType",
-        "FakeClientCoordinator",
+        "SimulatedPlayerCoordinator",
         "+workerId",
         "${IMPROBABLE_WORKER_ID}",
         "+projectName",
@@ -73,11 +73,11 @@
       ]
     },
     "linux": {
-      "artifact_name": "FakeClientCoordinator@Linux.zip",
-      "command": "FakeClientCoordinator@Linux",
+      "artifact_name": "SimulatedPlayerCoordinator@Linux.zip",
+      "command": "SimulatedPlayerCoordinator@Linux",
       "arguments": [
         "+workerType",
-        "FakeClientCoordinator",
+        "SimulatedPlayerCoordinator",
         "+workerId",
         "${IMPROBABLE_WORKER_ID}",
         "+projectName",

@@ -8,7 +8,7 @@ using Unity.Entities;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class FakePlayerDriver : MonoBehaviour
+public class SimulatedPlayerDriver : MonoBehaviour
 {
     public enum PlayerState
     {
@@ -27,7 +27,7 @@ public class FakePlayerDriver : MonoBehaviour
     private ClientShooting shooting;
     private SpatialOSComponent spatial;
     private NavMeshAgent agent;
-    private FakeClientCoordinatorWorkerConnector coordinator;
+    private SimulatedPlayerCoordinatorWorkerConnector coordinator;
 
     private Vector3 anchorPoint;
     private MovementSpeed movementSpeed = MovementSpeed.Run;
@@ -47,7 +47,7 @@ public class FakePlayerDriver : MonoBehaviour
         movementDriver = GetComponent<ClientMovementDriver>();
         shooting = GetComponent<ClientShooting>();
         agent = GetComponent<NavMeshAgent>();
-        coordinator = FindObjectOfType<FakeClientCoordinatorWorkerConnector>();
+        coordinator = FindObjectOfType<SimulatedPlayerCoordinatorWorkerConnector>();
         agent.updatePosition = false;
         agent.updateRotation = false;
         agent.updateUpAxis = false;

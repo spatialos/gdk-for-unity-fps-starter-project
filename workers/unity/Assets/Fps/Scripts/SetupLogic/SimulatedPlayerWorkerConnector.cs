@@ -6,14 +6,14 @@ using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.Health;
 using Improbable.Gdk.PlayerLifecycle;
 
-public class FakeClientWorkerConnector : WorkerConnector
+public class SimulatedPlayerWorkerConnector : WorkerConnector
 {
-    private const string AuthPlayer = "Prefabs/FakeClient/FakePlayer";
-    private const string NonAuthPlayer = "Prefabs/FakeClient/FakePlayerProxy";
+    private const string AuthPlayer = "Prefabs/SimulatedPlayer/SimulatedPlayer";
+    private const string NonAuthPlayer = "Prefabs/SimulatedPlayer/SimulatedPlayerProxy";
 
     private async void Start()
     {
-        await Connect(WorkerUtils.FakeClient, new ForwardingDispatcher());
+        await Connect(WorkerUtils.SimulatedPlayer, new ForwardingDispatcher());
     }
 
     protected override void HandleWorkerConnectionEstablished()

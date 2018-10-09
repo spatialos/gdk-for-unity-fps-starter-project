@@ -55,18 +55,18 @@
       }
     },
     {
-      "worker_type": "FakeClientCoordinator",
+      "worker_type": "SimulatedPlayerCoordinator",
       "flags": [
         {
           "name": "world_size",
           "value": "large"
         },
         {
-          "name": "fake_client_count",
+          "name": "fps_simulated_players_per_coordinator",
           "value": "0"
         },
         {
-          "name": "creation_interval",
+          "name": "fps_simulated_players_creation_interval",
           "value": "2"
         }
       ],
@@ -178,7 +178,7 @@
       ]
     },
     {
-      "worker_type": "FakeClient",
+      "worker_type": "SimulatedPlayer",
       "flags": [
         {
           "name": "world_size",

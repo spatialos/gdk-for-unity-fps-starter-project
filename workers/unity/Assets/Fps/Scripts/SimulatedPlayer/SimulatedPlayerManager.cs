@@ -2,19 +2,19 @@
 using Improbable.Worker;
 using UnityEngine;
 
-public class FakePlayerManager : MonoBehaviour
+public class SimulatedPlayerManager : MonoBehaviour
 {
     private EntityId entityId;
-    private FakeClientCoordinatorWorkerConnector coordinator;
+    private SimulatedPlayerCoordinatorWorkerConnector coordinator;
 
     private void Start()
     {
-        coordinator = FindObjectOfType<FakeClientCoordinatorWorkerConnector>();
+        coordinator = FindObjectOfType<SimulatedPlayerCoordinatorWorkerConnector>();
         if (coordinator != null)
         {
             var spatial = GetComponent<SpatialOSComponent>();
             entityId = spatial.SpatialEntityId;
-            coordinator.RegisterLocalFakePlayer(entityId, gameObject);
+            coordinator.RegisterLocalSimulatedPlayer(entityId, gameObject);
         }
     }
 
@@ -22,7 +22,7 @@ public class FakePlayerManager : MonoBehaviour
     {
         if (coordinator != null)
         {
-            coordinator.UnregisterLocalFakePlayer(entityId, gameObject);
+            coordinator.UnregisterLocalSimulatedPlayer(entityId, gameObject);
         }
     }
 }

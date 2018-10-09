@@ -4,7 +4,7 @@
   "bridge": {
     "worker_attribute_set": {
       "attributes": [
-        "FakeClient"
+        "SimulatedPlayer"
       ]
     },
     "entity_interest": {
@@ -21,10 +21,10 @@
     "default": {
       "run_type": "EXECUTABLE",
       "windows": {
-        "command": "build/worker/FakeClient@Windows/FakeClient@Windows.exe",
+        "command": "build/worker/SimulatedPlayer@Windows/SimulatedPlayer@Windows.exe",
         "arguments": [
           "+workerType",
-          "FakeClient",
+          "SimulatedPlayer",
           "+infraServicesUrl",
           "http://127.0.0.1:21000",
           "+projectName",

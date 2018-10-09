@@ -7,19 +7,19 @@ using System.Threading.Tasks;
 using Improbable.Worker;
 using Random = UnityEngine.Random;
 
-public class FakeClientCoordinatorWorkerConnector : WorkerConnectorBase
+public class SimulatedPlayerCoordinatorWorkerConnector : WorkerConnectorBase
 {
-    private const string FlagClientCount = "fake_client_count";
-    private const string FlagCreationInterval = "creation_interval";
+    private const string FlagClientCount = "fps_simulated_players_per_coordinator";
+    private const string FlagCreationInterval = "fps_simulated_players_creation_interval";
 
-    public GameObject FakeClientWorkerConnector;
-    public int FakeClientCount = 1;
-    public int FakeClientCreationInterval = 5;
+    public GameObject SimulatedPlayerWorkerConnector;
+    public int SimulatedPlayerCount = 1;
+    public int SimulatedPlayerCreationInterval = 5;
 
     private readonly Dictionary<EntityId, List<GameObject>> proxies = new Dictionary<EntityId, List<GameObject>>();
-    private readonly List<EntityId> localFakeClients = new List<EntityId>();
+    private readonly List<EntityId> localSimulatedPlayers = new List<EntityId>();
 
-    private readonly List<GameObject> FakeClientConnectors = new List<GameObject>();
+    private readonly List<GameObject> SimulatedPlayerConnectors = new List<GameObject>();
 
     protected override async void Start()
     {
@@ -29,7 +29,7 @@ public class FakeClientCoordinatorWorkerConnector : WorkerConnectorBase
 
     protected override string GetWorkerType()
     {
-        return WorkerUtils.FakeClientCoorindator;
+        return WorkerUtils.SimulatedPlayerCoorindator;
     }
 
     protected override async void HandleWorkerConnectionEstablished()
@@ -40,21 +40,21 @@ public class FakeClientCoordinatorWorkerConnector : WorkerConnectorBase
 
         CheckWorkerFlags();
 
-        if (FakeClientWorkerConnector != null)
+        if (SimulatedPlayerWorkerConnector != null)
         {
-            while (FakeClientConnectors.Count < FakeClientCount)
+            while (SimulatedPlayerConnectors.Count < SimulatedPlayerCount)
             {
                 await Task.Delay(TimeSpan.FromSeconds(
-                    Random.Range(FakeClientCreationInterval, 1.25f * FakeClientCreationInterval)));
-                var fakeClient = Instantiate(FakeClientWorkerConnector, transform.position, transform.rotation);
-                FakeClientConnectors.Add(fakeClient);
+                    Random.Range(SimulatedPlayerCreationInterval, 1.25f * SimulatedPlayerCreationInterval)));
+                var SimulatedPlayer = Instantiate(SimulatedPlayerWorkerConnector, transform.position, transform.rotation);
+                SimulatedPlayerConnectors.Add(SimulatedPlayer);
             }
 
-            StartCoroutine(MonitorFakeClients());
+            StartCoroutine(MonitorSimulatedPlayers());
         }
     }
 
-    private IEnumerator MonitorFakeClients()
+    private IEnumerator MonitorSimulatedPlayers()
     {
         while (Worker.Connection?.IsConnected == true)
         {
@@ -62,19 +62,19 @@ public class FakeClientCoordinatorWorkerConnector : WorkerConnectorBase
 
             if (CheckWorkerFlags())
             {
-                while (FakeClientConnectors.Count < FakeClientCount)
+                while (SimulatedPlayerConnectors.Count < SimulatedPlayerCount)
                 {
                     yield return new WaitForSeconds(
-                        Random.Range(FakeClientCreationInterval, 1.25f * FakeClientCreationInterval));
-                    var fakeClient = Instantiate(FakeClientWorkerConnector, transform.position, transform.rotation);
-                    FakeClientConnectors.Add(fakeClient);
+                        Random.Range(SimulatedPlayerCreationInterval, 1.25f * SimulatedPlayerCreationInterval));
+                    var SimulatedPlayer = Instantiate(SimulatedPlayerWorkerConnector, transform.position, transform.rotation);
+                    SimulatedPlayerConnectors.Add(SimulatedPlayer);
                 }
 
-                while (FakeClientConnectors.Count > FakeClientCount)
+                while (SimulatedPlayerConnectors.Count > SimulatedPlayerCount)
                 {
-                    var fakeClient = FakeClientConnectors[0];
-                    FakeClientConnectors.Remove(fakeClient);
-                    Destroy(fakeClient);
+                    var SimulatedPlayer = SimulatedPlayerConnectors[0];
+                    SimulatedPlayerConnectors.Remove(SimulatedPlayer);
+                    Destroy(SimulatedPlayer);
                 }
             }
         }
@@ -84,14 +84,14 @@ public class FakeClientCoordinatorWorkerConnector : WorkerConnectorBase
     {
         if (int.TryParse(Worker.Connection.GetWorkerFlag(FlagCreationInterval), out var newInterval))
         {
-            FakeClientCreationInterval = newInterval;
+            SimulatedPlayerCreationInterval = newInterval;
         }
 
         if (int.TryParse(Worker.Connection.GetWorkerFlag(FlagClientCount), out var newCount))
         {
-            if (FakeClientCount != newCount)
+            if (SimulatedPlayerCount != newCount)
             {
-                FakeClientCount = newCount;
+                SimulatedPlayerCount = newCount;
                 return true;
             }
         }
@@ -115,7 +115,7 @@ public class FakeClientCoordinatorWorkerConnector : WorkerConnectorBase
         {
             proxy.SetActive(false);
         }
-        else if (localFakeClients.Contains(entityId))
+        else if (localSimulatedPlayers.Contains(entityId))
         {
             proxy.SetActive(false);
         }
@@ -133,15 +133,15 @@ public class FakeClientCoordinatorWorkerConnector : WorkerConnectorBase
         entityProxies.Remove(proxy);
         entityProxies.RemoveAll(p => p == null);
 
-        if (!localFakeClients.Contains(entityId) && entityProxies.Count > 0)
+        if (!localSimulatedPlayers.Contains(entityId) && entityProxies.Count > 0)
         {
             entityProxies[0].SetActive(true);
         }
     }
 
-    public void RegisterLocalFakePlayer(EntityId entityId, GameObject prefab)
+    public void RegisterLocalSimulatedPlayer(EntityId entityId, GameObject prefab)
     {
-        localFakeClients.Add(entityId);
+        localSimulatedPlayers.Add(entityId);
         if (proxies.ContainsKey(entityId))
         {
             var entityProxies = proxies[entityId];
@@ -154,9 +154,9 @@ public class FakeClientCoordinatorWorkerConnector : WorkerConnectorBase
         }
     }
 
-    public void UnregisterLocalFakePlayer(EntityId entityId, GameObject prefab)
+    public void UnregisterLocalSimulatedPlayer(EntityId entityId, GameObject prefab)
     {
-        localFakeClients.Remove(entityId);
+        localSimulatedPlayers.Remove(entityId);
 
         if (!proxies.ContainsKey(entityId))
         {

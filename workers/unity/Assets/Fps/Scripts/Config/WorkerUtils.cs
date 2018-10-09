@@ -5,7 +5,7 @@ namespace Fps
         public const string UnityClient = "UnityClient";
         public const string UnityGameLogic = "UnityGameLogic";
 
-        public const string FakeClientCoorindator = "FakeClientCoordinator";
-        public const string FakeClient = "FakeClient";
+        public const string SimulatedPlayerCoorindator = "SimulatedPlayerCoordinator";
+        public const string SimulatedPlayer = "SimulatedPlayer";
     }
 }
