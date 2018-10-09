@@ -2,11 +2,14 @@ $ErrorActionPreference = "Stop"
 
 function Select-Clone-Method
 {
+    $HTTPS_URI = "https://github.com/spatialos/gdk-for-unity.git"
+    $SSH_URI = "git@github.com:spatialos/gdk-for-unity.git"
+
     Write-Host @"
 Select a cloning method.
 
-Press 1 for HTTPS
-Press 2 for SSH
+Press 1 for HTTPS ($($HTTPS_URI))
+Press 2 for SSH   ($($SSH_URI))
 Press 3 to Quit
 "@
 
@@ -16,10 +19,10 @@ Press 3 to Quit
         switch ($Selection)
         {
             '1' {
-                return "https://github.com/spatialos/gdk-for-unity.git"
+                return $HTTPS_URI
             }
             '2' {
-                return "git@github.com:spatialos/gdk-for-unity.git"
+                return $SSH_URI
             }
         }
     }
@@ -35,23 +38,23 @@ Welcome to the SpatialOS GDK for Unity FPS Starter Project setup script.
 
 $TargetDirectory = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($PSScriptRoot + "/../../../gdk-for-unity")
 
-$CloneUri = Select-Clone-Method
-
-if ($CloneUri -eq -1)
-{
-    Write-Host "Stopping the setup process."
-    exit 0
-}
-
 Write-Warning @"
 
-This script will create the following directory: $($TargetDirectory)
+This script will create the following directory to set up the SpatialOS GDK for Unity: $($TargetDirectory)
 *** If such a directory already exists it will be deleted. ***
 Are you ready to proceed? (y/n)
 "@
 $Confirmation = Read-Host
 
 if ($Confirmation -ne 'y')
+{
+    Write-Host "Stopping the setup process."
+    exit 0
+}
+
+$CloneUri = Select-Clone-Method
+
+if ($CloneUri -eq -1)
 {
     Write-Host "Stopping the setup process."
     exit 0
