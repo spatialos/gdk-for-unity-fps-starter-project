@@ -21,6 +21,7 @@ namespace Fps
 
         protected virtual async void Start()
         {
+            Application.targetFrameRate = TargetFrameRate;
             await AttemptConnect();
         }
 
