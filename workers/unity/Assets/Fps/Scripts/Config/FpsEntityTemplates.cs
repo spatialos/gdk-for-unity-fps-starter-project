@@ -31,7 +31,7 @@ namespace Fps
                 .Build();
         }
 
-        public static Entity FakeClientCoordinatorTrigger()
+        public static EntityTemplate FakeClientCoordinatorTrigger()
         {
             return EntityBuilder.Begin()
                 .AddPosition(0, 0, 0, WorkerUtils.FakeClientCoorindator)
