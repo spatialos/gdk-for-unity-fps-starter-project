@@ -66,8 +66,6 @@ namespace Improbable.Gdk.Guns
 
         private void OnDisable()
         {
-            StopAllCoroutines();
-
             foreach (var bullet in activeBulletDetails.Keys)
             {
                 bullet.ReturnToPool();
@@ -209,7 +207,7 @@ namespace Improbable.Gdk.Guns
                     startValue = Mathf.Clamp(startValue, 0, 1);
                     lineRenderer.SetPosition(0,
                         Vector3.Lerp(GunBarrel.position + GunBarrel.forward * bulletDetails.Start,
-                            lineRenderer.GetPosition(0),   startValue));
+                            lineRenderer.GetPosition(0), startValue));
                     lineRenderer.SetPosition(1,
                         Vector3.Lerp(GunBarrel.position + GunBarrel.forward * bulletDetails.End,
                             lineRenderer.GetPosition(1), startValue));
