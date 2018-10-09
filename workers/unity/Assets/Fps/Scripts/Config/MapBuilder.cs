@@ -24,12 +24,11 @@ public class MapBuilder : MonoBehaviour
     private GameObject[] levelTiles;
     private GameObject groundTile;
     private GameObject groundEdge;
-    private GameObject desertWall;
-    private GameObject desertCube;
+    private GameObject surroundWall;
 
     private Transform tileParentTransform;
     private Transform groundParentTransform;
-    private Transform desertParentTransform;
+    private Transform surroundParentTransform;
     private Transform cubeParentTransform;
 
     private const string TileParentName = "TileParent";
@@ -255,29 +254,29 @@ public class MapBuilder : MonoBehaviour
 
     private void PlaceSurround()
     {
-        desertParentTransform = new GameObject(SurroundParentName).transform;
-        desertParentTransform.parent = gameObject.transform;
+        surroundParentTransform = new GameObject(SurroundParentName).transform;
+        surroundParentTransform.parent = gameObject.transform;
 
-        desertWall = Resources.Load<GameObject>(SurroundPath);
-        if (desertWall == null)
+        surroundWall = Resources.Load<GameObject>(SurroundPath);
+        if (surroundWall == null)
         {
-            Debug.LogError("Desert wall prefab not loaded.");
+            Debug.LogError("Surround wall prefab not loaded.");
             return;
         }
 
-        var halfDesertWidth = groundWidth / 2;
+        var halfSurroundWidth = groundWidth / 2;
 
         //top
-        PlaceWall(0, halfDesertWidth, 180f);
+        PlaceWall(0, halfSurroundWidth, 180f);
 
         //bottom
-        PlaceWall(0, -halfDesertWidth, 0f);
+        PlaceWall(0, -halfSurroundWidth, 0f);
 
         //left
-        PlaceWall(-halfDesertWidth, 0, 90f);
+        PlaceWall(-halfSurroundWidth, 0, 90f);
 
         //right
-        PlaceWall(halfDesertWidth, 0, -90f);
+        PlaceWall(halfSurroundWidth, 0, -90f);
     }
 
     private void PlaceWall(int wallX, int wallZ, float rotation)
@@ -289,8 +288,8 @@ public class MapBuilder : MonoBehaviour
             z = 1
         };
 
-        var desertWallObjectVisible = Instantiate(
-            desertWall,
+        var surroundWallObjectVisible = Instantiate(
+            surroundWall,
             new Vector3()
             {
                 x = wallX,
@@ -306,11 +305,11 @@ public class MapBuilder : MonoBehaviour
                     z = -90
                 }
             },
-            desertParentTransform.transform);
-        desertWallObjectVisible.transform.localScale = wallScale;
+            surroundParentTransform.transform);
+        surroundWallObjectVisible.transform.localScale = wallScale;
 
-        var desertWallObjectInvisible = Instantiate(
-            desertWall,
+        var surroundWallObjectInvisible = Instantiate(
+            surroundWall,
             new Vector3()
             {
                 x = wallX,
@@ -326,9 +325,9 @@ public class MapBuilder : MonoBehaviour
                     z = -90
                 }
             },
-            desertParentTransform.transform);
-        desertWallObjectInvisible.transform.localScale = wallScale;
-        desertWallObjectInvisible.GetComponent<Renderer>().enabled = false;
+            surroundParentTransform.transform);
+        surroundWallObjectInvisible.transform.localScale = wallScale;
+        surroundWallObjectInvisible.GetComponent<Renderer>().enabled = false;
     }
 
     private void MakeLevelObjectStatic()
