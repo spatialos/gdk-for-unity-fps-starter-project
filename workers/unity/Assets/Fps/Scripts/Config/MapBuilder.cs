@@ -60,6 +60,7 @@ public class MapBuilder : MonoBehaviour
         PlaceGround();
         PlaceDesert();
         MakeLevelObjectStatic();
+        Debug.Log($"Finished building world of size: {groundWidth} x {groundWidth}");
     }
 
     private void PlaceTiles()
@@ -297,8 +298,8 @@ public class MapBuilder : MonoBehaviour
             return;
         }
 
-        // var halfDesertWidth = desertWidth / 2;
-        var halfDesertWidth = groundWidth / 2;
+        desertWidth = groundWidth;
+        var halfDesertWidth = desertWidth / 2;
 
         //top
         PlaceWall(0, halfDesertWidth, 180f);
