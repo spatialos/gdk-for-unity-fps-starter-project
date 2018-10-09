@@ -34,12 +34,11 @@ component ServerMovement {
   id = 2021;
 
   ServerResponse latest = 1;
+  event RotationUpdate forced_rotation; 
 }
 
 component ClientRotation {
   id = 2022;
 
   RotationUpdate latest = 1;
-
-  command improbable.common.Empty force_rotation(RotationUpdate);
 }
