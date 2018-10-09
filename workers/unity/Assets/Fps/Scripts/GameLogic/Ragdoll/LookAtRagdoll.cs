@@ -39,13 +39,24 @@ namespace Fps
         private void SetRagdoll(GameObject ragdollObject)
         {
             ragdoll = ragdollObject.GetComponent<PoolableRagdoll>();
+            ragdoll.OnCleanup += StopLooking;
         }
 
         private void OnRespawn(Empty empty)
         {
-            ragdoll = null;
+            StopLooking();
             playerCamera.transform.localPosition = Vector3.zero;
             playerCamera.transform.localRotation = Quaternion.identity;
+        }
+
+        private void StopLooking()
+        {
+            if (ragdoll == null)
+            {
+                return;
+            }
+
+            ragdoll = null;
         }
 
         private void Update()
@@ -58,7 +69,7 @@ namespace Fps
             // If the ragdoll is returned to the pool, stop tracking it.
             if (!ragdoll.isActiveAndEnabled)
             {
-                ragdoll = null;
+                StopLooking();
                 return;
             }
 
