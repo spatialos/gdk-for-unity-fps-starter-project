@@ -46,7 +46,7 @@ if ($CloneUri -eq -1)
 Write-Warning @"
 
 This script will create the following directory: $($TargetDirectory)
-If such a directory already exists it will be deleted.
+*** If such a directory already exists it will be deleted. ***
 Are you ready to proceed? (y/n)
 "@
 $Confirmation = Read-Host
@@ -80,6 +80,7 @@ Push-Location -Path "$TargetDirectory"
     
     if ($LastExitCode -ne 0)
     {
+        Pop-Location
         exit 1
     } 
 Pop-Location
