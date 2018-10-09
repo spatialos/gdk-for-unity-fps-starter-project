@@ -60,7 +60,7 @@ public class MapBuilder : MonoBehaviour
         PlaceGround();
         PlaceDesert();
         MakeLevelObjectStatic();
-        Debug.Log($"Finished building world of size: {groundWidth} x {groundWidth}");
+        Debug.Log($"Finished building world of size: {desertWidth} x {desertWidth}");
     }
 
     private void PlaceTiles()
