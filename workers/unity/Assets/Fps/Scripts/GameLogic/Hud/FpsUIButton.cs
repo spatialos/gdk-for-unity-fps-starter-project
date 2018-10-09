@@ -1,16 +1,26 @@
+using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Fps
 {
+    [RequireComponent(typeof(AudioSource))]
     public class FpsUIButton : Button, IPointerDownHandler
     {
         public Image TargetFrame;
         public Image TargetText;
         public Image TargetFill;
 
+        public AudioClip HoverSound;
+        public AudioClip SelectSound;
+
         public Image[] TextOptions = new Image[2];
+
+        // Define visual style of button.
+        public bool DarkTheme;
+
+        private AudioSource audioSource;
 
         // Initialise colour values.
         private readonly Color32 lightFill = Color.white;
@@ -24,13 +34,11 @@ namespace Fps
         private readonly Color32 disabledFill = new Color32(255, 255, 255, 100);
         private readonly Color32 disabledText = new Color32(69, 71, 71, 100);
 
-        // Define visual style of button.
-        public bool DarkTheme;
-
         // Use this for initialization
         protected override void Start()
         {
             TargetText = TextOptions[0];
+            audioSource = this.GetComponent<AudioSource>();
         }
 
         protected override void OnEnable()
@@ -62,6 +70,8 @@ namespace Fps
             // Pressed state
             if (interactable)
             {
+                audioSource.PlayOneShot(SelectSound);
+
                 if (DarkTheme)
                 {
                     if (TargetText != null)
@@ -118,6 +128,7 @@ namespace Fps
             if (interactable)
             {
                 HoverState();
+                audioSource.PlayOneShot(HoverSound);
             }
         }
 

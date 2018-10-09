@@ -1,5 +1,3 @@
-
-using Fps.SetupLogic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,6 +16,11 @@ namespace Fps
                 (Image) EditorGUILayout.ObjectField("Target Fill", button.TargetFill, typeof(Image), true);
             button.TargetFrame =
                 (Image) EditorGUILayout.ObjectField("Target Frame", button.TargetFrame, typeof(Image), true);
+
+            button.HoverSound =
+                (AudioClip) EditorGUILayout.ObjectField("Hover Sound", button.HoverSound, typeof(AudioClip), true);
+            button.SelectSound =
+                (AudioClip) EditorGUILayout.ObjectField("Select Sound", button.SelectSound, typeof(AudioClip), true);
 
             serializedObject.Update();
             var textOptions = serializedObject.FindProperty(nameof(FpsUIButton.TextOptions));
