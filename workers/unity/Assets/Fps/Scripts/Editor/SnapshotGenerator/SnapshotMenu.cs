@@ -18,6 +18,9 @@ namespace Fps
             var spawner = FpsEntityTemplates.Spawner();
             snapshot.AddEntity(spawner);
 
+            var SimulatedPlayerCoordinatorTrigger = FpsEntityTemplates.SimulatedPlayerCoordinatorTrigger();
+            snapshot.AddEntity(SimulatedPlayerCoordinatorTrigger);
+
             SaveSnapshot(snapshot);
         }
 

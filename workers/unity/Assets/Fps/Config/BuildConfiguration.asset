@@ -30,4 +30,13 @@ MonoBehaviour:
     CloudBuildConfig:
       BuildPlatforms: 8
       BuildOptions: 16384
+  - WorkerType: SimulatedPlayerCoordinator
+    ScenesForWorker:
+    - {fileID: 102900000, guid: 2cc9e8eb323f45b4c8dad1fb41dc2831, type: 3}
+    LocalBuildConfig:
+      BuildPlatforms: 1
+      BuildOptions: 1
+    CloudBuildConfig:
+      BuildPlatforms: 8
+      BuildOptions: 16384
   isInitialised: 1

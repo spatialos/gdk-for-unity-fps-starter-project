@@ -1,0 +1,38 @@
+{
+  "build": {
+  },
+  "bridge": {
+    "worker_attribute_set": {
+      "attributes": [
+        "SimulatedPlayer"
+      ]
+    },
+    "entity_interest": {
+      "range_entity_interest": {
+        "radius": 210
+      }
+    },
+    "component_delivery": {
+      "default": "RELIABLE_ORDERED",
+      "checkoutAllInitially": true
+    }
+  },
+  "external": {
+    "default": {
+      "run_type": "EXECUTABLE",
+      "windows": {
+        "command": "build/worker/SimulatedPlayer@Windows/SimulatedPlayer@Windows.exe",
+        "arguments": [
+          "+workerType",
+          "SimulatedPlayer",
+          "+infraServicesUrl",
+          "http://127.0.0.1:21000",
+          "+projectName",
+          "${IMPROBABLE_PROJECT_NAME}",
+          "-logfile",
+          "../../logs/external-default-unityclient.log"
+        ]
+      }
+    }
+  }
+}

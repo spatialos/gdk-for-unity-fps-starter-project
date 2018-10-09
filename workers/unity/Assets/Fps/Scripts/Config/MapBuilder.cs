@@ -60,6 +60,7 @@ public class MapBuilder : MonoBehaviour
         PlaceGround();
         PlaceDesert();
         MakeLevelObjectStatic();
+        Debug.Log($"Finished building world of size: {desertWidth} x {desertWidth}");
     }
 
     private void PlaceTiles()
@@ -258,37 +259,37 @@ public class MapBuilder : MonoBehaviour
 
     private void PlaceDesert()
     {
-        desertPlane = Resources.Load<GameObject>(DesertPlanePath);
-        if (desertPlane == null)
-        {
-            Debug.LogError("Desert plane prefab not loaded.");
-            return;
-        }
+        // desertPlane = Resources.Load<GameObject>(DesertPlanePath);
+        // if (desertPlane == null)
+        // {
+        //     Debug.LogError("Desert plane prefab not loaded.");
+        //     return;
+        // }
 
         desertParentTransform = new GameObject(DesertParentName).transform;
         desertParentTransform.parent = gameObject.transform;
 
-        desertWidth = (groundWidth / 200 + 2) * 200;
-        desertWidth = (int) (4f * Mathf.Round(desertWidth / 4f));
-        desertWidth -= 4;
-
-        var desertPlaneObject = Instantiate(
-            desertPlane,
-            new Vector3(),
-            new Quaternion()
-            {
-                eulerAngles = new Vector3()
-                {
-                    x = 90
-                }
-            },
-            desertParentTransform.transform);
-        desertPlaneObject.transform.localScale = new Vector3()
-        {
-            x = desertWidth,
-            y = desertWidth,
-            z = 1
-        };
+        // desertWidth = (groundWidth / 200 + 2) * 200;
+        // desertWidth = (int) (4f * Mathf.Round(desertWidth / 4f));
+        // desertWidth -= 4;
+        //
+        // var desertPlaneObject = Instantiate(
+        //     desertPlane,
+        //     new Vector3(),
+        //     new Quaternion()
+        //     {
+        //         eulerAngles = new Vector3()
+        //         {
+        //             x = 90
+        //         }
+        //     },
+        //     desertParentTransform.transform);
+        // desertPlaneObject.transform.localScale = new Vector3()
+        // {
+        //     x = desertWidth,
+        //     y = desertWidth,
+        //     z = 1
+        // };
 
         desertWall = Resources.Load<GameObject>(DesertWallPath);
         if (desertWall == null)
@@ -297,6 +298,7 @@ public class MapBuilder : MonoBehaviour
             return;
         }
 
+        desertWidth = groundWidth;
         var halfDesertWidth = desertWidth / 2;
 
         //top
@@ -311,21 +313,21 @@ public class MapBuilder : MonoBehaviour
         //right
         PlaceWall(halfDesertWidth, 0, -90f);
 
-        desertCube = Resources.Load<GameObject>(DesertCubePath);
-        if (desertCube == null)
-        {
-            Debug.LogError("Desert cube prefab not loaded.");
-            return;
-        }
-
-        cubeParentTransform = new GameObject(CubeParentName).transform;
-        cubeParentTransform.parent = gameObject.transform;
-
-        var numCubes = (desertWidth * desertWidth - groundWidth * groundWidth) / 1000 * cubeDensity;
-        for (var i = 0; i < numCubes; i++)
-        {
-            PlaceCube();
-        }
+        // desertCube = Resources.Load<GameObject>(DesertCubePath);
+        // if (desertCube == null)
+        // {
+        //     Debug.LogError("Desert cube prefab not loaded.");
+        //     return;
+        // }
+        //
+        // cubeParentTransform = new GameObject(CubeParentName).transform;
+        // cubeParentTransform.parent = gameObject.transform;
+        //
+        // var numCubes = (desertWidth * desertWidth - groundWidth * groundWidth) / 1000 * cubeDensity;
+        // for (var i = 0; i < numCubes; i++)
+        // {
+        //     PlaceCube();
+        // }
     }
 
     private void PlaceWall(int wallX, int wallZ, float rotation)
