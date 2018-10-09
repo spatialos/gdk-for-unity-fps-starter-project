@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Threading.Tasks;
+﻿using System.Collections;
 using Improbable.Common;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectRepresentation;
