@@ -151,14 +151,14 @@ namespace Improbable.Gdk.Movement
             server.OnForcedRotation += OnForcedRotation;
         }
 
-        private void OnForcedRotation(RotationUpdate forcedRotaiton)
+        private void OnForcedRotation(RotationUpdate forcedRotation)
         {
             var rotationUpdate = new RotationUpdate
             {
-                Pitch = forcedRotaiton.Pitch,
-                Roll = forcedRotaiton.Roll,
-                Yaw = forcedRotaiton.Yaw,
-                TimeDelta = forcedRotaiton.TimeDelta
+                Pitch = forcedRotation.Pitch,
+                Roll = forcedRotation.Roll,
+                Yaw = forcedRotation.Yaw,
+                TimeDelta = forcedRotation.TimeDelta
             };
             var update = new ClientRotation.Update { Latest = new Option<RotationUpdate>(rotationUpdate) };
             rotation.Send(update);
@@ -167,9 +167,9 @@ namespace Improbable.Gdk.Movement
             pitchDirty = rollDirty = yawDirty = false;
             
             //Apply the forced rotation
-            var x = rotationConstraints.XAxisRotation ? forcedRotaiton.Pitch.ToFloat1k() : 0;
-            var y = rotationConstraints.YAxisRotation ? forcedRotaiton.Yaw.ToFloat1k() : 0;
-            var z = rotationConstraints.ZAxisRotation ? forcedRotaiton.Roll.ToFloat1k() : 0;
+            var x = rotationConstraints.XAxisRotation ? forcedRotation.Pitch.ToFloat1k() : 0;
+            var y = rotationConstraints.YAxisRotation ? forcedRotation.Yaw.ToFloat1k() : 0;
+            var z = rotationConstraints.ZAxisRotation ? forcedRotation.Roll.ToFloat1k() : 0;
             transform.rotation = Quaternion.Euler(x, y, z);
         }
 
