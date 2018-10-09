@@ -34,7 +34,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1455626031769568}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1000, z: 0}
+  m_LocalPosition: {x: 500, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -53,6 +53,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxConnectionAttempts: 3
   UseExternalIp: 0
+  TargetFrameRate: 30
   SmallLevelPrefab: {fileID: 1613497914398450, guid: e4a3eb8590344604db1e998db676a211,
     type: 2}
   LargeLevelPrefab: {fileID: 1620385508151754, guid: 1d177d0ca1e95c646a6a7b9b84364f9b,
