@@ -22,9 +22,9 @@ echo ""
 readonly RAW_DIR="$(dirname "$0")/../../../gdk-for-unity"
 readonly TARGET_DIRECTORY="$(realpath "${RAW_DIR}")"
 
-echo_with_color "This script will create the following directory: ${TARGET_DIRECTORY}" $LOG_WARNING
-echo_with_color "*** If such a directory already exists it will be deleted. ***" $LOG_EMPHASIS
-echo_with_color "Are you ready to proceed? (y/n)" $LOG_WARNING
+echo_with_color "This script will create the following directory: ${TARGET_DIRECTORY}" "$LOG_WARNING"
+echo_with_color "*** If such a directory already exists it will be deleted. ***" "$LOG_EMPHASIS"
+echo_with_color "Are you ready to proceed? (y/n)" "$LOG_WARNING"
 
 read -r -p "" response
 if [[ "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]
@@ -64,7 +64,7 @@ do
 done
 
 if [[ -d "${TARGET_DIRECTORY}" ]]; then
-    echo_with_color "Deleting existing directory at ${TARGET_DIRECTORY}..." $LOG_WARNING
+    echo_with_color "Deleting existing directory at ${TARGET_DIRECTORY}..." "$LOG_WARNING"
     rm -rf "${TARGET_DIRECTORY}"
 fi
 
@@ -77,4 +77,4 @@ pushd "${TARGET_DIRECTORY}"
     git checkout "${PINNED_VERSION}"
 popd
 
-echo_with_color "Finished!" $LOG_SUCCESS
+echo_with_color "Finished!" "$LOG_SUCCESS"
