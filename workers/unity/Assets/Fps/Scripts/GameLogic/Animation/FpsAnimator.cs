@@ -22,8 +22,19 @@ namespace Fps
             public string Name;
             public float OldValue;
             public float CurrentValue;
-            public float TargetValue;
             public float LerpTimeElapsed;
+            private float targetValue;
+
+            public float TargetValue
+            {
+                get => targetValue;
+                set
+                {
+                    OldValue = CurrentValue;
+                    targetValue = value;
+                    LerpTimeElapsed = 0;
+                }
+            }
         }
 
         private class AnimationBoolParameter
@@ -96,7 +107,7 @@ namespace Fps
                 pitch -= 360;
             }
 
-            SetFloatParameter(pitchParameter, pitch);
+            pitchParameter.TargetValue = pitch;
         }
 
         public void StopMovement()
@@ -150,7 +161,7 @@ namespace Fps
 
         private void SetMoving(float moving)
         {
-            SetFloatParameter(movementParameter, moving);
+            movementParameter.TargetValue = moving;
             SetBoolParameter(sprintingParameter, moving >= 2.4f);
         }
 
@@ -184,8 +195,8 @@ namespace Fps
 
         private void SetXAndZ(Vector2 position)
         {
-            SetFloatParameter(xParameter, position.x);
-            SetFloatParameter(zParameter, position.y);
+            xParameter.TargetValue = position.x;
+            zParameter.TargetValue = position.y;
         }
 
         private static float CalculateAngle(Transform from, Vector3 direction)
@@ -217,22 +228,16 @@ namespace Fps
             LerpFloatParameter(movementParameter, animationSettings.InterpolateMovementDuration);
         }
 
-        private static void SetFloatParameter(AnimationFloatParameter parameter, float newValue)
-        {
-            parameter.OldValue = parameter.CurrentValue;
-            parameter.TargetValue = newValue;
-            parameter.LerpTimeElapsed = 0;
-        }
-
         private void LerpFloatParameter(AnimationFloatParameter parameter, float lerpTime)
         {
-            if (parameter.CurrentValue == parameter.TargetValue || parameter.LerpTimeElapsed >= lerpTime)
+            if (parameter.CurrentValue == parameter.TargetValue)
             {
-                if (parameter.CurrentValue == parameter.TargetValue)
-                {
-                    return;
-                }
+                return;
+            }
 
+            // If lerpTime has passed (e.g. if lerpTime is 0), snap to the target value.
+            if (parameter.LerpTimeElapsed >= lerpTime)
+            {
                 parameter.CurrentValue = parameter.TargetValue;
 
                 foreach (var animator in animators)
@@ -245,10 +250,8 @@ namespace Fps
 
             parameter.LerpTimeElapsed = Mathf.Clamp(parameter.LerpTimeElapsed + Time.deltaTime, 0, lerpTime);
 
-            parameter.CurrentValue = lerpTime > 0.0f
-                ? Mathf.Lerp(parameter.CurrentValue, parameter.TargetValue,
-                    parameter.LerpTimeElapsed / lerpTime)
-                : parameter.TargetValue;
+            parameter.CurrentValue = Mathf.Lerp(parameter.OldValue, parameter.TargetValue,
+                parameter.LerpTimeElapsed / lerpTime);
 
             foreach (var animator in animators)
             {
