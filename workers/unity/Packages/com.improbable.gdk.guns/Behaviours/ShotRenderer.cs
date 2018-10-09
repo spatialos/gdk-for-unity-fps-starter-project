@@ -64,6 +64,16 @@ namespace Improbable.Gdk.Guns
             shooting.OnShots += ShotFired;
         }
 
+        private void OnDisable()
+        {
+            foreach (var bullet in activeBulletDetails.Keys)
+            {
+                bullet.ReturnToPool();
+            }
+
+            activeBulletDetails.Clear();
+        }
+
         private void ShotFired(ShotInfo shotInfo)
         {
             var isAiming = gunState.Data.IsAiming;
@@ -196,11 +206,11 @@ namespace Improbable.Gdk.Guns
                     var startValue = bulletDetails.Start / barrelLerpThreshold;
                     startValue = Mathf.Clamp(startValue, 0, 1);
                     lineRenderer.SetPosition(0,
-                        Vector3.Lerp(GunBarrel.position + GunBarrel.forward * bulletDetails.Start, lineRenderer.GetPosition(0),
-                            startValue));
+                        Vector3.Lerp(GunBarrel.position + GunBarrel.forward * bulletDetails.Start,
+                            lineRenderer.GetPosition(0), startValue));
                     lineRenderer.SetPosition(1,
-                        Vector3.Lerp(GunBarrel.position + GunBarrel.forward * bulletDetails.End, lineRenderer.GetPosition(1),
-                            startValue));
+                        Vector3.Lerp(GunBarrel.position + GunBarrel.forward * bulletDetails.End,
+                            lineRenderer.GetPosition(1), startValue));
                 }
             }
         }
