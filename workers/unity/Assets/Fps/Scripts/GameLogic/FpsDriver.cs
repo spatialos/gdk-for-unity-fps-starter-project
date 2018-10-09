@@ -60,7 +60,7 @@ namespace Fps
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
-            serverMovement.OnForcedRotation += OnForcedRotaiton;
+            serverMovement.OnForcedRotation += OnForcedRotation;
         }
 
         private void Update()
@@ -199,9 +199,9 @@ namespace Fps
             }
         }
 
-        private void OnForcedRotaiton(RotationUpdate forcedRotaiton)
+        private void OnForcedRotation(RotationUpdate forcedRotation)
         {
-            var newPitch = Mathf.Clamp(forcedRotaiton.Pitch.ToFloat1k(), -cameraSettings.MaxPitch, -cameraSettings.MinPitch);
+            var newPitch = Mathf.Clamp(forcedRotation.Pitch.ToFloat1k(), -cameraSettings.MaxPitch, -cameraSettings.MinPitch);
             pitchTransform.localRotation = Quaternion.Euler(newPitch, 0, 0);
         }
         
