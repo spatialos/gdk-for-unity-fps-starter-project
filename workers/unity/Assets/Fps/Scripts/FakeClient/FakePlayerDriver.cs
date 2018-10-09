@@ -35,6 +35,9 @@ public class FakePlayerDriver : MonoBehaviour
     private bool jumpNext;
     private bool sprintNext;
 
+    private int similarPositionsCount = 0;
+    private Vector3 lastPosition;
+
     private GameObject target;
     private float lastShotTime;
     private bool strafeRight;
@@ -135,6 +138,7 @@ public class FakePlayerDriver : MonoBehaviour
             agent.nextPosition = transform.position;
 
             var velocity = agent.desiredVelocity;
+            velocity.y = 0;
             if (velocity != Vector3.zero)
             {
                 var rotation = Quaternion.LookRotation(velocity, Vector3.up);
@@ -220,6 +224,7 @@ public class FakePlayerDriver : MonoBehaviour
                     StartCoroutine(RandomlyJump());
                     StartCoroutine(RandomlySprint());
                     StartCoroutine(CheckForNearbyTargets());
+                    StartCoroutine(CheckImmobility());
                     break;
             }
         }
@@ -267,6 +272,30 @@ public class FakePlayerDriver : MonoBehaviour
                         }
                     }
                 }
+            }
+        }
+    }
+
+    private IEnumerator CheckImmobility()
+    {
+        const float maxDistance = 0.1f;
+        const int maxSimilarPositions = 5;
+        while (true)
+        {
+            yield return new WaitForSeconds(3);
+            if (Vector3.Distance(lastPosition, transform.position) < maxDistance)
+            {
+                similarPositionsCount++;
+                if (similarPositionsCount >= maxSimilarPositions)
+                {
+                    Debug.LogWarningFormat("{0} got stuck at {1}, respawning", name, transform.position);
+                    SetPlayerState(PlayerState.Dead);
+                }
+            }
+            else
+            {
+                lastPosition = transform.position;
+                similarPositionsCount = 0;
             }
         }
     }
