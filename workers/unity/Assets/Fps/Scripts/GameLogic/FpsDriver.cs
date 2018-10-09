@@ -33,7 +33,7 @@ namespace Fps
         private GroundChecker groundChecker;
         private FpsAnimator fpsAnimator;
         private GunManager currentGun;
-        private SpatialOSComponent spatial;
+        private SpatialOSComponent spatialComponent;
 
         private readonly Vector3[] cachedDirectionVectors = new Vector3[16];
         [SerializeField] private Transform pitchTransform;
@@ -63,11 +63,12 @@ namespace Fps
 
         private void OnEnable()
         {
+            spatialComponent = GetComponent<SpatialOSComponent>();
+
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
             serverMovement.OnForcedRotation += OnForcedRotation;
             health.OnRespawn += OnRespawn;
-            spatial = GetComponent<SpatialOSComponent>();
         }
 
         private void Update()
@@ -166,7 +167,7 @@ namespace Fps
         {
             while (true)
             {
-                commandSender?.SendRequestRespawnRequest(spatial.SpatialEntityId, new Empty());
+                commandSender?.SendRequestRespawnRequest(spatialComponent.SpatialEntityId, new Empty());
                 yield return new WaitForSeconds(2);
             }
         }
