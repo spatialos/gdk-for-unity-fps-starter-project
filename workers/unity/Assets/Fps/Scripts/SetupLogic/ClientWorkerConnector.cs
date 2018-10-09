@@ -43,9 +43,7 @@ namespace Fps
         {
             var world = Worker.World;
 
-            // Only take the Heartbeat from the PlayerLifecycleConfig Client Systems.
-            world.GetOrCreateManager<HandlePlayerHeartbeatRequestSystem>();
-
+            PlayerLifecycleHelper.AddClientSystems(world);
             GameObjectRepresentationHelper.AddSystems(world);
             var fallback = new GameObjectCreatorFromMetadata(Worker.WorkerType, Worker.Origin, Worker.LogDispatcher);
 
