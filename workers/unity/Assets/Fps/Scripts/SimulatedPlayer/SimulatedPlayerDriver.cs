@@ -1,5 +1,7 @@
 ﻿using System.Collections;
+using System.Text;
 using Improbable.Common;
+using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.Guns;
 using Improbable.Gdk.Health;
@@ -30,8 +32,7 @@ public class SimulatedPlayerDriver : MonoBehaviour
     private SimulatedPlayerCoordinatorWorkerConnector coordinator;
 
     private Vector3 anchorPoint;
-    private MovementSpeed movementSpeed = MovementSpeed.Run;
-    private const float MovementRadius = 200;
+    private const float MovementRadius = 50f;
     private bool jumpNext;
     private bool sprintNext;
 
@@ -42,16 +43,24 @@ public class SimulatedPlayerDriver : MonoBehaviour
     private float lastShotTime;
     private bool strafeRight;
 
+    private Bounds worldBounds;
+
+    private void Awake()
+    {
+        agent = GetComponent<NavMeshAgent>();
+    }
+
     private void Start()
     {
         movementDriver = GetComponent<ClientMovementDriver>();
         shooting = GetComponent<ClientShooting>();
-        agent = GetComponent<NavMeshAgent>();
         coordinator = FindObjectOfType<SimulatedPlayerCoordinatorWorkerConnector>();
         agent.updatePosition = false;
         agent.updateRotation = false;
         agent.updateUpAxis = false;
+        agent.Warp(transform.position);
         anchorPoint = transform.position;
+        worldBounds = coordinator.GetWorldBounds();
     }
 
     private void OnEnable()
@@ -74,6 +83,7 @@ public class SimulatedPlayerDriver : MonoBehaviour
     {
         if (state == PlayerState.Dead)
         {
+            anchorPoint = transform.position;
             SetPlayerState(PlayerState.LookingForTarget);
         }
     }
@@ -128,15 +138,22 @@ public class SimulatedPlayerDriver : MonoBehaviour
 
     private void Update_LookingForTarget()
     {
-        if (!agent.hasPath)
+        if (!agent.isOnNavMesh)
+        {
+            // If agent has fallen off the nav mesh, move forward and attempt to get back on the navmesh.
+            var velocity = transform.forward;
+            var rotation = Quaternion.LookRotation(velocity, Vector3.up);
+            var speed = sprintNext ? MovementSpeed.Sprint : MovementSpeed.Run;
+            movementDriver.ApplyMovement(velocity, rotation, speed, jumpNext);
+            jumpNext = false;
+            agent.Warp(transform.position);
+        }
+        else if (agent.remainingDistance < 0.3f || agent.pathStatus == NavMeshPathStatus.PathInvalid || !agent.hasPath)
         {
             SetRandomDestination();
         }
-        else
+        else if (agent.pathStatus == NavMeshPathStatus.PathComplete)
         {
-            // set agent position to current position.
-            agent.nextPosition = transform.position;
-
             var velocity = agent.desiredVelocity;
             velocity.y = 0;
             if (velocity != Vector3.zero)
@@ -147,6 +164,8 @@ public class SimulatedPlayerDriver : MonoBehaviour
                 jumpNext = false;
             }
         }
+
+        agent.nextPosition = transform.position;
     }
 
     private void Update_ShootingTarget()
@@ -221,6 +240,7 @@ public class SimulatedPlayerDriver : MonoBehaviour
                     StartCoroutine(RandomlyStrafe());
                     break;
                 case PlayerState.LookingForTarget:
+                    agent.isStopped = false;
                     StartCoroutine(RandomlyJump());
                     StartCoroutine(RandomlySprint());
                     StartCoroutine(CheckForNearbyTargets());
@@ -233,10 +253,16 @@ public class SimulatedPlayerDriver : MonoBehaviour
     public void SetRandomDestination()
     {
         var destination = anchorPoint + Random.insideUnitSphere * MovementRadius;
-        destination.z = anchorPoint.z;
-        agent.isStopped = false;
-        agent.nextPosition = transform.position;
-        agent.SetDestination(destination);
+        destination.y = anchorPoint.y;
+        if (NavMesh.SamplePosition(destination, out var hit, 50f, NavMesh.AllAreas))
+        {
+            if (worldBounds.Contains(hit.position))
+            {
+                agent.isStopped = false;
+                agent.nextPosition = transform.position;
+                agent.SetDestination(hit.position);
+            }
+        }
     }
 
     private IEnumerator RequestRespawn()
@@ -267,6 +293,7 @@ public class SimulatedPlayerDriver : MonoBehaviour
                         if (hitInfo.transform.root == nearbyCollider.transform.root)
                         {
                             target = nearbyCollider.gameObject;
+                            agent.isStopped = true;
                             SetPlayerState(PlayerState.ShootingTarget);
                             break;
                         }
