@@ -13,13 +13,13 @@ public class SimulatedPlayerCoordinatorWorkerConnector : WorkerConnectorBase
     private const string FlagCreationInterval = "fps_simulated_players_creation_interval";
 
     public GameObject SimulatedPlayerWorkerConnector;
-    public int SimulatedPlayerCount = 1;
-    public int SimulatedPlayerCreationInterval = 5;
+    public int DefaultSimulatedPlayerCount = 1;
+    public int DefaultSimulatedPlayerCreationInterval = 5;
 
     private readonly Dictionary<EntityId, List<GameObject>> proxies = new Dictionary<EntityId, List<GameObject>>();
     private readonly List<EntityId> localSimulatedPlayers = new List<EntityId>();
 
-    private readonly List<GameObject> SimulatedPlayerConnectors = new List<GameObject>();
+    private readonly List<GameObject> simulatedPlayerConnectors = new List<GameObject>();
 
     protected override async void Start()
     {
@@ -42,12 +42,12 @@ public class SimulatedPlayerCoordinatorWorkerConnector : WorkerConnectorBase
 
         if (SimulatedPlayerWorkerConnector != null)
         {
-            while (SimulatedPlayerConnectors.Count < SimulatedPlayerCount)
+            while (simulatedPlayerConnectors.Count < DefaultSimulatedPlayerCount)
             {
                 await Task.Delay(TimeSpan.FromSeconds(
-                    Random.Range(SimulatedPlayerCreationInterval, 1.25f * SimulatedPlayerCreationInterval)));
-                var SimulatedPlayer = Instantiate(SimulatedPlayerWorkerConnector, transform.position, transform.rotation);
-                SimulatedPlayerConnectors.Add(SimulatedPlayer);
+                    Random.Range(DefaultSimulatedPlayerCreationInterval, 1.25f * DefaultSimulatedPlayerCreationInterval)));
+                var simulatedPlayer = Instantiate(SimulatedPlayerWorkerConnector, transform.position, transform.rotation);
+                simulatedPlayerConnectors.Add(simulatedPlayer);
             }
 
             StartCoroutine(MonitorSimulatedPlayers());
@@ -62,19 +62,19 @@ public class SimulatedPlayerCoordinatorWorkerConnector : WorkerConnectorBase
 
             if (CheckWorkerFlags())
             {
-                while (SimulatedPlayerConnectors.Count < SimulatedPlayerCount)
+                while (simulatedPlayerConnectors.Count < DefaultSimulatedPlayerCount)
                 {
                     yield return new WaitForSeconds(
-                        Random.Range(SimulatedPlayerCreationInterval, 1.25f * SimulatedPlayerCreationInterval));
-                    var SimulatedPlayer = Instantiate(SimulatedPlayerWorkerConnector, transform.position, transform.rotation);
-                    SimulatedPlayerConnectors.Add(SimulatedPlayer);
+                        Random.Range(DefaultSimulatedPlayerCreationInterval, 1.25f * DefaultSimulatedPlayerCreationInterval));
+                    var simulatedPlayer = Instantiate(SimulatedPlayerWorkerConnector, transform.position, transform.rotation);
+                    simulatedPlayerConnectors.Add(simulatedPlayer);
                 }
 
-                while (SimulatedPlayerConnectors.Count > SimulatedPlayerCount)
+                while (simulatedPlayerConnectors.Count > DefaultSimulatedPlayerCount)
                 {
-                    var SimulatedPlayer = SimulatedPlayerConnectors[0];
-                    SimulatedPlayerConnectors.Remove(SimulatedPlayer);
-                    Destroy(SimulatedPlayer);
+                    var simulatedPlayer = simulatedPlayerConnectors[0];
+                    simulatedPlayerConnectors.Remove(simulatedPlayer);
+                    Destroy(simulatedPlayer);
                 }
             }
         }
@@ -84,14 +84,14 @@ public class SimulatedPlayerCoordinatorWorkerConnector : WorkerConnectorBase
     {
         if (int.TryParse(Worker.Connection.GetWorkerFlag(FlagCreationInterval), out var newInterval))
         {
-            SimulatedPlayerCreationInterval = newInterval;
+            DefaultSimulatedPlayerCreationInterval = newInterval;
         }
 
         if (int.TryParse(Worker.Connection.GetWorkerFlag(FlagClientCount), out var newCount))
         {
-            if (SimulatedPlayerCount != newCount)
+            if (DefaultSimulatedPlayerCount != newCount)
             {
-                SimulatedPlayerCount = newCount;
+                DefaultSimulatedPlayerCount = newCount;
                 return true;
             }
         }
