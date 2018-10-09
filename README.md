@@ -4,6 +4,6 @@ This starter project is designed to help you get started quickly with the [Spati
 
 ## Installation and setup
 
-For prerequisites, installation and setup, see the [installation and setup](https://github.com/spatialos/gdk-for-unity/docs/projects/template-fps/setup-and-installing.md) documentation.
+For prerequisites, installation and setup, see the [installation and setup](https://docs.improbable.io/unity/alpha/projects/template-fps/setup-and-installing) documentation.
 
 &copy; 2018 Improbable
