@@ -9,10 +9,10 @@ namespace Fps
         private struct AnimationSettings
         {
             [Tooltip("The speed at which the animator changes pitch.")]
-            public float InterpolatePitchSpeed;
+            public float InterpolatePitchDuration;
 
             [Tooltip("The speed at which the animator changes movement speed.")]
-            public float InterpolateMovementSpeed;
+            public float InterpolateMovementDuration;
 
             public float JumpCrossFadeDuration;
         }
@@ -20,8 +20,21 @@ namespace Fps
         private class AnimationFloatParameter
         {
             public string Name;
+            public float OldValue;
             public float CurrentValue;
-            public float TargetValue;
+            public float LerpTimeElapsed;
+            private float targetValue;
+
+            public float TargetValue
+            {
+                get => targetValue;
+                set
+                {
+                    OldValue = CurrentValue;
+                    targetValue = value;
+                    LerpTimeElapsed = 0;
+                }
+            }
         }
 
         private class AnimationBoolParameter
@@ -32,8 +45,8 @@ namespace Fps
 
         [SerializeField] private AnimationSettings animationSettings = new AnimationSettings
         {
-            InterpolatePitchSpeed = 100.0f,
-            InterpolateMovementSpeed = 10.0f,
+            InterpolatePitchDuration = 0.1f,
+            InterpolateMovementDuration = 0.1f,
             JumpCrossFadeDuration = 0.1f
         };
 
@@ -195,33 +208,51 @@ namespace Fps
 
         private void SetBoolParameter(AnimationBoolParameter parameter, bool newValue)
         {
-            if (parameter.LastValue != newValue)
+            if (parameter.LastValue == newValue)
             {
-                parameter.LastValue = newValue;
-                foreach (var animator in animators)
-                {
-                    animator.SetBool(parameter.Name, newValue);
-                }
+                return;
+            }
+
+            parameter.LastValue = newValue;
+            foreach (var animator in animators)
+            {
+                animator.SetBool(parameter.Name, newValue);
             }
         }
 
         private void Update()
         {
-            LerpFloatParameter(pitchParameter, animationSettings.InterpolatePitchSpeed);
-            LerpFloatParameter(xParameter, animationSettings.InterpolateMovementSpeed);
-            LerpFloatParameter(zParameter, animationSettings.InterpolateMovementSpeed);
-            LerpFloatParameter(movementParameter, animationSettings.InterpolateMovementSpeed);
+            LerpFloatParameter(pitchParameter, animationSettings.InterpolatePitchDuration);
+            LerpFloatParameter(xParameter, animationSettings.InterpolateMovementDuration);
+            LerpFloatParameter(zParameter, animationSettings.InterpolateMovementDuration);
+            LerpFloatParameter(movementParameter, animationSettings.InterpolateMovementDuration);
         }
 
-        private void LerpFloatParameter(AnimationFloatParameter parameter, float interpolateSpeed)
+        private void LerpFloatParameter(AnimationFloatParameter parameter, float lerpTime)
         {
             if (parameter.CurrentValue == parameter.TargetValue)
             {
                 return;
             }
 
-            parameter.CurrentValue = Mathf.MoveTowards(parameter.CurrentValue, parameter.TargetValue,
-                interpolateSpeed * Time.deltaTime);
+            // If lerpTime has passed (e.g. if lerpTime is 0), snap to the target value.
+            if (parameter.LerpTimeElapsed >= lerpTime)
+            {
+                parameter.CurrentValue = parameter.TargetValue;
+
+                foreach (var animator in animators)
+                {
+                    animator.SetFloat(parameter.Name, parameter.TargetValue);
+                }
+
+                return;
+            }
+
+            parameter.LerpTimeElapsed = Mathf.Clamp(parameter.LerpTimeElapsed + Time.deltaTime, 0, lerpTime);
+
+            parameter.CurrentValue = Mathf.Lerp(parameter.OldValue, parameter.TargetValue,
+                parameter.LerpTimeElapsed / lerpTime);
+
             foreach (var animator in animators)
             {
                 animator.SetFloat(parameter.Name, parameter.CurrentValue);
