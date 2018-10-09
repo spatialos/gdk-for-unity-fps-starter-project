@@ -19,6 +19,29 @@ echo ""
 echo "Welcome to the SpatialOS GDK for Unity FPS Starter Project setup script." 
 echo ""
 
+PS3="Please make a selection: "
+echo "Select a cloning method."
+echo ""
+options=("HTTPS" "SSH" "Quit")
+select opt in "${options[@]}"
+do
+    case $opt in
+        "HTTPS")
+            CLONE_URI="https://github.com/spatialos/gdk-for-unity.git"
+            break
+            ;;
+        "SSH")
+            CLONE_URI="git@github.com:spatialos/gdk-for-unity.git"
+            break
+            ;;
+        "Quit")
+            echo "Stopping the setup process."
+            exit 0
+            ;;
+        *) echo "Invalid option $REPLY";;
+    esac
+done
+
 readonly RAW_DIR="$(dirname "$0")/../../../gdk-for-unity"
 readonly TARGET_DIRECTORY="$(realpath "${RAW_DIR}")"
 
