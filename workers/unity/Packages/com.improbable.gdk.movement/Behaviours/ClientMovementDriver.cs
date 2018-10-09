@@ -148,6 +148,29 @@ namespace Improbable.Gdk.Movement
             spatialOSComponent = GetComponent<SpatialOSComponent>();
             origin = spatialOSComponent.Worker.Origin;
             server.LatestUpdated += OnServerUpdate;
+            server.OnForcedRotation += OnForcedRotation;
+        }
+
+        private void OnForcedRotation(RotationUpdate forcedRotation)
+        {
+            var rotationUpdate = new RotationUpdate
+            {
+                Pitch = forcedRotation.Pitch,
+                Roll = forcedRotation.Roll,
+                Yaw = forcedRotation.Yaw,
+                TimeDelta = forcedRotation.TimeDelta
+            };
+            var update = new ClientRotation.Update { Latest = new Option<RotationUpdate>(rotationUpdate) };
+            rotation.Send(update);
+
+            cumulativeRotationTimeDelta = 0;
+            pitchDirty = rollDirty = yawDirty = false;
+            
+            //Apply the forced rotation
+            var x = rotationConstraints.XAxisRotation ? forcedRotation.Pitch.ToFloat1k() : 0;
+            var y = rotationConstraints.YAxisRotation ? forcedRotation.Yaw.ToFloat1k() : 0;
+            var z = rotationConstraints.ZAxisRotation ? forcedRotation.Roll.ToFloat1k() : 0;
+            transform.rotation = Quaternion.Euler(x, y, z);
         }
 
         private void OnServerUpdate(ServerResponse update)

@@ -4,6 +4,7 @@ using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.Guns;
 using Improbable.Gdk.Health;
 using Improbable.Gdk.Movement;
+using Improbable.Gdk.StandardTypes;
 using UnityEngine;
 
 namespace Fps
@@ -20,6 +21,7 @@ namespace Fps
         }
 
         [Require] private ClientMovement.Requirable.Writer authority;
+        [Require] private ServerMovement.Requirable.Reader serverMovement;
         [Require] private GunStateComponent.Requirable.Writer gunState;
         [Require] private HealthComponent.Requirable.Reader health;
         [Require] private HealthComponent.Requirable.CommandRequestSender commandSender;
@@ -58,8 +60,8 @@ namespace Fps
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+            serverMovement.OnForcedRotation += OnForcedRotation;
         }
-
 
         private void Update()
         {
@@ -197,6 +199,12 @@ namespace Fps
             }
         }
 
+        private void OnForcedRotation(RotationUpdate forcedRotation)
+        {
+            var newPitch = Mathf.Clamp(forcedRotation.Pitch.ToFloat1k(), -cameraSettings.MaxPitch, -cameraSettings.MinPitch);
+            pitchTransform.localRotation = Quaternion.Euler(newPitch, 0, 0);
+        }
+        
         // Cache the direction vectors to avoid having to normalize every time.
         private void CreateDirectionCache()
         {

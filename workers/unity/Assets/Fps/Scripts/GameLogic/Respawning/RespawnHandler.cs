@@ -11,7 +11,6 @@ namespace Fps
     public class RespawnHandler : MonoBehaviour
     {
         [Require] private HealthComponent.Requirable.CommandRequestHandler respawnRequests;
-        [Require] private ClientRotation.Requirable.CommandRequestSender clientRotationRequest;
         [Require] private HealthComponent.Requirable.Writer health;
         [Require] private ServerMovement.Requirable.Writer serverMovement;
         [Require] private Position.Requirable.Writer spatialPosition;
@@ -64,7 +63,7 @@ namespace Fps
                 Pitch = spawnPitch.ToInt1k(),
                 TimeDelta = 0
             };
-            clientRotationRequest.SendForceRotationRequest(spatial.SpatialEntityId, forceRotationRequest);
+            serverMovement.SendForcedRotation(forceRotationRequest);
 
             // Trigger the respawn event.
             health.SendRespawn(new Empty());
