@@ -37,6 +37,7 @@ namespace Fps
         private SpatialOSComponent spatialComponent;
 
         private readonly Vector3[] cachedDirectionVectors = new Vector3[16];
+        [SerializeField] private AudioRandomiser gunSoundRandomiser;
         [SerializeField] private Transform pitchTransform;
         [SerializeField] private new Camera camera;
 
@@ -198,6 +199,7 @@ namespace Fps
             var ray = shotRayProvider.GetShotRay(gunState.Data.IsAiming, camera);
             shooting.FireShot(gunSettings.ShotRange, ray);
             shooting.InitiateCooldown(gunSettings.ShotCooldown);
+            gunSoundRandomiser.Play();
         }
 
         private void Aiming(bool shouldBeAiming)

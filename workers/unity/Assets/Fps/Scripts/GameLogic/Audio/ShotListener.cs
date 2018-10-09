@@ -13,7 +13,12 @@ namespace Fps.GameLogic.Audio
     {
         [Require] ShootingComponent.Requirable.Reader shotReader;
 
-        public AudioRandomiser ShotRandomiser;
+        private AudioRandomiser shotRandomiser;
+
+        private void Start()
+        {
+            shotRandomiser.GetComponent<AudioRandomiser>();
+        }
 
         private void OnEnable()
         {
@@ -22,7 +27,7 @@ namespace Fps.GameLogic.Audio
 
         private void ShotReaderOnShots(ShotInfo shotInfo)
         {
-            ShotRandomiser.Play();
+            shotRandomiser.Play();
         }
     }
 }

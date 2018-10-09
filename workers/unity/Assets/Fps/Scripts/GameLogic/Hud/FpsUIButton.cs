@@ -127,8 +127,8 @@ namespace Fps
         {
             if (interactable)
             {
-                HoverState();
                 audioSource.PlayOneShot(HoverSound);
+                HoverState();
             }
         }
 
