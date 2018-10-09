@@ -50,9 +50,6 @@ namespace Fps
         private readonly AnimationBoolParameter groundedParameter = new AnimationBoolParameter { Name = "Grounded" };
         private readonly AnimationBoolParameter sprintingParameter = new AnimationBoolParameter { Name = "Sprinting" };
 
-        private readonly AnimationBoolParameter
-            nearGroundParameter = new AnimationBoolParameter { Name = "NearGround" };
-
         private const string JumpParameter = "Jump";
         private readonly AnimationFloatParameter movementParameter = new AnimationFloatParameter { Name = "Movement" };
         private readonly AnimationFloatParameter pitchParameter = new AnimationFloatParameter { Name = "Pitch" };
@@ -80,11 +77,6 @@ namespace Fps
         public void SetGrounded(bool grounded)
         {
             SetBoolParameter(groundedParameter, grounded);
-        }
-
-        public void SetNearGround(bool nearGround)
-        {
-            SetBoolParameter(nearGroundParameter, nearGround);
         }
 
         public void SetPitch(float pitch)

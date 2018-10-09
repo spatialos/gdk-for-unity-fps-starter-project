@@ -187,7 +187,6 @@ namespace Fps
         {
             fpsAnimator.SetAiming(gunState.Data.IsAiming);
             fpsAnimator.SetGrounded(groundChecker.Grounded);
-            fpsAnimator.SetNearGround(groundChecker.NearGround);
             fpsAnimator.SetMovement(transform.position, Time.deltaTime);
             fpsAnimator.SetPitch(pitchTransform.transform.localEulerAngles.x);
 

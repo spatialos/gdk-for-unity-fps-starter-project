@@ -44,7 +44,6 @@ namespace Fps
         private void Update()
         {
             fpsAnimator.SetGrounded(groundChecker.Grounded);
-            fpsAnimator.SetNearGround(groundChecker.NearGround);
             if (isMoving)
             {
                 movementTimeout -= Time.deltaTime;

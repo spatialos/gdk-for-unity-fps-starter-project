@@ -10,12 +10,9 @@ namespace Improbable.Gdk.Movement
         [SerializeField] private LayerMask walkableLayer = ~0;
 
         private CharacterController characterController;
-        private bool nearGround;
         private bool grounded;
 
         public bool OverrideInAir { get; set; }
-        
-        public bool NearGround => nearGround || characterController.isGrounded;
 
         public bool Grounded => grounded || characterController.isGrounded;
 
@@ -29,9 +26,9 @@ namespace Improbable.Gdk.Movement
         {
             var upOffset = characterController.radius + 0.1f;
             var ray = new Ray(transform.position + Vector3.up * upOffset, Vector3.down);
-            nearGround = Physics.SphereCast(ray, characterController.radius, out var hitInfo,
+            var hit = Physics.SphereCast(ray, characterController.radius, out var hitInfo,
                 nearToGroundDistance + upOffset, walkableLayer);
-            grounded = nearGround && hitInfo.distance < upOffset + 0.1f;
+            grounded = hit && hitInfo.distance < upOffset + 0.1f;
         }
     }
 }
