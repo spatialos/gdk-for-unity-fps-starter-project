@@ -1,4 +1,7 @@
-﻿using Improbable.Common;
+﻿using System;
+using System.Collections;
+using System.Threading.Tasks;
+using Improbable.Common;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.Guns;
@@ -32,6 +35,7 @@ namespace Fps
         private GroundChecker groundChecker;
         private FpsAnimator fpsAnimator;
         private GunManager currentGun;
+        private SpatialOSComponent spatial;
 
         private readonly Vector3[] cachedDirectionVectors = new Vector3[16];
         [SerializeField] private Transform pitchTransform;
@@ -44,6 +48,9 @@ namespace Fps
             MinPitch = -80.0f,
             MaxPitch = 60.0f
         };
+
+        private bool isRequestingRespawn;
+        private Coroutine requestingRespawnCoroutine;
 
         private void Awake()
         {
@@ -61,6 +68,8 @@ namespace Fps
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
             serverMovement.OnForcedRotation += OnForcedRotation;
+            health.OnRespawn += OnRespawn;
+            spatial = GetComponent<SpatialOSComponent>();
         }
 
         private void Update()
@@ -74,14 +83,17 @@ namespace Fps
                 return;
             }
 
+            if (isRequestingRespawn)
+            {
+                return;
+            }
+
             if (health.Data.Health == 0)
             {
-                //Send respawn if applicable
-                var isRespawnPressed = Input.GetKeyDown(KeyCode.Space);
-                if (isRespawnPressed)
+                if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    var spatialOS = GetComponent<SpatialOSComponent>();
-                    commandSender.SendRequestRespawnRequest(spatialOS.SpatialEntityId, new Empty());
+                    isRequestingRespawn = true;
+                    requestingRespawnCoroutine = StartCoroutine(RequestRespawn());
                 }
 
                 return;
@@ -152,6 +164,21 @@ namespace Fps
             Animations(isJumpPressed && wasGroundedBeforeMovement);
         }
 
+        private IEnumerator RequestRespawn()
+        {
+            while (true)
+            {
+                commandSender?.SendRequestRespawnRequest(spatial.SpatialEntityId, new Empty());
+                yield return new WaitForSeconds(2);
+            }
+        }
+
+        private void OnRespawn(Empty _)
+        {
+            StopCoroutine(requestingRespawnCoroutine);
+            isRequestingRespawn = false;
+        }
+
         private void HandleShooting(bool shootingPressed, bool shootingHeld)
         {
             if (shootingPressed)
@@ -204,7 +231,7 @@ namespace Fps
             var newPitch = Mathf.Clamp(forcedRotation.Pitch.ToFloat1k(), -cameraSettings.MaxPitch, -cameraSettings.MinPitch);
             pitchTransform.localRotation = Quaternion.Euler(newPitch, 0, 0);
         }
-        
+
         // Cache the direction vectors to avoid having to normalize every time.
         private void CreateDirectionCache()
         {
