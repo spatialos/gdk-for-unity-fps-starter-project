@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Improbable.Gdk.Movement
 {
-    public class ClientMovementDriver : CharacterControllerMotor
+    public class ClientMovementDriver : GroundCheckingDriver
     {
         [Require] private ClientMovement.Requirable.Writer client;
         [Require] private ClientRotation.Requirable.Writer rotation;
@@ -254,8 +254,7 @@ namespace Improbable.Gdk.Movement
                 verticalVelocity = 0;
             }
 
-            CheckGrounded();
-            CheckOverrideInAir();
+            CheckExtensionsForOverrides();
 
             //Rotation
             var x = rotationConstraints.XAxisRotation ? rotation.eulerAngles.x : 0;

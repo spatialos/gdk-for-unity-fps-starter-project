@@ -43,7 +43,7 @@ namespace Fps
 
         private void Update()
         {
-            fpsAnimator.SetGrounded(driver.GetGrounded());
+            fpsAnimator.SetGrounded(driver.IsGrounded);
             if (isMoving)
             {
                 movementTimeout -= Time.deltaTime;

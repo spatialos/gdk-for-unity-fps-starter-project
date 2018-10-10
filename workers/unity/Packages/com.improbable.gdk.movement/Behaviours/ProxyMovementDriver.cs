@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Improbable.Gdk.Movement
 {
-    public class ProxyMovementDriver : CharacterControllerMotor
+    public class ProxyMovementDriver : GroundCheckingDriver
     {
         [Require] private ServerMovement.Requirable.Reader server;
         [Require] private ClientRotation.Requirable.Reader client;
@@ -85,12 +85,6 @@ namespace Improbable.Gdk.Movement
                 transform.rotation = target;
                 hasRotationLeft = false;
             }
-        }
-
-        public bool GetGrounded()
-        {
-            CheckGrounded();
-            return IsGrounded;
         }
     }
 }

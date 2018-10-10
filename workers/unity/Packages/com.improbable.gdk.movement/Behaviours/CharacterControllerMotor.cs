@@ -25,22 +25,12 @@ namespace Improbable.Gdk.Movement
         private float teleportDistanceSqrd = 25f;
 
         private CharacterController characterController;
-        private IMotorExtension[] motorExtensions;
-
-        // Ground checking
-        public bool IsGrounded { get; private set; }
-
-        [Tooltip("Uses an overlap sphere of this radius from the character's feet to check for collision.")]
-        [SerializeField]
-        private float groundedRadius = 0.05f;
-
-        [SerializeField] private LayerMask groundLayerMask = ~0;
-        private readonly Collider[] groundedOverlapSphereArray = new Collider[1];
+        protected IMotorExtension[] MotorExtensions;
 
         protected virtual void Awake()
         {
             characterController = GetComponent<CharacterController>();
-            motorExtensions = GetComponents<IMotorExtension>();
+            MotorExtensions = GetComponents<IMotorExtension>();
         }
 
         public bool HasEnoughMovement(float threshold, out Vector3 movement, out float timeDelta, out bool anyMovement,
@@ -104,35 +94,19 @@ namespace Improbable.Gdk.Movement
         }
 
         // Separate from regular move, as we only want the extensions applied to the movement once.
-        public virtual void MoveWithExtensions(Vector3 toMove)
+        public void MoveWithExtensions(Vector3 toMove)
         {
-            if (characterController.enabled)
+            if (!characterController.enabled)
             {
-                foreach (var extension in motorExtensions)
-                {
-                    extension.BeforeMove(toMove);
-                }
-
-                characterController.Move(toMove);
+                return;
             }
-        }
 
-        protected void CheckGrounded()
-        {
-            IsGrounded = Physics.OverlapSphereNonAlloc(transform.position, groundedRadius, groundedOverlapSphereArray,
-                groundLayerMask) > 0;
-        }
-
-        protected void CheckOverrideInAir()
-        {
-            foreach (var extension in motorExtensions)
+            foreach (var extension in MotorExtensions)
             {
-                if (extension.IsOverrideAir())
-                {
-                    IsGrounded = false;
-                    return;
-                }
+                extension.BeforeMove(toMove);
             }
+
+            Move(toMove);
         }
 
         public void Interpolate(Vector3 target, float timeDelta)
@@ -158,13 +132,13 @@ namespace Improbable.Gdk.Movement
                 {
                     var percentageToMove = Time.deltaTime / timeLeftToMove;
                     var distanceToMove = distanceLeftToMove * percentageToMove;
-                    transform.position += distanceToMove;
+                    Move(distanceToMove);
                     distanceLeftToMove -= distanceToMove;
                     timeLeftToMove -= Time.deltaTime;
                 }
                 else
                 {
-                    transform.position += distanceLeftToMove;
+                    Move(distanceLeftToMove);
                     hasMovementLeft = false;
                 }
             }
