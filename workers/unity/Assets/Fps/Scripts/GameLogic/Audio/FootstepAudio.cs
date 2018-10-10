@@ -1,3 +1,4 @@
+using Improbable.Gdk.Movement;
 using UnityEngine;
 
 namespace Fps.GameLogic.Audio
@@ -9,12 +10,17 @@ namespace Fps.GameLogic.Audio
 
         private AudioRandomiser leftAudio;
         private AudioRandomiser rightAudio;
+        private ClientMovementDriver clientMovementDriver;
+
 
         private int previousLeftRaycast;
         private int previousRightRaycast;
 
         private bool previousFootGroundedLeft;
         private bool previousFootGroundedRight;
+        private bool previousIsGroundedState;
+
+        private bool previousInAirState;
 
         private readonly float hitRayLength = 0.1f;
 
@@ -24,6 +30,7 @@ namespace Fps.GameLogic.Audio
         {
             leftAudio = LeftFoot.GetComponent<AudioRandomiser>();
             rightAudio = RightFoot.GetComponent<AudioRandomiser>();
+            clientMovementDriver = GetComponentInParent<ClientMovementDriver>();
         }
 
         private void Start()
@@ -36,6 +43,14 @@ namespace Fps.GameLogic.Audio
         {
             var currentFootGroundedLeft = IsFootGrounded(LeftFoot);
             var currentFootGroundedRight = IsFootGrounded(RightFoot);
+            var currentIsGroundedState = clientMovementDriver.IsGrounded;
+
+            if (currentIsGroundedState != null && currentIsGroundedState && !previousIsGroundedState)
+            {
+                // Player landed this frame
+                leftAudio.Play();
+                rightAudio.Play();
+            }
 
             if (!previousFootGroundedLeft && currentFootGroundedLeft && NavKeysDown())
             {
@@ -51,6 +66,7 @@ namespace Fps.GameLogic.Audio
 
             previousFootGroundedLeft = currentFootGroundedLeft;
             previousFootGroundedRight = currentFootGroundedRight;
+            previousIsGroundedState = currentIsGroundedState;
         }
 
         private bool IsFootGrounded(Transform foot)
