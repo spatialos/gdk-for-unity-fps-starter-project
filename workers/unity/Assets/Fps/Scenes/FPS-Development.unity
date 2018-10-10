@@ -98,15 +98,15 @@ NavMeshSettings:
   m_BuildSettings:
     serializedVersion: 2
     agentTypeID: 0
-    agentRadius: 0.5
-    agentHeight: 2
+    agentRadius: 0.25
+    agentHeight: 1.75
     agentSlope: 45
     agentClimb: 0.6
     ledgeDropHeight: 0
     maxJumpAcrossDistance: 0
     minRegionArea: 2
     manualCellSize: 0
-    cellSize: 0.16666667
+    cellSize: 0.083333336
     manualTileSize: 0
     tileSize: 256
     accuratePlacement: 0
@@ -786,6 +786,52 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &915625527
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4977616286773460, guid: 1d177d0ca1e95c646a6a7b9b84364f9b, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 5000
+      objectReference: {fileID: 0}
+    - target: {fileID: 4977616286773460, guid: 1d177d0ca1e95c646a6a7b9b84364f9b, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 4977616286773460, guid: 1d177d0ca1e95c646a6a7b9b84364f9b, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4977616286773460, guid: 1d177d0ca1e95c646a6a7b9b84364f9b, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4977616286773460, guid: 1d177d0ca1e95c646a6a7b9b84364f9b, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4977616286773460, guid: 1d177d0ca1e95c646a6a7b9b84364f9b, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4977616286773460, guid: 1d177d0ca1e95c646a6a7b9b84364f9b, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4977616286773460, guid: 1d177d0ca1e95c646a6a7b9b84364f9b, type: 2}
+      propertyPath: m_RootOrder
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 1620385508151754, guid: 1d177d0ca1e95c646a6a7b9b84364f9b, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 1d177d0ca1e95c646a6a7b9b84364f9b, type: 2}
+  m_IsPrefabAsset: 0
 --- !u!4 &946697438
 Transform:
   m_ObjectHideFlags: 0
@@ -1382,16 +1428,16 @@ MonoBehaviour:
   edgeLeakFixup: 1
   edgeToleranceNormal: 1
   edgeTolerance: 1
-  shadowCascadeCount: 4
+  shadowCascadeCount: 3
   shadowCascadeRatios:
   - 0.05
-  - 0.15
+  - 0.2
   - 0.3
   shadowCascadeBorders:
   - 0
   - 0
-  - 0
   - 0.2
+  - 0
   shadowAlgorithm: 0
   shadowVariant: 3
   shadowPrecision: 0
@@ -1583,11 +1629,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4593588597980260, guid: e4a3eb8590344604db1e998db676a211, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 1000
+      value: 5000
       objectReference: {fileID: 0}
     - target: {fileID: 4593588597980260, guid: e4a3eb8590344604db1e998db676a211, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 4593588597980260, guid: e4a3eb8590344604db1e998db676a211, type: 2}
       propertyPath: m_LocalPosition.z
@@ -1659,7 +1705,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4527984774241536, guid: a18c738cbcda9914591d9af24a618907, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 100
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 4527984774241536, guid: a18c738cbcda9914591d9af24a618907, type: 2}
       propertyPath: m_LocalPosition.z
@@ -1684,6 +1730,11 @@ Prefab:
     - target: {fileID: 4527984774241536, guid: a18c738cbcda9914591d9af24a618907, type: 2}
       propertyPath: m_RootOrder
       value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 114510834623507516, guid: a18c738cbcda9914591d9af24a618907,
+        type: 2}
+      propertyPath: DefaultSimulatedPlayerCount
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a18c738cbcda9914591d9af24a618907, type: 2}
