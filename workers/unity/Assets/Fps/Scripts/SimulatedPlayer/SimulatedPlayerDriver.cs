@@ -1,7 +1,5 @@
 ﻿using System.Collections;
-using System.Text;
 using Improbable.Common;
-using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.Guns;
 using Improbable.Gdk.Health;
@@ -33,6 +31,8 @@ public class SimulatedPlayerDriver : MonoBehaviour
 
     private Vector3 anchorPoint;
     private const float MovementRadius = 50f;
+    private const float NavMeshSnapDistance = 5f;
+    private const float MinRemainingDistance = 0.3f;
     private bool jumpNext;
     private bool sprintNext;
 
@@ -148,7 +148,8 @@ public class SimulatedPlayerDriver : MonoBehaviour
             jumpNext = false;
             agent.Warp(transform.position);
         }
-        else if (agent.remainingDistance < 0.3f || agent.pathStatus == NavMeshPathStatus.PathInvalid || !agent.hasPath)
+        else if (agent.remainingDistance < MinRemainingDistance || agent.pathStatus == NavMeshPathStatus.PathInvalid ||
+            !agent.hasPath)
         {
             SetRandomDestination();
         }
@@ -254,7 +255,7 @@ public class SimulatedPlayerDriver : MonoBehaviour
     {
         var destination = anchorPoint + Random.insideUnitSphere * MovementRadius;
         destination.y = anchorPoint.y;
-        if (NavMesh.SamplePosition(destination, out var hit, 50f, NavMesh.AllAreas))
+        if (NavMesh.SamplePosition(destination, out var hit, NavMeshSnapDistance, NavMesh.AllAreas))
         {
             if (worldBounds.Contains(hit.position))
             {
