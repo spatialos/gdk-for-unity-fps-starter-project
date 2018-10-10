@@ -56,6 +56,7 @@ namespace Fps
                 return;
             }
 
+            ragdoll.OnCleanup -= StopLooking;
             ragdoll = null;
         }
 
@@ -63,13 +64,6 @@ namespace Fps
         {
             if (ragdoll == null)
             {
-                return;
-            }
-
-            // If the ragdoll is returned to the pool, stop tracking it.
-            if (!ragdoll.isActiveAndEnabled)
-            {
-                StopLooking();
                 return;
             }
 
