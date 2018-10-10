@@ -182,7 +182,7 @@ namespace Improbable.Gdk.Movement
 
             verticalVelocity = Mathf.Clamp(verticalVelocity - movementSettings.Gravity * Time.deltaTime,
                 -movementSettings.TerminalVelocity, verticalVelocity);
-            CheckGrounded();
+
             if (IsGrounded && verticalVelocity < -movementSettings.GroundedFallSpeed)
             {
                 verticalVelocity = -movementSettings.GroundedFallSpeed;
@@ -254,6 +254,7 @@ namespace Improbable.Gdk.Movement
                 verticalVelocity = 0;
             }
 
+            CheckGrounded();
             CheckOverrideInAir();
 
             //Rotation

@@ -129,7 +129,7 @@ namespace Improbable.Gdk.Movement
             {
                 if (extension.IsOverrideAir())
                 {
-                    IsGrounded = true;
+                    IsGrounded = false;
                     return;
                 }
             }
