@@ -19,7 +19,7 @@ echo ""
 echo "Welcome to the SpatialOS GDK for Unity FPS Starter Project setup script." 
 echo ""
 
-readonly RAW_DIR="$(dirname "${0}")/../../../gdk-for-unity"
+readonly RAW_DIR="$(CDPATH= cd -- "$(dirname -- $0)" && pwd)/../../../gdk-for-unity"
 readonly TARGET_DIRECTORY="$(realpath "${RAW_DIR}")"
 
 echo_with_color "This script will create the following directory: ${TARGET_DIRECTORY}" "${LOG_WARNING}"
