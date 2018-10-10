@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Fps
 {
-    [RequireComponent(typeof(FpsAnimator), typeof(GroundChecker))]
+    [RequireComponent(typeof(FpsAnimator), typeof(ProxyMovementDriver))]
     public class ProxyAnimation : MonoBehaviour
     {
         [Require] private GunStateComponent.Requirable.Reader gunState;
@@ -19,7 +19,7 @@ namespace Fps
         [SerializeField]
         private float stopAnimatingAfterUpdates = 5.0f;
 
-        private GroundChecker groundChecker;
+        private ProxyMovementDriver driver;
         private FpsAnimator fpsAnimator;
 
         private float movementTimeout;
@@ -27,7 +27,7 @@ namespace Fps
 
         private void Awake()
         {
-            groundChecker = GetComponent<GroundChecker>();
+            driver = GetComponent<ProxyMovementDriver>();
             fpsAnimator = GetComponent<FpsAnimator>();
         }
 
@@ -43,7 +43,7 @@ namespace Fps
 
         private void Update()
         {
-            fpsAnimator.SetGrounded(groundChecker.Grounded);
+            fpsAnimator.SetGrounded(driver.GetGrounded());
             if (isMoving)
             {
                 movementTimeout -= Time.deltaTime;

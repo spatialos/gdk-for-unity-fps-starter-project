@@ -773,7 +773,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4244229316102358}
   - component: {fileID: 143934676795818780}
-  - component: {fileID: 114960919700455182}
   - component: {fileID: 114711516255448412}
   - component: {fileID: 114318485812647952}
   - component: {fileID: 114801285074366292}
@@ -2917,6 +2916,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   teleportDistanceSqrd: 25
+  groundedRadius: 0.2
+  groundLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
   transformUpdateHz: 15
   rotationUpdateHz: 15
   transformUpdateDelta: 0.06666667
@@ -2937,10 +2940,6 @@ MonoBehaviour:
     XAxisRotation: 0
     YAxisRotation: 1
     ZAxisRotation: 0
-  groundedRadius: 0.1
-  groundLayerMask:
-    serializedVersion: 2
-    m_Bits: 1
 --- !u!114 &114898509530246980
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2952,21 +2951,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3b612912a0397d4087bb3a37ef8f403, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114960919700455182
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1627949407420470}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3205d6d2e2108eb478ab467af2c0fc81, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  nearToGroundDistance: 2
-  walkableLayer:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!114 &114980933896096268
 MonoBehaviour:
   m_ObjectHideFlags: 1

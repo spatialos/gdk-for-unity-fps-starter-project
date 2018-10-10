@@ -10,8 +10,7 @@ namespace Improbable.Gdk.Movement
         [Require] private ServerMovement.Requirable.Reader server;
         [Require] private ClientRotation.Requirable.Reader client;
 
-        [SerializeField]
-        private RotationConstraints rotationConstraints = new RotationConstraints
+        [SerializeField] private RotationConstraints rotationConstraints = new RotationConstraints
         {
             XAxisRotation = true,
             YAxisRotation = true,
@@ -86,6 +85,12 @@ namespace Improbable.Gdk.Movement
                 transform.rotation = target;
                 hasRotationLeft = false;
             }
+        }
+
+        public bool GetGrounded()
+        {
+            CheckGrounded();
+            return IsGrounded;
         }
     }
 }

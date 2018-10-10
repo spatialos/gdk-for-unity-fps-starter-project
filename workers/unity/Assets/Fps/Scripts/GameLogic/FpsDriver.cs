@@ -30,7 +30,6 @@ namespace Fps
         private ClientMovementDriver movement;
         private ClientShooting shooting;
         private ShotRayProvider shotRayProvider;
-        private GroundChecker groundChecker;
         private FpsAnimator fpsAnimator;
         private GunManager currentGun;
         private SpatialOSComponent spatialComponent;
@@ -55,7 +54,6 @@ namespace Fps
             movement = GetComponent<ClientMovementDriver>();
             shooting = GetComponent<ClientShooting>();
             shotRayProvider = GetComponent<ShotRayProvider>();
-            groundChecker = GetComponent<GroundChecker>();
             fpsAnimator = GetComponent<FpsAnimator>();
             currentGun = GetComponent<GunManager>();
             CreateDirectionCache();
@@ -214,7 +212,7 @@ namespace Fps
         private void Animations(bool isJumping)
         {
             fpsAnimator.SetAiming(gunState.Data.IsAiming);
-            fpsAnimator.SetGrounded(groundChecker.Grounded);
+            fpsAnimator.SetGrounded(movement.IsGrounded);
             fpsAnimator.SetMovement(transform.position, Time.deltaTime);
             fpsAnimator.SetPitch(pitchTransform.transform.localEulerAngles.x);
 

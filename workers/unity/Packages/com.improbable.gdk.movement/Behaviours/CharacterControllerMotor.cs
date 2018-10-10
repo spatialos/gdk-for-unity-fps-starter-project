@@ -7,8 +7,6 @@ namespace Improbable.Gdk.Movement
     [RequireComponent(typeof(CharacterController))]
     public class CharacterControllerMotor : MonoBehaviour
     {
-        protected bool isGrounded = false;
-
         //CSP
         private readonly Queue<MovementRequest> requests = new Queue<MovementRequest>();
         private Vector3 cumulativeMovement;
@@ -28,6 +26,16 @@ namespace Improbable.Gdk.Movement
 
         private CharacterController characterController;
         private IMotorExtension[] motorExtensions;
+
+        // Ground checking
+        public bool IsGrounded { get; private set; }
+
+        [Tooltip("Uses an overlap sphere of this radius from the character's feet to check for collision.")]
+        [SerializeField]
+        private float groundedRadius = 0.05f;
+
+        [SerializeField] private LayerMask groundLayerMask = ~0;
+        private readonly Collider[] groundedOverlapSphereArray = new Collider[1];
 
         protected virtual void Awake()
         {
@@ -109,17 +117,22 @@ namespace Improbable.Gdk.Movement
             }
         }
 
-        protected bool CheckOverrideInAir()
+        protected void CheckGrounded()
+        {
+            IsGrounded = Physics.OverlapSphereNonAlloc(transform.position, groundedRadius, groundedOverlapSphereArray,
+                groundLayerMask) > 0;
+        }
+
+        protected void CheckOverrideInAir()
         {
             foreach (var extension in motorExtensions)
             {
                 if (extension.IsOverrideAir())
                 {
-                    return true;
+                    IsGrounded = true;
+                    return;
                 }
             }
-
-            return false;
         }
 
         public void Interpolate(Vector3 target, float timeDelta)

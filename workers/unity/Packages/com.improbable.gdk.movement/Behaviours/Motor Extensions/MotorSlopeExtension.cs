@@ -5,12 +5,10 @@ namespace Improbable.Gdk.Movement
     [RequireComponent(typeof(CharacterController), typeof(CharacterControllerMotor))]
     public class MotorSlopeExtension : MonoBehaviour, IMotorExtension
     {
-        [RangeAttribute(0, 1)]
-        [SerializeField] private float slideFriction;
+        [Range(0, 1)] [SerializeField] private float slideFriction;
 
         private CharacterController characterController;
         private CharacterControllerMotor motor;
-        private GroundChecker groundChecker;
         private Vector3 hitNormal;
         private bool isGrounded;
         private bool overrideInAir;
@@ -21,11 +19,10 @@ namespace Improbable.Gdk.Movement
         {
             characterController = GetComponent<CharacterController>();
             motor = GetComponent<CharacterControllerMotor>();
-            groundChecker = GetComponent<GroundChecker>();
         }
 
         // Record the hits of the CharacterController
-        void OnControllerColliderHit(ControllerColliderHit hit)
+        private void OnControllerColliderHit(ControllerColliderHit hit)
         {
             hitNormal = hit.normal;
             var angleToGround = Vector3.Angle(Vector3.up, hitNormal);
@@ -34,16 +31,14 @@ namespace Improbable.Gdk.Movement
             if (angleToGround >= 90 - ErrorTolerance)
             {
                 overrideInAir = false;
-                groundChecker.OverrideInAir = overrideInAir;
                 return;
             }
 
             // Consider as in-air if beyond the slope limit.
-            isGrounded = (angleToGround <= characterController.slopeLimit + ErrorTolerance);
+            isGrounded = angleToGround <= characterController.slopeLimit + ErrorTolerance;
             if (isGrounded == overrideInAir)
             {
                 overrideInAir = !isGrounded;
-                groundChecker.OverrideInAir = overrideInAir;
             }
         }
 
@@ -63,6 +58,9 @@ namespace Improbable.Gdk.Movement
             }
         }
 
-        bool IMotorExtension.IsOverrideAir() => overrideInAir;
+        bool IMotorExtension.IsOverrideAir()
+        {
+            return overrideInAir;
+        }
     }
 }
