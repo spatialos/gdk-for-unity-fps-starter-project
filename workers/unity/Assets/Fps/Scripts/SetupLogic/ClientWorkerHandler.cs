@@ -52,7 +52,7 @@ namespace Fps
                 && workerConnector.Worker != null
                 && !workerConnector.Worker.Connection.IsConnected)
             {
-                screenUIController.OnDisconnect();
+                screenUIController.OnDisconnect("Client");
                 Destroy(currentClientWorker);
             }
         }

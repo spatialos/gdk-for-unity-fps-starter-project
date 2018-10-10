@@ -74,6 +74,7 @@ namespace Fps
             if (connectButton.GetCurrentAnimatorStateInfo(0).IsName("FailedToSpawn"))
             {
                 connectButton.SetTrigger("Retry");
+                GameLogicWorkerHandler.CreateGameLogic();
                 //SpawnPlayer();
             }
             else if (connectButton.GetCurrentAnimatorStateInfo(0).IsName("FailedToConnect"))

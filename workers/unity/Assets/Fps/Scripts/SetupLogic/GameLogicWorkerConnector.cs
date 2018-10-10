@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.Guns;
@@ -17,6 +17,11 @@ namespace Fps
             await AttemptConnect();
         }
 
+        public async void Connect()
+        {
+            await AttemptConnect();
+        }
+
         protected override string GetWorkerType()
         {
             return WorkerUtils.UnityGameLogic;
@@ -25,7 +30,6 @@ namespace Fps
         protected override void HandleWorkerConnectionEstablished()
         {
             var world = Worker.World;
-
             PlayerLifecycleHelper.AddServerSystems(world);
             GameObjectRepresentationHelper.AddSystems(world);
             GameObjectCreationHelper.EnableStandardGameObjectCreation(world);
