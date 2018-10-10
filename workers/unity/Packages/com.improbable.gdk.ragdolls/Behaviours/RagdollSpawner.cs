@@ -25,7 +25,7 @@ namespace Improbable.Gdk.Ragdoll
             health.OnRespawn += empty => ragdollSpawned = false;
             pool = ObjectPooler.GetOrCreateObjectPool<PoolableRagdoll>(ragdollPrefab, 2);
         }
-        
+
         private void OnHealthModified(HealthModifiedInfo info)
         {
             if (info.Died && !ragdollSpawned)
