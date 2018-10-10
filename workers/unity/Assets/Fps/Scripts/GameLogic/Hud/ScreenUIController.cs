@@ -34,30 +34,30 @@ namespace Fps
                 SetEscapeScreen(!EscapeScreen.activeInHierarchy);
             }
 
-            if (Input.GetKeyDown(KeyCode.Space)
-                && ConnectScreen.activeInHierarchy
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                ConnectClicked();
+            }
+        }
+
+        public void ConnectClicked()
+        {
+            if (ConnectScreen.activeInHierarchy
                 && connectAnimator.GetCurrentAnimatorStateInfo(0).IsName("ReadyState"))
             {
                 // Create Client Worker
                 connectAnimator.SetTrigger("Connecting");
                 ClientWorkerHandler.CreateClient();
             }
-            else if (Input.GetKeyDown(KeyCode.Space)
-                && connectAnimator.GetCurrentAnimatorStateInfo(0).IsName("WorkerDisconnected"))
+            else if (connectAnimator.GetCurrentAnimatorStateInfo(0).IsName("WorkerDisconnected"))
             {
                 connectAnimator.SetTrigger("Retry");
             }
-            else if (Input.GetKeyDown(KeyCode.Space)
-                && ConnectScreen.activeInHierarchy
+            else if (ConnectScreen.activeInHierarchy
                 && ClientWorkerHandler.ConnectionController != null)
             {
                 ClientWorkerHandler.ConnectionController.ConnectAction();
             }
-        }
-
-        public void ConnectClicked()
-        {
-            ClientWorkerHandler.ConnectionController.ConnectAction();
         }
 
         public void SetPlayerAiming(bool isAiming)
