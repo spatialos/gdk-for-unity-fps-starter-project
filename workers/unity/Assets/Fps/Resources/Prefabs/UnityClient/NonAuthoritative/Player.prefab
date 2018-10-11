@@ -2812,7 +2812,7 @@ AudioSource:
   MinDistance: 1
   MaxDistance: 500
   Pan2D: 0
-  rolloffMode: 0
+  rolloffMode: 2
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -2820,23 +2820,32 @@ AudioSource:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0
+      time: 0.002
       value: 1
-      inSlope: 0
-      outSlope: 0
+      inSlope: -5.7980294
+      outSlope: -5.7980294
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
+      inWeight: 0
+      outWeight: 0.28579387
     - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
+      time: 0.09259832
+      value: 0.12157336
+      inSlope: -0.6182845
+      outSlope: -0.6182845
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 0.33333334
+      outWeight: 0.18488722
+    - serializedVersion: 3
+      time: 0.93938446
+      value: 0
+      inSlope: -0.05351625
+      outSlope: -0.05351625
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.21441795
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
@@ -2845,7 +2854,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -3141,6 +3150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f1013ab56d5e0549bbbbd55b246ffbe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shotRandomiser: {fileID: 114474901321814338}
 --- !u!114 &114893241843570428
 MonoBehaviour:
   m_ObjectHideFlags: 1

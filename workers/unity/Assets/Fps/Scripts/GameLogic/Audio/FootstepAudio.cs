@@ -10,8 +10,6 @@ namespace Fps.GameLogic.Audio
 
         private AudioRandomiser leftAudio;
         private AudioRandomiser rightAudio;
-        private ClientMovementDriver clientMovementDriver;
-
 
         private int previousLeftRaycast;
         private int previousRightRaycast;
@@ -30,7 +28,6 @@ namespace Fps.GameLogic.Audio
         {
             leftAudio = LeftFoot.GetComponent<AudioRandomiser>();
             rightAudio = RightFoot.GetComponent<AudioRandomiser>();
-            clientMovementDriver = GetComponentInParent<ClientMovementDriver>();
         }
 
         private void Start()
@@ -43,7 +40,7 @@ namespace Fps.GameLogic.Audio
         {
             var currentFootGroundedLeft = IsFootGrounded(LeftFoot);
             var currentFootGroundedRight = IsFootGrounded(RightFoot);
-            var currentIsGroundedState = clientMovementDriver.IsGrounded;
+            var currentIsGroundedState = GetComponentInParent<GroundChecker>().Grounded;
 
             if (currentIsGroundedState != null && currentIsGroundedState && !previousIsGroundedState)
             {
