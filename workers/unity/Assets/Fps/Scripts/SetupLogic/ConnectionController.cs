@@ -1,3 +1,4 @@
+using System.Collections;
 using Improbable;
 using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.PlayerLifecycle;
@@ -43,9 +44,18 @@ namespace Fps
             // Detect successful player creation, hide loadscreen UI in response.
             if (obj.StatusCode == StatusCode.Success)
             {
-                canvasCameraObj.SetActive(false);
-                screenUIController.ConnectScreen.SetActive(false);
-                screenUIController.InGameHud.SetActive(true);
+                if (connectButton.GetCurrentAnimatorStateInfo(0).IsName("FailedToSpawn"))
+                {
+                    Debug.Log("FailedToSpawn");
+                    connectButton.SetTrigger("Retry");
+                    StartCoroutine(DelayUIRemoval());
+                }
+                else
+                {
+                    canvasCameraObj.SetActive(false);
+                    screenUIController.ConnectScreen.SetActive(false);
+                    screenUIController.InGameHud.SetActive(true);
+                }
             }
             else
             {
@@ -69,18 +79,32 @@ namespace Fps
             connectButton.SetTrigger("FailedToConnect");
         }
 
+        private void SpawnPlayer()
+        {
+            var request = new CreatePlayerRequestType(new Vector3f { X = 0, Y = 0, Z = 0 });
+            commandSender.SendCreatePlayerRequest(new EntityId(1), request);
+        }
+
         public void ConnectAction()
         {
             if (connectButton.GetCurrentAnimatorStateInfo(0).IsName("FailedToSpawn"))
             {
                 connectButton.SetTrigger("Retry");
-                //SpawnPlayer();
+                SpawnPlayer();
             }
             else if (connectButton.GetCurrentAnimatorStateInfo(0).IsName("FailedToConnect"))
             {
                 connectButton.SetTrigger("Retry");
                 ClientWorkerHandler.CreateClient();
             }
+        }
+
+        IEnumerator DelayUIRemoval()
+        {
+            yield return new WaitForSeconds(2);
+            canvasCameraObj.SetActive(false);
+            screenUIController.ConnectScreen.SetActive(false);
+            screenUIController.InGameHud.SetActive(true);
         }
     }
 }
