@@ -183,9 +183,12 @@ public class SimulatedPlayerDriver : MonoBehaviour
             GetComponent<ClientMovementDriver>().ApplyMovement(
                 strafeRight ? transform.right : -transform.right, rotationAmount, MovementSpeed.Run, false);
 
-            if (shooting.IsShooting(true) && Mathf.Abs(Quaternion.Angle(targetRotation, transform.rotation)) < 5)
+            var aimRotation = Quaternion.Euler(movementDriver.CurrentPitch, movementDriver.CurrentYaw,
+                movementDriver.CurrentRoll);
+            if (shooting.IsShooting(true) && Mathf.Abs(Quaternion.Angle(targetRotation, aimRotation)) < 5)
             {
-                shooting.FireShot(200f, new Ray(gunOrigin, transform.forward));
+                Debug.Log(aimRotation * Vector3.forward);
+                shooting.FireShot(200f, new Ray(gunOrigin, aimRotation * Vector3.forward));
                 shooting.InitiateCooldown(0.2f);
                 lastShotTime = Time.time;
             }
