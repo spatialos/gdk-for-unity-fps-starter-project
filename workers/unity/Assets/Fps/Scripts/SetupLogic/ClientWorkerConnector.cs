@@ -42,6 +42,7 @@ namespace Fps
         protected override void HandleWorkerConnectionEstablished()
         {
             var world = Worker.World;
+
             PlayerLifecycleHelper.AddClientSystems(world);
             GameObjectRepresentationHelper.AddSystems(world);
             var fallback = new GameObjectCreatorFromMetadata(Worker.WorkerType, Worker.Origin, Worker.LogDispatcher);

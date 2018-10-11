@@ -47,18 +47,11 @@ namespace Fps
             {
                 // Create Client Worker
                 connectAnimator.SetTrigger("Connecting");
-                //GameLogicWorkerHandler.CreateGameLogic();
                 ClientWorkerHandler.CreateClient();
             }
-            else if (connectAnimator.GetCurrentAnimatorStateInfo(0).IsName("ClientDisconnected"))
+            else if (connectAnimator.GetCurrentAnimatorStateInfo(0).IsName("WorkerDisconnected"))
             {
                 connectAnimator.SetTrigger("Retry");
-                ClientWorkerHandler.CreateClient();
-            }
-            else if (connectAnimator.GetCurrentAnimatorStateInfo(0).IsName("ClientDisconnected"))
-            {
-                connectAnimator.SetTrigger("Retry");
-                GameLogicWorkerHandler.CreateGameLogic();
             }
             else if (ConnectScreen.activeInHierarchy
                 && ClientWorkerHandler.ConnectionController != null)
@@ -99,18 +92,11 @@ namespace Fps
             InEscapeMenu = inEscapeScreen;
         }
 
-        public void OnDisconnect(string worker)
+        public void OnDisconnect()
         {
-            // A Worker has been disconnected.
+            // Worker has been disconnected.
             ShowConnectScreen();
-
-            switch (worker)
-            {
-                case "GameLogic": connectAnimator.SetTrigger("GameLogicDisconnected");
-                    break;
-                case "Client": connectAnimator.SetTrigger("ClientDisconnected");
-                    break;
-            }
+            connectAnimator.SetTrigger("Disconnected");
         }
     }
 }
