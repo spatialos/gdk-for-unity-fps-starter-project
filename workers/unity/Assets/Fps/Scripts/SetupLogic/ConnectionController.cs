@@ -46,7 +46,6 @@ namespace Fps
             {
                 if (connectButton.GetCurrentAnimatorStateInfo(0).IsName("FailedToSpawn"))
                 {
-                    Debug.Log("FailedToSpawn");
                     connectButton.SetTrigger("Retry");
                     StartCoroutine(DelayUIRemoval());
                 }
