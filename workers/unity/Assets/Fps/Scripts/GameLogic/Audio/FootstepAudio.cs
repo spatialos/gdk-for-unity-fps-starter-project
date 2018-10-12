@@ -10,6 +10,8 @@ namespace Fps.GameLogic.Audio
 
         private AudioRandomiser leftAudio;
         private AudioRandomiser rightAudio;
+        private GroundChecker groundChecker;
+        private FpsDriver fpsDriver;
 
         private int previousLeftRaycast;
         private int previousRightRaycast;
@@ -17,6 +19,7 @@ namespace Fps.GameLogic.Audio
         private bool previousFootGroundedLeft;
         private bool previousFootGroundedRight;
         private bool previousIsGroundedState;
+        private bool isAuthoritative;
 
         private bool previousInAirState;
 
@@ -28,19 +31,22 @@ namespace Fps.GameLogic.Audio
         {
             leftAudio = LeftFoot.GetComponent<AudioRandomiser>();
             rightAudio = RightFoot.GetComponent<AudioRandomiser>();
+            groundChecker = GetComponentInParent<GroundChecker>();
+            fpsDriver = GetComponentInParent<FpsDriver>();
         }
 
         private void Start()
         {
             previousFootGroundedLeft = IsFootGrounded(LeftFoot);
             previousFootGroundedRight = IsFootGrounded(RightFoot);
+            isAuthoritative = fpsDriver != null;
         }
 
         private void Update()
         {
             var currentFootGroundedLeft = IsFootGrounded(LeftFoot);
             var currentFootGroundedRight = IsFootGrounded(RightFoot);
-            var currentIsGroundedState = GetComponentInParent<GroundChecker>().Grounded;
+            var currentIsGroundedState = groundChecker.Grounded;
 
             if (currentIsGroundedState != null && currentIsGroundedState && !previousIsGroundedState)
             {
@@ -49,16 +55,36 @@ namespace Fps.GameLogic.Audio
                 rightAudio.Play();
             }
 
-            if (!previousFootGroundedLeft && currentFootGroundedLeft && NavKeysDown())
+            if (!previousFootGroundedLeft && currentFootGroundedLeft)
             {
                 // Left foot grounded this frame.
-                leftAudio.Play();
+
+                if (!isAuthoritative)
+                {
+                    leftAudio.Play();
+                }
+
+                if (isAuthoritative && NavKeysDown())
+                {
+                    // Player is authoritative, only play footstep noise when WASD are pressed
+                    leftAudio.Play();
+                }
             }
 
-            if (!previousFootGroundedRight && currentFootGroundedRight && NavKeysDown())
+            if (!previousFootGroundedRight && currentFootGroundedRight)
             {
                 // Right foot grounded this frame.
-                rightAudio.Play();
+
+                if (!isAuthoritative)
+                {
+                    rightAudio.Play();
+                }
+
+                if (isAuthoritative && NavKeysDown())
+                {
+                    // Player is authoritative, only play footstep noise when WASD are pressed
+                    rightAudio.Play();
+                }
             }
 
             previousFootGroundedLeft = currentFootGroundedLeft;
