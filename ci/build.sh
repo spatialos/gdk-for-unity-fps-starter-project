@@ -52,7 +52,7 @@ pushd "${UNITY_PROJECT_DIR}"
         -projectPath "${UNITY_PROJECT_DIR}" \
         -batchmode \
         -quit \
-        -logfile "$(pwd)/../../logs/UnityGameLogicBuild.log" \
+        -logfile "$(pwd)/../../logs/SimulatedPlayerCoordinatorBuild.log" \
         -executeMethod "Improbable.Gdk.BuildSystem.WorkerBuilder.Build" \
         ${UNITY_ASSET_CACHE_IP:+-CacheServerIPAddress "${UNITY_ASSET_CACHE_IP}"} \
         +buildWorkerTypes "SimulatedPlayerCoordinator" \
