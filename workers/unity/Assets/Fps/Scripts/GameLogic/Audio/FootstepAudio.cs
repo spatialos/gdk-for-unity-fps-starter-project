@@ -47,18 +47,20 @@ namespace Fps.GameLogic.Audio
             var currentFootGroundedLeft = IsFootGrounded(LeftFoot);
             var currentFootGroundedRight = IsFootGrounded(RightFoot);
             var currentIsGroundedState = groundChecker.Grounded;
-
+            /*
             if (currentIsGroundedState != null && currentIsGroundedState && !previousIsGroundedState)
             {
                 // Player landed this frame
+
                 leftAudio.Play();
                 rightAudio.Play();
-            }
+                Debug.Log(groundChecker.gameObject.name + ": Landed");
+            }*/
 
-            if (!previousFootGroundedLeft && currentFootGroundedLeft)
+            if (!previousFootGroundedLeft && currentFootGroundedLeft && NavKeysDown())
             {
                 // Left foot grounded this frame.
-
+                /*
                 if (!isAuthoritative)
                 {
                     leftAudio.Play();
@@ -69,12 +71,20 @@ namespace Fps.GameLogic.Audio
                     // Player is authoritative, only play footstep noise when WASD are pressed
                     leftAudio.Play();
                 }
+
+                if (currentIsGroundedState != null && currentIsGroundedState && !previousIsGroundedState)
+                {
+                    // Player landed this frame
+                    leftAudio.Play();
+                }*/
+
+                leftAudio.Play();
             }
 
-            if (!previousFootGroundedRight && currentFootGroundedRight)
+            if (!previousFootGroundedRight && currentFootGroundedRight && NavKeysDown())
             {
                 // Right foot grounded this frame.
-
+                /*
                 if (!isAuthoritative)
                 {
                     rightAudio.Play();
@@ -85,6 +95,8 @@ namespace Fps.GameLogic.Audio
                     // Player is authoritative, only play footstep noise when WASD are pressed
                     rightAudio.Play();
                 }
+                */
+                rightAudio.Play();
             }
 
             previousFootGroundedLeft = currentFootGroundedLeft;
