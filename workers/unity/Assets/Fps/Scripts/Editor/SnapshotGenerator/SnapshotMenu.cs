@@ -1,4 +1,5 @@
 using System.IO;
+using Improbable;
 using Improbable.Gdk.Core;
 using UnityEditor;
 using UnityEngine;
@@ -20,6 +21,9 @@ namespace Fps
 
             var SimulatedPlayerCoordinatorTrigger = FpsEntityTemplates.SimulatedPlayerCoordinatorTrigger();
             snapshot.AddEntity(SimulatedPlayerCoordinatorTrigger);
+
+            var zone = FpsEntityTemplates.Zone(new Vector3f(0f, 0f, 0f));
+            snapshot.AddEntity(zone);
 
             SaveSnapshot(snapshot);
         }

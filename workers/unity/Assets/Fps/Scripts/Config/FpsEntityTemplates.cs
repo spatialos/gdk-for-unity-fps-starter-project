@@ -7,6 +7,7 @@ using Improbable.Gdk.Guns;
 using Improbable.Gdk.Health;
 using Improbable.Gdk.Movement;
 using Improbable.Gdk.PlayerLifecycle;
+using Improbable.Gdk.Safezone;
 using Improbable.Gdk.StandardTypes;
 using Improbable.PlayerLifecycle;
 using Improbable.Worker.Core;
@@ -90,6 +91,20 @@ namespace Fps
                 .AddComponent(healthRegenComponent, gameLogic)
                 .AddPlayerLifecycleComponents(workerId, client, gameLogic)
                 .Build();
+        }
+
+        public static EntityTemplate Zone(Vector3f position)
+        {
+            var gameLogic = WorkerUtils.UnityGameLogic;
+            var zoneComponent = SafeZone.Component.CreateSchemaComponentData(position, ZoneSettings.MaxRadius, true);
+            var safeZoneTemplate = EntityBuilder.Begin()
+                .AddPosition(position.X, position.Y, position.Z, gameLogic)
+                .AddMetadata("SafeZone", gameLogic)
+                .SetPersistence(true)
+                .SetReadAcl(AllWorkerAttributes)
+                .AddComponent(zoneComponent, gameLogic)
+                .Build();
+            return safeZoneTemplate;
         }
     }
 }

@@ -45,7 +45,6 @@ namespace Improbable.Gdk.Health
                     health.Health = Mathf.Clamp(health.Health + modifier.Amount, 0, health.MaxHealth);
                     healthModifiedInfo.HealthAfter = health.Health;
 
-
                     if (health.Health <= 0)
                     {
                         healthModifiedInfo.Died = true;
