@@ -187,7 +187,6 @@ public class SimulatedPlayerDriver : MonoBehaviour
                 movementDriver.CurrentRoll);
             if (shooting.IsShooting(true) && Mathf.Abs(Quaternion.Angle(targetRotation, aimRotation)) < 5)
             {
-                Debug.Log(aimRotation * Vector3.forward);
                 shooting.FireShot(200f, new Ray(gunOrigin, aimRotation * Vector3.forward));
                 shooting.InitiateCooldown(0.2f);
                 lastShotTime = Time.time;
