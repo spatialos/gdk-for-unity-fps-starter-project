@@ -15,7 +15,6 @@ markStartOfBlock "$0"
 
 markStartOfBlock "Building UnityClient"
 
-# TODO - run unity stuff
 pushd "${UNITY_PROJECT_DIR}"
     dotnet run -p ../../.shared-ci/tools/RunUnity/RunUnity.csproj -- \
         -projectPath "${UNITY_PROJECT_DIR}" \
@@ -31,7 +30,6 @@ markEndOfBlock "Building UnityClient"
 
 markStartOfBlock "Building UnityGameLogic"
 
-# TODO - run unity stuff
 pushd "${UNITY_PROJECT_DIR}"
     dotnet run -p ../../.shared-ci/tools/RunUnity/RunUnity.csproj -- \
         -projectPath "${UNITY_PROJECT_DIR}" \
@@ -47,7 +45,6 @@ markEndOfBlock "Building UnityGameLogic"
 
 markStartOfBlock "Building SimulatedPlayerCoordinator"
 
-# TODO - run unity stuff
 pushd "${UNITY_PROJECT_DIR}"
     dotnet run -p ../../.shared-ci/tools/RunUnity/RunUnity.csproj -- \
         -projectPath "${UNITY_PROJECT_DIR}" \
