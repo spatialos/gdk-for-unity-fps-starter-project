@@ -15,7 +15,7 @@ fi
 git clone "${CLONE_URL}" "${SHARED_CI_DIR}"
 
 
-# Clone the Unity GDK repository
+# Clone the GDK for Unity repository
 
 CLONE_URI="git@github.com:spatialos/gdk-for-unity.git"
 TARGET_DIRECTORY="$(realpath $(pwd)/../gdk-for-unity)"
