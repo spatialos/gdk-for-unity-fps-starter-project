@@ -22,6 +22,7 @@ pushd "${UNITY_PROJECT_DIR}"
         -quit \
         -logfile "$(pwd)/../../logs/UnityClientBuild.log" \
         -executeMethod "Improbable.Gdk.BuildSystem.WorkerBuilder.Build" \
+        ${UNITY_ASSET_CACHE_IP:+-CacheServerIPAddress "${UNITY_ASSET_CACHE_IP}"} \
         +buildWorkerTypes "UnityClient" \
         +buildTarget "cloud"
 popd
@@ -37,6 +38,7 @@ pushd "${UNITY_PROJECT_DIR}"
         -quit \
         -logfile "$(pwd)/../../logs/UnityGameLogicBuild.log" \
         -executeMethod "Improbable.Gdk.BuildSystem.WorkerBuilder.Build" \
+        ${UNITY_ASSET_CACHE_IP:+-CacheServerIPAddress "${UNITY_ASSET_CACHE_IP}"} \
         +buildWorkerTypes "UnityGameLogic" \
         +buildTarget "cloud"
 popd
@@ -52,6 +54,7 @@ pushd "${UNITY_PROJECT_DIR}"
         -quit \
         -logfile "$(pwd)/../../logs/UnityGameLogicBuild.log" \
         -executeMethod "Improbable.Gdk.BuildSystem.WorkerBuilder.Build" \
+        ${UNITY_ASSET_CACHE_IP:+-CacheServerIPAddress "${UNITY_ASSET_CACHE_IP}"} \
         +buildWorkerTypes "SimulatedPlayerCoordinator" \
         +buildTarget "cloud"
 popd
