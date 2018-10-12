@@ -43,8 +43,29 @@
           "http://127.0.0.1:21000",
           "+projectName",
           "${IMPROBABLE_PROJECT_NAME}",
+          "-batchmode",
+          "-nographics",
           "-logfile",
-          "../../logs/external-default-fakeclientcoordinator.log"
+          "../../logs/external-default-simulatedplayercoordinator.log"
+        ]
+      },
+      "macos": {
+        "command": "open",
+        "arguments": [
+          "./build/worker/UnityGameLogic@Mac/SimulatedPlayerCoordinator@Mac.app",
+          "--args",
+          "+assemblyName",
+          "local_assembly",
+          "+workerType",
+          "SimulatedPlayerCoordinator",
+          "+infraServicesUrl",
+          "http://127.0.0.1:21000",
+          "+projectName",
+          "${IMPROBABLE_PROJECT_NAME}",
+          "-batchmode",
+          "-nographics",
+          "-logfile",
+          "../../logs/external-default-simulatedplayercoordinator.log"
         ]
       }
     }
@@ -54,6 +75,30 @@
       "artifact_name": "SimulatedPlayerCoordinator@Windows.zip",
       "command": "SimulatedPlayerCoordinator@Windows.exe",
       "arguments": [
+        "+workerType",
+        "SimulatedPlayerCoordinator",
+        "+workerId",
+        "${IMPROBABLE_WORKER_ID}",
+        "+projectName",
+        "${IMPROBABLE_PROJECT_NAME}",
+        "+receptionistHost",
+        "${IMPROBABLE_RECEPTIONIST_HOST}",
+        "+receptionistPort",
+        "${IMPROBABLE_RECEPTIONIST_PORT}",
+        "+linkProtocol",
+        "RakNet",
+        "-batchmode",
+        "-nographics",
+        "-logfile",
+        "${IMPROBABLE_LOG_FILE}"
+      ]
+    },
+    "macos": {
+      "artifact_name": "SimulatedPlayerCoordinator@Mac.zip",
+      "command": "open",
+      "arguments": [
+        "SimulatedPlayerCoordinator@Mac.app",
+        "--args",
         "+workerType",
         "SimulatedPlayerCoordinator",
         "+workerId",

@@ -30,7 +30,24 @@
           "+projectName",
           "${IMPROBABLE_PROJECT_NAME}",
           "-logfile",
-          "../../logs/external-default-unityclient.log"
+          "../../logs/external-default-simulatedplayer.log"
+        ]
+      },
+      "macos": {
+        "command": "open",
+        "arguments": [
+          "./build/worker/UnityGameLogic@Mac/SimulatedPlayer@Mac.app",
+          "--args",
+          "+assemblyName",
+          "local_assembly",
+          "+workerType",
+          "SimulatedPlayer",
+          "+infraServicesUrl",
+          "http://127.0.0.1:21000",
+          "+projectName",
+          "${IMPROBABLE_PROJECT_NAME}",
+          "-logfile",
+          "../../logs/external-default-simulatedplayer.log"
         ]
       }
     }
