@@ -1,4 +1,5 @@
 using Improbable.Gdk.Core;
+using Improbable.Gdk.Guns;
 using Improbable.Gdk.Health;
 using Unity.Collections;
 using Unity.Entities;
@@ -16,6 +17,9 @@ namespace Improbable.Gdk.Health
             public ComponentDataArray<HealthComponent.Component> Health;
             [ReadOnly] public ComponentDataArray<HealthComponent.CommandRequests.ModifyHealth> ModifyHealthRequests;
             public ComponentDataArray<HealthComponent.EventSender.HealthModified> HealthModifiedEventSenders;
+            public ComponentDataArray<ScoreComponent.CommandSenders.AddScore> ScoreSender;
+            public ComponentDataArray<ScoreComponent.Component> ScoreComponent;
+            [ReadOnly] public ComponentDataArray<Authoritative<ScoreComponent.Component>> DenotesAuthority;
         }
 
         [Inject] private EntitiesWithModifiedHealth entitiesWithModifiedHealth;
@@ -45,11 +49,23 @@ namespace Improbable.Gdk.Health
                     health.Health = Mathf.Clamp(health.Health + modifier.Amount, 0, health.MaxHealth);
                     healthModifiedInfo.HealthAfter = health.Health;
 
-
                     if (health.Health <= 0)
                     {
                         healthModifiedInfo.Died = true;
                         healthModifiedEventSender.Events.Add(healthModifiedInfo);
+
+                        var scoreComponent = entitiesWithModifiedHealth.ScoreComponent[i];
+                        scoreComponent.Deaths++;
+                        entitiesWithModifiedHealth.ScoreComponent[i] = scoreComponent;
+
+                        if (modifier.Shooter.HasValue)
+                        {
+                            entitiesWithModifiedHealth.ScoreSender[i].RequestsToSend.Add(
+                                ScoreComponent.AddScore.CreateRequest(
+                                    modifier.Shooter.Value,
+                                    new AddScoreRequest()));
+                        }
+
                         break;
                     }
 

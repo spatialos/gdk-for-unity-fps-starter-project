@@ -26,6 +26,22 @@
         "radius": 210
       }
     },
+    "streaming_query": [
+      {
+        "global_component_streaming_query": {
+          "component_name": "improbable.gdk.safezone.SafeZone"
+        },
+        "components_streamed": {
+          "specific_components": {
+            "components": [
+              "improbable.Position",
+              "improbable.Metadata",
+              "improbable.gdk.safezone.SafeZone"
+            ]
+          }
+        }
+      }
+    ],
     "component_delivery": {
       "default": "RELIABLE_ORDERED",
       "checkoutAllInitially": true

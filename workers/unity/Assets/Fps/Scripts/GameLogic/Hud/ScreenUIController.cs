@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Fps
 {
@@ -14,6 +15,9 @@ namespace Fps
         public GameObject UICamera;
         private Animator connectAnimator;
         private bool isPlayerAiming;
+
+        public Text killText;
+        public Text deathText;
 
         // Use this for initialization
         private void Start()
@@ -51,6 +55,22 @@ namespace Fps
             Reticle.SetActive(!isPlayerAiming);
         }
 
+        public void SetKillCount(int newKillCount)
+        {
+            if (killText != null)
+            {
+                killText.text = $"Kills: {newKillCount}";
+            }
+        }
+
+        public void SetDeathCount(int newDeathCount)
+        {
+            if (deathText != null)
+            {
+                deathText.text = $"Deaths: {newDeathCount}";
+            }
+        }
+
         public void ShowConnectScreen()
         {
             ConnectScreen.SetActive(true);
@@ -59,6 +79,9 @@ namespace Fps
             InGameHud.SetActive(false);
             RespawnScreen.SetActive(false);
             EscapeScreen.SetActive(false);
+
+            killText.enabled = false;
+            deathText.enabled = false;
 
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.Confined;

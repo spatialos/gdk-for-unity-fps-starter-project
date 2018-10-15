@@ -1,3 +1,5 @@
+using Boo.Lang;
+using Improbable.Gdk.Safezone;
 using UnityEngine;
 
 namespace Fps
@@ -18,7 +20,7 @@ namespace Fps
             }
         }
 
-        private static SpawnPoint[] spawnPointList;
+        public static SpawnPoint[] spawnPointList;
         [SerializeField] private bool snapsToGround;
 
         public static SpawnPoint GetRandomSpawnPoint()
@@ -32,29 +34,31 @@ namespace Fps
             return spawnPointList[Random.Range(0, spawnPointList.Length)];
         }
 
-        private void Awake()
+        private void Start()
         {
             var spawnPoints = FindSpawnPoints();
             var worldOffset = transform.root.position;
 
-            spawnPointList = new SpawnPoint[spawnPoints.Length];
+            var tempList = new List<SpawnPoint>();
+
             for (var n = 0; n < spawnPoints.Length; n++)
             {
                 var spawnPointTransform = spawnPoints[n].transform;
                 var spawnPointPosition = spawnPointTransform.position;
-                if (snapsToGround)
+                if (SnapToGround(spawnPointPosition, out spawnPointPosition))
                 {
-                    spawnPointPosition = SnapToGround(spawnPointPosition);
+                    tempList.Add(new SpawnPoint
+                    {
+                        SpawnPosition = spawnPointPosition - worldOffset,
+                        SpawnYaw = spawnPointTransform.eulerAngles.y,
+                        SpawnPitch = 0
+                    });
                 }
 
-                spawnPointList[n] = new SpawnPoint
-                {
-                    SpawnPosition = spawnPointPosition - worldOffset,
-                    SpawnYaw = spawnPointTransform.eulerAngles.y,
-                    SpawnPitch = 0
-                };
                 Destroy(spawnPoints[n]);
             }
+
+            spawnPointList = tempList.ToArray();
         }
 
         private GameObject[] FindSpawnPoints()
@@ -71,16 +75,18 @@ namespace Fps
             return gameObjects;
         }
 
-        private Vector3 SnapToGround(Vector3 position)
+        private bool SnapToGround(Vector3 position, out Vector3 hitPoint)
         {
             LayerMask allLayerMask = ~0;
             if (Physics.Raycast(new Ray(position, Vector3.down), out var hitInfo, 100f,
                 allLayerMask))
             {
-                return hitInfo.point;
+                hitPoint = hitInfo.point;
+                return true;
             }
 
-            return position;
+            hitPoint = position;
+            return false;
         }
     }
 }

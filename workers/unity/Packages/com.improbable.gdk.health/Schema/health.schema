@@ -8,6 +8,7 @@ type HealthModifier {
   float amount = 2;
   improbable.gdk.standardtypes.IntAbsolute applied_location = 3;
   improbable.gdk.standardtypes.IntAbsolute origin = 4;
+  option<EntityId> shooter = 5;
 }
 
 type HealthModifiedInfo {

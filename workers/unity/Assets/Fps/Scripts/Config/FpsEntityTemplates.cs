@@ -7,9 +7,11 @@ using Improbable.Gdk.Guns;
 using Improbable.Gdk.Health;
 using Improbable.Gdk.Movement;
 using Improbable.Gdk.PlayerLifecycle;
+using Improbable.Gdk.Safezone;
 using Improbable.Gdk.StandardTypes;
 using Improbable.PlayerLifecycle;
 using Improbable.Worker.Core;
+using UnityEngine;
 
 namespace Fps
 {
@@ -75,6 +77,8 @@ namespace Fps
                 PlayerHealthSettings.RegenInterval,
                 PlayerHealthSettings.RegenAmount);
 
+            var scoreComponent = ScoreComponent.Component.CreateSchemaComponentData(0, 0);
+
             return EntityBuilder.Begin()
                 .AddPosition(spawnPosition.x, spawnPosition.y, spawnPosition.z, gameLogic)
                 .AddMetadata("Player", gameLogic)
@@ -88,8 +92,24 @@ namespace Fps
                 .AddComponent(gunStateComponent, client)
                 .AddComponent(healthComponent, gameLogic)
                 .AddComponent(healthRegenComponent, gameLogic)
+                .AddComponent(scoreComponent, gameLogic)
                 .AddPlayerLifecycleComponents(workerId, client, gameLogic)
                 .Build();
+        }
+
+        public static EntityTemplate Zone(Vector3 position)
+        {
+            var gameLogic = WorkerUtils.UnityGameLogic;
+            var zoneComponent = SafeZone.Component.CreateSchemaComponentData(
+                position.ToSpatialVector3f(), ZoneSettings.MaxRadius, true, false);
+            var safeZoneTemplate = EntityBuilder.Begin()
+                .AddPosition(position.x, position.y, position.z, gameLogic)
+                .AddMetadata("SafeZone", gameLogic)
+                .SetPersistence(true)
+                .SetReadAcl(AllWorkerAttributes)
+                .AddComponent(zoneComponent, gameLogic)
+                .Build();
+            return safeZoneTemplate;
         }
     }
 }

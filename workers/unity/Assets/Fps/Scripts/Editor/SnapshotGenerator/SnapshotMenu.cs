@@ -21,6 +21,9 @@ namespace Fps
             var SimulatedPlayerCoordinatorTrigger = FpsEntityTemplates.SimulatedPlayerCoordinatorTrigger();
             snapshot.AddEntity(SimulatedPlayerCoordinatorTrigger);
 
+            var zone = FpsEntityTemplates.Zone(Vector3.zero);
+            snapshot.AddEntity(zone);
+
             SaveSnapshot(snapshot);
         }
 

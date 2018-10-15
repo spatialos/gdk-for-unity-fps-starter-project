@@ -154,17 +154,20 @@ public class SimulatedPlayerDriver : MonoBehaviour
         else if (agent.pathStatus == NavMeshPathStatus.PathComplete)
         {
             var velocity = agent.desiredVelocity;
-            velocity.y = 0;
             if (velocity != Vector3.zero)
             {
                 var rotation = Quaternion.LookRotation(velocity, Vector3.up);
                 var speed = sprintNext ? MovementSpeed.Sprint : MovementSpeed.Run;
-                MoveTowards(transform.position + velocity, speed, rotation, jumpNext);
+
+                var desiredPosition = transform.position +
+                    velocity * movementDriver.GetSpeed(speed) * Time.deltaTime;
+                agent.nextPosition = desiredPosition;
+                var adjustedPosition = agent.nextPosition;
+                var adjustedVelocity = (adjustedPosition - transform.position).normalized;
+                movementDriver.ApplyMovement(adjustedVelocity, rotation, speed, jumpNext);
                 jumpNext = false;
             }
         }
-
-        agent.nextPosition = transform.position;
     }
 
     private void Update_ShootingTarget()
@@ -178,9 +181,13 @@ public class SimulatedPlayerDriver : MonoBehaviour
             var targetRotation = Quaternion.LookRotation(targetCenter - gunOrigin);
             var rotationAmount = Quaternion.RotateTowards(transform.rotation, targetRotation, 10f);
 
-            var destination = transform.position + (strafeRight ? transform.right : -transform.right);
-
-            MoveTowards(destination, MovementSpeed.Run, rotationAmount, false);
+            var strafe = strafeRight ? transform.right : -transform.right;
+            var desiredPosition = transform.position +
+                strafe * movementDriver.GetSpeed(MovementSpeed.Run) * Time.deltaTime;
+            agent.nextPosition = desiredPosition;
+            var adjustedPosition = agent.nextPosition;
+            var adjustedVelocity = (adjustedPosition - transform.position).normalized;
+            movementDriver.ApplyMovement(adjustedVelocity, rotationAmount, MovementSpeed.Run, false);
 
             if (shooting.IsShooting(true) && Mathf.Abs(Quaternion.Angle(targetRotation, transform.rotation)) < 5)
             {

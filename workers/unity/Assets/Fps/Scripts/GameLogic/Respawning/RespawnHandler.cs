@@ -18,6 +18,8 @@ namespace Fps
 
         private SpatialOSComponent spatial;
 
+        private ZoneExitDetector zoneExitDetector;
+
         private void OnEnable()
         {
             respawnRequests.OnRequestRespawnRequest += OnRequestRespawn;
@@ -31,6 +33,11 @@ namespace Fps
 
         private void OnRequestRespawn(HealthComponent.RequestRespawn.RequestResponder request)
         {
+            if (zoneExitDetector == null)
+            {
+                zoneExitDetector = gameObject.GetComponent<ZoneExitDetector>();
+            }
+
             // Reset the player's health.
             var healthUpdate = new HealthComponent.Update
             {
@@ -40,6 +47,19 @@ namespace Fps
 
             // Move to a spawn point (position and rotation)
             var (spawnPosition, spawnYaw, spawnPitch) = SpawnPoints.GetRandomSpawnPoint();
+            for (var i = 0; i < SpawnPoints.spawnPointList.Length; i++)
+            {
+                if (zoneExitDetector == null ||
+                    zoneExitDetector.SafeZone == null ||
+                    Vector3.Distance(spawnPosition, zoneExitDetector.SafeZone.transform.position)
+                    < zoneExitDetector.SafeZone.transform.localScale.x)
+                {
+                    break;
+                }
+
+                (spawnPosition, spawnYaw, spawnPitch) = SpawnPoints.GetRandomSpawnPoint();
+            }
+
             var newLatest = new ServerResponse
             {
                 Position = spawnPosition.ToIntAbsolute(),

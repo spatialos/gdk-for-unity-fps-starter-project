@@ -1,5 +1,6 @@
 using Improbable;
 using Improbable.Gdk.GameObjectRepresentation;
+using Improbable.Gdk.Guns;
 using Improbable.PlayerLifecycle;
 using Improbable.Worker;
 using Improbable.Worker.Core;
@@ -44,6 +45,8 @@ namespace Fps
                 canvasCameraObj.SetActive(false);
                 screenUIController.ConnectScreen.SetActive(false);
                 screenUIController.InGameHud.SetActive(true);
+                screenUIController.killText.enabled = true;
+                screenUIController.deathText.enabled = true;
             }
             else
             {

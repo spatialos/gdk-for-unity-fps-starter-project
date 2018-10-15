@@ -1,0 +1,18 @@
+package improbable.gdk.safezone;
+
+import "improbable/vector3.schema";
+import "from_gdk_packages/com.improbable.gdk.core/common.schema";
+
+component SafeZone {
+	id = 1996;
+
+	improbable.Vector3f position = 1;
+	float scale = 2;
+	bool shrink = 3;
+
+	bool playing = 4;
+
+	command improbable.common.Empty start(improbable.common.Empty);
+	command improbable.common.Empty stop(improbable.common.Empty);
+	command improbable.common.Empty reset(improbable.common.Empty);
+}

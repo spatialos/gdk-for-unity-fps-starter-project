@@ -1,5 +1,6 @@
 using Improbable.Gdk.Core;
 using Improbable.Gdk.Health;
+using Improbable.Worker;
 using Unity.Collections;
 using Unity.Entities;
 
@@ -44,7 +45,8 @@ namespace Improbable.Gdk.Guns
                         {
                             Amount = -damage,
                             Origin = shotInfo.HitOrigin,
-                            AppliedLocation = shotInfo.HitLocation
+                            AppliedLocation = shotInfo.HitLocation,
+                            Shooter = playersShooting.EntityId[i].EntityId
                         });
                     commandSender.RequestsToSend.Add(modifyHealthRequest);
                     commandSent = true;

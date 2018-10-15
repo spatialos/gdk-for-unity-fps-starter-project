@@ -180,4 +180,14 @@ public class SimulatedPlayerCoordinatorWorkerConnector : WorkerConnectorBase
         var isSmall = Worker.Connection.GetWorkerFlag("world_size") == "small";
         return new Bounds(Worker.Origin, isSmall ? SmallWorldSize : LargeWorldSize);
     }
+
+    protected override void LoadWorld()
+    {
+        base.LoadWorld();
+
+        foreach (var renderer in levelInstance.GetComponentsInChildren<Renderer>())
+        {
+            renderer.enabled = false;
+        }
+    }
 }

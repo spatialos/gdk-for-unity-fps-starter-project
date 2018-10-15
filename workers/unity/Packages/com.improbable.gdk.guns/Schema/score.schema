@@ -1,0 +1,13 @@
+package improbable.gdk.guns;
+
+type AddScoreResponse{}
+type AddScoreRequest{}
+
+component ScoreComponent {
+  id = 2069;
+
+  int32 kills = 1;
+  int32 deaths = 2;
+
+  command AddScoreResponse add_score(AddScoreRequest);
+}
