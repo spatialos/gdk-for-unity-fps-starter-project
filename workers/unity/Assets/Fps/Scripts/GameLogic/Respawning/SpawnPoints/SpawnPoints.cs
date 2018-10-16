@@ -41,7 +41,7 @@ namespace Fps
             for (var n = 0; n < spawnPoints.Length; n++)
             {
                 var spawnPointTransform = spawnPoints[n].transform;
-                var spawnPointPosition = spawnPointTransform.position - worldOffset;
+                var spawnPointPosition = spawnPointTransform.position;
                 if (snapsToGround)
                 {
                     spawnPointPosition = SnapToGround(spawnPointPosition);
@@ -49,7 +49,7 @@ namespace Fps
 
                 spawnPointList[n] = new SpawnPoint
                 {
-                    SpawnPosition = spawnPointPosition,
+                    SpawnPosition = spawnPointPosition - worldOffset,
                     SpawnYaw = spawnPointTransform.eulerAngles.y,
                     SpawnPitch = 0
                 };
