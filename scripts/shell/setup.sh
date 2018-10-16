@@ -20,7 +20,15 @@ echo "Welcome to the SpatialOS GDK for Unity FPS Starter Project setup script."
 echo ""
 
 readonly RAW_DIR="$(dirname "${0}")/../../../gdk-for-unity"
-readonly TARGET_DIRECTORY="$(realpath "${RAW_DIR}")"
+
+# Workaround for lack of realpath by default on MacOS
+#   1. Create the directory is it doesn't exist
+#   2. pushd there and record the directory through pwd
+#   3. This gives you a nice resolved path.
+mkdir -p "${RAW_DIR}"
+pushd "${RAW_DIR}" > /dev/null
+    readonly TARGET_DIRECTORY=$(pwd)
+popd > /dev/null
 
 echo_with_color "This script will create the following directory: ${TARGET_DIRECTORY}" "${LOG_WARNING}"
 echo_with_color "*** If such a directory already exists it will be deleted. ***" "${LOG_EMPHASIS}"
