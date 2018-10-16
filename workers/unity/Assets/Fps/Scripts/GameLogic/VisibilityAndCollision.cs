@@ -22,11 +22,23 @@ namespace Fps
         private void OnEnable()
         {
             health.HealthUpdated += HealthUpdated;
-            SetIsVisible(health.Data.Health > 0);
+            UpdateVisibility();
         }
 
-        private void SetIsVisible(bool visible)
+        private void HealthUpdated(float newHealth)
         {
+            UpdateVisibility();
+        }
+
+        private void UpdateVisibility()
+        {
+            if (health == null)
+            {
+                return;
+            }
+
+            var visible = (health.Data.Health > 0);
+
             if (visible == isVisible)
             {
                 return;
@@ -39,18 +51,13 @@ namespace Fps
                 characterController.enabled = visible;
             }
 
-            foreach (var r in GetComponentsInChildren<Renderer>())
+            foreach (var childRenderer in GetComponentsInChildren<Renderer>())
             {
-                if (!renderersToIgnore.Contains(r))
+                if (!renderersToIgnore.Contains(childRenderer))
                 {
-                    r.enabled = visible;
+                    childRenderer.enabled = visible;
                 }
             }
-        }
-
-        private void HealthUpdated(float newHealth)
-        {
-            SetIsVisible(newHealth > 0);
         }
     }
 }
