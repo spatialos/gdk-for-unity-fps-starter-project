@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Improbable.Common;
 using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.Health;
 using UnityEngine;
@@ -10,7 +9,7 @@ namespace Fps
     {
         [Require] private HealthComponent.Requirable.Reader health;
 
-        private bool isDead = false;
+        private bool isVisible = true;
 
         private CharacterController characterController;
         [SerializeField] private List<Renderer> renderersToIgnore = new List<Renderer>();
@@ -22,58 +21,41 @@ namespace Fps
 
         private void OnEnable()
         {
-            health.OnRespawn += OnRespawn;
-            health.OnHealthModified += OnHealthModified;
-            ApplyState();
-            SetIsDeadState(health.Data.Health <= 0);
+            health.HealthUpdated += HealthUpdated;
+            UpdateVisibility();
         }
 
-        private void Start()
+        private void HealthUpdated(float newHealth)
         {
-            ApplyState();
+            UpdateVisibility();
         }
 
-        private void OnRespawn(Empty empty)
+        private void UpdateVisibility()
         {
-            SetIsDeadState(false);
-        }
-
-        private void OnHealthModified(HealthModifiedInfo info)
-        {
-            if (info.Died)
+            if (health == null)
             {
-                SetIsDeadState(true);
+                return;
             }
-        }
 
-        private void SetIsDeadState(bool newDeadState)
-        {
-            if (isDead != newDeadState)
+            var visible = (health.Data.Health > 0);
+
+            if (visible == isVisible)
             {
-                isDead = newDeadState;
-                ApplyState();
+                return;
             }
-        }
 
-        private void ApplyState()
-        {
-            SetRenderersEnabled(transform, !isDead);
-        }
+            isVisible = visible;
 
-        private void SetRenderersEnabled(Transform root, bool enabled)
-        {
-            // Enable/Disable the character controller (to turn on/off collision)
             if (characterController)
             {
-                characterController.enabled = enabled;
+                characterController.enabled = visible;
             }
 
-            // Enable/Disable the renderers to turn on/off the model's visibility.
-            foreach (var renderer in GetComponentsInChildren<Renderer>())
+            foreach (var childRenderer in GetComponentsInChildren<Renderer>())
             {
-                if (!renderersToIgnore.Contains(renderer))
+                if (!renderersToIgnore.Contains(childRenderer))
                 {
-                    renderer.enabled = enabled;
+                    childRenderer.enabled = visible;
                 }
             }
         }

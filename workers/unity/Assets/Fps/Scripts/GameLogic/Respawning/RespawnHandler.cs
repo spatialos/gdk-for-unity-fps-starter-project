@@ -1,4 +1,5 @@
-﻿using Improbable;
+﻿using System.Collections;
+using Improbable;
 using Improbable.Common;
 using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.Health;
@@ -21,6 +22,11 @@ namespace Fps
         {
             respawnRequests.OnRequestRespawnRequest += OnRequestRespawn;
             spatial = GetComponent<SpatialOSComponent>();
+        }
+
+        private void OnDisable()
+        {
+            StopAllCoroutines();
         }
 
         private void OnRequestRespawn(HealthComponent.RequestRespawn.RequestResponder request)
@@ -48,13 +54,6 @@ namespace Fps
             };
             serverMovement.Send(serverMovementUpdate);
 
-            // Update the spatial position on respawn.
-            var spatialPositionUpdate = new Position.Update
-            {
-                Coords = spawnPosition.ToSpatialCoordinates()
-            };
-            spatialPosition.Send(spatialPositionUpdate);
-
             transform.position = spawnPosition + spatial.Worker.Origin;
 
             var forceRotationRequest = new RotationUpdate
@@ -67,6 +66,19 @@ namespace Fps
 
             // Trigger the respawn event.
             health.SendRespawn(new Empty());
+
+            // Update spatial position in the next frame.
+            StartCoroutine(SetSpatialPosition(spawnPosition));
+        }
+
+        private IEnumerator SetSpatialPosition(Vector3 position)
+        {
+            yield return null;
+            var spatialPositionUpdate = new Position.Update
+            {
+                Coords = position.ToSpatialCoordinates()
+            };
+            spatialPosition.Send(spatialPositionUpdate);
         }
     }
 }
