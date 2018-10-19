@@ -207,7 +207,11 @@ public class SimulatedPlayerDriver : MonoBehaviour
         var agentPosition = agent.nextPosition;
         var direction = (destination - agentPosition).normalized;
         var desiredVelocity = direction * movementDriver.GetSpeed(speed);
+
+        // Setting nextPosition will move the agent towards destination, but is constrained by the navmesh
         agent.nextPosition += desiredVelocity * Time.deltaTime;
+
+        // Getting nextPosition here will return the constrained position of the agent
         var actualDirection = (agent.nextPosition - agentPosition).normalized;
 
         movementDriver.ApplyMovement(actualDirection, rotation, speed, jump);
