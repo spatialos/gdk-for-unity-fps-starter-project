@@ -165,7 +165,7 @@ namespace Improbable.Gdk.Movement
 
             cumulativeRotationTimeDelta = 0;
             pitchDirty = rollDirty = yawDirty = false;
-            
+
             //Apply the forced rotation
             var x = rotationConstraints.XAxisRotation ? forcedRotation.Pitch.ToFloat1k() : 0;
             var y = rotationConstraints.YAxisRotation ? forcedRotation.Yaw.ToFloat1k() : 0;
@@ -280,7 +280,7 @@ namespace Improbable.Gdk.Movement
             CurrentRoll = rotation.eulerAngles.z;
         }
 
-        private float GetSpeed(MovementSpeed requestedSpeed)
+        public float GetSpeed(MovementSpeed requestedSpeed)
         {
             switch (requestedSpeed)
             {

@@ -84,6 +84,7 @@ public class SimulatedPlayerDriver : MonoBehaviour
         if (state == PlayerState.Dead)
         {
             anchorPoint = transform.position;
+            agent.Warp(transform.position);
             SetPlayerState(PlayerState.LookingForTarget);
         }
     }
@@ -140,13 +141,10 @@ public class SimulatedPlayerDriver : MonoBehaviour
     {
         if (!agent.isOnNavMesh)
         {
-            // If agent has fallen off the nav mesh, move forward and attempt to get back on the navmesh.
-            var velocity = transform.forward;
-            var rotation = Quaternion.LookRotation(velocity, Vector3.up);
-            var speed = sprintNext ? MovementSpeed.Sprint : MovementSpeed.Run;
-            movementDriver.ApplyMovement(velocity, rotation, speed, jumpNext);
-            jumpNext = false;
-            agent.Warp(transform.position);
+            if (NavMesh.SamplePosition(transform.position, out var hit, 0.5f, NavMesh.AllAreas))
+            {
+                agent.Warp(hit.position);
+            }
         }
         else if (agent.remainingDistance < MinRemainingDistance || agent.pathStatus == NavMeshPathStatus.PathInvalid ||
             !agent.hasPath)
@@ -161,7 +159,7 @@ public class SimulatedPlayerDriver : MonoBehaviour
             {
                 var rotation = Quaternion.LookRotation(velocity, Vector3.up);
                 var speed = sprintNext ? MovementSpeed.Sprint : MovementSpeed.Run;
-                movementDriver.ApplyMovement(velocity, rotation, speed, jumpNext);
+                MoveTowards(transform.position + velocity, speed, rotation, jumpNext);
                 jumpNext = false;
             }
         }
@@ -180,8 +178,9 @@ public class SimulatedPlayerDriver : MonoBehaviour
             var targetRotation = Quaternion.LookRotation(targetCenter - gunOrigin);
             var rotationAmount = Quaternion.RotateTowards(transform.rotation, targetRotation, 10f);
 
-            GetComponent<ClientMovementDriver>().ApplyMovement(
-                strafeRight ? transform.right : -transform.right, rotationAmount, MovementSpeed.Run, false);
+            var destination = transform.position + (strafeRight ? transform.right : -transform.right);
+
+            MoveTowards(destination, MovementSpeed.Run, rotationAmount, false);
 
             if (shooting.IsShooting(true) && Mathf.Abs(Quaternion.Angle(targetRotation, transform.rotation)) < 5)
             {
@@ -201,6 +200,21 @@ public class SimulatedPlayerDriver : MonoBehaviour
             target = null;
             SetPlayerState(PlayerState.LookingForTarget);
         }
+    }
+
+    private void MoveTowards(Vector3 destination, MovementSpeed speed, Quaternion rotation, bool jump = false)
+    {
+        var agentPosition = agent.nextPosition;
+        var direction = (destination - agentPosition).normalized;
+        var desiredVelocity = direction * movementDriver.GetSpeed(speed);
+
+        // Setting nextPosition will move the agent towards destination, but is constrained by the navmesh
+        agent.nextPosition += desiredVelocity * Time.deltaTime;
+
+        // Getting nextPosition here will return the constrained position of the agent
+        var actualDirection = (agent.nextPosition - agentPosition).normalized;
+
+        movementDriver.ApplyMovement(actualDirection, rotation, speed, jump);
     }
 
     private bool TargetIsValid()
@@ -316,7 +330,9 @@ public class SimulatedPlayerDriver : MonoBehaviour
                 similarPositionsCount++;
                 if (similarPositionsCount >= maxSimilarPositions)
                 {
-                    Debug.LogWarningFormat("{0} got stuck at {1}, respawning", name, transform.position);
+                    Debug.LogWarningFormat("{0} got stuck at {1}: agent at {2}, respawning",
+                        name, transform.position, agent.nextPosition);
+
                     SetPlayerState(PlayerState.Dead);
                 }
             }
