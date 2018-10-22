@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Improbable.Gdk.Movement
 {
-    public class ClientMovementDriver : CharacterControllerMotor
+    public class ClientMovementDriver : GroundCheckingDriver
     {
         [Require] private ClientMovement.Requirable.Writer client;
         [Require] private ClientRotation.Requirable.Writer rotation;
@@ -58,15 +58,6 @@ namespace Improbable.Gdk.Movement
         private bool rollDirty;
         private bool pitchDirty;
         private float sprintCooldownExpires;
-
-        [Tooltip("Uses an overlap sphere of this radius from the character's feet to check for collision.")]
-        [SerializeField]
-        private float groundedRadius = 0.05f;
-
-        [SerializeField] private LayerMask groundLayerMask;
-        private readonly Collider[] groundedOverlapSphereArray = new Collider[1];
-
-        public bool IsGrounded => isGrounded;
 
         public float CurrentYaw
         {
@@ -191,13 +182,14 @@ namespace Improbable.Gdk.Movement
 
             verticalVelocity = Mathf.Clamp(verticalVelocity - movementSettings.Gravity * Time.deltaTime,
                 -movementSettings.TerminalVelocity, verticalVelocity);
-            if (isGrounded && verticalVelocity < -movementSettings.GroundedFallSpeed)
+
+            if (IsGrounded && verticalVelocity < -movementSettings.GroundedFallSpeed)
             {
                 verticalVelocity = -movementSettings.GroundedFallSpeed;
             }
 
-            var inAir = isJumping || !isGrounded;
-            var isSprinting = movementSpeed == MovementSpeed.Sprint && movement.sqrMagnitude > 0 && isGrounded;
+            var inAir = isJumping || !IsGrounded;
+            var isSprinting = movementSpeed == MovementSpeed.Sprint && movement.sqrMagnitude > 0 && IsGrounded;
             if (isSprinting)
             {
                 sprintCooldownExpires = Time.time + movementSettings.SprintCooldown;
@@ -236,7 +228,7 @@ namespace Improbable.Gdk.Movement
                 jumpedThisFrame = false;
             }
 
-            if (startJump && isGrounded && !isJumping)
+            if (startJump && IsGrounded && !isJumping)
             {
                 verticalVelocity = movementSettings.StartingJumpSpeed;
                 didJump = true;
@@ -244,7 +236,7 @@ namespace Improbable.Gdk.Movement
             }
 
             // Record the (horizontal) direction when last on the ground (for jumping or falling off platforms)
-            if (isGrounded)
+            if (IsGrounded)
             {
                 lastDirection = toMove;
             }
@@ -262,13 +254,7 @@ namespace Improbable.Gdk.Movement
                 verticalVelocity = 0;
             }
 
-            isGrounded = Physics.OverlapSphereNonAlloc(transform.position, groundedRadius, groundedOverlapSphereArray,
-                groundLayerMask) > 0;
-
-            if (CheckOverrideInAir())
-            {
-                isGrounded = false;
-            }
+            CheckExtensionsForOverrides();
 
             //Rotation
             var x = rotationConstraints.XAxisRotation ? rotation.eulerAngles.x : 0;

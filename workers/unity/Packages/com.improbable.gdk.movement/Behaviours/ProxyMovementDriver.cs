@@ -5,13 +5,12 @@ using UnityEngine;
 
 namespace Improbable.Gdk.Movement
 {
-    public class ProxyMovementDriver : CharacterControllerMotor
+    public class ProxyMovementDriver : GroundCheckingDriver
     {
         [Require] private ServerMovement.Requirable.Reader server;
         [Require] private ClientRotation.Requirable.Reader client;
 
-        [SerializeField]
-        private RotationConstraints rotationConstraints = new RotationConstraints
+        [SerializeField] private RotationConstraints rotationConstraints = new RotationConstraints
         {
             XAxisRotation = true,
             YAxisRotation = true,

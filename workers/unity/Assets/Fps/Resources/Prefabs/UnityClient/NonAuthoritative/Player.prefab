@@ -1091,7 +1091,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4002677222149622}
   - component: {fileID: 143701840091269074}
-  - component: {fileID: 114041732661807546}
   - component: {fileID: 114176885467457352}
   - component: {fileID: 114091363043555426}
   - component: {fileID: 114064594739644698}
@@ -2513,21 +2512,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &114041732661807546
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1807652507279196}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3205d6d2e2108eb478ab467af2c0fc81, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  nearToGroundDistance: 2
-  walkableLayer:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!114 &114064594739644698
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2622,6 +2606,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   teleportDistanceSqrd: 25
+  groundedRadius: 0.2
+  groundLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
   rotationConstraints:
     XAxisRotation: 0
     YAxisRotation: 1

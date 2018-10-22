@@ -7,8 +7,6 @@ namespace Improbable.Gdk.Movement
     [RequireComponent(typeof(CharacterController))]
     public class CharacterControllerMotor : MonoBehaviour
     {
-        protected bool isGrounded = false;
-
         //CSP
         private readonly Queue<MovementRequest> requests = new Queue<MovementRequest>();
         private Vector3 cumulativeMovement;
@@ -27,12 +25,12 @@ namespace Improbable.Gdk.Movement
         private float teleportDistanceSqrd = 25f;
 
         private CharacterController characterController;
-        private IMotorExtension[] motorExtensions;
+        protected IMotorExtension[] MotorExtensions;
 
         protected virtual void Awake()
         {
             characterController = GetComponent<CharacterController>();
-            motorExtensions = GetComponents<IMotorExtension>();
+            MotorExtensions = GetComponents<IMotorExtension>();
         }
 
         public bool HasEnoughMovement(float threshold, out Vector3 movement, out float timeDelta, out bool anyMovement,
@@ -96,30 +94,19 @@ namespace Improbable.Gdk.Movement
         }
 
         // Separate from regular move, as we only want the extensions applied to the movement once.
-        public virtual void MoveWithExtensions(Vector3 toMove)
+        public void MoveWithExtensions(Vector3 toMove)
         {
-            if (characterController.enabled)
+            if (!characterController.enabled)
             {
-                foreach (var extension in motorExtensions)
-                {
-                    extension.BeforeMove(toMove);
-                }
-
-                characterController.Move(toMove);
-            }
-        }
-
-        protected bool CheckOverrideInAir()
-        {
-            foreach (var extension in motorExtensions)
-            {
-                if (extension.IsOverrideAir())
-                {
-                    return true;
-                }
+                return;
             }
 
-            return false;
+            foreach (var extension in MotorExtensions)
+            {
+                extension.BeforeMove(toMove);
+            }
+
+            Move(toMove);
         }
 
         public void Interpolate(Vector3 target, float timeDelta)
@@ -145,13 +132,13 @@ namespace Improbable.Gdk.Movement
                 {
                     var percentageToMove = Time.deltaTime / timeLeftToMove;
                     var distanceToMove = distanceLeftToMove * percentageToMove;
-                    transform.position += distanceToMove;
+                    Move(distanceToMove);
                     distanceLeftToMove -= distanceToMove;
                     timeLeftToMove -= Time.deltaTime;
                 }
                 else
                 {
-                    transform.position += distanceLeftToMove;
+                    Move(distanceLeftToMove);
                     hasMovementLeft = false;
                 }
             }
