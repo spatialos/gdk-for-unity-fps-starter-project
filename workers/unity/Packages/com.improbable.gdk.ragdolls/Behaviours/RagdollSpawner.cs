@@ -17,18 +17,16 @@ namespace Improbable.Gdk.Ragdoll
         public RagdollSpawned OnRagdollSpawned;
 
         private ObjectPool<PoolableRagdoll> pool;
-        private bool hasRagdollSpawned;
 
         private void OnEnable()
         {
             health.OnHealthModified += OnHealthModified;
-            health.OnRespawn += (empty) => hasRagdollSpawned = false;
             pool = ObjectPooler.GetOrCreateObjectPool<PoolableRagdoll>(ragdollPrefab, 2);
         }
 
         private void OnHealthModified(HealthModifiedInfo info)
         {
-            if (info.Died && !hasRagdollSpawned)
+            if (info.Died)
             {
                 OnDeath(info.Modifier);
             }
@@ -36,7 +34,6 @@ namespace Improbable.Gdk.Ragdoll
 
         private void OnDeath(HealthModifier deathDetails)
         {
-            hasRagdollSpawned = true;
             var ragdoll = pool.Get();
             if (transformToMatch != null)
             {
