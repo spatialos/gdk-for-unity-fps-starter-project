@@ -4,4 +4,4 @@ A basic version of a battle-royale-style shrinking arena mechanic that damages p
 
 INSERT IMAGE/GIF
 
-This code was originally made for a [video](https://bit.ly/2yDGcKS) we created for the alpha launch of the GDK. Feel free to develop this further - we can't wait to see what other battle-royale style features you build around it.
+This code was originally written for a [video](https://bit.ly/2yDGcKS) we created for the alpha launch of the GDK. Feel free to develop this further - we can't wait to see what other battle-royale style features you build around it!
