@@ -8,25 +8,20 @@ public class MapBuilderInspector : Editor
     {
         var myTarget = (MapBuilder) target;
 
-        myTarget.layers = EditorGUILayout.IntField(new GUIContent(
+        myTarget.Layers = EditorGUILayout.IntField(new GUIContent(
                 "Number of Tile Layers",
                 "N layers corresponds to 4*(N^2) tiles."),
-            myTarget.layers);
+            myTarget.Layers);
 
-        myTarget.seed = EditorGUILayout.TextField(new GUIContent(
+        myTarget.Seed = EditorGUILayout.TextField(new GUIContent(
                 "Seed for Map Generator",
                 "Different seeds produce different maps."),
-            myTarget.seed);
+            myTarget.Seed);
 
-        myTarget.emptyTileChance = EditorGUILayout.FloatField(new GUIContent(
+        myTarget.EmptyTileChance = EditorGUILayout.FloatField(new GUIContent(
                 "Chance of Empty Tile",
                 "The chance that a tile in one grid square of the world will be empty."),
-            myTarget.emptyTileChance);
-
-        myTarget.cubeDensity = EditorGUILayout.FloatField(new GUIContent(
-                "Desert Cube Density",
-                "Cubes to place per 100x100m, averaged across the full desert area."),
-            myTarget.cubeDensity);
+            myTarget.EmptyTileChance);
 
         if (GUILayout.Button("Generate Map"))
         {

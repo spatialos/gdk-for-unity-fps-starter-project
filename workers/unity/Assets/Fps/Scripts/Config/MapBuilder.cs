@@ -7,18 +7,16 @@ using Random = UnityEngine.Random;
 [ExecuteInEditMode]
 public class MapBuilder : MonoBehaviour
 {
-    public int layers = 3;
-    public string seed = "SpatialOS GDK for Unity";
-    public float emptyTileChance = 0.45f;
-    public float cubeDensity = 0.15f;
+    public int Layers = 3;
+    public string Seed = "SpatialOS GDK for Unity";
+    public float EmptyTileChance = 0.2f;
 
-    private int tileSeparation = 36;
-    private float groundHeight = 0f;
-    private float heightOffset = 0.5f;
+    private const int TileSeparation = 36;
+    private const float GroundHeight = 0f;
+    private const float HeightOffset = 0.5f;
 
     private int groundWidth;
-    private int wallHeight = 4;
-    private int cubeHeight = 4;
+    private const int WallHeight = 4;
 
     private GameObject[] centreTiles;
     private GameObject[] levelTiles;
@@ -41,7 +39,7 @@ public class MapBuilder : MonoBehaviour
     private const string GroundEdgePath = "Prefabs/Level/Ground/Edge";
     private const string SurroundPath = "Prefabs/Level/Surround/Wall";
 
-    //central tiles hardcoded as per AAA's request
+    // Central tiles are hardcoded.
     private const string CentreTile0 = "Prefabs/Level/Tiles/Centre0";
     private const string CentreTile1 = "Prefabs/Level/Tiles/Centre1";
     private const string CentreTile2 = "Prefabs/Level/Tiles/Centre2";
@@ -50,7 +48,7 @@ public class MapBuilder : MonoBehaviour
 #if UNITY_EDITOR
     public void Build()
     {
-        Random.InitState(seed.GetHashCode());
+        Random.InitState(Seed.GetHashCode());
         PlaceTiles();
         PlaceGround();
         PlaceSurround();
@@ -88,12 +86,12 @@ public class MapBuilder : MonoBehaviour
         var tileCoord = new Vector2Int();
         var diff = new Vector2Int(0, -1);
 
-        var tileCount = Math.Pow(2 * layers, 2);
+        var tileCount = Math.Pow(2 * Layers, 2);
 
         for (var i = 0; i < tileCount; i++)
         {
             // -layers < x <= layers AND -layers < y <= layers
-            if (-layers < tileCoord.x && tileCoord.x <= layers && -layers < tileCoord.y && tileCoord.y <= layers)
+            if (-Layers < tileCoord.x && tileCoord.x <= Layers && -Layers < tileCoord.y && tileCoord.y <= Layers)
             {
                 if (i < 4)
                 {
@@ -118,14 +116,14 @@ public class MapBuilder : MonoBehaviour
         tileParentTransform.position = new Vector3()
         {
             x = tileParentTransform.position.x,
-            y = heightOffset,
+            y = HeightOffset,
             z = tileParentTransform.position.z
         };
     }
 
     private void PlaceTile(Vector2Int tileCoord)
     {
-        if (Random.value < emptyTileChance)
+        if (Random.value < EmptyTileChance)
         {
             return;
         }
@@ -138,14 +136,14 @@ public class MapBuilder : MonoBehaviour
 
     private void PlaceTile(Vector2Int tileCoord, GameObject tile, float rotation)
     {
-        var tileOffset = tileSeparation / 2;
+        var tileOffset = TileSeparation / 2;
 
         Instantiate(
             tile,
             new Vector3()
             {
-                x = (tileCoord.x - 1) * tileSeparation + tileOffset,
-                z = (tileCoord.y - 1) * tileSeparation + tileOffset
+                x = (tileCoord.x - 1) * TileSeparation + tileOffset,
+                z = (tileCoord.y - 1) * TileSeparation + tileOffset
             },
             new Quaternion()
             {
@@ -176,7 +174,7 @@ public class MapBuilder : MonoBehaviour
         groundParentTransform = new GameObject(GroundParentName).transform;
         groundParentTransform.parent = gameObject.transform;
 
-        var groundLayers = (layers - 1) / 4 + 1;
+        var groundLayers = (Layers - 1) / 4 + 1;
 
         for (var x = -groundLayers; x < groundLayers; x++)
         {
@@ -191,7 +189,7 @@ public class MapBuilder : MonoBehaviour
         groundParentTransform.position = new Vector3()
         {
             x = groundParentTransform.position.x,
-            y = heightOffset,
+            y = HeightOffset,
             z = groundParentTransform.position.z
         };
     }
@@ -203,7 +201,7 @@ public class MapBuilder : MonoBehaviour
             new Vector3()
             {
                 x = 144 * groundX + 74,
-                y = groundHeight,
+                y = GroundHeight,
                 z = 144 * groundZ + 70
             },
             Quaternion.identity,
@@ -226,7 +224,7 @@ public class MapBuilder : MonoBehaviour
             groundEdge,
             new Vector3()
             {
-                y = groundHeight,
+                y = GroundHeight,
                 z = groundLayers * 144
             },
             Quaternion.identity,
@@ -239,7 +237,7 @@ public class MapBuilder : MonoBehaviour
             new Vector3()
             {
                 x = -groundLayers * 144,
-                y = groundHeight
+                y = GroundHeight
             },
             new Quaternion()
             {
@@ -283,7 +281,7 @@ public class MapBuilder : MonoBehaviour
     {
         var wallScale = new Vector3()
         {
-            x = wallHeight,
+            x = WallHeight,
             y = groundWidth,
             z = 1
         };
@@ -293,7 +291,7 @@ public class MapBuilder : MonoBehaviour
             new Vector3()
             {
                 x = wallX,
-                y = wallHeight / 2,
+                y = WallHeight / 2,
                 z = wallZ
             },
             new Quaternion()
@@ -313,7 +311,7 @@ public class MapBuilder : MonoBehaviour
             new Vector3()
             {
                 x = wallX,
-                y = wallHeight * 3 / 2,
+                y = WallHeight * 3 / 2,
                 z = wallZ
             },
             new Quaternion()
