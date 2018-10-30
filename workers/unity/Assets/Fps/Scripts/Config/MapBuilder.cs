@@ -7,46 +7,39 @@ using Random = UnityEngine.Random;
 [ExecuteInEditMode]
 public class MapBuilder : MonoBehaviour
 {
-    public int layers = 3;
-    public string seed = "SpatialOS GDK for Unity";
-    public float emptyTileChance = 0.45f;
-    public float cubeDensity = 0.15f;
+    public int Layers = 3;
+    public string Seed = "SpatialOS GDK for Unity";
+    public float EmptyTileChance = 0.2f;
 
-    private int tileSeparation = 36;
-    private float groundHeight = 0f;
-    private float heightOffset = 0.5f;
+    private const int TileSeparation = 36;
+    private const float GroundHeight = 0f;
+    private const float HeightOffset = 0.5f;
 
     private int groundWidth;
-    private int desertWidth;
-    private int wallHeight = 4;
-    private int cubeHeight = 4;
+    private const int WallHeight = 4;
 
     private GameObject[] centreTiles;
     private GameObject[] levelTiles;
     private GameObject groundTile;
     private GameObject groundEdge;
-    private GameObject desertPlane;
-    private GameObject desertWall;
-    private GameObject desertCube;
+    private GameObject surroundWall;
 
     private Transform tileParentTransform;
     private Transform groundParentTransform;
-    private Transform desertParentTransform;
+    private Transform surroundParentTransform;
     private Transform cubeParentTransform;
 
     private const string TileParentName = "TileParent";
     private const string GroundParentName = "GroundParent";
-    private const string DesertParentName = "DesertParent";
+    private const string SurroundParentName = "SurroundParent";
     private const string CubeParentName = "CubeParent";
 
     private const string LevelTilePath = "Prefabs/Level/Tiles";
     private const string GroundTilePath = "Prefabs/Level/Ground/Ground4x4";
     private const string GroundEdgePath = "Prefabs/Level/Ground/Edge";
-    private const string DesertPlanePath = "Prefabs/Level/Desert/Plane";
-    private const string DesertWallPath = "Prefabs/Level/Desert/Wall";
-    private const string DesertCubePath = "Prefabs/Level/Desert/Cube";
+    private const string SurroundPath = "Prefabs/Level/Surround/Wall";
 
-    //central tiles hardcoded as per AAA's request
+    // Central tiles are hardcoded.
     private const string CentreTile0 = "Prefabs/Level/Tiles/Centre0";
     private const string CentreTile1 = "Prefabs/Level/Tiles/Centre1";
     private const string CentreTile2 = "Prefabs/Level/Tiles/Centre2";
@@ -55,12 +48,12 @@ public class MapBuilder : MonoBehaviour
 #if UNITY_EDITOR
     public void Build()
     {
-        Random.InitState(seed.GetHashCode());
+        Random.InitState(Seed.GetHashCode());
         PlaceTiles();
         PlaceGround();
-        PlaceDesert();
+        PlaceSurround();
         MakeLevelObjectStatic();
-        Debug.Log($"Finished building world of size: {desertWidth} x {desertWidth}");
+        Debug.Log($"Finished building world of size: {groundWidth} x {groundWidth}");
     }
 
     private void PlaceTiles()
@@ -93,12 +86,12 @@ public class MapBuilder : MonoBehaviour
         var tileCoord = new Vector2Int();
         var diff = new Vector2Int(0, -1);
 
-        var tileCount = Math.Pow(2 * layers, 2);
+        var tileCount = Math.Pow(2 * Layers, 2);
 
         for (var i = 0; i < tileCount; i++)
         {
             // -layers < x <= layers AND -layers < y <= layers
-            if (-layers < tileCoord.x && tileCoord.x <= layers && -layers < tileCoord.y && tileCoord.y <= layers)
+            if (-Layers < tileCoord.x && tileCoord.x <= Layers && -Layers < tileCoord.y && tileCoord.y <= Layers)
             {
                 if (i < 4)
                 {
@@ -123,14 +116,14 @@ public class MapBuilder : MonoBehaviour
         tileParentTransform.position = new Vector3()
         {
             x = tileParentTransform.position.x,
-            y = heightOffset,
+            y = HeightOffset,
             z = tileParentTransform.position.z
         };
     }
 
     private void PlaceTile(Vector2Int tileCoord)
     {
-        if (Random.value < emptyTileChance)
+        if (Random.value < EmptyTileChance)
         {
             return;
         }
@@ -143,14 +136,14 @@ public class MapBuilder : MonoBehaviour
 
     private void PlaceTile(Vector2Int tileCoord, GameObject tile, float rotation)
     {
-        var tileOffset = tileSeparation / 2;
+        var tileOffset = TileSeparation / 2;
 
         Instantiate(
             tile,
             new Vector3()
             {
-                x = (tileCoord.x - 1) * tileSeparation + tileOffset,
-                z = (tileCoord.y - 1) * tileSeparation + tileOffset
+                x = (tileCoord.x - 1) * TileSeparation + tileOffset,
+                z = (tileCoord.y - 1) * TileSeparation + tileOffset
             },
             new Quaternion()
             {
@@ -181,7 +174,7 @@ public class MapBuilder : MonoBehaviour
         groundParentTransform = new GameObject(GroundParentName).transform;
         groundParentTransform.parent = gameObject.transform;
 
-        var groundLayers = (layers - 1) / 4 + 1;
+        var groundLayers = (Layers - 1) / 4 + 1;
 
         for (var x = -groundLayers; x < groundLayers; x++)
         {
@@ -196,7 +189,7 @@ public class MapBuilder : MonoBehaviour
         groundParentTransform.position = new Vector3()
         {
             x = groundParentTransform.position.x,
-            y = heightOffset,
+            y = HeightOffset,
             z = groundParentTransform.position.z
         };
     }
@@ -208,7 +201,7 @@ public class MapBuilder : MonoBehaviour
             new Vector3()
             {
                 x = 144 * groundX + 74,
-                y = groundHeight,
+                y = GroundHeight,
                 z = 144 * groundZ + 70
             },
             Quaternion.identity,
@@ -231,7 +224,7 @@ public class MapBuilder : MonoBehaviour
             groundEdge,
             new Vector3()
             {
-                y = groundHeight,
+                y = GroundHeight,
                 z = groundLayers * 144
             },
             Quaternion.identity,
@@ -244,7 +237,7 @@ public class MapBuilder : MonoBehaviour
             new Vector3()
             {
                 x = -groundLayers * 144,
-                y = groundHeight
+                y = GroundHeight
             },
             new Quaternion()
             {
@@ -257,94 +250,48 @@ public class MapBuilder : MonoBehaviour
         leftEdgeObject.transform.localScale = edgeScale;
     }
 
-    private void PlaceDesert()
+    private void PlaceSurround()
     {
-        // desertPlane = Resources.Load<GameObject>(DesertPlanePath);
-        // if (desertPlane == null)
-        // {
-        //     Debug.LogError("Desert plane prefab not loaded.");
-        //     return;
-        // }
+        surroundParentTransform = new GameObject(SurroundParentName).transform;
+        surroundParentTransform.parent = gameObject.transform;
 
-        desertParentTransform = new GameObject(DesertParentName).transform;
-        desertParentTransform.parent = gameObject.transform;
-
-        // desertWidth = (groundWidth / 200 + 2) * 200;
-        // desertWidth = (int) (4f * Mathf.Round(desertWidth / 4f));
-        // desertWidth -= 4;
-        //
-        // var desertPlaneObject = Instantiate(
-        //     desertPlane,
-        //     new Vector3(),
-        //     new Quaternion()
-        //     {
-        //         eulerAngles = new Vector3()
-        //         {
-        //             x = 90
-        //         }
-        //     },
-        //     desertParentTransform.transform);
-        // desertPlaneObject.transform.localScale = new Vector3()
-        // {
-        //     x = desertWidth,
-        //     y = desertWidth,
-        //     z = 1
-        // };
-
-        desertWall = Resources.Load<GameObject>(DesertWallPath);
-        if (desertWall == null)
+        surroundWall = Resources.Load<GameObject>(SurroundPath);
+        if (surroundWall == null)
         {
-            Debug.LogError("Desert wall prefab not loaded.");
+            Debug.LogError("Surround wall prefab not loaded.");
             return;
         }
 
-        desertWidth = groundWidth;
-        var halfDesertWidth = desertWidth / 2;
+        var halfSurroundWidth = groundWidth / 2;
 
         //top
-        PlaceWall(0, halfDesertWidth, 180f);
+        PlaceWall(0, halfSurroundWidth, 180f);
 
         //bottom
-        PlaceWall(0, -halfDesertWidth, 0f);
+        PlaceWall(0, -halfSurroundWidth, 0f);
 
         //left
-        PlaceWall(-halfDesertWidth, 0, 90f);
+        PlaceWall(-halfSurroundWidth, 0, 90f);
 
         //right
-        PlaceWall(halfDesertWidth, 0, -90f);
-
-        // desertCube = Resources.Load<GameObject>(DesertCubePath);
-        // if (desertCube == null)
-        // {
-        //     Debug.LogError("Desert cube prefab not loaded.");
-        //     return;
-        // }
-        //
-        // cubeParentTransform = new GameObject(CubeParentName).transform;
-        // cubeParentTransform.parent = gameObject.transform;
-        //
-        // var numCubes = (desertWidth * desertWidth - groundWidth * groundWidth) / 1000 * cubeDensity;
-        // for (var i = 0; i < numCubes; i++)
-        // {
-        //     PlaceCube();
-        // }
+        PlaceWall(halfSurroundWidth, 0, -90f);
     }
 
     private void PlaceWall(int wallX, int wallZ, float rotation)
     {
         var wallScale = new Vector3()
         {
-            x = wallHeight,
-            y = desertWidth,
+            x = WallHeight,
+            y = groundWidth,
             z = 1
         };
 
-        var desertWallObjectVisible = Instantiate(
-            desertWall,
+        var surroundWallObjectVisible = Instantiate(
+            surroundWall,
             new Vector3()
             {
                 x = wallX,
-                y = wallHeight / 2,
+                y = WallHeight / 2,
                 z = wallZ
             },
             new Quaternion()
@@ -356,15 +303,15 @@ public class MapBuilder : MonoBehaviour
                     z = -90
                 }
             },
-            desertParentTransform.transform);
-        desertWallObjectVisible.transform.localScale = wallScale;
+            surroundParentTransform.transform);
+        surroundWallObjectVisible.transform.localScale = wallScale;
 
-        var desertWallObjectInvisible = Instantiate(
-            desertWall,
+        var surroundWallObjectInvisible = Instantiate(
+            surroundWall,
             new Vector3()
             {
                 x = wallX,
-                y = wallHeight * 3 / 2,
+                y = WallHeight * 3 / 2,
                 z = wallZ
             },
             new Quaternion()
@@ -376,31 +323,9 @@ public class MapBuilder : MonoBehaviour
                     z = -90
                 }
             },
-            desertParentTransform.transform);
-        desertWallObjectInvisible.transform.localScale = wallScale;
-        desertWallObjectInvisible.GetComponent<Renderer>().enabled = false;
-    }
-
-    private void PlaceCube()
-    {
-        var cubeX = Random.Range(-desertWidth / 2, desertWidth / 2);
-        var cubeZ = Random.Range(-desertWidth / 2, desertWidth / 2);
-
-        if (Math.Abs(cubeX) < groundWidth / 2 && Math.Abs(cubeZ) < groundWidth / 2)
-        {
-            return;
-        }
-
-        Instantiate(
-            desertCube,
-            new Vector3()
-            {
-                x = 4f * Mathf.Round(cubeX / 4f),
-                y = cubeHeight,
-                z = 4f * Mathf.Round(cubeZ / 4f)
-            },
-            Quaternion.identity,
-            cubeParentTransform.transform);
+            surroundParentTransform.transform);
+        surroundWallObjectInvisible.transform.localScale = wallScale;
+        surroundWallObjectInvisible.GetComponent<Renderer>().enabled = false;
     }
 
     private void MakeLevelObjectStatic()
@@ -430,7 +355,7 @@ public class MapBuilder : MonoBehaviour
                 continue;
             }
 
-            if (child.gameObject.name.Contains(DesertParentName))
+            if (child.gameObject.name.Contains(SurroundParentName))
             {
                 childrenToDestroy.Enqueue(child.gameObject);
                 continue;
