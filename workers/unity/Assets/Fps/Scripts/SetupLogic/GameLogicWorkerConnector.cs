@@ -40,6 +40,8 @@ namespace Fps
             world.GetOrCreateManager<ServerHealthModifierSystem>();
             world.GetOrCreateManager<HealthRegenSystem>();
 
+            world.GetOrCreateManager<CommandFrameSystem>();
+
             base.HandleWorkerConnectionEstablished();
         }
 

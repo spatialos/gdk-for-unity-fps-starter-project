@@ -55,6 +55,8 @@ namespace Fps
                 new AdvancedEntityPipeline(Worker, AuthPlayer, NonAuthPlayer, fallback),
                 gameObject);
 
+            world.GetOrCreateManager<CommandFrameSystem>();
+
             base.HandleWorkerConnectionEstablished();
         }
 
