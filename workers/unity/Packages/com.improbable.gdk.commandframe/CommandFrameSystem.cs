@@ -1,10 +1,11 @@
-﻿using Unity.Entities;
+﻿using System;
+using Unity.Entities;
 using UnityEngine;
 
 public class CommandFrameSystem : ComponentSystem
 {
     public int CurrentFrame = 0;
-    public float FrameLength = 1 / 1f;
+    public float FrameLength = 1 / 30f;
 
     private float remainder = 0;
 
@@ -17,5 +18,10 @@ public class CommandFrameSystem : ComponentSystem
             remainder -= FrameLength;
             CurrentFrame += 1;
         }
+    }
+
+    public float GetPartial()
+    {
+        return remainder / FrameLength;
     }
 }

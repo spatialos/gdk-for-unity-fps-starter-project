@@ -772,13 +772,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4244229316102358}
-  - component: {fileID: 143934676795818780}
-  - component: {fileID: 114711516255448412}
   - component: {fileID: 114318485812647952}
   - component: {fileID: 114801285074366292}
   - component: {fileID: 114198340130317920}
   - component: {fileID: 114795034482753322}
-  - component: {fileID: 114890930238186000}
   - component: {fileID: 114095212150324808}
   - component: {fileID: 114492761064943198}
   - component: {fileID: 114471432205030634}
@@ -788,7 +785,8 @@ GameObject:
   - component: {fileID: 114522738583802250}
   - component: {fileID: 114775314640606656}
   - component: {fileID: 114898509530246980}
-  - component: {fileID: 114781168066614706}
+  - component: {fileID: 114123407700197846}
+  - component: {fileID: 143160483645145128}
   m_Layer: 11
   m_Name: Player
   m_TagString: Player
@@ -2609,6 +2607,19 @@ MonoBehaviour:
   ragdollPrefab: {fileID: 1364289975559898, guid: 1c7560c8984118b4ea52cf9335e7c821,
     type: 2}
   transformToMatch: {fileID: 0}
+--- !u!114 &114123407700197846
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1627949407420470}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0af318b72580e0d4ca4e5108a8a95523, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Controller: {fileID: 143160483645145128}
+  ViewTransform: {fileID: 4955140760145538}
 --- !u!114 &114158075481504632
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2818,24 +2829,6 @@ MonoBehaviour:
   cameraHeightAboveRagdoll: 2
   lookAtRagdollMoveSpeed: 5
   lookAtRagdollRotateSpeed: 50
---- !u!114 &114711516255448412
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1627949407420470}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30116109eb8b24346a34ba5d505cd5f4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pitchTransform: {fileID: 4620716434285874}
-  camera: {fileID: 20443460711874354}
-  cameraSettings:
-    PitchSpeed: 1.75
-    YawSpeed: 1.75
-    MinPitch: -75
-    MaxPitch: 85
 --- !u!114 &114748765334934590
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2862,18 +2855,6 @@ MonoBehaviour:
   hitIntensity: 1
   hitEffectDuration: 1
   hitEffectFocus: 16
---- !u!114 &114781168066614706
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1627949407420470}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a26382f57abcf24aa8b96ce9bf51d71, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slideFriction: 0.8
 --- !u!114 &114795034482753322
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2917,42 +2898,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   socketOffset: {fileID: 4429577863450270}
---- !u!114 &114890930238186000
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1627949407420470}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3914475562c91fe4db45424efe19c38b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  teleportDistanceSqrd: 25
-  groundedRadius: 0.2
-  groundLayerMask:
-    serializedVersion: 2
-    m_Bits: 1
-  transformUpdateHz: 15
-  rotationUpdateHz: 15
-  transformUpdateDelta: 0.06666667
-  rotationUpdateDelta: 0.06666667
-  movementSettings:
-    MovementSpeed:
-      WalkSpeed: 2
-      RunSpeed: 3.5
-      SprintSpeed: 6
-    SprintCooldown: 0.2
-    Gravity: 25
-    StartingJumpSpeed: 8
-    TerminalVelocity: 40
-    GroundedFallSpeed: 3.5
-    AirControlModifier: 0.25
-    InAirDamping: 0.5
-  rotationConstraints:
-    XAxisRotation: 0
-    YAxisRotation: 1
-    ZAxisRotation: 0
 --- !u!114 &114898509530246980
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3082,7 +3027,7 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.02831319, y: -0.040561557, z: 0}
     m_Extent: {x: 0.29807648, y: 0.14629424, z: 0.6226641}
   m_DirtyAABB: 0
---- !u!143 &143934676795818780
+--- !u!143 &143160483645145128
 CharacterController:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
