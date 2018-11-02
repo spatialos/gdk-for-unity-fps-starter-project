@@ -58,7 +58,7 @@ namespace Fps
             base.HandleWorkerConnectionEstablished();
         }
 
-        protected override void HandleWorkerConnectionFailure()
+        protected override void HandleWorkerConnectionFailure(string errorMessage)
         {
             connectionController.OnFailedToConnect();
         }

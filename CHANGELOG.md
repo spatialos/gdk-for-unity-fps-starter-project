@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## `0.1.2` - 2018-11-02
+
+### Changed
+
+- Updated to GDK for Unity version `0.1.2`.
+
 ### Fixed
 
 - Fixed an issue where newer versions of Unity would fail to open the project with errors like: `ParticleSystem` not found.

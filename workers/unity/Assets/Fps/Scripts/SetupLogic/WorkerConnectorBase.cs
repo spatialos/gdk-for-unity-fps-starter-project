@@ -1,11 +1,11 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Improbable.Gdk.Core;
 using Improbable.Worker.Core;
 using UnityEngine;
 
 namespace Fps
 {
-    public abstract class WorkerConnectorBase : WorkerConnector
+    public abstract class WorkerConnectorBase : DefaultWorkerConnector
     {
         private const string Small = "small";
         private const string Large = "large";

@@ -1,12 +1,11 @@
-﻿using System;
+using System;
 using Fps;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.GameObjectRepresentation;
-using Improbable.Gdk.Health;
 using Improbable.Gdk.PlayerLifecycle;
 
-public class SimulatedPlayerWorkerConnector : WorkerConnector
+public class SimulatedPlayerWorkerConnector : DefaultWorkerConnector
 {
     private const string AuthPlayer = "Prefabs/SimulatedPlayer/SimulatedPlayer";
     private const string NonAuthPlayer = "Prefabs/SimulatedPlayer/SimulatedPlayerProxy";
