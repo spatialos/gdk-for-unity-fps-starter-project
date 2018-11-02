@@ -1097,10 +1097,9 @@ GameObject:
   - component: {fileID: 114092968993964530}
   - component: {fileID: 114893241843570428}
   - component: {fileID: 114518501515610296}
-  - component: {fileID: 114251151529455824}
   - component: {fileID: 114316454962868320}
-  - component: {fileID: 114295608448625932}
   - component: {fileID: 205572536524406604}
+  - component: {fileID: 114779232325334466}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -2587,38 +2586,6 @@ MonoBehaviour:
     JumpCrossFadeDuration: 0.1
   animators:
   - {fileID: 95495377815714362}
---- !u!114 &114251151529455824
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1807652507279196}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a5b133c90cea0a41a6331736e623a66, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  stopAnimatingAfterUpdates: 5
---- !u!114 &114295608448625932
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1807652507279196}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ecdad25e8df427c4397e2a22db72b3c6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  teleportDistanceSqrd: 25
-  groundedRadius: 0.2
-  groundLayerMask:
-    serializedVersion: 2
-    m_Bits: 1
-  rotationConstraints:
-    XAxisRotation: 0
-    YAxisRotation: 1
-    ZAxisRotation: 0
 --- !u!114 &114316454962868320
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2640,6 +2607,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 314074a3ac5000344995d3ef8b947bcc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114779232325334466
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1807652507279196}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfcbbbbc85fe3ec4e8c6082af99f36d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &114893241843570428

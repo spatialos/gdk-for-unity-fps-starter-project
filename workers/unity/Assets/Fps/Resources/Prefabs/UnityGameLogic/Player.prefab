@@ -22,8 +22,7 @@ GameObject:
   - component: {fileID: 143784863591789312}
   - component: {fileID: 114652479500816118}
   - component: {fileID: 114435201848092016}
-  - component: {fileID: 114476396735560078}
-  - component: {fileID: 114162950878698390}
+  - component: {fileID: 114058573570502558}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -44,7 +43,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114162950878698390
+--- !u!114 &114058573570502558
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -52,18 +51,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1777598867489458}
   m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ecdad25e8df427c4397e2a22db72b3c6, type: 3}
+  m_Script: {fileID: 11500000, guid: cbba87604904c6f4e9818ad3586f3d3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  teleportDistanceSqrd: 25
-  groundedRadius: 0.2
-  groundLayerMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  rotationConstraints:
-    XAxisRotation: 0
-    YAxisRotation: 1
-    ZAxisRotation: 0
 --- !u!114 &114435201848092016
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -75,20 +65,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63e99540de038714b9ea38d7777f4cdd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114476396735560078
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1777598867489458}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 56fdc3e27af14544294b04e8ee7d54a9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  teleportDistanceSqrd: 25
-  spatialPositionUpdateHz: 1
-  spatialPositionUpdateDelta: 1
 --- !u!114 &114652479500816118
 MonoBehaviour:
   m_ObjectHideFlags: 1

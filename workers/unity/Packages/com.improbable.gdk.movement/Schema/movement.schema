@@ -7,6 +7,13 @@ type ClientRequest {
 	int32 timestamp = 2;
 	float time_delta = 3;
 	bool includes_jump = 4;
+	bool forward_pressed = 5;
+	bool back_pressed = 6;
+	bool left_pressed = 7;
+	bool right_pressed = 8;
+	bool includes_sprint = 9;
+	int32 camera_pitch = 10;
+	int32 camera_yaw = 11;
 }
 
 type ServerResponse {
@@ -27,13 +34,15 @@ component ClientMovement {
   id = 2020;
 
   ClientRequest latest = 1;
+	event ClientRequest client_input;
 }
 
 component ServerMovement {
   id = 2021;
 
   ServerResponse latest = 1;
-  event RotationUpdate forced_rotation; 
+	event ServerResponse server_movement;
+  event RotationUpdate forced_rotation;
 }
 
 component ClientRotation {
