@@ -67,7 +67,7 @@ namespace Fps
 
         private void OnMovement(ServerResponse movement)
         {
-            fpsAnimator.SetMovement(movement.Position.ToVector3(), movement.TimeDelta);
+            // fpsAnimator.SetMovement(movement.Position.ToVector3(), movement.TimeDelta);
             if (movement.IncludesJump)
             {
                 fpsAnimator.Jump();

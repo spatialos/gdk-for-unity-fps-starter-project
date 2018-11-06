@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using UnityEngine;
 using Improbable.Gdk.GameObjectRepresentation;
@@ -11,7 +12,7 @@ public class MyClientMovementDriver : MonoBehaviour
     [Require] private ServerMovement.Requirable.Reader serverMovement;
 
     public CharacterController Controller;
-    public bool UseKeyboardInput = true;
+    public bool UseDirectInput = true;
 
     private SpatialOSComponent spatial;
     private CommandFrameSystem commandFrame;
@@ -29,6 +30,7 @@ public class MyClientMovementDriver : MonoBehaviour
     private bool rightThisFrame;
     private bool jumpThisFrame;
     private bool sprintThisFrame;
+    private float yawThisFrame;
 
     private StringBuilder outBuilder = new StringBuilder();
 
@@ -42,13 +44,7 @@ public class MyClientMovementDriver : MonoBehaviour
     private Dictionary<int, Vector3> movementState = new Dictionary<int, Vector3>();
     private Dictionary<int, ClientRequest> inputState = new Dictionary<int, ClientRequest>();
 
-    private readonly MyMovementUtils.IMovementProcessor[] movementProcessors =
-    {
-        new StandardMovement(),
-        new JumpMovement(),
-        new MyMovementUtils.Gravity(),
-        new MyMovementUtils.TerminalVelocity(),
-    };
+    private MyMovementUtils.IMovementProcessor[] movementProcessors = { };
 
     private void OnEnable()
     {
@@ -68,9 +64,14 @@ public class MyClientMovementDriver : MonoBehaviour
         // fileOut.Close();
     }
 
+    public void SetMovementProcessors(MyMovementUtils.IMovementProcessor[] processors)
+    {
+        movementProcessors = processors;
+    }
+
     private void Update()
     {
-        if (UseKeyboardInput)
+        if (UseDirectInput)
         {
             forwardThisFrame |= Input.GetKey(KeyCode.W);
             backThisFrame |= Input.GetKey(KeyCode.S);
@@ -78,12 +79,6 @@ public class MyClientMovementDriver : MonoBehaviour
             rightThisFrame |= Input.GetKey(KeyCode.D);
             jumpThisFrame |= Input.GetKey(KeyCode.Space);
             sprintThisFrame |= Input.GetKey(KeyCode.LeftShift);
-        }
-
-        if (commandFrame.CurrentFrame != lastFrame)
-        {
-            lastFrame = commandFrame.CurrentFrame;
-            // Debug.LogFormat("Send forward={0} for cf {1}", forwardThisFrame, lastFrame);
 
             var rot = ViewTransform.rotation.eulerAngles;
             rot.x -= Input.GetAxis("Mouse Y") * pitchSpeed;
@@ -92,6 +87,12 @@ public class MyClientMovementDriver : MonoBehaviour
             var controllerRot = Controller.transform.rotation.eulerAngles;
             controllerRot.y += Input.GetAxis("Mouse X") * yawSpeed;
             Controller.transform.rotation = Quaternion.Euler(controllerRot);
+        }
+
+        if (commandFrame.CurrentFrame != lastFrame)
+        {
+            lastFrame = commandFrame.CurrentFrame;
+            // Debug.LogFormat("Send forward={0} for cf {1}", forwardThisFrame, lastFrame);
 
             var input = SendInput();
             outBuilder.AppendLine(string.Format("[{0}] Before: {1}", lastFrame, Controller.transform.position));
@@ -107,18 +108,17 @@ public class MyClientMovementDriver : MonoBehaviour
             jumpThisFrame = false;
             sprintThisFrame = false;
         }
-
-        // transform.position = Controller.transform.position;
     }
 
-    private void SetInput(bool forward, bool back, bool left, bool right, bool jump, bool sprint)
+    public void AddInput(bool forward, bool back, bool left, bool right, bool jump, bool sprint, float yaw)
     {
-        forwardThisFrame = forward;
-        backThisFrame = back;
-        leftThisFrame = left;
-        rightThisFrame = right;
-        jumpThisFrame = jump;
-        sprintThisFrame = sprint;
+        forwardThisFrame |= forward;
+        backThisFrame |= back;
+        leftThisFrame |= left;
+        rightThisFrame |= right;
+        jumpThisFrame |= jump;
+        sprintThisFrame |= sprint;
+        yawThisFrame = yaw;
     }
 
     private void OnServerMovement(ServerResponse response)
@@ -188,7 +188,7 @@ public class MyClientMovementDriver : MonoBehaviour
 
             inputState.Remove(response.Timestamp);
 
-            // Remove the previous last confirmed state, keep this one around for potential velocity calculation.
+            // Remove the previous last confirmed state, keep this one around for potential velocity calculation
             movementState.Remove(response.Timestamp - 2);
             MyMovementUtils.CleanProcessors(movementProcessors, response.Timestamp - 2);
         }
@@ -208,7 +208,7 @@ public class MyClientMovementDriver : MonoBehaviour
             RightPressed = rightThisFrame,
             IncludesJump = jumpThisFrame,
             IncludesSprint = sprintThisFrame,
-            CameraYaw = (int) (Controller.transform.rotation.eulerAngles.y * 100000f),
+            CameraYaw = (int) (yawThisFrame * 100000f),
             Timestamp = lastFrame
         };
 
@@ -220,8 +220,7 @@ public class MyClientMovementDriver : MonoBehaviour
     private void SaveMovementState(int frame)
     {
         // Debug.LogFormat("[Client] {0} = {1}", frame, controller.transform.position);
-        movementState.Remove(frame);
-        movementState.Add(frame, Controller.transform.position);
+        movementState[frame] = Controller.transform.position;
     }
 
     private void SaveInputState(ClientRequest request)
@@ -229,7 +228,7 @@ public class MyClientMovementDriver : MonoBehaviour
         inputState.Add(lastFrame, request);
     }
 
-    private Vector3 GetVelocity(int frame)
+    public Vector3 GetVelocity(int frame)
     {
         // return the difference of the previous 2 movement states.
         if (movementState.TryGetValue(frame - 2, out var before) &&
