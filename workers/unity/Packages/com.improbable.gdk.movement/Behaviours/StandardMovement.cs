@@ -39,8 +39,7 @@ public class StandardMovement : MyMovementUtils.IMovementProcessor
             controlledMovement = controlledMovement * (1 - MyMovementUtils.movementSettings.InAirDamping)
                 + input2D * MyMovementUtils.movementSettings.AirControlModifier;
 
-            controlledMovement = Vector2.ClampMagnitude(controlledMovement,
-                MyMovementUtils.movementSettings.MovementSpeed.SprintSpeed);
+            controlledMovement = Vector2.ClampMagnitude(controlledMovement, speed);
 
             newVelocity.x = controlledMovement.x;
             newVelocity.z = controlledMovement.y;
