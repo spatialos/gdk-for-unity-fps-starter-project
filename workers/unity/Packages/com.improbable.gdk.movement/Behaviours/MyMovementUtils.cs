@@ -1,74 +1,93 @@
-﻿using Improbable.Gdk.Movement;
+﻿using System.Collections.Generic;
+using Improbable.Gdk.Movement;
+using Improbable.Gdk.StandardTypes;
 using UnityEngine;
 
 public class MyMovementUtils
 {
-    public const float Gravity = 10f;
-    public const float Jump = 5f;
-    public const float FrameLength = 1 / 30f;
-    public const float NormalSpeed = 3f;
-    public const float SprintSpeed = 6f;
-
-    public const float AirControlMultiplier = 0.01f;
-
-    public static Vector3 ApplyMovement(CharacterController controller, ClientRequest input, Vector3 velocity)
+    public interface IMovementProcessor
     {
-        var newVelocity = velocity / FrameLength;
-        var speed = input.IncludesSprint ? SprintSpeed : NormalSpeed;
-        var inputVector = new Vector3(
-            input.RightPressed ? 1 : (input.LeftPressed) ? -1 : 0,
-            0,
-            input.ForwardPressed ? 1 : (input.BackPressed ? -1 : 0));
+        Vector3 GetMovement(CharacterController controller, ClientRequest input, int frame, Vector3 velocity,
+            Vector3 previous);
 
-        inputVector.Normalize();
+        void Clean(int frame);
+    }
 
-        var rot = Quaternion.Euler(0, input.CameraYaw / 100000f, 0);
-
-        // rotate to face yaw in input.
-        inputVector = rot * inputVector;
-
-        // multiply by speed determined by sprint.
-        inputVector *= speed;
-
-        if (IsGrounded(controller))
+    public static readonly MovementSettings movementSettings = new MovementSettings
+    {
+        MovementSpeed = new MovementSpeedSettings
         {
-            newVelocity.z = inputVector.z;
-            newVelocity.x = inputVector.x;
+            WalkSpeed = 2f,
+            RunSpeed = 3.5f,
+            SprintSpeed = 6f
+        },
+        SprintCooldown = 0.2f,
+        Gravity = 25f,
+        StartingJumpSpeed = 8f,
+        TerminalVelocity = 40f,
+        GroundedFallSpeed = 3.5f,
+        AirControlModifier = 0.5f,
+        InAirDamping = 0.05f
+    };
 
-            if (input.IncludesJump)
-            {
-                newVelocity.y = Jump;
-            }
-        }
-        else
+    public class TerminalVelocity : IMovementProcessor
+    {
+        public Vector3 GetMovement(CharacterController controller, ClientRequest input, int frame, Vector3 velocity,
+            Vector3 previous)
         {
-            newVelocity.z += (AirControlMultiplier * inputVector.z);
-            newVelocity.x += (AirControlMultiplier * inputVector.x);
+            return Vector3.ClampMagnitude(previous, movementSettings.TerminalVelocity);
         }
 
-        newVelocity.y = newVelocity.y - Gravity * FrameLength;
+        public void Clean(int frame)
+        {
+            // Do nothing, not storing any state that needs cleaning.
+        }
+    }
 
-        newVelocity *= FrameLength;
+    public class Gravity : IMovementProcessor
+    {
+        public Vector3 GetMovement(CharacterController controller, ClientRequest input, int frame, Vector3 velocity,
+            Vector3 previous)
+        {
+            return previous + Vector3.down * movementSettings.Gravity * FrameLength;
+        }
 
-        controller.Move(newVelocity);
+        public void Clean(int frame)
+        {
+            // Do nothing, not storing any state that needs cleaning.
+        }
+    }
 
-        return newVelocity;
+    public const float FrameLength = 1 / 30f;
+
+    public static void ApplyInput(CharacterController controller, ClientRequest input, int frame, Vector3 velocity,
+        IMovementProcessor[] processors)
+    {
+        var toMove = Vector3.zero;
+        for (var i = 0; i < processors.Length; i++)
+        {
+            toMove = processors[i].GetMovement(controller, input, frame, velocity, toMove);
+        }
+
+        ApplyMovement(controller, toMove);
+    }
+
+    public static void ApplyMovement(CharacterController controller, Vector3 movement)
+    {
+        controller.Move(movement * FrameLength);
+        controller.transform.position = controller.transform.position.ToIntAbsolute().ToVector3();
     }
 
     public static bool IsGrounded(CharacterController controller)
     {
-        var start = controller.transform.position + controller.center;
-        var maxFloorDistance = controller.center.y + 0.3f;
+        return Physics.CheckSphere(controller.transform.position, 0.1f, LayerMask.GetMask("Default"));
+    }
 
-        if (Physics.SphereCast(new Ray(start, Vector3.down), 0.45f, out var hit, maxFloorDistance, Physics.AllLayers))
+    public static void CleanProcessors(IMovementProcessor[] processors, int frame)
+    {
+        for (var i = 0; i < processors.Length; i++)
         {
-            Debug.DrawLine(controller.transform.position, hit.point, Color.green);
-            return true;
+            processors[i].Clean(frame);
         }
-
-        Debug.DrawLine(controller.transform.position,
-            controller.transform.position + Vector3.down * maxFloorDistance, Color.red);
-
-        return false;
     }
 }

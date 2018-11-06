@@ -42,6 +42,14 @@ public class MyClientMovementDriver : MonoBehaviour
     private Dictionary<int, Vector3> movementState = new Dictionary<int, Vector3>();
     private Dictionary<int, ClientRequest> inputState = new Dictionary<int, ClientRequest>();
 
+    private readonly MyMovementUtils.IMovementProcessor[] movementProcessors =
+    {
+        new StandardMovement(),
+        new JumpMovement(),
+        new MyMovementUtils.Gravity(),
+        new MyMovementUtils.TerminalVelocity(),
+    };
+
     private void OnEnable()
     {
         spatial = GetComponent<SpatialOSComponent>();
@@ -87,7 +95,7 @@ public class MyClientMovementDriver : MonoBehaviour
 
             var input = SendInput();
             outBuilder.AppendLine(string.Format("[{0}] Before: {1}", lastFrame, Controller.transform.position));
-            MyMovementUtils.ApplyMovement(Controller, input, GetVelocity(lastFrame));
+            MyMovementUtils.ApplyInput(Controller, input, lastFrame, GetVelocity(lastFrame), movementProcessors);
             outBuilder.AppendLine(string.Format("[{0}] After: {1}", lastFrame, Controller.transform.position));
             SaveMovementState(lastFrame);
             SaveInputState(input);
@@ -143,18 +151,17 @@ public class MyClientMovementDriver : MonoBehaviour
                     lastFrame, response.Timestamp, Controller.transform.position
                 ));
                 // Replay inputs until lastFrame, storing movementstates.
-                var v = GetVelocity(response.Timestamp);
                 for (var i = response.Timestamp + 1; i <= lastFrame; i++)
                 {
                     Debug.LogFormat("[Replaying Frame {0} ({1})]", i, rewindColors[rewindColorIndex]);
                     Debug.LogFormat("Input {0}", InputToString(inputState[i]));
                     Debug.LogFormat("Previous Position {0}", movementState[i]);
-                    Debug.LogFormat("Previous Velocity {0}", v);
+                    Debug.LogFormat("Previous Velocity {0}", GetVelocity(i));
 
                     outBuilder.AppendLine(string.Format("[{0}] Before replay {1}: {2}",
                         lastFrame, i, Controller.transform.position
                     ));
-                    v = MyMovementUtils.ApplyMovement(Controller, inputState[i], v);
+                    MyMovementUtils.ApplyInput(Controller, inputState[i], i, GetVelocity(i), movementProcessors);
 
                     outBuilder.AppendLine(string.Format("[{0}] After replay {1}: {2}",
                         lastFrame, i, Controller.transform.position
@@ -183,6 +190,7 @@ public class MyClientMovementDriver : MonoBehaviour
 
             // Remove the previous last confirmed state, keep this one around for potential velocity calculation.
             movementState.Remove(response.Timestamp - 2);
+            MyMovementUtils.CleanProcessors(movementProcessors, response.Timestamp - 2);
         }
         else
         {
@@ -227,7 +235,7 @@ public class MyClientMovementDriver : MonoBehaviour
         if (movementState.TryGetValue(frame - 2, out var before) &&
             movementState.TryGetValue(frame - 1, out var after))
         {
-            return after - before;
+            return (after - before) / MyMovementUtils.FrameLength;
         }
 
         Debug.LogWarningFormat("Looking for velocity for frame {0}", frame);
@@ -249,6 +257,19 @@ public class MyClientMovementDriver : MonoBehaviour
         //     i += lineHeight + 2;
         // }
         GUI.Label(new Rect(700, 10, 200, 30), string.Format("C.Grounded: {0}", MyMovementUtils.IsGrounded(Controller)));
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawSphere(Controller.transform.position, 0.1f);
+
+        float c = 0;
+        for (var i = lastFrame; movementState.ContainsKey(i); i--)
+        {
+            Gizmos.color = Color.Lerp(Color.red, Color.white, c / movementState.Count);
+            Gizmos.DrawWireSphere(movementState[i], 0.5f);
+            c += 1;
+        }
     }
 
     private string InputToString(ClientRequest request)

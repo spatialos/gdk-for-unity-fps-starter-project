@@ -30,6 +30,14 @@ public class MyServerMovementDriver : MonoBehaviour
     private Dictionary<int, ClientRequest> clientInputs = new Dictionary<int, ClientRequest>();
     private Dictionary<int, Vector3> movementState = new Dictionary<int, Vector3>();
 
+    private readonly MyMovementUtils.IMovementProcessor[] movementProcessors =
+    {
+        new StandardMovement(),
+        new JumpMovement(),
+        new MyMovementUtils.Gravity(),
+        new MyMovementUtils.TerminalVelocity(),
+    };
+
     private void Awake()
     {
         controller = GetComponent<CharacterController>();
@@ -92,7 +100,7 @@ public class MyServerMovementDriver : MonoBehaviour
                 clientInputs.Remove(lastFrame);
                 logOut.AppendLine(
                     string.Format("[{0}] Before: {1}", ToClientCf(lastFrame), controller.transform.position));
-                MyMovementUtils.ApplyMovement(controller, input, GetVelocity(lastFrame));
+                MyMovementUtils.ApplyInput(controller, input, lastFrame, GetVelocity(lastFrame), movementProcessors);
                 logOut.AppendLine(
                     string.Format("[{0}] After: {1}", ToClientCf(lastFrame), controller.transform.position));
                 SaveMovementState();
@@ -100,6 +108,7 @@ public class MyServerMovementDriver : MonoBehaviour
 
                 // Remove movement state from 10 frames ago
                 movementState.Remove(lastFrame - 10);
+                MyMovementUtils.CleanProcessors(movementProcessors, lastFrame - 10);
             }
             else
             {
@@ -142,7 +151,7 @@ public class MyServerMovementDriver : MonoBehaviour
         if (movementState.TryGetValue(frame - 2, out var before) &&
             movementState.TryGetValue(frame - 1, out var after))
         {
-            return after - before;
+            return (after - before) / MyMovementUtils.FrameLength;
         }
 
         return Vector3.zero;
