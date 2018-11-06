@@ -5,6 +5,7 @@ using UnityEngine;
 public class JumpMovement : MyMovementUtils.IMovementProcessor
 {
     private Dictionary<int, bool> jumpState = new Dictionary<int, bool>();
+    private Dictionary<int, bool> jumped = new Dictionary<int, bool>();
 
     public Vector3 GetMovement(CharacterController controller, ClientRequest input, int frame, Vector3 velocity,
         Vector3 previous)
@@ -18,6 +19,11 @@ public class JumpMovement : MyMovementUtils.IMovementProcessor
         if (grounded && canJump && jumpPressed)
         {
             result.y = MyMovementUtils.movementSettings.StartingJumpSpeed;
+            jumped[frame] = true;
+        }
+        else
+        {
+            jumped[frame] = false;
         }
 
         if (!jumpPressed && grounded)
@@ -36,5 +42,11 @@ public class JumpMovement : MyMovementUtils.IMovementProcessor
     {
         // remove old jump state.
         jumpState.Remove(frame);
+    }
+
+    public bool DidJump(int frame)
+    {
+        jumped.TryGetValue(frame, out var result);
+        return result;
     }
 }

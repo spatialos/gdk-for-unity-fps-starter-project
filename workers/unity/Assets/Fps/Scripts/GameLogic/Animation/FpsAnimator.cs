@@ -108,13 +108,11 @@ namespace Fps
             SetMoving(0);
         }
 
-        public void SetMovement(Vector3 newPosition, float time)
+        public void SetMovement(Vector3 velocity)
         {
-            var movementDirection = newPosition - latestPosition;
+            var movementDirection = velocity;
             movementDirection.y = 0;
-            latestPosition = newPosition;
 
-            movementDirection /= time;
 
             var diffAngle = CalculateAngle(transform, movementDirection);
             var angleRadian = Mathf.Deg2Rad * diffAngle;
@@ -122,21 +120,21 @@ namespace Fps
             var directionMagnitude = movementDirection.magnitude;
 
             var magnitudeToUse = 0f;
-            if (directionMagnitude > MovementSpeedSettings.SharedSettings.RunSpeed)
+            if (directionMagnitude > MyMovementUtils.movementSettings.MovementSpeed.RunSpeed)
             {
-                directionMagnitude -= MovementSpeedSettings.SharedSettings.RunSpeed;
-                magnitudeToUse = 2 + directionMagnitude / (MovementSpeedSettings.SharedSettings.SprintSpeed -
-                    MovementSpeedSettings.SharedSettings.RunSpeed);
+                directionMagnitude -= MyMovementUtils.movementSettings.MovementSpeed.RunSpeed;
+                magnitudeToUse = 2 + directionMagnitude / (MyMovementUtils.movementSettings.MovementSpeed.SprintSpeed -
+                    MyMovementUtils.movementSettings.MovementSpeed.RunSpeed);
             }
-            else if (directionMagnitude > MovementSpeedSettings.SharedSettings.WalkSpeed)
+            else if (directionMagnitude > MyMovementUtils.movementSettings.MovementSpeed.WalkSpeed)
             {
-                directionMagnitude -= MovementSpeedSettings.SharedSettings.WalkSpeed;
-                magnitudeToUse = 1 + directionMagnitude / (MovementSpeedSettings.SharedSettings.RunSpeed -
-                    MovementSpeedSettings.SharedSettings.WalkSpeed);
+                directionMagnitude -= MyMovementUtils.movementSettings.MovementSpeed.WalkSpeed;
+                magnitudeToUse = 1 + directionMagnitude / (MyMovementUtils.movementSettings.MovementSpeed.RunSpeed -
+                    MyMovementUtils.movementSettings.MovementSpeed.WalkSpeed);
             }
             else
             {
-                magnitudeToUse = directionMagnitude / MovementSpeedSettings.SharedSettings.WalkSpeed;
+                magnitudeToUse = directionMagnitude / MyMovementUtils.movementSettings.MovementSpeed.WalkSpeed;
             }
 
             var delta = Vector2.zero;

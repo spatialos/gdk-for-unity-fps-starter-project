@@ -772,6 +772,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4244229316102358}
+  - component: {fileID: 114431074254768500}
   - component: {fileID: 114318485812647952}
   - component: {fileID: 114801285074366292}
   - component: {fileID: 114198340130317920}
@@ -2619,7 +2620,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Controller: {fileID: 143160483645145128}
-  UseKeyboardInput: 1
+  UseDirectInput: 0
   ViewTransform: {fileID: 4955140760145538}
 --- !u!114 &114158075481504632
 MonoBehaviour:
@@ -2722,6 +2723,24 @@ MonoBehaviour:
       enableFptlForForwardOpaque: 1
       enableBigTilePrepass: 1
       isFptlEnabled: 1
+--- !u!114 &114431074254768500
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1627949407420470}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30116109eb8b24346a34ba5d505cd5f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pitchTransform: {fileID: 4620716434285874}
+  camera: {fileID: 20443460711874354}
+  cameraSettings:
+    PitchSpeed: 1
+    YawSpeed: 1
+    MinPitch: -80
+    MaxPitch: 60
 --- !u!114 &114471432205030634
 MonoBehaviour:
   m_ObjectHideFlags: 1

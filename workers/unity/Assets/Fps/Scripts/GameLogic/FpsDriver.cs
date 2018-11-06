@@ -21,13 +21,11 @@ namespace Fps
             public float MaxPitch;
         }
 
-        [Require] private ClientMovement.Requirable.Writer authority;
-        [Require] private ServerMovement.Requirable.Reader serverMovement;
         [Require] private GunStateComponent.Requirable.Writer gunState;
         [Require] private HealthComponent.Requirable.Reader health;
         [Require] private HealthComponent.Requirable.CommandRequestSender commandSender;
 
-        private ClientMovementDriver movement;
+        private MyClientMovementDriver movement;
         private ClientShooting shooting;
         private ShotRayProvider shotRayProvider;
         private FpsAnimator fpsAnimator;
@@ -48,10 +46,21 @@ namespace Fps
 
         private bool isRequestingRespawn;
         private Coroutine requestingRespawnCoroutine;
+        private readonly JumpMovement jumpMovement = new JumpMovement();
+        private readonly MyMovementUtils.SprintCooldown sprintCooldown = new MyMovementUtils.SprintCooldown();
+        private CommandFrameSystem commandFrame;
 
         private void Awake()
         {
-            movement = GetComponent<ClientMovementDriver>();
+            movement = GetComponent<MyClientMovementDriver>();
+            movement.SetMovementProcessors(new MyMovementUtils.IMovementProcessor[]
+            {
+                new StandardMovement(),
+                sprintCooldown,
+                jumpMovement,
+                new MyMovementUtils.Gravity(),
+                new MyMovementUtils.TerminalVelocity(),
+            });
             shooting = GetComponent<ClientShooting>();
             shotRayProvider = GetComponent<ShotRayProvider>();
             fpsAnimator = GetComponent<FpsAnimator>();
@@ -62,10 +71,10 @@ namespace Fps
         private void OnEnable()
         {
             spatialComponent = GetComponent<SpatialOSComponent>();
+            commandFrame = spatialComponent.World.GetExistingManager<CommandFrameSystem>();
 
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
-            serverMovement.OnForcedRotation += OnForcedRotation;
             health.OnRespawn += OnRespawn;
         }
 
@@ -74,8 +83,6 @@ namespace Fps
             // Don't allow controls if in the menu.
             if (ScreenUIController.InEscapeMenu)
             {
-                // Still apply physics.
-                movement.ApplyMovement(Vector3.zero, transform.rotation, MovementSpeed.Run, false);
                 Animations(false);
                 return;
             }
@@ -101,8 +108,6 @@ namespace Fps
             var backward = Input.GetKey(KeyCode.S);
             var left = Input.GetKey(KeyCode.A);
             var right = Input.GetKey(KeyCode.D);
-
-            var toMove = transform.rotation * GetDirectionFromCache(forward, backward, left, right);
             var onlyForward = forward && !(backward || left || right);
 
             // Rotation
@@ -128,11 +133,6 @@ namespace Fps
             }
 
             //Mediator
-            var movementSpeed = isAiming
-                ? MovementSpeed.Walk
-                : isSprinting
-                    ? MovementSpeed.Sprint
-                    : MovementSpeed.Run;
             var yawChange = yawDelta * yawSpeed;
             var pitchChange = pitchDelta * -pitchSpeed;
             var currentPitch = pitchTransform.transform.localEulerAngles.x;
@@ -144,21 +144,21 @@ namespace Fps
 
             newPitch = Mathf.Clamp(newPitch, -cameraSettings.MaxPitch, -cameraSettings.MinPitch);
             pitchTransform.localRotation = Quaternion.Euler(newPitch, 0, 0);
-            var currentYaw = transform.eulerAngles.y;
-            var newYaw = currentYaw + yawChange;
-            var rotation = Quaternion.Euler(newPitch, newYaw, 0);
+            var rotation = transform.eulerAngles;
+            rotation.y += yawChange;
+            transform.rotation = Quaternion.Euler(rotation);
+
+            movement.AddInput(forward, backward, left, right, isJumpPressed, isSprinting, rotation.y);
 
             //Check for sprint cooldown
-            if (!movement.HasSprintedRecently)
+            if (sprintCooldown.GetCooldown(commandFrame.CurrentFrame - 1) <= 0 && !isSprinting)
             {
                 HandleShooting(shootPressed, shootHeld);
             }
 
             Aiming(isAiming);
 
-            var wasGroundedBeforeMovement = movement.IsGrounded;
-            movement.ApplyMovement(toMove, rotation, movementSpeed, isJumpPressed);
-            Animations(isJumpPressed && wasGroundedBeforeMovement);
+            Animations(jumpMovement.DidJump(commandFrame.CurrentFrame));
         }
 
         private IEnumerator RequestRespawn()
@@ -212,8 +212,8 @@ namespace Fps
         private void Animations(bool isJumping)
         {
             fpsAnimator.SetAiming(gunState.Data.IsAiming);
-            fpsAnimator.SetGrounded(movement.IsGrounded);
-            fpsAnimator.SetMovement(transform.position, Time.deltaTime);
+            fpsAnimator.SetGrounded(MyMovementUtils.IsGrounded(movement.Controller));
+            fpsAnimator.SetMovement(movement.GetVelocity(commandFrame.CurrentFrame));
             fpsAnimator.SetPitch(pitchTransform.transform.localEulerAngles.x);
 
             if (isJumping)

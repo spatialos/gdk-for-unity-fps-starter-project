@@ -58,6 +58,38 @@ public class MyMovementUtils
         }
     }
 
+    public class SprintCooldown : IMovementProcessor
+    {
+        private Dictionary<int, float> cooldown = new Dictionary<int, float>();
+
+        public Vector3 GetMovement(CharacterController controller, ClientRequest input, int frame, Vector3 velocity,
+            Vector3 previous)
+        {
+            if (input.IncludesSprint)
+            {
+                cooldown[frame] = movementSettings.SprintCooldown;
+            }
+            else
+            {
+                cooldown.TryGetValue(frame - 1, out var last);
+                cooldown[frame] = Mathf.Max(last - FrameLength, 0);
+            }
+
+            return previous;
+        }
+
+        public void Clean(int frame)
+        {
+            cooldown.Remove(frame);
+        }
+
+        public float GetCooldown(int frame)
+        {
+            cooldown.TryGetValue(frame, out var result);
+            return result;
+        }
+    }
+
     public const float FrameLength = 1 / 30f;
 
     public static void ApplyInput(CharacterController controller, ClientRequest input, int frame, Vector3 velocity,
