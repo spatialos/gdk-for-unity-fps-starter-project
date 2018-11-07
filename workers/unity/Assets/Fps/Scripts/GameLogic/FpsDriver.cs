@@ -6,7 +6,6 @@ using Improbable.Gdk.Guns;
 using Improbable.Gdk.Health;
 using Improbable.Gdk.Movement;
 using Improbable.Gdk.StandardTypes;
-using UnityEditor;
 using UnityEngine;
 
 namespace Fps
@@ -25,6 +24,8 @@ namespace Fps
         [Require] private GunStateComponent.Requirable.Writer gunState;
         [Require] private HealthComponent.Requirable.Reader health;
         [Require] private HealthComponent.Requirable.CommandRequestSender commandSender;
+
+        [SerializeField] public GameObject ControllerProxy;
 
         private MyClientMovementDriver movement;
         private ClientShooting shooting;
@@ -67,6 +68,12 @@ namespace Fps
             fpsAnimator = GetComponent<FpsAnimator>();
             currentGun = GetComponent<GunManager>();
             CreateDirectionCache();
+        }
+
+        private void Start()
+        {
+            ControllerProxy.transform.parent = null;
+            movement.Controller = ControllerProxy.GetComponent<CharacterController>();
         }
 
         private void OnEnable()
@@ -171,6 +178,8 @@ namespace Fps
             Aiming(isAiming);
 
             Animations(jumpMovement.DidJump(commandFrame.CurrentFrame));
+
+            transform.position = Vector3.Lerp(transform.position, ControllerProxy.transform.position, 0.5f);
         }
 
         private IEnumerator RequestRespawn()
@@ -275,7 +284,5 @@ namespace Fps
             directionIndex += left & !right ? 8 : 0;
             return cachedDirectionVectors[directionIndex];
         }
-
-
     }
 }

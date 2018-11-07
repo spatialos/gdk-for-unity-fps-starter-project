@@ -313,9 +313,12 @@ public class MyServerMovementDriver : MonoBehaviour
 
     private void UpdateDilation()
     {
-        // var cons = GetAverageInputConsumptionRate();
-        // var ins = GetAverageInputReceivedRate();
-        // var delta = (ins - cons);
+        // Don't do anything until the buffer's full for the first time.
+        if (lastFrame < firstFrame)
+        {
+            return;
+        }
+
         var bufferSize = clientInputs.Count;
         var error = bufferSize - FrameBuffer;
 
