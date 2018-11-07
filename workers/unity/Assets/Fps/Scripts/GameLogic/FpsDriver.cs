@@ -6,6 +6,7 @@ using Improbable.Gdk.Guns;
 using Improbable.Gdk.Health;
 using Improbable.Gdk.Movement;
 using Improbable.Gdk.StandardTypes;
+using UnityEditor;
 using UnityEngine;
 
 namespace Fps
@@ -103,6 +104,17 @@ namespace Fps
                 return;
             }
 
+            // Manually fudge command frame length.
+            if (Input.GetKeyDown(KeyCode.I))
+            {
+                commandFrame.ManualFudge -= 0.05f;
+            }
+
+            if (Input.GetKeyDown(KeyCode.O))
+            {
+                commandFrame.ManualFudge += 0.05f;
+            }
+
             // Movement
             var forward = Input.GetKey(KeyCode.W);
             var backward = Input.GetKey(KeyCode.S);
@@ -148,7 +160,7 @@ namespace Fps
             rotation.y += yawChange;
             transform.rotation = Quaternion.Euler(rotation);
 
-            movement.AddInput(forward, backward, left, right, isJumpPressed, isSprinting, rotation.y);
+            movement.AddInput(forward, backward, left, right, isJumpPressed, isSprinting, rotation.y, newPitch);
 
             //Check for sprint cooldown
             if (sprintCooldown.GetCooldown(commandFrame.CurrentFrame - 1) <= 0 && !isSprinting)
@@ -263,5 +275,7 @@ namespace Fps
             directionIndex += left & !right ? 8 : 0;
             return cachedDirectionVectors[directionIndex];
         }
+
+
     }
 }

@@ -12,15 +12,8 @@ public class MyClientMovementDriver : MonoBehaviour
     [Require] private ServerMovement.Requirable.Reader serverMovement;
 
     public CharacterController Controller;
-    public bool UseDirectInput = true;
-
     private SpatialOSComponent spatial;
     private CommandFrameSystem commandFrame;
-
-    private float pitchSpeed = 1;
-    private float yawSpeed = 1;
-
-    public Transform ViewTransform;
 
     private int lastFrame = -1;
 
@@ -31,8 +24,7 @@ public class MyClientMovementDriver : MonoBehaviour
     private bool jumpThisFrame;
     private bool sprintThisFrame;
     private float yawThisFrame;
-
-    private StringBuilder outBuilder = new StringBuilder();
+    private float pitchThisFrame;
 
     private Color[] rewindColors = new Color[]
     {
@@ -57,13 +49,6 @@ public class MyClientMovementDriver : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
     }
 
-    private void OnDestroy()
-    {
-        // var fileOut = new StreamWriter("C:/GdkLogs/MyClientMovement.txt");
-        // fileOut.Write(outBuilder.ToString());
-        // fileOut.Close();
-    }
-
     public void SetMovementProcessors(MyMovementUtils.IMovementProcessor[] processors)
     {
         movementProcessors = processors;
@@ -71,33 +56,12 @@ public class MyClientMovementDriver : MonoBehaviour
 
     private void Update()
     {
-        if (UseDirectInput)
-        {
-            forwardThisFrame |= Input.GetKey(KeyCode.W);
-            backThisFrame |= Input.GetKey(KeyCode.S);
-            leftThisFrame |= Input.GetKey(KeyCode.A);
-            rightThisFrame |= Input.GetKey(KeyCode.D);
-            jumpThisFrame |= Input.GetKey(KeyCode.Space);
-            sprintThisFrame |= Input.GetKey(KeyCode.LeftShift);
-
-            var rot = ViewTransform.rotation.eulerAngles;
-            rot.x -= Input.GetAxis("Mouse Y") * pitchSpeed;
-            ViewTransform.rotation = Quaternion.Euler(rot);
-
-            var controllerRot = Controller.transform.rotation.eulerAngles;
-            controllerRot.y += Input.GetAxis("Mouse X") * yawSpeed;
-            Controller.transform.rotation = Quaternion.Euler(controllerRot);
-        }
-
         if (commandFrame.CurrentFrame != lastFrame)
         {
             lastFrame = commandFrame.CurrentFrame;
-            // Debug.LogFormat("Send forward={0} for cf {1}", forwardThisFrame, lastFrame);
 
             var input = SendInput();
-            outBuilder.AppendLine(string.Format("[{0}] Before: {1}", lastFrame, Controller.transform.position));
             MyMovementUtils.ApplyInput(Controller, input, lastFrame, GetVelocity(lastFrame), movementProcessors);
-            outBuilder.AppendLine(string.Format("[{0}] After: {1}", lastFrame, Controller.transform.position));
             SaveMovementState(lastFrame);
             SaveInputState(input);
 
@@ -110,7 +74,7 @@ public class MyClientMovementDriver : MonoBehaviour
         }
     }
 
-    public void AddInput(bool forward, bool back, bool left, bool right, bool jump, bool sprint, float yaw)
+    public void AddInput(bool forward, bool back, bool left, bool right, bool jump, bool sprint, float yaw, float pitch)
     {
         forwardThisFrame |= forward;
         backThisFrame |= back;
@@ -119,12 +83,11 @@ public class MyClientMovementDriver : MonoBehaviour
         jumpThisFrame |= jump;
         sprintThisFrame |= sprint;
         yawThisFrame = yaw;
+        pitchThisFrame = pitch;
     }
 
     private void OnServerMovement(ServerResponse response)
     {
-        // Debug.LogFormat("[Client] Received {0} (local frame {1})", response.Timestamp, lastFrame);
-
         if (movementState.ContainsKey(response.Timestamp))
         {
             // Check if server agrees, which it always should.
@@ -139,17 +102,9 @@ public class MyClientMovementDriver : MonoBehaviour
                 Debug.LogFormat("Diff: {0}", distance);
                 Debug.LogFormat("Replaying input from {0} to {1}", response.Timestamp + 1, lastFrame);
 
-
-                outBuilder.AppendLine(string.Format("[{0}] Before Reset frame {1}: {2}",
-                    lastFrame, response.Timestamp, Controller.transform.position
-                ));
-
                 Controller.transform.position = actualPosition;
                 SaveMovementState(response.Timestamp);
 
-                outBuilder.AppendLine(string.Format("[{0}] After Reset frame {1}: {2}",
-                    lastFrame, response.Timestamp, Controller.transform.position
-                ));
                 // Replay inputs until lastFrame, storing movementstates.
                 for (var i = response.Timestamp + 1; i <= lastFrame; i++)
                 {
@@ -158,14 +113,8 @@ public class MyClientMovementDriver : MonoBehaviour
                     Debug.LogFormat("Previous Position {0}", movementState[i]);
                     Debug.LogFormat("Previous Velocity {0}", GetVelocity(i));
 
-                    outBuilder.AppendLine(string.Format("[{0}] Before replay {1}: {2}",
-                        lastFrame, i, Controller.transform.position
-                    ));
                     MyMovementUtils.ApplyInput(Controller, inputState[i], i, GetVelocity(i), movementProcessors);
 
-                    outBuilder.AppendLine(string.Format("[{0}] After replay {1}: {2}",
-                        lastFrame, i, Controller.transform.position
-                    ));
                     SaveMovementState(i);
 
 
@@ -175,9 +124,6 @@ public class MyClientMovementDriver : MonoBehaviour
                         Controller.transform.position + Vector3.up * 500,
                         rewindColors[rewindColorIndex], 100f);
                 }
-
-                outBuilder.AppendLine(string.Format("[{0}] After reapply: {1}",
-                    lastFrame, Controller.transform.position));
 
                 rewindColorIndex = (rewindColorIndex + 1) % rewindColors.Length;
             }
@@ -196,6 +142,42 @@ public class MyClientMovementDriver : MonoBehaviour
         {
             // Debug.LogWarningFormat("Don't have movement state for cf {0}", response.Timestamp);
         }
+
+        // update dilation
+        commandFrame.ServerAdjustment = response.TimeDelta;
+    }
+
+    private float lastInputSentTime = -1;
+    private List<float> inputSendRate = new List<float>(20);
+
+    private void UpdateInputSendRate()
+    {
+        if (inputSendRate.Count >= 20)
+        {
+            inputSendRate.RemoveAt(0);
+        }
+
+        if (lastInputSentTime > 0)
+        {
+            // we have a last time to compare to.
+            var delta = Time.time - lastInputSentTime;
+            inputSendRate.Add(delta);
+            lastInputSentTime = Time.time;
+        }
+        else
+        {
+            lastInputSentTime = Time.time;
+        }
+    }
+
+    private float GetInputSendRate()
+    {
+        if (inputSendRate.Count > 0)
+        {
+            return inputSendRate.Average() / commandFrame.FrameLength;
+        }
+
+        return -1;
     }
 
     private ClientRequest SendInput()
@@ -209,10 +191,13 @@ public class MyClientMovementDriver : MonoBehaviour
             IncludesJump = jumpThisFrame,
             IncludesSprint = sprintThisFrame,
             CameraYaw = (int) (yawThisFrame * 100000f),
+            CameraPitch = (int) (pitchThisFrame * 100000f),
             Timestamp = lastFrame
         };
 
         movement.SendClientInput(clientRequest);
+
+        UpdateInputSendRate();
         // Debug.LogFormat("[Client] Sent {0}", clientRequest.Timestamp);
         return clientRequest;
     }
@@ -243,19 +228,12 @@ public class MyClientMovementDriver : MonoBehaviour
 
     private void OnGUI()
     {
-        // // Print Current movement states on right side of screen.
-        // var frames = new List<int>(movementState.Keys);
-        // frames.Sort();
-        //
-        // var i = 10;
-        // const int lineHeight = 30;
-        //
-        // foreach (var frame in frames)
-        // {
-        //     GUI.Label(new Rect(700, i, 300, lineHeight), string.Format("[{0}] {1}", frame, movementState[frame]));
-        //     i += lineHeight + 2;
-        // }
-        GUI.Label(new Rect(700, 10, 200, 30), string.Format("C.Grounded: {0}", MyMovementUtils.IsGrounded(Controller)));
+        GUI.Label(new Rect(10, 10, 700, 20),
+            string.Format("Frame: {0:00.00}, Fudge: {1:00.00}, Adjustment: {2:00.00}, rate: {3:00.00}",
+                commandFrame.FrameLength,
+                commandFrame.ManualFudge,
+                commandFrame.ServerAdjustment,
+                GetInputSendRate()));
     }
 
     private void OnDrawGizmosSelected()
@@ -273,10 +251,10 @@ public class MyClientMovementDriver : MonoBehaviour
 
     private string InputToString(ClientRequest request)
     {
-        return string.Format("[F:{0} B:{1} R:{2} L:{3}, J:{4}, S:{5}, Yaw:{6}]",
+        return string.Format("[F:{0} B:{1} R:{2} L:{3}, J:{4}, S:{5}, Yaw:{6}, Pitch:{7}]",
             request.ForwardPressed, request.BackPressed,
             request.RightPressed, request.LeftPressed,
             request.IncludesJump, request.IncludesSprint,
-            request.CameraYaw);
+            request.CameraYaw, request.CameraPitch);
     }
 }
