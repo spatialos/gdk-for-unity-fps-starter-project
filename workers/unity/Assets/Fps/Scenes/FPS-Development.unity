@@ -168,6 +168,10 @@ Prefab:
       value: 
       objectReference: {fileID: 1638104666241782, guid: 075c14fd6c4ad514581b6aaabc0711bb,
         type: 2}
+    - target: {fileID: 1980441004664082, guid: 928af08170e7d0243a977f4f26fe42a0, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 928af08170e7d0243a977f4f26fe42a0, type: 2}
   m_IsPrefabAsset: 0
@@ -1380,16 +1384,16 @@ MonoBehaviour:
   edgeLeakFixup: 1
   edgeToleranceNormal: 1
   edgeTolerance: 1
-  shadowCascadeCount: 4
+  shadowCascadeCount: 3
   shadowCascadeRatios:
   - 0.05
-  - 0.15
+  - 0.2
   - 0.3
   shadowCascadeBorders:
   - 0
   - 0
-  - 0
   - 0.2
+  - 0
   shadowAlgorithm: 0
   shadowVariant: 3
   shadowPrecision: 0
@@ -1729,6 +1733,16 @@ Prefab:
     - target: {fileID: 4877581869204892, guid: 75d29a39b8a626e42bdfc2e1d7af6746, type: 2}
       propertyPath: m_RootOrder
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 114219126016241412, guid: 75d29a39b8a626e42bdfc2e1d7af6746,
+        type: 2}
+      propertyPath: DisableRenderers
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114219126016241412, guid: 75d29a39b8a626e42bdfc2e1d7af6746,
+        type: 2}
+      propertyPath: TargetFrameRate
+      value: 60
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 75d29a39b8a626e42bdfc2e1d7af6746, type: 2}
