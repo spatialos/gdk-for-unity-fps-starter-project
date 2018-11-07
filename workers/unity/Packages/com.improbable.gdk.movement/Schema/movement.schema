@@ -21,6 +21,8 @@ type ServerResponse {
 	int32 timestamp = 2;
 	float time_delta = 3;
 	bool includes_jump = 4;
+	int32 yaw = 5;
+	int32 pitch = 6;
 }
 
 type RotationUpdate {

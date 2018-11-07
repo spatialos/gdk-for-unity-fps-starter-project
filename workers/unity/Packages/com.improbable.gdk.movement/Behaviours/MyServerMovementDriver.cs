@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Improbable;
 using Improbable.Gdk.Core;
@@ -21,11 +22,22 @@ public class MyServerMovementDriver : MonoBehaviour
     private Vector3 origin;
 
     private int lastFrame = -1;
-    private int clientFrameOffset = -1;
+    private bool hasInput = false;
     private int firstFrame = -1;
-    private const int FrameBuffer = 2;
+
+    private int nextExpectedInput = -1;
+    private int nextServerFrame = -1;
+    private const int FrameBuffer = 10;
+
+    private float clientDilation = 1f;
+
+    private MyMovementUtils.PidController pidController = new MyMovementUtils.PidController(0.2f, 0.05f, 0.0f);
+
+    private ClientRequest lastInput;
 
     private StringBuilder logOut = new StringBuilder();
+
+    private Queue<ClientRequest> inputReceived = new Queue<ClientRequest>();
 
     private Dictionary<int, ClientRequest> clientInputs = new Dictionary<int, ClientRequest>();
     private Dictionary<int, Vector3> movementState = new Dictionary<int, Vector3>();
@@ -43,13 +55,6 @@ public class MyServerMovementDriver : MonoBehaviour
         controller = GetComponent<CharacterController>();
     }
 
-    private void OnDestroy()
-    {
-        // var sw = new StreamWriter("C:/GdkLogs/MyServerMovement.txt");
-        // sw.Write(logOut.ToString());
-        // sw.Close();
-    }
-
     private void OnEnable()
     {
         spatial = GetComponent<SpatialOSComponent>();
@@ -60,61 +65,244 @@ public class MyServerMovementDriver : MonoBehaviour
         origin = spatial.Worker.Origin;
     }
 
+    private float lastInputReceiveTime = -1;
+    private List<float> inputReceiveRate = new List<float>(20);
+
     private void OnClientInputReceived(ClientRequest request)
     {
-        // If this is the first client input, use it for the next cf + Buffer.
-        if (clientFrameOffset < 0)
-        {
-            clientFrameOffset = lastFrame - request.Timestamp + FrameBuffer;
-            firstFrame = lastFrame + FrameBuffer;
+        // Debug.LogFormat("[Server] Received client frame {0} on frame {1}",
+        //     request.Timestamp, lastFrame);
+        inputReceived.Enqueue(request);
 
-            // Debug.LogFormat("[Server] Setting offset to {0}, currentFrame {1}", clientFrameOffset, lastFrame);
+        UpdateInputReceivedRate();
+    }
+
+    private void UpdateInputReceivedRate()
+    {
+        if (inputReceiveRate.Count >= 20)
+        {
+            inputReceiveRate.RemoveAt(0);
         }
 
-        // Debug.LogFormat("[Server] Received {0}. Local frame {1}", request.Timestamp, lastFrame);
-        // Debug.LogFormat("[Server] Adding forward={0} to cf {1}", request.ForwardPressed, request.Timestamp);
-        clientInputs.Add(request.Timestamp + clientFrameOffset, request);
+        if (lastInputReceiveTime > 0)
+        {
+            var delta = Time.time - lastInputReceiveTime;
+            inputReceiveRate.Add(delta);
+            lastInputReceiveTime = Time.time;
+        }
+        else
+        {
+            lastInputReceiveTime = Time.time;
+        }
     }
+
+    private float GetAverageInputReceivedRate()
+    {
+        if (inputReceiveRate.Count > 0)
+        {
+            return inputReceiveRate.Average() / commandFrame.FrameLength;
+        }
+
+        return -1;
+    }
+
+    private void ProcessInput()
+    {
+        if (lastFrame < 0)
+        {
+            return;
+        }
+
+        while (inputReceived.Count > 0)
+        {
+            var request = inputReceived.Dequeue();
+            // If this is the first client input, use it for the next cf + Buffer.
+            if (!hasInput)
+            {
+                nextExpectedInput = request.Timestamp;
+                nextServerFrame = lastFrame + FrameBuffer;
+
+                Debug.LogFormat("[Server] First Client frame {0}, applied on server frame {1}. Current frame {2}",
+                    nextExpectedInput, nextServerFrame, lastFrame);
+
+                hasInput = true;
+            }
+
+            if (request.IncludesJump)
+            {
+                Debug.LogFormat("Got Jump. Client Frame {0}, Received Frame {1}, Apply Frame {2}", request.Timestamp,
+                    lastFrame, nextServerFrame);
+            }
+
+            if (request.Timestamp != nextExpectedInput)
+            {
+                Debug.LogWarningFormat(
+                    "[Server] Expected input frame {0}, but received {1}", nextExpectedInput, request.Timestamp);
+            }
+
+            clientInputs.Add(nextServerFrame, request);
+
+            // if (clientInputs.Count > 5)
+            // {
+            //     Debug.LogWarningFormat(
+            //         "[Server] Client {0}, inputs {1}", spatial.SpatialEntityId, clientInputs.Count);
+            // }
+
+            nextServerFrame++;
+            nextExpectedInput++;
+        }
+    }
+
+    private List<float> inputConsumptionRate = new List<float>(20);
 
     private void Update()
     {
-        if (lastFrame < commandFrame.CurrentFrame)
+        ProcessInput();
+
+        TunePid();
+
+        if (commandFrame.NewFrame)
         {
             lastFrame = commandFrame.CurrentFrame;
 
-            if (clientFrameOffset < 0)
+            if (!hasInput || lastFrame < firstFrame)
             {
-                return;
-            }
-
-            if (lastFrame < firstFrame)
-            {
-                // Debug.LogFormat("Current Frame {0} < First frame {1}", lastFrame, firstFrame);
                 return;
             }
 
             if (clientInputs.ContainsKey(lastFrame))
             {
-                var input = clientInputs[lastFrame];
-                // Debug.LogFormat("[Server] Apply {0} ({1})", lastFrame, input.Timestamp);
+                lastInput = clientInputs[lastFrame];
                 clientInputs.Remove(lastFrame);
-                logOut.AppendLine(
-                    string.Format("[{0}] Before: {1}", ToClientCf(lastFrame), controller.transform.position));
-                MyMovementUtils.ApplyInput(controller, input, lastFrame, GetVelocity(lastFrame), movementProcessors);
-                logOut.AppendLine(
-                    string.Format("[{0}] After: {1}", ToClientCf(lastFrame), controller.transform.position));
-                SaveMovementState();
-                SendMovement();
-
-                // Remove movement state from 10 frames ago
-                movementState.Remove(lastFrame - 10);
-                MyMovementUtils.CleanProcessors(movementProcessors, lastFrame - 10);
             }
             else
             {
-                // Debug.LogFormat("[Server] No client input found for cf={0}", ToClienfCf(lastFrame));
+                Debug.LogFormat("[Server] No client input for frame {0}. next input available: {1}",
+                    lastFrame, GetNextFrame());
+                if (clientInputs.Count == 0)
+                {
+                    nextServerFrame += 1;
+                }
             }
+
+            UpdateInputConsumptionRate();
+
+            if (lastInput.IncludesJump)
+            {
+                Debug.LogFormat("Applying jump. Client Frame {0}, Local Frame {1}", lastInput.Timestamp, lastFrame);
+            }
+
+            logOut.AppendLine(
+                string.Format("[{0}] Before: {1}", lastFrame, controller.transform.position));
+            MyMovementUtils.ApplyInput(controller, lastInput, lastFrame, GetVelocity(lastFrame),
+                movementProcessors);
+            logOut.AppendLine(
+                string.Format("[{0}] After: {1}", lastFrame, controller.transform.position));
+            SaveMovementState();
+            UpdateDilation();
+            SendMovement();
+
+            // Remove movement state from 10 frames ago
+            movementState.Remove(lastFrame - 10);
+            MyMovementUtils.CleanProcessors(movementProcessors, lastFrame - 10);
         }
+    }
+
+    private void TunePid()
+    {
+        var changed = false;
+        var kp = pidController.Kp;
+        var ki = pidController.Ki;
+        var kd = pidController.Kd;
+
+        // Kp up.
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            kp += 0.01f;
+            changed = true;
+        }
+
+        // Kp down.
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            kp -= 0.01f;
+            changed = true;
+        }
+
+        // Ki up.
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            ki += 0.01f;
+            changed = true;
+        }
+
+        // Ki down.
+        if (Input.GetKeyDown(KeyCode.N))
+        {
+            ki -= 0.01f;
+            changed = true;
+        }
+
+        // Kd up.
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            kd += 0.01f;
+            changed = true;
+        }
+
+        // Kd down.
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            kd -= 0.01f;
+            changed = true;
+        }
+
+        if (changed)
+        {
+            pidController = new MyMovementUtils.PidController(kp, ki, kd);
+        }
+    }
+
+    private float lastConsumptionTime = -1;
+
+    private void UpdateInputConsumptionRate()
+    {
+        if (inputConsumptionRate.Count >= 20)
+        {
+            inputConsumptionRate.RemoveAt(0);
+        }
+
+        if (lastConsumptionTime > 0)
+        {
+            // we have a last time to compare to.
+            var delta = Time.time - lastConsumptionTime;
+            inputConsumptionRate.Add(delta);
+            lastConsumptionTime = Time.time;
+        }
+        else
+        {
+            lastConsumptionTime = Time.time;
+        }
+    }
+
+    private float GetAverageInputConsumptionRate()
+    {
+        if (inputConsumptionRate.Count > 0)
+        {
+            return inputConsumptionRate.Average() / commandFrame.FrameLength;
+        }
+
+        return -1;
+    }
+
+    private int GetNextFrame()
+    {
+        if (clientInputs.Count > 0)
+        {
+            return clientInputs.Keys.Min();
+        }
+
+        return -1;
     }
 
     private void SaveMovementState()
@@ -123,6 +311,22 @@ public class MyServerMovementDriver : MonoBehaviour
         movementState.Add(lastFrame, controller.transform.position);
     }
 
+    private void UpdateDilation()
+    {
+        // var cons = GetAverageInputConsumptionRate();
+        // var ins = GetAverageInputReceivedRate();
+        // var delta = (ins - cons);
+        var bufferSize = clientInputs.Count;
+        var error = bufferSize - FrameBuffer;
+
+        var adjustment = pidController.Update(error, commandFrame.FrameLength);
+
+        clientDilation = Mathf.Clamp(adjustment, 0.5f, 1.5f);
+    }
+
+    private int positionRate = 30;
+    private int positionTick = 0;
+
     private void SendMovement()
     {
         var position = controller.transform.position - origin;
@@ -130,19 +334,23 @@ public class MyServerMovementDriver : MonoBehaviour
         var response = new ServerResponse
         {
             Position = position.ToIntAbsolute(),
-            Timestamp = ToClientCf(lastFrame),
+            Timestamp = lastInput.Timestamp,
+            Yaw = lastInput.CameraYaw,
+            Pitch = lastInput.CameraPitch,
+            TimeDelta = clientDilation
         };
         server.SendServerMovement(response);
         // Debug.LogFormat("[Server] Sent {0}", response.Timestamp);
-        spatialPosition.Send(new Position.Update()
-        {
-            Coords = new Option<Coordinates>(new Coordinates(position.x, position.y, position.z))
-        });
-    }
 
-    private int ToClientCf(int serverCf)
-    {
-        return serverCf - clientFrameOffset;
+        positionTick -= 1;
+        if (positionTick <= 0)
+        {
+            positionTick = positionRate;
+            spatialPosition.Send(new Position.Update()
+            {
+                Coords = new Option<Coordinates>(new Coordinates(position.x, position.y, position.z))
+            });
+        }
     }
 
     private Vector3 GetVelocity(int frame)
@@ -159,18 +367,16 @@ public class MyServerMovementDriver : MonoBehaviour
 
     private void OnGUI()
     {
-        // Print Current movement states on right side of screen.
-        // var frames = new List<int>(movementState.Keys);
-        // frames.Sort();
-        //
-        // var i = 10;
-        // const int lineHeight = 30;
-        //
-        // foreach (var frame in frames)
-        // {
-        //     GUI.Label(new Rect(10, i, 300, lineHeight), string.Format("[{0}] {1}", frame, movementState[frame]));
-        //     i += lineHeight + 2;
-        // }
-        GUI.Label(new Rect(10, 10, 300, 30), string.Format("S.Grounded: {0}", MyMovementUtils.IsGrounded(controller)));
+        var cons = GetAverageInputConsumptionRate();
+        var ins = GetAverageInputReceivedRate();
+        var delta = clientInputs.Count - FrameBuffer;
+
+        GUI.Label(new Rect(10, 100, 700, 20),
+            string.Format("Input Buffer: {0:00}, in: {1:00.00}, out: {2:00.00}, d: {3:00.00}, cd: {4:00.00}",
+                clientInputs.Count, ins, cons, delta, clientDilation));
+
+        GUI.Label(new Rect(10, 200, 700, 20),
+            string.Format("Kp: {0:00.00} Ki: {1:00.00} Kd: {2:00.00}",
+                pidController.Kp, pidController.Ki, pidController.Kd));
     }
 }

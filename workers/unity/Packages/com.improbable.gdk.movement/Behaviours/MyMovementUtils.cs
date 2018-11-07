@@ -107,7 +107,7 @@ public class MyMovementUtils
     public static void ApplyMovement(CharacterController controller, Vector3 movement)
     {
         controller.Move(movement * FrameLength);
-        controller.transform.position = controller.transform.position.ToIntAbsolute().ToVector3();
+        // controller.transform.position = controller.transform.position.ToIntAbsolute().ToVector3();
     }
 
     public static bool IsGrounded(CharacterController controller)
@@ -120,6 +120,34 @@ public class MyMovementUtils
         for (var i = 0; i < processors.Length; i++)
         {
             processors[i].Clean(frame);
+        }
+    }
+
+    public class PidController
+    {
+        public float Kp;
+        public float Ki;
+        public float Kd;
+
+        private float lastError;
+        private float integral;
+        private float value;
+
+        public PidController(float kp, float ki, float kd)
+        {
+            Kp = kp;
+            Ki = ki;
+            Kd = kd;
+        }
+
+        public float Update(float error, float dt)
+        {
+            float derivative = (error - lastError) / dt;
+            integral += error * dt;
+            lastError = error;
+
+            value = Kp * error + Ki * integral + Kd * derivative;
+            return value;
         }
     }
 }
