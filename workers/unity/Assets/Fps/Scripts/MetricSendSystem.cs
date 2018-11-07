@@ -69,7 +69,10 @@ namespace Fps
 
         private float CalculateFps()
         {
-            return totalFpsCount / fpsMeasurements;
+            var fps = totalFpsCount / fpsMeasurements;
+            totalFpsCount = 0;
+            fpsMeasurements = 0;
+            return fps;
         }
     }
 }
