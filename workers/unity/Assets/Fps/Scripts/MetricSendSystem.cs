@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Improbable.Gdk.Core;
 using Improbable.Worker.Core;
 using Unity.Entities;
@@ -10,15 +10,21 @@ namespace Fps
     {
         private Connection connection;
 
-        private float timeElapsedSinceUpdate;
+        private DateTime timeOfNextUpdate;
+        private DateTime timeOfLastUpdate;
 
-        private const float TimeBetweenMetricUpdatesSecs = 2.0f;
+        private const double TimeBetweenMetricUpdatesSecs = 2;
         private const int DefaultTargetFrameRate = 60;
 
-        private float TargetFps;
+        private double targetFps;
 
-        private float totalFpsCount;
-        private int fpsMeasurements;
+        private int lastFrameCount;
+        private double lastSentFps;
+
+        // We use exponential smoothing for the FPS metric
+        // larger value == more smoothing, 0 = no smoothing
+        // 0 <= smoothing < 1
+        private const double smoothing = 0;
 
         private Improbable.Worker.Metrics Metrics;
 
@@ -28,7 +34,7 @@ namespace Fps
             connection = World.GetExistingManager<WorkerSystem>().Connection;
             Metrics = new Improbable.Worker.Metrics();
 
-            TargetFps = Application.targetFrameRate == -1
+            targetFps = Application.targetFrameRate == -1
                 ? DefaultTargetFrameRate
                 : Application.targetFrameRate;
         }
@@ -40,39 +46,36 @@ namespace Fps
                 return;
             }
 
-            timeElapsedSinceUpdate += Time.deltaTime;
-
-            AddFpsSample();
-            if (timeElapsedSinceUpdate >= TimeBetweenMetricUpdatesSecs)
+            if (DateTime.Now >= timeOfNextUpdate)
             {
-                timeElapsedSinceUpdate = 0;
-
                 var dynamicFps = CalculateFps();
                 Metrics.GaugeMetrics["Dynamic.FPS"] = dynamicFps;
                 Metrics.GaugeMetrics["Unity used heap size"] = GC.GetTotalMemory(false);
                 Metrics.Load = CalculateLoad(dynamicFps);
 
                 connection.SendMetrics(Metrics);
+
+                lastSentFps = dynamicFps;
+                timeOfLastUpdate = DateTime.Now;
+                timeOfNextUpdate = DateTime.Now.AddSeconds(TimeBetweenMetricUpdatesSecs);
             }
         }
 
-        private float CalculateLoad(float dynamicFps)
+        // Load defined as performance relative to target FPS.
+        // i.e. a load of 0.5 means that the worker is hitting the target FPS
+        // but achieving less than half the target FPS takes load above 1.0
+        private double CalculateLoad(double dynamicFps)
         {
-            return Mathf.Max(0.0f, 0.5f * TargetFps / dynamicFps);
+            return Math.Max(0.0d, 0.5d * targetFps / dynamicFps);
         }
 
-        private void AddFpsSample()
-        {
-            totalFpsCount += 1.0f / Time.deltaTime;
-            fpsMeasurements++;
-        }
 
-        private float CalculateFps()
+        private double CalculateFps()
         {
-            var fps = totalFpsCount / fpsMeasurements;
-            totalFpsCount = 0;
-            fpsMeasurements = 0;
-            return fps;
+            var frameCount = Time.frameCount - lastFrameCount;
+            lastFrameCount = Time.frameCount;
+            var rawFps = frameCount / (DateTime.Now - timeOfLastUpdate).TotalSeconds;
+            return (rawFps * (1 - smoothing)) + (lastSentFps * smoothing);
         }
     }
 }
