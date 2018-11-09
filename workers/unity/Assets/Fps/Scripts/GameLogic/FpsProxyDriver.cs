@@ -8,9 +8,6 @@ public class FpsProxyDriver : MonoBehaviour
 
     private FpsAnimator animator;
     private MyProxyMovementDriver movement;
-    private CommandFrameSystem commandFrame;
-
-    private Vector3 velocity;
 
     private void Awake()
     {
@@ -31,9 +28,7 @@ public class FpsProxyDriver : MonoBehaviour
         animator.SetMovement(movement.GetVelocity());
         animator.SetPitch(movement.GetPitch());
 
-        var newPosition = Vector3.Lerp(transform.position, ControllerProxy.transform.position, 0.5f);
-        velocity = (newPosition - transform.position) / Time.deltaTime;
-        transform.position = newPosition;
-        transform.rotation = Quaternion.Slerp(transform.rotation, ControllerProxy.transform.rotation, 0.5f);
+        transform.position = ControllerProxy.transform.position;
+        transform.rotation = ControllerProxy.transform.rotation;
     }
 }

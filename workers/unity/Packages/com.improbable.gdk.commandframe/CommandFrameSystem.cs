@@ -31,4 +31,9 @@ public class CommandFrameSystem : ComponentSystem
             NewFrame = false;
         }
     }
+
+    public float GetRemainder()
+    {
+        return remainder;
+    }
 }
