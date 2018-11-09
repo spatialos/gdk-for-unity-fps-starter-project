@@ -3,6 +3,8 @@ using System.Linq;
 using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.Movement;
 using Improbable.Gdk.StandardTypes;
+using Unity.Collections;
+using UnityEditor.Graphs;
 using UnityEngine;
 
 public class MyProxyMovementDriver : MonoBehaviour
@@ -13,18 +15,15 @@ public class MyProxyMovementDriver : MonoBehaviour
     private CommandFrameSystem commandFrame;
     public CharacterController Controller;
 
-    private float remainder;
-    private int frame = 0;
-
     private readonly List<ServerResponse> movementBuffer = new List<ServerResponse>();
+
+    private float pitch;
+    private Vector3 velocity;
 
     private void OnEnable()
     {
         spatial = GetComponent<SpatialOSComponent>();
         commandFrame = spatial.World.GetExistingManager<CommandFrameSystem>();
-        frame = commandFrame.CurrentFrame;
-        Controller = GetComponent<CharacterController>();
-
         server.OnServerMovement += OnServerMovement;
     }
 
@@ -35,58 +34,55 @@ public class MyProxyMovementDriver : MonoBehaviour
 
     private void Update()
     {
-        if (movementBuffer.Count < 2)
+        if (Controller == null)
         {
             return;
         }
 
-        if (frame < commandFrame.CurrentFrame)
+        if (movementBuffer.Count < 3)
         {
-            frame = commandFrame.CurrentFrame;
-            while (movementBuffer.Count > 2)
-            {
-                movementBuffer.RemoveAt(0);
-            }
+            return;
         }
 
-        if (movementBuffer.Count > 0)
+        var from = movementBuffer[0];
+        var to = movementBuffer[1];
+        var fromPosition = from.Position.ToVector3() + spatial.Worker.Origin;
+        var toPosition = to.Position.ToVector3() + spatial.Worker.Origin;
+
+        var t = commandFrame.GetRemainder() / commandFrame.FrameLength;
+
+        var oldPosition = Controller.transform.position;
+        var newPosition = Vector3.Lerp(fromPosition, toPosition, t);
+        Controller.transform.position = newPosition;
+        velocity = (newPosition - oldPosition) / Time.deltaTime;
+        var rotation = Controller.transform.rotation.eulerAngles;
+        rotation.y = Mathf.Lerp(from.Yaw, to.Yaw, t) / 100000f;
+        Controller.transform.rotation = Quaternion.Euler(rotation);
+        pitch = Mathf.Lerp(from.Pitch, to.Pitch, t) / 100000f;
+
+        if (commandFrame.NewFrame)
         {
-            var state = movementBuffer[0];
-            Controller.transform.position = state.Position.ToVector3() + spatial.Worker.Origin;
-            var rotation = Controller.transform.rotation.eulerAngles;
-            rotation.y = state.Yaw / 100000f;
-            Controller.transform.rotation = Quaternion.Euler(rotation);
+            movementBuffer.RemoveAt(0);
         }
     }
 
     public Vector3 GetVelocity()
     {
-        if (movementBuffer.Count > 2)
-        {
-            return (movementBuffer[0].Position.ToVector3() - movementBuffer[1].Position.ToVector3()) /
-                MyMovementUtils.FrameLength;
-        }
-
-        return Vector3.zero;
+        return velocity;
     }
 
     public float GetPitch()
     {
-        if (movementBuffer.Count > 0)
-        {
-            return movementBuffer[0].Pitch / 100000f;
-        }
-
-        return Quaternion.identity.eulerAngles.x;
+        return pitch;
     }
 
     private void OnGUI()
     {
-        // for (var i = 0; i < movementBuffer.Count; i++)
-        // {
-        //     var state = movementBuffer[i];
-        //     GUI.Label(new Rect(400, i * 31 + 10, 300, 30), string.Format("[{0}]: {1} | {2}",
-        //         state.Timestamp, state.Position.ToVector3().ToString(), state.Yaw / 100000f));
-        // }
+        for (var i = 0; i < movementBuffer.Count; i++)
+        {
+            var state = movementBuffer[i];
+            GUI.Label(new Rect(10, i * 31 + 300, 700, 30), string.Format("[{0}]: {1} | {2}",
+                state.Timestamp, state.Position.ToVector3().ToString(), state.Yaw / 100000f));
+        }
     }
 }
