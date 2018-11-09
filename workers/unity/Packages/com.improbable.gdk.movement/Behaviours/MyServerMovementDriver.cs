@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Improbable;
@@ -31,7 +32,8 @@ public class MyServerMovementDriver : MonoBehaviour
 
     private float clientDilation = 1f;
 
-    private MyMovementUtils.PidController pidController = new MyMovementUtils.PidController(0.2f, 0.05f, 0.0f);
+    private MyMovementUtils.PidController pidController =
+        new MyMovementUtils.PidController(0.1f, 0.01f, 0.0f, 1.0f, 100.0f);
 
     private ClientRequest lastInput;
 
@@ -158,8 +160,8 @@ public class MyServerMovementDriver : MonoBehaviour
     private void Update()
     {
         ProcessInput();
-
         TunePid();
+        UpdateDilation();
 
         if (commandFrame.NewFrame)
         {
@@ -199,7 +201,6 @@ public class MyServerMovementDriver : MonoBehaviour
             logOut.AppendLine(
                 string.Format("[{0}] After: {1}", lastFrame, controller.transform.position));
             SaveMovementState();
-            UpdateDilation();
             SendMovement();
 
             // Remove movement state from 10 frames ago
@@ -311,6 +312,8 @@ public class MyServerMovementDriver : MonoBehaviour
         movementState.Add(lastFrame, controller.transform.position);
     }
 
+    private float lastPidUpdateTime = -1;
+
     private void UpdateDilation()
     {
         // Don't do anything until the buffer's full for the first time.
@@ -322,9 +325,17 @@ public class MyServerMovementDriver : MonoBehaviour
         var bufferSize = clientInputs.Count;
         var error = bufferSize - FrameBuffer;
 
-        var adjustment = pidController.Update(error, commandFrame.FrameLength);
+        var dt = commandFrame.FrameLength;
+        if (lastPidUpdateTime > 0)
+        {
+            dt = Time.time - lastPidUpdateTime;
+        }
 
-        clientDilation = Mathf.Clamp(adjustment, 0.5f, 1.5f);
+        lastPidUpdateTime = Time.time;
+
+        var adjustment = pidController.Update(error, dt);
+
+        clientDilation = adjustment;
     }
 
     private int positionRate = 30;
@@ -340,7 +351,7 @@ public class MyServerMovementDriver : MonoBehaviour
             Timestamp = lastInput.Timestamp,
             Yaw = lastInput.CameraYaw,
             Pitch = lastInput.CameraPitch,
-            TimeDelta = clientDilation
+            TimeDelta = Mathf.Clamp(clientDilation, 0.5f, 1.5f)
         };
         server.SendServerMovement(response);
         // Debug.LogFormat("[Server] Sent {0}", response.Timestamp);
@@ -379,7 +390,9 @@ public class MyServerMovementDriver : MonoBehaviour
                 clientInputs.Count, ins, cons, delta, clientDilation));
 
         GUI.Label(new Rect(10, 200, 700, 20),
-            string.Format("Kp: {0:00.00} Ki: {1:00.00} Kd: {2:00.00}",
-                pidController.Kp, pidController.Ki, pidController.Kd));
+            string.Format("Kp: {0:00.00} Ki: {1:00.00} Kd: {2:00.00}, lastError: {3:00.00}, integral: {4:00.00}, value: {5:00.00}",
+                pidController.Kp, pidController.Ki, pidController.Kd,
+                pidController.lastError, pidController.integral, pidController.value));
+
     }
 }
