@@ -354,7 +354,8 @@ public class MyServerMovementDriver : MonoBehaviour
             TimeDelta = Mathf.Clamp(clientDilation, 0.5f, 1.5f)
         };
         server.SendServerMovement(response);
-        // Debug.LogFormat("[Server] Sent {0}", response.Timestamp);
+        var update = new ServerMovement.Update { Latest = response };
+        server.Send(update);
 
         positionTick -= 1;
         if (positionTick <= 0)

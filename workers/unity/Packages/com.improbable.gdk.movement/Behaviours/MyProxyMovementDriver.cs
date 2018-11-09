@@ -3,8 +3,6 @@ using System.Linq;
 using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.Movement;
 using Improbable.Gdk.StandardTypes;
-using Unity.Collections;
-using UnityEditor.Graphs;
 using UnityEngine;
 
 public class MyProxyMovementDriver : MonoBehaviour
@@ -16,15 +14,24 @@ public class MyProxyMovementDriver : MonoBehaviour
     public CharacterController Controller;
 
     private readonly List<ServerResponse> movementBuffer = new List<ServerResponse>();
+    private readonly MyMovementUtils.PidController pidController =
+        new MyMovementUtils.PidController(0.1f, 0.01f, 0f, 1f, 100f);
+
+    private const int BufferSize = 3;
 
     private float pitch;
     private Vector3 velocity;
+
+    private float remainder = 0f;
+    private float frameLengthModifier = 1.0f;
+    private float frameLength;
 
     private void OnEnable()
     {
         spatial = GetComponent<SpatialOSComponent>();
         commandFrame = spatial.World.GetExistingManager<CommandFrameSystem>();
         server.OnServerMovement += OnServerMovement;
+        frameLength = commandFrame.FrameLength;
     }
 
     private void OnServerMovement(ServerResponse response)
@@ -39,7 +46,7 @@ public class MyProxyMovementDriver : MonoBehaviour
             return;
         }
 
-        if (movementBuffer.Count < 3)
+        if (movementBuffer.Count < BufferSize)
         {
             return;
         }
@@ -49,7 +56,7 @@ public class MyProxyMovementDriver : MonoBehaviour
         var fromPosition = from.Position.ToVector3() + spatial.Worker.Origin;
         var toPosition = to.Position.ToVector3() + spatial.Worker.Origin;
 
-        var t = commandFrame.GetRemainder() / commandFrame.FrameLength;
+        var t = remainder / frameLength;
 
         var oldPosition = Controller.transform.position;
         var newPosition = Vector3.Lerp(fromPosition, toPosition, t);
@@ -60,10 +67,23 @@ public class MyProxyMovementDriver : MonoBehaviour
         Controller.transform.rotation = Quaternion.Euler(rotation);
         pitch = Mathf.Lerp(from.Pitch, to.Pitch, t) / 100000f;
 
-        if (commandFrame.NewFrame)
+        remainder += Time.deltaTime;
+        if (remainder > frameLength)
         {
+            remainder -= frameLength;
             movementBuffer.RemoveAt(0);
         }
+
+        UpdatePid();
+    }
+
+    private void UpdatePid()
+    {
+        var current = movementBuffer.Count;
+        var error = BufferSize - current;
+
+        frameLengthModifier = pidController.Update(error, Time.deltaTime);
+        frameLength = commandFrame.FrameLength * Mathf.Clamp(frameLengthModifier, 0.5f, 1.5f);
     }
 
     public Vector3 GetVelocity()
@@ -78,11 +98,7 @@ public class MyProxyMovementDriver : MonoBehaviour
 
     private void OnGUI()
     {
-        for (var i = 0; i < movementBuffer.Count; i++)
-        {
-            var state = movementBuffer[i];
-            GUI.Label(new Rect(10, i * 31 + 300, 700, 30), string.Format("[{0}]: {1} | {2}",
-                state.Timestamp, state.Position.ToVector3().ToString(), state.Yaw / 100000f));
-        }
+        GUI.Label(new Rect(10, 300, 700, 30), string.Format("Buffer Size: {0}, modifier: {1:00.00}, length: {2}",
+            movementBuffer.Count, frameLengthModifier, frameLength * 1000f));
     }
 }
