@@ -52,6 +52,9 @@ namespace Fps
         private readonly MyMovementUtils.SprintCooldown sprintCooldown = new MyMovementUtils.SprintCooldown();
         private CommandFrameSystem commandFrame;
 
+        private Vector3 from;
+        private Vector3 to;
+
         private void Awake()
         {
             movement = GetComponent<MyClientMovementDriver>();
@@ -179,7 +182,17 @@ namespace Fps
 
             Animations(jumpMovement.DidJump(commandFrame.CurrentFrame));
 
-            transform.position = Vector3.Lerp(transform.position, ControllerProxy.transform.position, 0.5f);
+            transform.position = Vector3.Lerp(from, to, commandFrame.GetRemainder() / (commandFrame.FrameLength
+                * commandFrame.ServerAdjustment));
+        }
+
+        private void LateUpdate()
+        {
+            if (commandFrame.NewFrame)
+            {
+                from = to;
+                to = ControllerProxy.transform.position;
+            }
         }
 
         private IEnumerator RequestRespawn()

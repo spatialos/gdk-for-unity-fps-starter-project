@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
@@ -72,6 +73,8 @@ public class MyClientMovementDriver : MonoBehaviour
             jumpThisFrame = false;
             sprintThisFrame = false;
         }
+
+        UpdateInRateStates();
     }
 
     public void AddInput(bool forward, bool back, bool left, bool right, bool jump, bool sprint, float yaw, float pitch)
@@ -229,12 +232,38 @@ public class MyClientMovementDriver : MonoBehaviour
     private void OnGUI()
     {
         GUI.Label(new Rect(10, 10, 700, 20),
-            string.Format("Frame: {0:00.00}, Fudge: {1:00.00}, Adjustment: {2:00.00}, rate: {3:00.00}",
+            string.Format("Frame: {0:00.00}, Fudge: {1:00.00}, Adjustment: {2:00.00}, rate: {3:00.00}, avg: {4:00.00}, var: {5:00.00}",
                 commandFrame.FrameLength,
                 commandFrame.ManualFudge,
                 commandFrame.ServerAdjustment,
-                GetInputSendRate()));
+                GetInputSendRate(),
+                averageRate,
+                rateVar));
     }
+
+    private Queue<float> outRate = new Queue<float>(50);
+    private float averageRate = 1.0f;
+    private float rateVar = 0.0f;
+
+    private void UpdateInRateStates()
+    {
+        if (outRate.Count >= 50)
+        {
+            outRate.Dequeue();
+        }
+
+        outRate.Enqueue(GetInputSendRate());
+        averageRate = outRate.Average();
+        var absDiffs = 0f;
+
+        foreach (var rate in outRate)
+        {
+            absDiffs += Mathf.Abs(rate - averageRate);
+        }
+
+        rateVar = absDiffs / outRate.Count;
+    }
+
 
     private void OnDrawGizmosSelected()
     {
