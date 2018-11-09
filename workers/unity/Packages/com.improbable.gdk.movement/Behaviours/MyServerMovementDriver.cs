@@ -159,12 +159,13 @@ public class MyServerMovementDriver : MonoBehaviour
 
     private void Update()
     {
-        ProcessInput();
         TunePid();
-        UpdateDilation();
+
 
         if (commandFrame.NewFrame)
         {
+            ProcessInput();
+
             lastFrame = commandFrame.CurrentFrame;
 
             if (!hasInput || lastFrame < firstFrame)
@@ -206,6 +207,8 @@ public class MyServerMovementDriver : MonoBehaviour
             // Remove movement state from 10 frames ago
             movementState.Remove(lastFrame - 10);
             MyMovementUtils.CleanProcessors(movementProcessors, lastFrame - 10);
+
+            UpdateDilation();
         }
     }
 
@@ -394,6 +397,5 @@ public class MyServerMovementDriver : MonoBehaviour
             string.Format("Kp: {0:00.00} Ki: {1:00.00} Kd: {2:00.00}, lastError: {3:00.00}, integral: {4:00.00}, value: {5:00.00}",
                 pidController.Kp, pidController.Ki, pidController.Kd,
                 pidController.lastError, pidController.integral, pidController.value));
-
     }
 }
