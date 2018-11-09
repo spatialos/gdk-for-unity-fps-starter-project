@@ -131,15 +131,24 @@ public class MyMovementUtils
         public float Ki;
         public float Kd;
 
-        private float lastError;
-        private float integral;
-        private float value;
+        public float lastError;
+        public float integral;
+        public float value;
 
         public PidController(float kp, float ki, float kd)
         {
             Kp = kp;
             Ki = ki;
             Kd = kd;
+        }
+
+        public PidController(float kp, float ki, float kd, float initialValue, float initialIntegral)
+        {
+            Kp = kp;
+            Ki = ki;
+            Kd = kd;
+            value = initialValue;
+            integral = initialIntegral;
         }
 
         public float Update(float error, float dt)
