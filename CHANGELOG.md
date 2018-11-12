@@ -4,7 +4,7 @@
 
 ### Added
 
-- Added Frames Per Second (FPS) and Unity heap usage as metrics sent by `MetricSendSystem.cs`.
+- `MetricsSendSystem.cs` now sends metrics for Frames Per Second (FPS) and Unity heap usage
 
 ### Changed
 
