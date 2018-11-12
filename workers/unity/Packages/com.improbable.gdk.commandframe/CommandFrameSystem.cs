@@ -6,7 +6,7 @@ using UnityEngine.Experimental.PlayerLoop;
 public class CommandFrameSystem : ComponentSystem
 {
     public int CurrentFrame = 0;
-    public float FrameLength = 1 / 30f;
+    public const float FrameLength = 1 / 24f;
     public bool NewFrame = false;
 
     public float ManualFudge = 1f;

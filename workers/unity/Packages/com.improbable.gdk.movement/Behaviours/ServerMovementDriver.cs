@@ -52,9 +52,9 @@ namespace Improbable.Gdk.Movement
             var response = new ServerResponse
             {
                 Position = positionNoOffset.ToIntAbsolute(),
-                IncludesJump = request.IncludesJump,
+                // IncludesJump = request.IncludesJump,
                 Timestamp = request.Timestamp,
-                TimeDelta = request.TimeDelta
+                // TimeDelta = request.TimeDelta
             };
             var update = new ServerMovement.Update { Latest = response };
             server.Send(update);

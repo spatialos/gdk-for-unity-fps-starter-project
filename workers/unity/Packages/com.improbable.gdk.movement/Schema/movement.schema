@@ -5,7 +5,7 @@ import "from_gdk_packages/com.improbable.gdk.standardtypes/standardtypes.schema"
 type ClientRequest {
 	improbable.gdk.standardtypes.IntDelta movement = 1;
 	int32 timestamp = 2;
-	float time_delta = 3;
+	float applied_dilation = 3;
 	bool includes_jump = 4;
 	bool forward_pressed = 5;
 	bool back_pressed = 6;
@@ -19,8 +19,8 @@ type ClientRequest {
 type ServerResponse {
 	improbable.gdk.standardtypes.IntAbsolute position = 1;
 	int32 timestamp = 2;
-	float time_delta = 3;
-	bool includes_jump = 4;
+	int32 applied_dilation = 3;
+	int32 next_dilation = 4;
 	int32 yaw = 5;
 	int32 pitch = 6;
 }

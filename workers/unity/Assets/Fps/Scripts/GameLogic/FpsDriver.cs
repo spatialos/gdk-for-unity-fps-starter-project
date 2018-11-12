@@ -6,6 +6,8 @@ using Improbable.Gdk.Guns;
 using Improbable.Gdk.Health;
 using Improbable.Gdk.Movement;
 using Improbable.Gdk.StandardTypes;
+using Unity.Collections;
+using UnityEditor.Experimental.UIElements;
 using UnityEngine;
 
 namespace Fps
@@ -182,9 +184,13 @@ namespace Fps
 
             Animations(jumpMovement.DidJump(commandFrame.CurrentFrame));
 
-            transform.position = Vector3.Lerp(from, to, commandFrame.GetRemainder() / (commandFrame.FrameLength
+            var oldPosition = transform.position;
+            transform.position = Vector3.Lerp(from, to, commandFrame.GetRemainder() / (CommandFrameSystem.FrameLength
                 * commandFrame.ServerAdjustment));
+            fpsVelocity = (transform.position - oldPosition).magnitude / Time.deltaTime;
         }
+
+        private float fpsVelocity = -1;
 
         private void LateUpdate()
         {
@@ -296,6 +302,12 @@ namespace Fps
             directionIndex += right & !left ? 4 : 0;
             directionIndex += left & !right ? 8 : 0;
             return cachedDirectionVectors[directionIndex];
+        }
+
+
+        private void OnGUI()
+        {
+            GUI.Label(new Rect(10, 400, 700, 20), string.Format("fps vel: {0:00.00}", fpsVelocity));
         }
     }
 }

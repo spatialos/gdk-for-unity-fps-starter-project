@@ -75,8 +75,7 @@ public class MyServerMovementDriver : MonoBehaviour
         // Debug.LogFormat("[Server] Received client frame {0} on frame {1}",
         //     request.Timestamp, lastFrame);
         inputReceived.Enqueue(request);
-
-        UpdateInputReceivedRate();
+        ProcessInput();
     }
 
     private void UpdateInputReceivedRate()
@@ -102,7 +101,7 @@ public class MyServerMovementDriver : MonoBehaviour
     {
         if (inputReceiveRate.Count > 0)
         {
-            return inputReceiveRate.Average() / commandFrame.FrameLength;
+            return inputReceiveRate.Average() / CommandFrameSystem.FrameLength;
         }
 
         return -1;
@@ -160,12 +159,10 @@ public class MyServerMovementDriver : MonoBehaviour
     private void Update()
     {
         TunePid();
-
+        UpdateInputReceivedRate();
 
         if (commandFrame.NewFrame)
         {
-            ProcessInput();
-
             lastFrame = commandFrame.CurrentFrame;
 
             if (!hasInput || lastFrame < firstFrame)
@@ -293,7 +290,7 @@ public class MyServerMovementDriver : MonoBehaviour
     {
         if (inputConsumptionRate.Count > 0)
         {
-            return inputConsumptionRate.Average() / commandFrame.FrameLength;
+            return inputConsumptionRate.Average() / CommandFrameSystem.FrameLength;
         }
 
         return -1;
@@ -328,7 +325,7 @@ public class MyServerMovementDriver : MonoBehaviour
         var bufferSize = clientInputs.Count;
         var error = bufferSize - FrameBuffer;
 
-        var dt = commandFrame.FrameLength;
+        var dt = CommandFrameSystem.FrameLength;
         if (lastPidUpdateTime > 0)
         {
             dt = Time.time - lastPidUpdateTime;
@@ -354,7 +351,7 @@ public class MyServerMovementDriver : MonoBehaviour
             Timestamp = lastInput.Timestamp,
             Yaw = lastInput.CameraYaw,
             Pitch = lastInput.CameraPitch,
-            TimeDelta = Mathf.Clamp(clientDilation, 0.5f, 1.5f)
+            NextDilation = (int) (Mathf.Clamp(clientDilation, 0.5f, 1.5f) * 100000f)
         };
         server.SendServerMovement(response);
         var update = new ServerMovement.Update { Latest = response };

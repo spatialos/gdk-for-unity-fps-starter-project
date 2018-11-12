@@ -147,7 +147,8 @@ public class MyClientMovementDriver : MonoBehaviour
         }
 
         // update dilation
-        commandFrame.ServerAdjustment = response.TimeDelta;
+        // commandFrame.ServerAdjustment = response.TimeDelta;
+        commandFrame.ServerAdjustment = response.NextDilation / 100000f;
     }
 
     private float lastInputSentTime = -1;
@@ -177,7 +178,7 @@ public class MyClientMovementDriver : MonoBehaviour
     {
         if (inputSendRate.Count > 0)
         {
-            return inputSendRate.Average() / commandFrame.FrameLength;
+            return inputSendRate.Average() / CommandFrameSystem.FrameLength;
         }
 
         return -1;
@@ -233,7 +234,7 @@ public class MyClientMovementDriver : MonoBehaviour
     {
         GUI.Label(new Rect(10, 10, 700, 20),
             string.Format("Frame: {0:00.00}, Fudge: {1:00.00}, Adjustment: {2:00.00}, rate: {3:00.00}, avg: {4:00.00}, var: {5:00.00}",
-                commandFrame.FrameLength,
+                CommandFrameSystem.FrameLength,
                 commandFrame.ManualFudge,
                 commandFrame.ServerAdjustment,
                 GetInputSendRate(),

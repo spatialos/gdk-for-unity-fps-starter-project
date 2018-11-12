@@ -92,7 +92,7 @@ public class MyMovementUtils
         }
     }
 
-    public const float FrameLength = 1 / 30f;
+    public const float FrameLength = CommandFrameSystem.FrameLength;
 
     public static void ApplyInput(CharacterController controller, ClientRequest input, int frame, Vector3 velocity,
         IMovementProcessor[] processors)
