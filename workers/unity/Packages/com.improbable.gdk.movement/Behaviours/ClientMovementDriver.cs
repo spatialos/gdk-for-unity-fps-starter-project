@@ -299,7 +299,7 @@ namespace Improbable.Gdk.Movement
                     {
                         IncludesJump = didJump,
                         Movement = movement.ToIntDelta(),
-                        TimeDelta = timeDelta,
+                        // TimeDelta = timeDelta,
                         Timestamp = messageStamp
                     };
                     var update = new ClientMovement.Update { Latest = new Option<ClientRequest>(clientRequest) };

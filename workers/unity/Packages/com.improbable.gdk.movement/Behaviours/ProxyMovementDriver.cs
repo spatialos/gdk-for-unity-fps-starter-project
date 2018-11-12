@@ -55,7 +55,7 @@ namespace Improbable.Gdk.Movement
                 return;
             }
 
-            Interpolate(movement.Position.ToVector3() + origin, movement.TimeDelta);
+            // Interpolate(movement.Position.ToVector3() + origin, movement.TimeDelta);
         }
 
         public void UpdateRotation(Quaternion targetQuaternion, float timeDelta)

@@ -43,9 +43,9 @@ namespace Fps
             var newLatest = new ServerResponse
             {
                 Position = spawnPosition.ToIntAbsolute(),
-                IncludesJump = false,
+                // IncludesJump = false,
                 Timestamp = serverMovement.Data.Latest.Timestamp,
-                TimeDelta = 0
+                // TimeDelta = 0
             };
 
             var serverMovementUpdate = new ServerMovement.Update

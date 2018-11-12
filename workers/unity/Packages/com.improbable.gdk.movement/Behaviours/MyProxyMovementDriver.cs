@@ -31,7 +31,7 @@ public class MyProxyMovementDriver : MonoBehaviour
         spatial = GetComponent<SpatialOSComponent>();
         commandFrame = spatial.World.GetExistingManager<CommandFrameSystem>();
         server.OnServerMovement += OnServerMovement;
-        frameLength = commandFrame.FrameLength;
+        frameLength = CommandFrameSystem.FrameLength;
     }
 
     private void OnServerMovement(ServerResponse response)
@@ -83,7 +83,7 @@ public class MyProxyMovementDriver : MonoBehaviour
         var error = BufferSize - current;
 
         frameLengthModifier = pidController.Update(error, Time.deltaTime);
-        frameLength = commandFrame.FrameLength * Mathf.Clamp(frameLengthModifier, 0.5f, 1.5f);
+        frameLength = CommandFrameSystem.FrameLength * Mathf.Clamp(frameLengthModifier, 0.5f, 1.5f);
     }
 
     public Vector3 GetVelocity()

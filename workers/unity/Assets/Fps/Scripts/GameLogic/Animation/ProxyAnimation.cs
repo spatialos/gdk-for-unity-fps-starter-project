@@ -68,12 +68,12 @@ namespace Fps
         private void OnMovement(ServerResponse movement)
         {
             // fpsAnimator.SetMovement(movement.Position.ToVector3(), movement.TimeDelta);
-            if (movement.IncludesJump)
+            // if (movement.IncludesJump)
             {
                 fpsAnimator.Jump();
             }
 
-            movementTimeout = movement.TimeDelta * stopAnimatingAfterUpdates;
+            // movementTimeout = movement.TimeDelta * stopAnimatingAfterUpdates;
             isMoving = true;
         }
     }
