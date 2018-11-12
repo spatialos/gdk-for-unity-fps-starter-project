@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### Added
+
+- `MetricsSendSystem.cs` now sends metrics for Frames Per Second (FPS) and Unity heap usage.
+
+### Changed
+
+- Improved the method of calculating load and FPS.
+
 ## `0.1.2` - 2018-11-02
 
 ### Changed
