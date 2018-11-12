@@ -2,16 +2,19 @@
 
 ## Unreleased
 
-## `0.1.2` - 2018-11-02
-
 ### Added
 
 - Added Frames Per Second (FPS) and Unity heap usage as metrics sent by `MetricSendSystem.cs`.
 
 ### Changed
 
-- Updated to GDK for Unity version `0.1.2`.
 - Improved the method of calculating load and FPS.
+
+## `0.1.2` - 2018-11-02
+
+### Changed
+
+- Updated to GDK for Unity version `0.1.2`.
 
 ### Fixed
 
