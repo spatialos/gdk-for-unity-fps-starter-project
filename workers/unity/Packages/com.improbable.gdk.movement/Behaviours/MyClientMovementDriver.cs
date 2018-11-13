@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using UnityEngine;
 using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.Movement;
@@ -15,6 +13,11 @@ public class MyClientMovementDriver : MonoBehaviour
     public CharacterController Controller;
     private SpatialOSComponent spatial;
     private CommandFrameSystem commandFrame;
+
+    private int lastServerTimestamp = 0;
+    private float lastServerTimestampReceived = 0;
+
+    private float nextDilation = 1f;
 
     private int lastFrame = -1;
 
@@ -72,6 +75,7 @@ public class MyClientMovementDriver : MonoBehaviour
             rightThisFrame = false;
             jumpThisFrame = false;
             sprintThisFrame = false;
+            commandFrame.ServerAdjustment = nextDilation;
         }
 
         UpdateInRateStates();
@@ -148,7 +152,10 @@ public class MyClientMovementDriver : MonoBehaviour
 
         // update dilation
         // commandFrame.ServerAdjustment = response.TimeDelta;
-        commandFrame.ServerAdjustment = response.NextDilation / 100000f;
+        // commandFrame.ServerAdjustment = response.NextDilation / 100000f;
+        nextDilation = response.NextDilation / 100000f;
+        lastServerTimestamp = response.AppliedDilation;
+        lastServerTimestampReceived = Time.time;
     }
 
     private float lastInputSentTime = -1;
@@ -196,7 +203,8 @@ public class MyClientMovementDriver : MonoBehaviour
             IncludesSprint = sprintThisFrame,
             CameraYaw = (int) (yawThisFrame * 100000f),
             CameraPitch = (int) (pitchThisFrame * 100000f),
-            Timestamp = lastFrame
+            Timestamp = lastFrame,
+            AppliedDilation = lastServerTimestamp + (Time.time - lastServerTimestampReceived) * 100000f
         };
 
         movement.SendClientInput(clientRequest);
