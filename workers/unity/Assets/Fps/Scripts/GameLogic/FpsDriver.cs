@@ -6,8 +6,6 @@ using Improbable.Gdk.Guns;
 using Improbable.Gdk.Health;
 using Improbable.Gdk.Movement;
 using Improbable.Gdk.StandardTypes;
-using Unity.Collections;
-using UnityEditor.Experimental.UIElements;
 using UnityEngine;
 
 namespace Fps
