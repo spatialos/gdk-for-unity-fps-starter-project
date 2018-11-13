@@ -54,6 +54,9 @@ namespace Fps
 
         private Vector3 from;
         private Vector3 to;
+        private Vector3 next;
+        private float t;
+        private bool nextAvailable = false;
 
         private void Awake()
         {
@@ -182,9 +185,26 @@ namespace Fps
 
             Animations(jumpMovement.DidJump(commandFrame.CurrentFrame));
 
+            t += Time.deltaTime / CommandFrameSystem.FrameLength;
+            if (t > 1.0f)
+            {
+                if (nextAvailable)
+                {
+                    t -= 1.0f;
+                    from = to;
+                    to = next;
+                    nextAvailable = false;
+                }
+                else
+                {
+                    // go back by a frame?
+                    Debug.LogFormat("Next not ready, go back a frame.");
+                    t -= Time.deltaTime / CommandFrameSystem.FrameLength;
+                }
+            }
+
             var oldPosition = transform.position;
-            transform.position = Vector3.Lerp(from, to, commandFrame.GetRemainder() / (CommandFrameSystem.FrameLength
-                * commandFrame.ServerAdjustment));
+            transform.position = Vector3.Lerp(from, to, t);
             fpsVelocity = (transform.position - oldPosition).magnitude / Time.deltaTime;
         }
 
@@ -194,8 +214,19 @@ namespace Fps
         {
             if (commandFrame.NewFrame)
             {
-                from = to;
-                to = ControllerProxy.transform.position;
+                // Debug.LogFormat("Frame {0}, t:{1:00.00}, nextAvailable:{2}",
+                //     commandFrame.CurrentFrame, t, nextAvailable);
+                next = ControllerProxy.transform.position;
+                nextAvailable = true;
+
+                if (t + Time.deltaTime / CommandFrameSystem.FrameLength < 1.0f)
+                {
+                    // Debug.LogFormat("More than a frame behind, fast forward a tiny bit");
+                    t += 0.001f;
+                }
+
+                // from = to;
+                // to = ControllerProxy.transform.position;
             }
         }
 

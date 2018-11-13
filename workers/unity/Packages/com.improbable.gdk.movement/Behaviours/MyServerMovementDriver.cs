@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Improbable;
@@ -28,12 +27,14 @@ public class MyServerMovementDriver : MonoBehaviour
 
     private int nextExpectedInput = -1;
     private int nextServerFrame = -1;
-    private const int FrameBuffer = 10;
+    private int FrameBuffer = 10;
 
     private float clientDilation = 1f;
 
-    private MyMovementUtils.PidController pidController =
-        new MyMovementUtils.PidController(0.01f, 0.00f, 0.0f);
+    private Queue<float> rttQueue = new Queue<float>(20);
+    private float rtt = (10 - 1) * 2 * CommandFrameSystem.FrameLength;
+
+    private MyMovementUtils.PidController pidController = new MyMovementUtils.PidController(0.1f, 0.01f, 0.0f, 100f, 1f);
 
     private ClientRequest lastInput;
 
@@ -76,8 +77,29 @@ public class MyServerMovementDriver : MonoBehaviour
     {
         // Debug.LogFormat("[Server] Received client frame {0} on frame {1}",
         //     request.Timestamp, lastFrame);
+        UpdateRtt(request);
+
         inputReceived.Enqueue(request);
         ProcessInput();
+    }
+
+    private void UpdateRtt(ClientRequest request)
+    {
+        if (rttQueue.Count >= 20)
+        {
+            rttQueue.Dequeue();
+        }
+
+        if (request.AppliedDilation > 0)
+        {
+            rttQueue.Enqueue(Time.time - (request.AppliedDilation / 100000f));
+        }
+
+        if (rttQueue.Count >= 20)
+        {
+            rtt = rttQueue.Average();
+            FrameBuffer = Mathf.CeilToInt(rtt / (2 * CommandFrameSystem.FrameLength) + 1);
+        }
     }
 
     private void UpdateInputReceivedRate()
@@ -316,6 +338,8 @@ public class MyServerMovementDriver : MonoBehaviour
 
     private float lastPidUpdateTime = -1;
 
+    private Queue<float> bufferSizeQueue = new Queue<float>(20);
+
     private void UpdateDilation()
     {
         // Don't do anything until the buffer's full for the first time.
@@ -324,8 +348,22 @@ public class MyServerMovementDriver : MonoBehaviour
             return;
         }
 
-        var bufferSize = clientInputs.Count;
-        var error = bufferSize - FrameBuffer;
+        if (bufferSizeQueue.Count < 20)
+        {
+            bufferSizeQueue.Enqueue(clientInputs.Count);
+            return;
+        }
+
+        bufferSizeQueue.Dequeue();
+        bufferSizeQueue.Enqueue(clientInputs.Count);
+
+        var error = bufferSizeQueue.Average() - FrameBuffer;
+
+        if (Mathf.Abs(error) < 1.0f)
+        {
+            clientDilation = 1f;
+            return;
+        }
 
         var dt = CommandFrameSystem.FrameLength;
         if (lastPidUpdateTime > 0)
@@ -335,9 +373,9 @@ public class MyServerMovementDriver : MonoBehaviour
 
         lastPidUpdateTime = Time.time;
 
-        // var adjustment = pidController.Update(error, dt);
+        var adjustment = pidController.Update(error, dt);
 
-        clientDilation = 1f;
+        clientDilation = adjustment;
     }
 
     private int positionRate = 30;
@@ -353,7 +391,8 @@ public class MyServerMovementDriver : MonoBehaviour
             Timestamp = lastInput.Timestamp,
             Yaw = lastInput.CameraYaw,
             Pitch = lastInput.CameraPitch,
-            NextDilation = (int) (Mathf.Clamp(clientDilation, 0.5f, 1.5f) * 100000f)
+            NextDilation = (int) (Mathf.Clamp(clientDilation, 0.5f, 1.5f) * 100000f),
+            AppliedDilation = (int) (Time.time * 100000f)
         };
         server.SendServerMovement(response);
         var update = new ServerMovement.Update { Latest = response };
@@ -392,8 +431,8 @@ public class MyServerMovementDriver : MonoBehaviour
         var delta = clientInputs.Count - FrameBuffer;
 
         GUI.Label(new Rect(10, 100 + renderLine * 20, 700, 20),
-            string.Format("Input Buffer: {0:00}, in: {1:00.00}, out: {2:00.00}, d: {3:00.00}, cd: {4:00.00}",
-                clientInputs.Count, ins, cons, delta, clientDilation));
+            string.Format("Input Buffer: {0:00}, in: {1:00.00}, out: {2:00.00}, d: {3:00.00}, cd: {4:00.00}, RTT: {5:00.0}, B: {6}",
+                clientInputs.Count, ins, cons, delta, clientDilation, rtt * 1000f, FrameBuffer));
 
         GUI.Label(new Rect(10, 200, 700, 20),
             string.Format("Kp: {0:00.00} Ki: {1:00.00} Kd: {2:00.00}, lastError: {3:00.00}, integral: {4:00.00}, value: {5:00.00}",
