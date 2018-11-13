@@ -26,6 +26,24 @@ public class CommandFrameSystem : ComponentSystem
             CurrentFrame += 1;
             NewFrame = true;
         }
+        else if (remainder + Time.deltaTime > currentFramelength)
+        {
+            var deltaNow = currentFramelength - remainder;
+            var deltaNext = remainder + Time.deltaTime - currentFramelength;
+            // Debug.LogFormat("[{0}] Will Overshoot next frame. now: {1:00.0} next: {2:00.0}",
+            //     CurrentFrame, deltaNow * 1000f, deltaNext * 1000f);
+            if (deltaNow < deltaNext)
+            {
+                // Debug.LogFormat("[{0}] Closer this frame. Undershoot.", CurrentFrame);
+                remainder -= currentFramelength;
+                CurrentFrame += 1;
+                NewFrame = true;
+            }
+            else
+            {
+                NewFrame = false;
+            }
+        }
         else
         {
             NewFrame = false;

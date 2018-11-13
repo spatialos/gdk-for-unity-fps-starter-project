@@ -33,7 +33,7 @@ public class MyServerMovementDriver : MonoBehaviour
     private float clientDilation = 1f;
 
     private MyMovementUtils.PidController pidController =
-        new MyMovementUtils.PidController(0.1f, 0.01f, 0.0f, 1.0f, 100.0f);
+        new MyMovementUtils.PidController(0.01f, 0.00f, 0.0f);
 
     private ClientRequest lastInput;
 
@@ -55,6 +55,8 @@ public class MyServerMovementDriver : MonoBehaviour
     private void Awake()
     {
         controller = GetComponent<CharacterController>();
+        renderLine = nextRenderLine;
+        nextRenderLine += 1;
     }
 
     private void OnEnable()
@@ -333,9 +335,9 @@ public class MyServerMovementDriver : MonoBehaviour
 
         lastPidUpdateTime = Time.time;
 
-        var adjustment = pidController.Update(error, dt);
+        // var adjustment = pidController.Update(error, dt);
 
-        clientDilation = adjustment;
+        clientDilation = 1f;
     }
 
     private int positionRate = 30;
@@ -380,13 +382,16 @@ public class MyServerMovementDriver : MonoBehaviour
         return Vector3.zero;
     }
 
+    private static int nextRenderLine = 0;
+    private int renderLine = 0;
+
     private void OnGUI()
     {
         var cons = GetAverageInputConsumptionRate();
         var ins = GetAverageInputReceivedRate();
         var delta = clientInputs.Count - FrameBuffer;
 
-        GUI.Label(new Rect(10, 100, 700, 20),
+        GUI.Label(new Rect(10, 100 + renderLine * 20, 700, 20),
             string.Format("Input Buffer: {0:00}, in: {1:00.00}, out: {2:00.00}, d: {3:00.00}, cd: {4:00.00}",
                 clientInputs.Count, ins, cons, delta, clientDilation));
 
@@ -394,5 +399,9 @@ public class MyServerMovementDriver : MonoBehaviour
             string.Format("Kp: {0:00.00} Ki: {1:00.00} Kd: {2:00.00}, lastError: {3:00.00}, integral: {4:00.00}, value: {5:00.00}",
                 pidController.Kp, pidController.Ki, pidController.Kd,
                 pidController.lastError, pidController.integral, pidController.value));
+
+        GUI.Label(new Rect(10, 300, 700, 20),
+            string.Format("Frame: {0}, Length: {1:00.0}, Remainder: {2:00.0}",
+                commandFrame.CurrentFrame, CommandFrameSystem.FrameLength * 1000f, commandFrame.GetRemainder() * 1000f));
     }
 }
