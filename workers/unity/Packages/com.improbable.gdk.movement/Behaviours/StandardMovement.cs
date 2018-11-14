@@ -7,9 +7,16 @@ public class StandardMovement : MyMovementUtils.IMovementProcessor
         Vector3 previous)
     {
         var newVelocity = velocity;
-        var speed = input.IncludesSprint
-            ? MyMovementUtils.movementSettings.MovementSpeed.SprintSpeed
-            : MyMovementUtils.movementSettings.MovementSpeed.RunSpeed;
+        var speed = MyMovementUtils.movementSettings.MovementSpeed.RunSpeed;
+        if (input.AimPressed)
+        {
+            speed = MyMovementUtils.movementSettings.MovementSpeed.WalkSpeed;
+        }
+        else if (input.SprintPressed)
+        {
+            speed = MyMovementUtils.movementSettings.MovementSpeed.SprintSpeed;
+        }
+
         var inputVector = new Vector3(
             input.RightPressed ? 1 : (input.LeftPressed) ? -1 : 0,
             0,

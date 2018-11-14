@@ -26,7 +26,6 @@ public class SimulatedPlayerCoordinatorWorkerConnector : WorkerConnectorBase
 
     protected override async void Start()
     {
-        Application.targetFrameRate = 60;
         await AttemptConnect();
     }
 

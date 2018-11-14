@@ -27,12 +27,12 @@ public class MyServerMovementDriver : MonoBehaviour
 
     private int nextExpectedInput = -1;
     private int nextServerFrame = -1;
-    private int FrameBuffer = 10;
+    private int FrameBuffer = 5;
 
     private float clientDilation = 1f;
 
-    private Queue<float> rttQueue = new Queue<float>(20);
-    private float rtt = (10 - 1) * 2 * CommandFrameSystem.FrameLength;
+    private readonly Queue<float> rttQueue = new Queue<float>(20);
+    private float rtt = (5 - 1) * 2 * CommandFrameSystem.FrameLength;
 
     private MyMovementUtils.PidController pidController = new MyMovementUtils.PidController(0.1f, 0.01f, 0.0f, 100f, 1f);
 
@@ -40,10 +40,10 @@ public class MyServerMovementDriver : MonoBehaviour
 
     private StringBuilder logOut = new StringBuilder();
 
-    private Queue<ClientRequest> inputReceived = new Queue<ClientRequest>();
+    private readonly Queue<ClientRequest> inputReceived = new Queue<ClientRequest>();
 
-    private Dictionary<int, ClientRequest> clientInputs = new Dictionary<int, ClientRequest>();
-    private Dictionary<int, Vector3> movementState = new Dictionary<int, Vector3>();
+    private readonly Dictionary<int, ClientRequest> clientInputs = new Dictionary<int, ClientRequest>();
+    private readonly Dictionary<int, Vector3> movementState = new Dictionary<int, Vector3>();
 
     private readonly MyMovementUtils.IMovementProcessor[] movementProcessors =
     {
@@ -153,7 +153,7 @@ public class MyServerMovementDriver : MonoBehaviour
                 hasInput = true;
             }
 
-            // if (request.IncludesJump)
+            // if (request.JumpPressed)
             // {
             //     Debug.LogFormat("Got Jump. Client Frame {0}, Received Frame {1}, Apply Frame {2}", request.Timestamp,
             //         lastFrame, nextServerFrame);
@@ -212,7 +212,7 @@ public class MyServerMovementDriver : MonoBehaviour
                     }
                 }
 
-                // if (lastInput.IncludesJump)
+                // if (lastInput.JumpPressed)
                 // {
                 //     Debug.LogFormat("Applying jump. Client Frame {0}, Local Frame {1}", lastInput.Timestamp, lastFrame);
                 // }
@@ -394,6 +394,7 @@ public class MyServerMovementDriver : MonoBehaviour
             Timestamp = lastInput.Timestamp,
             Yaw = lastInput.CameraYaw,
             Pitch = lastInput.CameraPitch,
+            Aiming = lastInput.AimPressed,
             NextDilation = (int) (Mathf.Clamp(clientDilation, 0.5f, 1.5f) * 100000f),
             AppliedDilation = (int) (Time.time * 100000f)
         };

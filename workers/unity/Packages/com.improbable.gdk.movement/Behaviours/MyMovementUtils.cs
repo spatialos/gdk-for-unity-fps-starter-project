@@ -69,7 +69,7 @@ public class MyMovementUtils
         public Vector3 GetMovement(CharacterController controller, ClientRequest input, int frame, Vector3 velocity,
             Vector3 previous)
         {
-            if (input.IncludesSprint)
+            if (input.SprintPressed)
             {
                 cooldown[frame] = movementSettings.SprintCooldown;
             }
@@ -110,8 +110,10 @@ public class MyMovementUtils
 
     public static void ApplyMovement(CharacterController controller, Vector3 movement)
     {
-        controller.Move(movement * FrameLength);
-        // controller.transform.position = controller.transform.position.ToIntAbsolute().ToVector3();
+        if (controller.enabled)
+        {
+            controller.Move(movement * FrameLength);
+        }
     }
 
     public static bool IsGrounded(CharacterController controller)

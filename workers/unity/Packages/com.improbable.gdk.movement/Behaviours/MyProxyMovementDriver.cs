@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.Movement;
 using Improbable.Gdk.StandardTypes;
+using Mono.Cecil;
 using UnityEngine;
 
 public class MyProxyMovementDriver : MonoBehaviour
@@ -14,24 +17,24 @@ public class MyProxyMovementDriver : MonoBehaviour
 
     private readonly List<ServerResponse> movementBuffer = new List<ServerResponse>();
 
-    private readonly MyMovementUtils.PidController pidController =
+    private MyMovementUtils.PidController pidController =
         new MyMovementUtils.PidController(0.1f, 0.01f, 0f, 1f, 100f);
 
     private const int BufferSize = 3;
+    private const int MaxBufferSize = 6;
 
     private float pitch;
     private Vector3 velocity;
+    private bool aiming;
 
     private float remainder = 0f;
-    private float frameLengthModifier = 1.0f;
-    private float frameLength;
+    private float frameLength = 1f;
 
     private void OnEnable()
     {
         spatial = GetComponent<SpatialOSComponent>();
         commandFrame = spatial.World.GetExistingManager<CommandFrameSystem>();
         server.OnServerMovement += OnServerMovement;
-        frameLength = CommandFrameSystem.FrameLength;
     }
 
     private void OnServerMovement(ServerResponse response)
@@ -60,9 +63,9 @@ public class MyProxyMovementDriver : MonoBehaviour
         var toRot = Quaternion.Euler(to.Pitch / 100000f, to.Yaw / 100000f, rot.z);
 
         velocity = (toPosition - fromPosition) / CommandFrameSystem.FrameLength;
+        aiming = from.Aiming;
 
-
-        var t = remainder / frameLength;
+        var t = remainder / CommandFrameSystem.FrameLength;
 
         var newRot = Quaternion.Slerp(fromRot, toRot, t);
         var newRotEuler = newRot.eulerAngles;
@@ -72,23 +75,36 @@ public class MyProxyMovementDriver : MonoBehaviour
         Controller.transform.rotation = Quaternion.Euler(rot.x, newRotEuler.y, rot.z);
         pitch = newRotEuler.x;
 
-        remainder += Time.deltaTime;
-        if (remainder > frameLength)
+        remainder += Time.deltaTime * frameLength;
+
+        while (remainder > CommandFrameSystem.FrameLength)
         {
-            remainder -= frameLength;
+            remainder -= CommandFrameSystem.FrameLength;
             movementBuffer.RemoveAt(0);
         }
 
         UpdatePid();
     }
 
+    private Queue<float> bufferSizeQueue = new Queue<float>(20);
+
     private void UpdatePid()
     {
-        var current = movementBuffer.Count;
-        var error = BufferSize - current;
+        if (bufferSizeQueue.Count >= 20)
+        {
+            bufferSizeQueue.Dequeue();
+        }
 
-        frameLengthModifier = pidController.Update(error, Time.deltaTime);
-        frameLength = CommandFrameSystem.FrameLength * Mathf.Clamp(frameLengthModifier, 0.5f, 1.5f);
+        bufferSizeQueue.Enqueue(movementBuffer.Count);
+        var error = bufferSizeQueue.Average() - BufferSize;
+
+        if (Mathf.Abs(error) < 1.0f)
+        {
+            frameLength = 1.0f;
+            return;
+        }
+
+        frameLength = Mathf.Clamp(pidController.Update(error, Time.deltaTime), 1 / 1000f, 2f);
     }
 
     public Vector3 GetVelocity()
@@ -101,6 +117,11 @@ public class MyProxyMovementDriver : MonoBehaviour
         return pitch;
     }
 
+    public bool GetAiming()
+    {
+        return aiming;
+    }
+
     private void OnGUI()
     {
         if (!MyMovementUtils.ShowDebug)
@@ -108,7 +129,7 @@ public class MyProxyMovementDriver : MonoBehaviour
             return;
         }
 
-        GUI.Label(new Rect(10, 500, 700, 30), string.Format("Buffer Size: {0}, modifier: {1:00.00}, length: {2}",
-            movementBuffer.Count, frameLengthModifier, frameLength * 1000f));
+        GUI.Label(new Rect(10, 500, 700, 30), string.Format("Buffer Size: {0}, average: {1:00.00}, length: {2}",
+            movementBuffer.Count, bufferSizeQueue.Average(), frameLength));
     }
 }

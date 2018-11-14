@@ -52,7 +52,7 @@ namespace Improbable.Gdk.Movement
             var response = new ServerResponse
             {
                 Position = positionNoOffset.ToIntAbsolute(),
-                // IncludesJump = request.IncludesJump,
+                // JumpPressed = request.JumpPressed,
                 Timestamp = request.Timestamp,
                 // TimeDelta = request.TimeDelta
             };
