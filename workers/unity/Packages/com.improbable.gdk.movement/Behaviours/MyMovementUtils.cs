@@ -15,6 +15,8 @@ public class MyMovementUtils
         void Clean(int frame);
     }
 
+    public static bool ShowDebug;
+
     public static readonly MovementSettings movementSettings = new MovementSettings
     {
         MovementSpeed = new MovementSpeedSettings

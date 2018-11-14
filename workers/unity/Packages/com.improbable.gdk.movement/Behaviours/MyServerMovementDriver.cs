@@ -153,11 +153,11 @@ public class MyServerMovementDriver : MonoBehaviour
                 hasInput = true;
             }
 
-            if (request.IncludesJump)
-            {
-                Debug.LogFormat("Got Jump. Client Frame {0}, Received Frame {1}, Apply Frame {2}", request.Timestamp,
-                    lastFrame, nextServerFrame);
-            }
+            // if (request.IncludesJump)
+            // {
+            //     Debug.LogFormat("Got Jump. Client Frame {0}, Received Frame {1}, Apply Frame {2}", request.Timestamp,
+            //         lastFrame, nextServerFrame);
+            // }
 
             if (request.Timestamp != nextExpectedInput)
             {
@@ -212,10 +212,10 @@ public class MyServerMovementDriver : MonoBehaviour
                     }
                 }
 
-                if (lastInput.IncludesJump)
-                {
-                    Debug.LogFormat("Applying jump. Client Frame {0}, Local Frame {1}", lastInput.Timestamp, lastFrame);
-                }
+                // if (lastInput.IncludesJump)
+                // {
+                //     Debug.LogFormat("Applying jump. Client Frame {0}, Local Frame {1}", lastInput.Timestamp, lastFrame);
+                // }
 
                 logOut.AppendLine(
                     string.Format("[{0}] Before: {1}", lastFrame, controller.transform.position));
@@ -429,6 +429,11 @@ public class MyServerMovementDriver : MonoBehaviour
 
     private void OnGUI()
     {
+        if (!MyMovementUtils.ShowDebug)
+        {
+            return;
+        }
+
         var cons = GetAverageInputConsumptionRate();
         var ins = GetAverageInputReceivedRate();
         var delta = clientInputs.Count - FrameBuffer;
