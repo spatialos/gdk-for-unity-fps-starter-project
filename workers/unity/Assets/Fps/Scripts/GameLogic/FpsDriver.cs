@@ -129,6 +129,12 @@ namespace Fps
                 commandFrame.ManualFudge += 0.05f;
             }
 
+            // Debug
+            if (Input.GetKeyDown(KeyCode.K))
+            {
+                MyMovementUtils.ShowDebug = !MyMovementUtils.ShowDebug;
+            }
+
             // Movement
             var forward = Input.GetKey(KeyCode.W);
             var backward = Input.GetKey(KeyCode.S);
@@ -337,6 +343,11 @@ namespace Fps
 
         private void OnGUI()
         {
+            if (!MyMovementUtils.ShowDebug)
+            {
+                return;
+            }
+
             GUI.Label(new Rect(10, 400, 700, 20), string.Format("fps vel: {0:00.00}", fpsVelocity));
         }
     }

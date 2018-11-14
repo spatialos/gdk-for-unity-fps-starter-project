@@ -243,6 +243,11 @@ public class MyClientMovementDriver : MonoBehaviour
 
     private void OnGUI()
     {
+        if (!MyMovementUtils.ShowDebug)
+        {
+            return;
+        }
+
         GUI.Label(new Rect(10, 10, 700, 20),
             string.Format("Frame: {0:00.00}, Fudge: {1:00.00}, Adjustment: {2:00.00}, rate: {3:00.00}, avg: {4:00.00}, var: {5:00.00}",
                 CommandFrameSystem.FrameLength,

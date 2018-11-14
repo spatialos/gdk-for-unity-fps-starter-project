@@ -103,7 +103,12 @@ public class MyProxyMovementDriver : MonoBehaviour
 
     private void OnGUI()
     {
-        GUI.Label(new Rect(10, 300, 700, 30), string.Format("Buffer Size: {0}, modifier: {1:00.00}, length: {2}",
+        if (!MyMovementUtils.ShowDebug)
+        {
+            return;
+        }
+
+        GUI.Label(new Rect(10, 500, 700, 30), string.Format("Buffer Size: {0}, modifier: {1:00.00}, length: {2}",
             movementBuffer.Count, frameLengthModifier, frameLength * 1000f));
     }
 }
