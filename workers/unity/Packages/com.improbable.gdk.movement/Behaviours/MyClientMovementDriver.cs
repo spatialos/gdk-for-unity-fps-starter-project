@@ -60,14 +60,17 @@ public class MyClientMovementDriver : MonoBehaviour
 
     private void Update()
     {
-        if (commandFrame.CurrentFrame != lastFrame)
+        if (commandFrame.NewFrame)
         {
-            lastFrame = commandFrame.CurrentFrame;
+            while (lastFrame < commandFrame.CurrentFrame)
+            {
+                lastFrame += 1;
 
-            var input = SendInput();
-            MyMovementUtils.ApplyInput(Controller, input, lastFrame, GetVelocity(lastFrame), movementProcessors);
-            SaveMovementState(lastFrame);
-            SaveInputState(input);
+                var input = SendInput();
+                MyMovementUtils.ApplyInput(Controller, input, lastFrame, GetVelocity(lastFrame), movementProcessors);
+                SaveMovementState(lastFrame);
+                SaveInputState(input);
+            }
 
             forwardThisFrame = false;
             backThisFrame = false;

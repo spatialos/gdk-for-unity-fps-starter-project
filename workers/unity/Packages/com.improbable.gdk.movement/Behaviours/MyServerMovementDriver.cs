@@ -187,48 +187,51 @@ public class MyServerMovementDriver : MonoBehaviour
 
         if (commandFrame.NewFrame)
         {
-            lastFrame = commandFrame.CurrentFrame;
-
             if (!hasInput || lastFrame < firstFrame)
             {
+                lastFrame = commandFrame.CurrentFrame;
                 return;
             }
 
-            if (clientInputs.ContainsKey(lastFrame))
+            while (lastFrame <= commandFrame.CurrentFrame)
             {
-                lastInput = clientInputs[lastFrame];
-                clientInputs.Remove(lastFrame);
-            }
-            else
-            {
-                Debug.LogFormat("[Server] No client input for frame {0}. next input available: {1}",
-                    lastFrame, GetNextFrame());
-                if (clientInputs.Count == 0)
+                lastFrame += 1;
+
+                if (clientInputs.ContainsKey(lastFrame))
                 {
-                    nextServerFrame += 1;
+                    lastInput = clientInputs[lastFrame];
+                    clientInputs.Remove(lastFrame);
                 }
+                else
+                {
+                    Debug.LogFormat("[Server] No client input for frame {0}. next input available: {1}",
+                        lastFrame, GetNextFrame());
+                    if (clientInputs.Count == 0)
+                    {
+                        nextServerFrame += 1;
+                    }
+                }
+
+                if (lastInput.IncludesJump)
+                {
+                    Debug.LogFormat("Applying jump. Client Frame {0}, Local Frame {1}", lastInput.Timestamp, lastFrame);
+                }
+
+                logOut.AppendLine(
+                    string.Format("[{0}] Before: {1}", lastFrame, controller.transform.position));
+                MyMovementUtils.ApplyInput(controller, lastInput, lastFrame, GetVelocity(lastFrame),
+                    movementProcessors);
+                logOut.AppendLine(
+                    string.Format("[{0}] After: {1}", lastFrame, controller.transform.position));
+                SaveMovementState();
+                SendMovement();
+
+                // Remove movement state from 10 frames ago
+                movementState.Remove(lastFrame - 10);
+                MyMovementUtils.CleanProcessors(movementProcessors, lastFrame - 10);
             }
 
             UpdateInputConsumptionRate();
-
-            if (lastInput.IncludesJump)
-            {
-                Debug.LogFormat("Applying jump. Client Frame {0}, Local Frame {1}", lastInput.Timestamp, lastFrame);
-            }
-
-            logOut.AppendLine(
-                string.Format("[{0}] Before: {1}", lastFrame, controller.transform.position));
-            MyMovementUtils.ApplyInput(controller, lastInput, lastFrame, GetVelocity(lastFrame),
-                movementProcessors);
-            logOut.AppendLine(
-                string.Format("[{0}] After: {1}", lastFrame, controller.transform.position));
-            SaveMovementState();
-            SendMovement();
-
-            // Remove movement state from 10 frames ago
-            movementState.Remove(lastFrame - 10);
-            MyMovementUtils.CleanProcessors(movementProcessors, lastFrame - 10);
-
             UpdateDilation();
         }
     }
