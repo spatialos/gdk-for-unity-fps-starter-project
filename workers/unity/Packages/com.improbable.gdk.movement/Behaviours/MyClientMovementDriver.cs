@@ -27,6 +27,7 @@ public class MyClientMovementDriver : MonoBehaviour
     private bool rightThisFrame;
     private bool jumpThisFrame;
     private bool sprintThisFrame;
+    private bool aimThisFrame;
     private float yawThisFrame;
     private float pitchThisFrame;
 
@@ -78,13 +79,14 @@ public class MyClientMovementDriver : MonoBehaviour
             rightThisFrame = false;
             jumpThisFrame = false;
             sprintThisFrame = false;
+            aimThisFrame = false;
             commandFrame.ServerAdjustment = nextDilation;
         }
 
         UpdateInRateStates();
     }
 
-    public void AddInput(bool forward, bool back, bool left, bool right, bool jump, bool sprint, float yaw, float pitch)
+    public void AddInput(bool forward, bool back, bool left, bool right, bool jump, bool sprint, bool aim, float yaw, float pitch)
     {
         forwardThisFrame |= forward;
         backThisFrame |= back;
@@ -92,6 +94,7 @@ public class MyClientMovementDriver : MonoBehaviour
         rightThisFrame |= right;
         jumpThisFrame |= jump;
         sprintThisFrame |= sprint;
+        aimThisFrame |= aim;
         yawThisFrame = yaw;
         pitchThisFrame = pitch;
     }
@@ -202,8 +205,9 @@ public class MyClientMovementDriver : MonoBehaviour
             BackPressed = backThisFrame,
             LeftPressed = leftThisFrame,
             RightPressed = rightThisFrame,
-            IncludesJump = jumpThisFrame,
-            IncludesSprint = sprintThisFrame,
+            JumpPressed = jumpThisFrame,
+            SprintPressed = sprintThisFrame,
+            AimPressed = aimThisFrame,
             CameraYaw = (int) (yawThisFrame * 100000f),
             CameraPitch = (int) (pitchThisFrame * 100000f),
             Timestamp = lastFrame,
@@ -300,7 +304,7 @@ public class MyClientMovementDriver : MonoBehaviour
         return string.Format("[F:{0} B:{1} R:{2} L:{3}, J:{4}, S:{5}, Yaw:{6}, Pitch:{7}]",
             request.ForwardPressed, request.BackPressed,
             request.RightPressed, request.LeftPressed,
-            request.IncludesJump, request.IncludesSprint,
+            request.JumpPressed, request.SprintPressed,
             request.CameraYaw, request.CameraPitch);
     }
 }

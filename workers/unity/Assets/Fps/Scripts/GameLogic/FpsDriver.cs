@@ -73,7 +73,6 @@ namespace Fps
             shotRayProvider = GetComponent<ShotRayProvider>();
             fpsAnimator = GetComponent<FpsAnimator>();
             currentGun = GetComponent<GunManager>();
-            CreateDirectionCache();
         }
 
         private void Start()
@@ -180,7 +179,10 @@ namespace Fps
             rotation.y += yawChange;
             transform.rotation = Quaternion.Euler(rotation);
 
-            movement.AddInput(forward, backward, left, right, isJumpPressed, isSprinting, rotation.y, newPitch);
+            movement.AddInput(
+                forward, backward, left, right,
+                isJumpPressed, isSprinting, isAiming,
+                rotation.y, newPitch);
 
             //Check for sprint cooldown
             if (sprintCooldown.GetCooldown(commandFrame.CurrentFrame - 1) <= 0 && !isSprinting)
@@ -297,49 +299,6 @@ namespace Fps
                 fpsAnimator.Jump();
             }
         }
-
-        private void OnForcedRotation(RotationUpdate forcedRotation)
-        {
-            var newPitch = Mathf.Clamp(forcedRotation.Pitch.ToFloat1k(), -cameraSettings.MaxPitch, -cameraSettings.MinPitch);
-            pitchTransform.localRotation = Quaternion.Euler(newPitch, 0, 0);
-        }
-
-        // Cache the direction vectors to avoid having to normalize every time.
-        private void CreateDirectionCache()
-        {
-            for (var i = 0; i < cachedDirectionVectors.Length; i++)
-            {
-                cachedDirectionVectors[i] = Vector3.zero;
-            }
-
-            var forwardRight = new Vector3(1, 0, 1).normalized;
-            var forwardLeft = new Vector3(-1, 0, 1).normalized;
-            var backwardRight = new Vector3(1, 0, -1).normalized;
-            var backwardLeft = new Vector3(-1, 0, -1).normalized;
-
-            cachedDirectionVectors[1] = Vector3.forward;
-            cachedDirectionVectors[2] = Vector3.back;
-            cachedDirectionVectors[4] = Vector3.right;
-            cachedDirectionVectors[5] = forwardRight;
-            cachedDirectionVectors[6] = backwardRight;
-            cachedDirectionVectors[8] = Vector3.left;
-            cachedDirectionVectors[9] = forwardLeft;
-            cachedDirectionVectors[10] = backwardLeft;
-        }
-
-        private Vector3 GetDirectionFromCache(
-            bool forward,
-            bool backward,
-            bool left,
-            bool right)
-        {
-            var directionIndex = forward & !backward ? 1 : 0;
-            directionIndex += backward & !forward ? 2 : 0;
-            directionIndex += right & !left ? 4 : 0;
-            directionIndex += left & !right ? 8 : 0;
-            return cachedDirectionVectors[directionIndex];
-        }
-
 
         private void OnGUI()
         {

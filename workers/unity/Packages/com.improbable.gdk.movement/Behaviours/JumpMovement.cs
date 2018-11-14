@@ -14,7 +14,7 @@ public class JumpMovement : MyMovementUtils.IMovementProcessor
 
         var grounded = MyMovementUtils.IsGrounded(controller);
         jumpState.TryGetValue(frame - 1, out var canJump);
-        var jumpPressed = input.IncludesJump;
+        var jumpPressed = input.JumpPressed;
 
         if (grounded && canJump && jumpPressed)
         {

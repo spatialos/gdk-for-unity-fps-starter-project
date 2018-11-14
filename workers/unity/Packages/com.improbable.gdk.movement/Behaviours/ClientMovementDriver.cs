@@ -297,7 +297,7 @@ namespace Improbable.Gdk.Movement
                 {
                     var clientRequest = new ClientRequest
                     {
-                        IncludesJump = didJump,
+                        JumpPressed = didJump,
                         Movement = movement.ToIntDelta(),
                         // TimeDelta = timeDelta,
                         Timestamp = messageStamp

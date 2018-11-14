@@ -13,7 +13,6 @@ namespace Fps
 
         protected override async void Start()
         {
-            Application.targetFrameRate = 60;
             await AttemptConnect();
         }
 

@@ -6,14 +6,15 @@ type ClientRequest {
 	improbable.gdk.standardtypes.IntDelta movement = 1;
 	int32 timestamp = 2;
 	float applied_dilation = 3;
-	bool includes_jump = 4;
+	bool jump_pressed = 4;
 	bool forward_pressed = 5;
 	bool back_pressed = 6;
 	bool left_pressed = 7;
 	bool right_pressed = 8;
-	bool includes_sprint = 9;
-	int32 camera_pitch = 10;
-	int32 camera_yaw = 11;
+	bool sprint_pressed = 9;
+	bool aim_pressed = 10;
+	int32 camera_pitch = 11;
+	int32 camera_yaw = 12;
 }
 
 type ServerResponse {
@@ -23,6 +24,7 @@ type ServerResponse {
 	int32 next_dilation = 4;
 	int32 yaw = 5;
 	int32 pitch = 6;
+	bool aiming = 7;
 }
 
 type RotationUpdate {
