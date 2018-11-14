@@ -67,9 +67,7 @@ public class MyProxyMovementDriver : MonoBehaviour
         var newRot = Quaternion.Slerp(fromRot, toRot, t);
         var newRotEuler = newRot.eulerAngles;
 
-        var oldPosition = Controller.transform.position;
-        var newPosition = Vector3.Lerp(fromPosition, toPosition, t);
-        Controller.transform.position = newPosition;
+        Controller.transform.position = Vector3.Lerp(fromPosition, toPosition, t);
 
         Controller.transform.rotation = Quaternion.Euler(rot.x, newRotEuler.y, rot.z);
         pitch = newRotEuler.x;

@@ -79,6 +79,7 @@ namespace Fps
         private void Start()
         {
             ControllerProxy.transform.parent = null;
+            ControllerProxy.name = $"{name} Controller Proxy";
             movement.Controller = ControllerProxy.GetComponent<CharacterController>();
         }
 
