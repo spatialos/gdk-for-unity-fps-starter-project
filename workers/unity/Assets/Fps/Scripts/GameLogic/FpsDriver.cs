@@ -198,7 +198,7 @@ namespace Fps
                 else
                 {
                     // go back by a frame?
-                    Debug.LogFormat("Next not ready, go back a frame.");
+                    // Debug.LogFormat("Next not ready, go back a frame.");
                     t -= Time.deltaTime / CommandFrameSystem.FrameLength;
                 }
             }

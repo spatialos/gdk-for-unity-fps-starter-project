@@ -25,7 +25,9 @@ public class FpsProxyDriver : MonoBehaviour
     {
         // fpsAnimator.SetAiming(gunState.Data.IsAiming);
         animator.SetGrounded(MyMovementUtils.IsGrounded(movement.Controller));
-        animator.SetMovement(movement.GetVelocity());
+        var vel = movement.GetVelocity();
+        vel.y = 0;
+        animator.SetMovement(vel);
         animator.SetPitch(movement.GetPitch());
 
         transform.position = ControllerProxy.transform.position;
