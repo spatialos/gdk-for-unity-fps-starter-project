@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.Movement;
 using Improbable.Gdk.StandardTypes;
@@ -14,6 +13,7 @@ public class MyProxyMovementDriver : MonoBehaviour
     public CharacterController Controller;
 
     private readonly List<ServerResponse> movementBuffer = new List<ServerResponse>();
+
     private readonly MyMovementUtils.PidController pidController =
         new MyMovementUtils.PidController(0.1f, 0.01f, 0f, 1f, 100f);
 
@@ -55,17 +55,24 @@ public class MyProxyMovementDriver : MonoBehaviour
         var to = movementBuffer[1];
         var fromPosition = from.Position.ToVector3() + spatial.Worker.Origin;
         var toPosition = to.Position.ToVector3() + spatial.Worker.Origin;
+        var rot = Controller.transform.rotation.eulerAngles;
+        var fromRot = Quaternion.Euler(from.Pitch / 100000f, from.Yaw / 100000f, rot.z);
+        var toRot = Quaternion.Euler(to.Pitch / 100000f, to.Yaw / 100000f, rot.z);
+
+        velocity = (toPosition - fromPosition) / CommandFrameSystem.FrameLength;
+
 
         var t = remainder / frameLength;
+
+        var newRot = Quaternion.Slerp(fromRot, toRot, t);
+        var newRotEuler = newRot.eulerAngles;
 
         var oldPosition = Controller.transform.position;
         var newPosition = Vector3.Lerp(fromPosition, toPosition, t);
         Controller.transform.position = newPosition;
-        velocity = (newPosition - oldPosition) / Time.deltaTime;
-        var rotation = Controller.transform.rotation.eulerAngles;
-        rotation.y = Mathf.Lerp(from.Yaw, to.Yaw, t) / 100000f;
-        Controller.transform.rotation = Quaternion.Euler(rotation);
-        pitch = Mathf.Lerp(from.Pitch, to.Pitch, t) / 100000f;
+
+        Controller.transform.rotation = Quaternion.Euler(rot.x, newRotEuler.y, rot.z);
+        pitch = newRotEuler.x;
 
         remainder += Time.deltaTime;
         if (remainder > frameLength)
