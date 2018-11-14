@@ -26,15 +26,15 @@ public class CommandFrameSystem : ComponentSystem
             CurrentFrame += 1;
             NewFrame = true;
 
-            // if (remainder > currentFramelength)
-            // {
-            //     while (remainder > currentFramelength)
-            //     {
-            //         Debug.LogWarningFormat("Missed Frame {0}", CurrentFrame);
-            //         remainder -= currentFramelength;
-            //         CurrentFrame += 1;
-            //     }
-            // }
+            if (remainder > currentFramelength)
+            {
+                while (remainder > currentFramelength)
+                {
+                    // Debug.LogWarningFormat("Missed Frame {0}", CurrentFrame);
+                    remainder -= currentFramelength;
+                    CurrentFrame += 1;
+                }
+            }
         }
         else if (remainder + Time.deltaTime > currentFramelength)
         {
