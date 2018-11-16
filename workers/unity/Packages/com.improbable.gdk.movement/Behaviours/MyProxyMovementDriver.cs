@@ -127,7 +127,9 @@ public class MyProxyMovementDriver : MonoBehaviour
             return;
         }
 
+        var bufferAverage = (bufferSizeQueue.Count > 0) ? bufferSizeQueue.Average() : 0;
+
         GUI.Label(new Rect(10, 500, 700, 30), string.Format("Buffer Size: {0}, average: {1:00.00}, length: {2}",
-            movementBuffer.Count, bufferSizeQueue.Average(), frameLength));
+            movementBuffer.Count, bufferAverage, frameLength));
     }
 }
