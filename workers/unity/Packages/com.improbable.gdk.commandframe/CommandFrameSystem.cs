@@ -1,6 +1,7 @@
 ﻿using Unity.Entities;
 using UnityEngine;
 using UnityEngine.Experimental.PlayerLoop;
+using UnityEngine.Experimental.XR;
 
 [UpdateInGroup(typeof(PostLateUpdate))]
 public class CommandFrameSystem : ComponentSystem
@@ -18,13 +19,25 @@ public class CommandFrameSystem : ComponentSystem
     {
         remainder += Time.deltaTime;
 
-        var currentFramelength = FrameLength * ManualFudge * ServerAdjustment;
+        var currentFramelength = FrameLength;
+        var frameIncrement = 1;
+        var isNewFrame = true;
+        if (ServerAdjustment > 0)
+        {
+            frameIncrement = 0;
+            isNewFrame = false;
+        }
+        else if (ServerAdjustment < 0)
+        {
+            frameIncrement = 2;
+            isNewFrame = true;
+        }
 
         if (remainder > currentFramelength)
         {
             remainder -= currentFramelength;
-            CurrentFrame += 1;
-            NewFrame = true;
+            CurrentFrame += frameIncrement;
+            NewFrame = isNewFrame;
 
             if (remainder > currentFramelength)
             {
@@ -32,7 +45,8 @@ public class CommandFrameSystem : ComponentSystem
                 {
                     // Debug.LogWarningFormat("Missed Frame {0}", CurrentFrame);
                     remainder -= currentFramelength;
-                    CurrentFrame += 1;
+                    CurrentFrame += frameIncrement;
+                    ServerAdjustment += (frameIncrement - 1);
                 }
             }
         }
@@ -46,8 +60,9 @@ public class CommandFrameSystem : ComponentSystem
             {
                 // Debug.LogFormat("[{0}] Closer this frame. Undershoot.", CurrentFrame);
                 remainder -= currentFramelength;
-                CurrentFrame += 1;
-                NewFrame = true;
+                CurrentFrame += frameIncrement;
+                ServerAdjustment += (frameIncrement - 1);
+                NewFrame = isNewFrame;
             }
             else
             {
