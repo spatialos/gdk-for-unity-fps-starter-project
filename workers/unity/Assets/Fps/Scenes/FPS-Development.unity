@@ -960,7 +960,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1275767668}
   - component: {fileID: 1275767667}
-  - component: {fileID: 1275767666}
   - component: {fileID: 1275767665}
   m_Layer: 0
   m_Name: UICamera
@@ -1026,13 +1025,6 @@ MonoBehaviour:
       enableFptlForForwardOpaque: 1
       enableBigTilePrepass: 1
       isFptlEnabled: 1
---- !u!81 &1275767666
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1275767664}
-  m_Enabled: 1
 --- !u!20 &1275767667
 Camera:
   m_ObjectHideFlags: 0
@@ -1428,16 +1420,16 @@ MonoBehaviour:
   edgeLeakFixup: 1
   edgeToleranceNormal: 1
   edgeTolerance: 1
-  shadowCascadeCount: 3
+  shadowCascadeCount: 4
   shadowCascadeRatios:
   - 0.05
-  - 0.2
+  - 0.15
   - 0.3
   shadowCascadeBorders:
   - 0
   - 0
-  - 0.2
   - 0
+  - 0.2
   shadowAlgorithm: 0
   shadowVariant: 3
   shadowPrecision: 0
@@ -1730,15 +1722,6 @@ Prefab:
     - target: {fileID: 4527984774241536, guid: a18c738cbcda9914591d9af24a618907, type: 2}
       propertyPath: m_RootOrder
       value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: 114510834623507516, guid: a18c738cbcda9914591d9af24a618907,
-        type: 2}
-      propertyPath: DefaultSimulatedPlayerCount
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 1971737696589158, guid: a18c738cbcda9914591d9af24a618907, type: 2}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a18c738cbcda9914591d9af24a618907, type: 2}

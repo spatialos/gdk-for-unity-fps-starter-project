@@ -1153,6 +1153,7 @@ GameObject:
   - component: {fileID: 20443460711874354}
   - component: {fileID: 114477222611163664}
   - component: {fileID: 114375817794709604}
+  - component: {fileID: 81632391014628510}
   m_Layer: 11
   m_Name: FirstPersonCamera
   m_TagString: Untagged
@@ -2569,6 +2570,13 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!81 &81632391014628510
+AudioListener:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1889680010243874}
+  m_Enabled: 1
 --- !u!95 &95707360094412314
 Animator:
   serializedVersion: 3
@@ -2629,6 +2637,11 @@ MonoBehaviour:
   barrelLerpThreshold: 10
   fullLengthShotThreshold: 10
   barrelSnap: 1
+  shotClips:
+  - {fileID: 8300000, guid: cf65dafddd668cb4cab1d4c1a4722d55, type: 3}
+  - {fileID: 8300000, guid: 32381b79e73278948a2e2850061e01e2, type: 3}
+  - {fileID: 8300000, guid: c36cf3840514f464d8ab164e1777daaf, type: 3}
+  - {fileID: 8300000, guid: fe51d6b42dc6a0a4ea984933bed33491, type: 3}
 --- !u!114 &114318485812647952
 MonoBehaviour:
   m_ObjectHideFlags: 1
