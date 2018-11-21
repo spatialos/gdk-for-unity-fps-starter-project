@@ -5,6 +5,7 @@
 ### Added
 
 - `MetricsSendSystem.cs` now sends metrics for Frames Per Second (FPS) and Unity heap usage.
+- Weapon fire now has sound effects.
 
 ### Changed
 
