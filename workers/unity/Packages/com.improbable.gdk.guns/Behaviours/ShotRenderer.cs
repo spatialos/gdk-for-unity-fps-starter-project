@@ -36,6 +36,9 @@ namespace Improbable.Gdk.Guns
         private bool muzzleFlashNeedsRefresh;
         private GameObject muzzleFlashObject;
         private ParticleSystem[] muzzleEffects;
+        private AudioSource muzzleAudioSource;
+
+        [SerializeField] private AudioClip[] shotClips;
 
 
         private ObjectPool<PoolableParticleEffect> hitPool;
@@ -150,6 +153,12 @@ namespace Improbable.Gdk.Guns
                     effect.Play();
                 }
             }
+
+            if (muzzleAudioSource != null && shotClips.Length > 0)
+            {
+                var clipIndex = Random.Range(0, shotClips.Length - 1);
+                muzzleAudioSource.PlayOneShot(shotClips[clipIndex]);
+            }
         }
 
         private void RefreshMuzzleFlash()
@@ -169,6 +178,8 @@ namespace Improbable.Gdk.Guns
                     var main = muzzleFlash.main;
                     main.startColor = gunSettings.ShotColour;
                 }
+
+                muzzleAudioSource = muzzleFlashObject.GetComponent<AudioSource>();
             }
 
             muzzleFlashNeedsRefresh = false;
