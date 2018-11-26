@@ -39,7 +39,7 @@ namespace Improbable.Gdk.Guns
 
                     // Send command to entity being shot.
                     var modifyHealthRequest = HealthComponent.ModifyHealth.CreateRequest(
-                        new Improbable.Worker.EntityId(shotInfo.EntityId),
+                        new EntityId(shotInfo.EntityId),
                         new HealthModifier()
                         {
                             Amount = -damage,
