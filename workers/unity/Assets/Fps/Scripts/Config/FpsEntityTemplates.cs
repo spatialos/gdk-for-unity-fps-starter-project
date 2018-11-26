@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using Improbable;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.Guns;
@@ -9,7 +7,6 @@ using Improbable.Gdk.Movement;
 using Improbable.Gdk.PlayerLifecycle;
 using Improbable.Gdk.StandardTypes;
 using Improbable.PlayerLifecycle;
-using Improbable.Worker.Core;
 
 namespace Fps
 {

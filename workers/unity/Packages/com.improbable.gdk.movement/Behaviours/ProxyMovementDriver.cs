@@ -1,6 +1,6 @@
 using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.StandardTypes;
-using Improbable.Worker.Core;
+using Improbable.Worker.CInterop;
 using UnityEngine;
 
 namespace Improbable.Gdk.Movement

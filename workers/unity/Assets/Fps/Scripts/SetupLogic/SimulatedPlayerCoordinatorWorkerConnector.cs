@@ -4,7 +4,7 @@ using Fps;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Improbable.Worker;
+using Improbable.Gdk.Core;
 using Random = UnityEngine.Random;
 
 public class SimulatedPlayerCoordinatorWorkerConnector : WorkerConnectorBase
