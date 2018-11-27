@@ -18,6 +18,11 @@ namespace Improbable.Gdk.ObjectPooling
         public static ObjectPool<T> GetOrCreateObjectPool<T>(GameObject prefab, int prePoolCount = 0)
             where T : IPoolableObject
         {
+            if (Instance == null)
+            {
+                new GameObject("ObjectPool").AddComponent<ObjectPooler>();
+            }
+
             return Instance.GetOrCreateObjectPoolInternal<T>(prefab, prePoolCount);
         }
 
