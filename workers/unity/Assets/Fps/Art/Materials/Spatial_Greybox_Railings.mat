@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: Spatial_Greybox_Railings
-  m_Shader: {fileID: 4800000, guid: 8697597c95bf06445b3ef6fa1f33d086, type: 3}
+  m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -24,6 +24,42 @@ Material:
         m_Offset: {x: 0, y: 0}
     - Texture2D_98D77128:
         m_Texture: {fileID: 2800000, guid: 541b8e9d59b516946bac68178198b1a0, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BumpMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailAlbedoMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailNormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ParallaxMap:
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_3BE8C835_Texture:
@@ -44,13 +80,31 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - Vector1_F78BCEA5: 4
+    - _BumpScale: 1
+    - _Cutoff: 0.5
+    - _DetailNormalMapScale: 1
+    - _DstBlend: 0
+    - _GlossMapScale: 1
     - _Gloss_Power: 0.45
     - _Gloss_Power_Sides: 1
     - _Gloss_Power_Top: 1
+    - _Glossiness: 0.5
+    - _GlossyReflections: 1
+    - _Metallic: 0
     - _Metallicity: 0
     - _Metallicity_Sides: 1
     - _Metallicity_Top: 1
+    - _Mode: 0
+    - _OcclusionStrength: 1
+    - _Parallax: 0.02
+    - _SmoothnessTextureChannel: 0
+    - _SpecularHighlights: 1
+    - _SrcBlend: 1
+    - _UVSec: 0
+    - _ZWrite: 1
     m_Colors:
     - Color_F94BEF6B: {r: 0.5188679, g: 0.5188679, b: 0.5188679, a: 0}
     - Vector3_67D67044: {r: 0.5, g: 0.5, b: 0.5, a: 0}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Color_Tint: {r: 0.5849056, g: 0.5849056, b: 0.5849056, a: 0}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}

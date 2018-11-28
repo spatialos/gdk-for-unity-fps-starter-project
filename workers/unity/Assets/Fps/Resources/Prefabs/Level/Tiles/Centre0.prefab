@@ -1061,7 +1061,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: 2e4b1eee6460c7a48aaf1b9bcaaf6358, type: 2}
+  - {fileID: 2100000, guid: 0eaa540306a85a743ae6f026c45abf60, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2105,6 +2105,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 834cfda29cc04cfca5066eec0a4f98d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PlayerTransform: {fileID: 0}
+  IsClient: 0
 --- !u!114 &114604202873990970
 MonoBehaviour:
   m_ObjectHideFlags: 1
