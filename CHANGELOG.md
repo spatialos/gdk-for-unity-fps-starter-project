@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Removed
+
+- Removed GameObjects containing `ObjectPooler` from all scenes, `ObjectPooler` instance is now created at runtime.
+
 ## `0.1.3` - 2018-11-26
 
 ### Added
