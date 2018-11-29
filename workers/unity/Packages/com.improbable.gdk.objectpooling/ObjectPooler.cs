@@ -11,6 +11,13 @@ namespace Improbable.Gdk.ObjectPooling
 
         private void Awake()
         {
+            // Destroy the ObjectPooler component being created if an Instance already exists
+            if (Instance != null)
+            {
+                Destroy(this);
+                return;
+            }
+
             Instance = this;
             objectPools = new Dictionary<GameObject, IObjectPool>();
         }
@@ -18,6 +25,12 @@ namespace Improbable.Gdk.ObjectPooling
         public static ObjectPool<T> GetOrCreateObjectPool<T>(GameObject prefab, int prePoolCount = 0)
             where T : IPoolableObject
         {
+            if (Instance == null)
+            {
+                // Creation of the ObjectPooler component sets the Instance field
+                new GameObject("ObjectPool").AddComponent<ObjectPooler>();
+            }
+
             return Instance.GetOrCreateObjectPoolInternal<T>(prefab, prePoolCount);
         }
 
