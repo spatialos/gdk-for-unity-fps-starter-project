@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Fixed
+
+- Simulated Players can now rotate about the X axis, enabling them to shoot targets above or below the plane they are on.
+
 ### Removed
 
 - Removed GameObjects containing `ObjectPooler` from all scenes, `ObjectPooler` instance is now created at runtime.
