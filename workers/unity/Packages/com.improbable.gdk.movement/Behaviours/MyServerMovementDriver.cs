@@ -31,9 +31,8 @@ public class MyServerMovementDriver : MonoBehaviour
 
     private float clientDilation = 1f;
 
-    private const int RttQueueSize = 100;
-    private readonly Queue<float> rttQueue = new Queue<float>(RttQueueSize);
     private float rtt = (5 - 1) * 2 * CommandFrameSystem.FrameLength;
+    private const float rttAlpha = 0.95f;
 
     private MyMovementUtils.PidController pidController = new MyMovementUtils.PidController(0.1f, 0.01f, 0.0f, 100f, 1f);
 
@@ -86,26 +85,17 @@ public class MyServerMovementDriver : MonoBehaviour
 
     private void UpdateRtt(ClientRequest request)
     {
-        if (rttQueue.Count >= RttQueueSize)
-        {
-            rttQueue.Dequeue();
-        }
-
         if (request.AppliedDilation > 0)
         {
-            rttQueue.Enqueue(Time.time - (request.AppliedDilation / 100000f));
-        }
-
-        if (rttQueue.Count >= RttQueueSize)
-        {
-            rtt = rttQueue.Average();
+            var sample = Time.time - (request.AppliedDilation / 100000f);
+            rtt = rttAlpha * rtt + (1 - rttAlpha) * sample;
             FrameBuffer = Mathf.CeilToInt(rtt / (2 * CommandFrameSystem.FrameLength) + 1);
         }
     }
 
     private void UpdateInputReceivedRate()
     {
-        if (inputReceiveRate.Count >= RttQueueSize)
+        if (inputReceiveRate.Count >= 100)
         {
             inputReceiveRate.RemoveAt(0);
         }
@@ -179,7 +169,7 @@ public class MyServerMovementDriver : MonoBehaviour
         }
     }
 
-    private List<float> inputConsumptionRate = new List<float>(RttQueueSize);
+    private List<float> inputConsumptionRate = new List<float>(100);
 
     private void Update()
     {
@@ -296,7 +286,7 @@ public class MyServerMovementDriver : MonoBehaviour
 
     private void UpdateInputConsumptionRate()
     {
-        if (inputConsumptionRate.Count >= RttQueueSize)
+        if (inputConsumptionRate.Count >= 100)
         {
             inputConsumptionRate.RemoveAt(0);
         }
@@ -342,7 +332,7 @@ public class MyServerMovementDriver : MonoBehaviour
 
     private float lastPidUpdateTime = -1;
 
-    private Queue<float> bufferSizeQueue = new Queue<float>(RttQueueSize);
+    private Queue<float> bufferSizeQueue = new Queue<float>(100);
 
     private void UpdateDilation()
     {
@@ -352,7 +342,7 @@ public class MyServerMovementDriver : MonoBehaviour
             return;
         }
 
-        if (bufferSizeQueue.Count < RttQueueSize)
+        if (bufferSizeQueue.Count < 100)
         {
             bufferSizeQueue.Enqueue(clientInputs.Count);
             return;
