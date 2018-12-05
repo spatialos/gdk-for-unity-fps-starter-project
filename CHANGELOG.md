@@ -5,6 +5,7 @@
 ### Fixed
 
 - Simulated Players can now rotate about the X axis, enabling them to shoot targets above or below the plane they are on.
+- Fixed a bug where you could start each built-out worker only once on OSX.
 
 ### Removed
 
