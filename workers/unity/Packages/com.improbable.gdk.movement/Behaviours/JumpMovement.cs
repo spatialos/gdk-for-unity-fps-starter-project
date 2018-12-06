@@ -7,6 +7,11 @@ public class JumpMovement : MyMovementUtils.IMovementProcessor
     public bool Process(CharacterController controller, ClientRequest input, MovementState previousState,
         ref MovementState newState)
     {
+        if (newState.DidTeleport)
+        {
+            return true;
+        }
+
         var grounded = MyMovementUtils.IsGrounded(controller);
         var canJump = previousState.CanJump;
         var jumpPressed = input.JumpPressed;

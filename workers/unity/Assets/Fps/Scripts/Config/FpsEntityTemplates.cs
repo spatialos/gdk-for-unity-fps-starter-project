@@ -49,7 +49,8 @@ namespace Fps
             {
                 MovementState = new MovementState()
                 {
-                    Position = spawnPosition.ToIntAbsolute()
+                    Position = spawnPosition.ToIntAbsolute(),
+                    DidTeleport = true
                 }
             };
 

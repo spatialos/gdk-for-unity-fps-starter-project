@@ -59,6 +59,7 @@ namespace Fps
         private Vector3 next;
         private float t;
         private bool nextAvailable = false;
+        private bool didTeleport = false;
 
         private void Awake()
         {
@@ -211,8 +212,18 @@ namespace Fps
                 if (nextAvailable)
                 {
                     t -= 1.0f;
-                    from = to;
-                    to = next;
+                    if (didTeleport)
+                    {
+                        from = next;
+                        to = next;
+                        didTeleport = false;
+                    }
+                    else
+                    {
+                        from = to;
+                        to = next;
+                    }
+
                     nextAvailable = false;
                 }
                 else
@@ -238,11 +249,16 @@ namespace Fps
                 //     commandFrame.CurrentFrame, t, nextAvailable);
 
                 Debug.DrawLine(ControllerProxy.transform.position, ControllerProxy.transform.position + Vector3.up * 6f, Color.green, 2);
-                var pos = movement.GetLatestState().Position.ToVector3();
+                var state = movement.GetLatestState();
+                var pos = state.Position.ToVector3();
                 Debug.DrawLine(pos, pos + Vector3.up * 5f, Color.red, 2);
 
-                next = ControllerProxy.transform.position;
+                next = pos;
                 nextAvailable = true;
+                if (state.DidTeleport)
+                {
+                    didTeleport = true;
+                }
 
                 if (t + Time.deltaTime / CommandFrameSystem.FrameLength < 1.0f)
                 {

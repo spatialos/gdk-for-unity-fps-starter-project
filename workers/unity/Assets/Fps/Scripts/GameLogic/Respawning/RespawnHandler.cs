@@ -16,12 +16,15 @@ namespace Fps
         [Require] private ServerMovement.Requirable.Writer serverMovement;
         [Require] private Position.Requirable.Writer spatialPosition;
 
+        private MyServerMovementDriver movementDriver;
+
         private SpatialOSComponent spatial;
 
         private void OnEnable()
         {
             respawnRequests.OnRequestRespawnRequest += OnRequestRespawn;
             spatial = GetComponent<SpatialOSComponent>();
+            movementDriver = GetComponent<MyServerMovementDriver>();
         }
 
         private void OnDisable()
@@ -40,24 +43,28 @@ namespace Fps
 
             // Move to a spawn point (position and rotation)
             var (spawnPosition, spawnYaw, spawnPitch) = SpawnPoints.GetRandomSpawnPoint();
-            var newLatest = new ServerResponse
-            {
-                MovementState = new MovementState()
-                {
-                    Position = spawnPosition.ToIntAbsolute()
-                },
-                // JumpPressed = false,
-                Timestamp = serverMovement.Data.Latest.Timestamp,
-                // TimeDelta = 0
-            };
 
-            var serverMovementUpdate = new ServerMovement.Update
-            {
-                Latest = newLatest
-            };
-            serverMovement.Send(serverMovementUpdate);
+            Debug.LogFormat("Request respawn to {0}", spawnPosition);
+            movementDriver.Teleport(spawnPosition);
 
-            transform.position = spawnPosition + spatial.Worker.Origin;
+            // var newLatest = new ServerResponse
+            // {
+            //     MovementState = new MovementState()
+            //     {
+            //         Position = spawnPosition.ToIntAbsolute()
+            //     },
+            //     // JumpPressed = false,
+            //     Timestamp = serverMovement.Data.Latest.Timestamp,
+            //     // TimeDelta = 0
+            // };
+            //
+            // var serverMovementUpdate = new ServerMovement.Update
+            // {
+            //     Latest = newLatest
+            // };
+            // serverMovement.Send(serverMovementUpdate);
+            //
+            // transform.position = spawnPosition + spatial.Worker.Origin;
 
             var forceRotationRequest = new RotationUpdate
             {
