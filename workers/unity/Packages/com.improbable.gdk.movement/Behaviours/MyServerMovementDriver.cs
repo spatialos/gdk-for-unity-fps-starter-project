@@ -42,6 +42,7 @@ public class MyServerMovementDriver : MonoBehaviour
 
     private readonly MyMovementUtils.RestoreStateProcessor restoreState = new MyMovementUtils.RestoreStateProcessor();
     private readonly MyMovementUtils.RemoveWorkerOrigin removeWorkerOrigin = new MyMovementUtils.RemoveWorkerOrigin();
+    private readonly MyMovementUtils.TeleportProcessor teleportProcessor = new MyMovementUtils.TeleportProcessor();
 
     private MyMovementUtils.IMovementProcessor[] movementProcessors;
 
@@ -54,6 +55,7 @@ public class MyServerMovementDriver : MonoBehaviour
         movementProcessors = new MyMovementUtils.IMovementProcessor[]
         {
             restoreState,
+            teleportProcessor,
             new StandardMovement(),
             new MyMovementUtils.SprintCooldown(),
             new JumpMovement(),
@@ -70,6 +72,7 @@ public class MyServerMovementDriver : MonoBehaviour
         spatial = GetComponent<SpatialOSComponent>();
         commandFrame = spatial.World.GetExistingManager<CommandFrameSystem>();
 
+        teleportProcessor.Origin = spatial.Worker.Origin;
         restoreState.Origin = spatial.Worker.Origin;
         removeWorkerOrigin.Origin = spatial.Worker.Origin;
 
@@ -230,6 +233,12 @@ public class MyServerMovementDriver : MonoBehaviour
         }
     }
 
+    public void Teleport(Vector3 spawnPosition)
+    {
+        Debug.LogFormat("Mark Teleport Processor with position: {0}", spawnPosition);
+        teleportProcessor.Teleport(spawnPosition);
+    }
+
     private static int nextRenderLine = 0;
     private int renderLine = 0;
 
@@ -250,4 +259,6 @@ public class MyServerMovementDriver : MonoBehaviour
             string.Format("Frame: {0}, Length: {1:00.0}, Remainder: {2:00.0}",
                 commandFrame.CurrentFrame, CommandFrameSystem.FrameLength * 1000f, commandFrame.GetRemainder() * 1000f));
     }
+
+
 }

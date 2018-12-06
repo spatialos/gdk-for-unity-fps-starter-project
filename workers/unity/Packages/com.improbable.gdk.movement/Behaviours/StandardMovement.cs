@@ -7,6 +7,11 @@ public class StandardMovement : MyMovementUtils.IMovementProcessor
     public bool Process(CharacterController controller, ClientRequest input, MovementState previousState,
         ref MovementState newState)
     {
+        if (newState.DidTeleport)
+        {
+            return true;
+        }
+
         var newVelocity = previousState.Velocity.ToVector3();
         var speed = MyMovementUtils.movementSettings.MovementSpeed.RunSpeed;
         if (input.AimPressed)

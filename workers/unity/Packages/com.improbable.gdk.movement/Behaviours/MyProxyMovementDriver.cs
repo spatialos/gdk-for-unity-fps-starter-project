@@ -37,7 +37,20 @@ public class MyProxyMovementDriver : MonoBehaviour
 
     private void OnServerMovement(ServerResponse response)
     {
-        movementBuffer.Add(response);
+        // replace entire buffer with this update.
+        if (response.MovementState.DidTeleport)
+        {
+            var count = movementBuffer.Count;
+            movementBuffer.Clear();
+            for (var i = 0; i < count; i++)
+            {
+                movementBuffer.Add(response);
+            }
+        }
+        else
+        {
+            movementBuffer.Add(response);
+        }
     }
 
     private void Update()
@@ -54,6 +67,7 @@ public class MyProxyMovementDriver : MonoBehaviour
 
         var from = movementBuffer[0];
         var to = movementBuffer[1];
+
         var fromPosition = from.MovementState.Position.ToVector3() + spatial.Worker.Origin;
         var toPosition = to.MovementState.Position.ToVector3() + spatial.Worker.Origin;
         var rot = Controller.transform.rotation.eulerAngles;
