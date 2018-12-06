@@ -789,6 +789,7 @@ GameObject:
   - component: {fileID: 114775314640606656}
   - component: {fileID: 114898509530246980}
   - component: {fileID: 114781168066614706}
+  - component: {fileID: 114110828523241228}
   m_Layer: 11
   m_Name: Player
   m_TagString: Player
@@ -2609,6 +2610,17 @@ MonoBehaviour:
   ragdollPrefab: {fileID: 1364289975559898, guid: 1c7560c8984118b4ea52cf9335e7c821,
     type: 2}
   transformToMatch: {fileID: 0}
+--- !u!114 &114110828523241228
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1627949407420470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8882a78e7c8b4134d9c24eed88fc7167, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114158075481504632
 MonoBehaviour:
   m_ObjectHideFlags: 1

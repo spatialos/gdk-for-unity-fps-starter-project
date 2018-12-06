@@ -1,61 +1,16 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public interface IControlProvider
 {
-
-    Vector3 GetMovement();
-    Vector3 GetLook();
-
-    bool GetJumpPressed();
-    bool GetJumpPressedThisFrame();
-    bool GetJumpReleasedThisFrame();
-
-    bool GetMenuPressed();
-    bool GetMenuPressedThisFrame();
-    bool GetMenuReleasedThisFrame();
-}
-
-public class MobileControlProvider : IControlProvider
-{
-    public Vector3 GetMovement()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public Vector3 GetLook()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public bool GetJumpPressed()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public bool GetJumpPressedThisFrame()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public bool GetJumpReleasedThisFrame()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public bool GetMenuPressed()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public bool GetMenuPressedThisFrame()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public bool GetMenuReleasedThisFrame()
-    {
-        throw new System.NotImplementedException();
-    }
+    Vector3 Movement { get; }
+    bool MenuPressed { get; }
+    bool RespawnPressed { get; }
+    float YawDelta { get; }
+    float PitchDelta { get; }
+    bool AreAiming { get; }
+    bool AreSprinting { get; }
+    bool JumpPressed { get; }
+    bool ShootPressed { get; }
+    bool ShootHeld { get; }
+    bool ConnectPressed { get; }
 }
