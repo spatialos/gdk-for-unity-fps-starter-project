@@ -40,25 +40,38 @@ public class MyServerMovementDriver : MonoBehaviour
     private readonly Queue<ClientRequest> clientInputs = new Queue<ClientRequest>();
     private readonly Dictionary<int, MovementState> movementState = new Dictionary<int, MovementState>();
 
-    private readonly MyMovementUtils.IMovementProcessor[] movementProcessors =
-    {
-        new StandardMovement(),
-        new JumpMovement(),
-        new MyMovementUtils.Gravity(),
-        new MyMovementUtils.TerminalVelocity(),
-    };
+    private readonly MyMovementUtils.RestoreStateProcessor restoreState = new MyMovementUtils.RestoreStateProcessor();
+    private readonly MyMovementUtils.RemoveWorkerOrigin removeWorkerOrigin = new MyMovementUtils.RemoveWorkerOrigin();
+
+    private MyMovementUtils.IMovementProcessor[] movementProcessors;
 
     private void Awake()
     {
         controller = GetComponent<CharacterController>();
         renderLine = nextRenderLine;
         nextRenderLine += 1;
+
+        movementProcessors = new MyMovementUtils.IMovementProcessor[]
+        {
+            restoreState,
+            new StandardMovement(),
+            new MyMovementUtils.SprintCooldown(),
+            new JumpMovement(),
+            new MyMovementUtils.Gravity(),
+            new MyMovementUtils.TerminalVelocity(),
+            new MyMovementUtils.ApplyMovementProcessor(),
+            removeWorkerOrigin,
+            new MyMovementUtils.AdjustVelocity(),
+        };
     }
 
     private void OnEnable()
     {
         spatial = GetComponent<SpatialOSComponent>();
         commandFrame = spatial.World.GetExistingManager<CommandFrameSystem>();
+
+        restoreState.Origin = spatial.Worker.Origin;
+        removeWorkerOrigin.Origin = spatial.Worker.Origin;
 
         clientInput.OnClientInput += OnClientInputReceived;
 
@@ -144,15 +157,13 @@ public class MyServerMovementDriver : MonoBehaviour
                     nextServerFrame += 1;
                 }
 
-                MyMovementUtils.ApplyInput(
-                    controller, lastInput, lastFrame, GetVelocity(lastFrame), movementProcessors);
-
-                var state = SaveMovementState();
+                movementState.TryGetValue(lastFrame - 1, out var previousState);
+                var state = MyMovementUtils.ApplyInput(controller, lastInput, previousState, movementProcessors);
+                movementState[lastFrame] = state;
                 SendMovement(state);
 
                 // Remove movement state from 10 frames ago
                 movementState.Remove(lastFrame - 10);
-                MyMovementUtils.CleanProcessors(movementProcessors, lastFrame - 10);
             }
 
             UpdateDilation();
@@ -163,7 +174,10 @@ public class MyServerMovementDriver : MonoBehaviour
     private MovementState SaveMovementState()
     {
         // Debug.LogFormat("[Server] {0} = {1}", ToClienfCf(lastFrame), controller.transform.position - origin);
-        var state = new MovementState((controller.transform.position - origin).ToIntAbsolute());
+        var state = new MovementState()
+        {
+            Position = (controller.transform.position - origin).ToIntAbsolute()
+        };
         movementState.Add(lastFrame, state);
         return state;
     }
@@ -215,18 +229,6 @@ public class MyServerMovementDriver : MonoBehaviour
             });
         }
     }
-
-    private Vector3 GetVelocity(int frame)
-    {
-        // return the difference of the previous 2 movement states.
-        if (movementState.TryGetValue(frame - 2, out var before) && movementState.TryGetValue(frame - 1, out var after))
-        {
-            return (after.Position.ToVector3() - before.Position.ToVector3()) / MyMovementUtils.FrameLength;
-        }
-
-        return Vector3.zero;
-    }
-
 
     private static int nextRenderLine = 0;
     private int renderLine = 0;

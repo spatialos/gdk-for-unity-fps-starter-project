@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
+﻿using System.Collections.Generic;
 using Improbable.Gdk.Movement;
 using Improbable.Gdk.StandardTypes;
 using UnityEngine;
@@ -9,10 +7,7 @@ public class MyMovementUtils
 {
     public interface IMovementProcessor
     {
-        Vector3 GetMovement(CharacterController controller, ClientRequest input, int frame, Vector3 velocity,
-            Vector3 previous);
-
-        void Clean(int frame);
+        bool Process(CharacterController controller, ClientRequest input, MovementState previousState, ref MovementState newState);
     }
 
     public static bool ShowDebug;
@@ -34,31 +29,48 @@ public class MyMovementUtils
         InAirDamping = 0.05f
     };
 
+    public class RestoreStateProcessor : IMovementProcessor
+    {
+        public Vector3 Origin = Vector3.zero;
+
+        public bool Process(CharacterController controller, ClientRequest input, MovementState previousState,
+            ref MovementState newState)
+        {
+            controller.transform.position = previousState.Position.ToVector3() + Origin;
+
+            return true;
+        }
+    }
+
     public class TerminalVelocity : IMovementProcessor
     {
-        public Vector3 GetMovement(CharacterController controller, ClientRequest input, int frame, Vector3 velocity,
-            Vector3 previous)
+        public bool Process(CharacterController controller, ClientRequest input, MovementState previousState,
+            ref MovementState newState)
         {
-            return Vector3.ClampMagnitude(previous, movementSettings.TerminalVelocity);
-        }
-
-        public void Clean(int frame)
-        {
-            // Do nothing, not storing any state that needs cleaning.
+            newState.Velocity = Vector3.ClampMagnitude(newState.Velocity.ToVector3(), movementSettings.TerminalVelocity)
+                .ToIntAbsolute();
+            return true;
         }
     }
 
     public class Gravity : IMovementProcessor
     {
-        public Vector3 GetMovement(CharacterController controller, ClientRequest input, int frame, Vector3 velocity,
-            Vector3 previous)
+        public bool Process(CharacterController controller, ClientRequest input, MovementState previousState,
+            ref MovementState newState)
         {
-            return previous + Vector3.down * movementSettings.Gravity * FrameLength;
-        }
+            var velocity = newState.Velocity.ToVector3();
+            if (IsGrounded(controller) && velocity.y <= 0)
+            {
+                velocity.y = -movementSettings.GroundedFallSpeed * FrameLength;
+            }
+            else
+            {
+                velocity += Vector3.down * movementSettings.Gravity * FrameLength;
+            }
 
-        public void Clean(int frame)
-        {
-            // Do nothing, not storing any state that needs cleaning.
+            newState.Velocity = velocity.ToIntAbsolute();
+
+            return true;
         }
     }
 
@@ -66,67 +78,88 @@ public class MyMovementUtils
     {
         private Dictionary<int, float> cooldown = new Dictionary<int, float>();
 
-        public Vector3 GetMovement(CharacterController controller, ClientRequest input, int frame, Vector3 velocity,
-            Vector3 previous)
+        public bool Process(CharacterController controller, ClientRequest input, MovementState previousState,
+            ref MovementState newState)
         {
             if (input.SprintPressed)
             {
-                cooldown[frame] = movementSettings.SprintCooldown;
+                newState.SprintCooldown = movementSettings.SprintCooldown;
             }
             else
             {
-                cooldown.TryGetValue(frame - 1, out var last);
-                cooldown[frame] = Mathf.Max(last - FrameLength, 0);
+                newState.SprintCooldown = Mathf.Max(previousState.SprintCooldown - FrameLength, 0);
             }
 
-            return previous;
+            return true;
         }
 
-        public void Clean(int frame)
+        public float GetCooldown(MovementState state)
         {
-            cooldown.Remove(frame);
+            return state.SprintCooldown;
         }
+    }
 
-        public float GetCooldown(int frame)
+    public class ApplyMovementProcessor : IMovementProcessor
+    {
+        public bool Process(CharacterController controller, ClientRequest input, MovementState previousState,
+            ref MovementState newState)
         {
-            cooldown.TryGetValue(frame, out var result);
-            return result;
+            if (controller.enabled)
+            {
+                controller.Move(newState.Velocity.ToVector3() * FrameLength);
+            }
+
+            newState.Position = controller.transform.position.ToIntAbsolute();
+
+            return true;
+        }
+    }
+
+    public class RemoveWorkerOrigin : IMovementProcessor
+    {
+        public Vector3 Origin;
+
+        public bool Process(CharacterController controller, ClientRequest input, MovementState previousState,
+            ref MovementState newState)
+        {
+            newState.Position = (newState.Position.ToVector3() - Origin).ToIntAbsolute();
+            return true;
+        }
+    }
+
+    public class AdjustVelocity : IMovementProcessor
+    {
+        public bool Process(CharacterController controller, ClientRequest input, MovementState previousState,
+            ref MovementState newState)
+        {
+            var oldPosition = previousState.Position.ToVector3();
+            var newPosition = newState.Position.ToVector3();
+            newState.Velocity = ((newPosition - oldPosition) / FrameLength).ToIntAbsolute();
+
+            return true;
         }
     }
 
     public const float FrameLength = CommandFrameSystem.FrameLength;
 
-    public static void ApplyInput(CharacterController controller, ClientRequest input, int frame, Vector3 velocity,
-        IMovementProcessor[] processors)
+    public static MovementState ApplyInput(
+        CharacterController controller, ClientRequest input, MovementState previousState, IMovementProcessor[] processors)
     {
-        var toMove = Vector3.zero;
-        for (var i = 0; i < processors.Length; i++)
+        MovementState newState = new MovementState();
+        for (int i = 0; i < processors.Length; i++)
         {
-            toMove = processors[i].GetMovement(controller, input, frame, velocity, toMove);
+            if (!processors[i].Process(controller, input, previousState, ref newState))
+            {
+                break;
+            }
         }
 
-        ApplyMovement(controller, toMove);
-    }
-
-    public static void ApplyMovement(CharacterController controller, Vector3 movement)
-    {
-        if (controller.enabled)
-        {
-            controller.Move(movement * FrameLength);
-        }
+        return newState;
     }
 
     public static bool IsGrounded(CharacterController controller)
     {
         return Physics.CheckSphere(controller.transform.position, 0.1f, LayerMask.GetMask("Default"));
-    }
-
-    public static void CleanProcessors(IMovementProcessor[] processors, int frame)
-    {
-        for (var i = 0; i < processors.Length; i++)
-        {
-            processors[i].Clean(frame);
-        }
     }
 
     public class PidController

@@ -20,6 +20,7 @@ public class MyClientMovementDriver : MonoBehaviour
     private float nextDilation = 1f;
 
     private int lastFrame = -1;
+    private MovementState lastMovementState = new MovementState();
 
     private bool forwardThisFrame;
     private bool backThisFrame;
@@ -38,7 +39,7 @@ public class MyClientMovementDriver : MonoBehaviour
 
     private int rewindColorIndex = 0;
 
-    private Dictionary<int, Vector3> movementState = new Dictionary<int, Vector3>();
+    private Dictionary<int, MovementState> movementState = new Dictionary<int, MovementState>();
     private Dictionary<int, ClientRequest> inputState = new Dictionary<int, ClientRequest>();
 
     private MyMovementUtils.IMovementProcessor[] movementProcessors = { };
@@ -68,8 +69,9 @@ public class MyClientMovementDriver : MonoBehaviour
                 lastFrame += 1;
 
                 var input = SendInput();
-                MyMovementUtils.ApplyInput(Controller, input, lastFrame, GetVelocity(lastFrame), movementProcessors);
-                SaveMovementState(lastFrame);
+                movementState.TryGetValue(lastFrame - 1, out var previousState);
+                lastMovementState = MyMovementUtils.ApplyInput(Controller, input, previousState, movementProcessors);
+                movementState[lastFrame] = lastMovementState;
                 SaveInputState(input);
             }
 
@@ -104,7 +106,7 @@ public class MyClientMovementDriver : MonoBehaviour
         if (movementState.ContainsKey(response.Timestamp))
         {
             // Check if server agrees, which it always should.
-            var predictionPosition = movementState[response.Timestamp];
+            var predictionPosition = movementState[response.Timestamp].Position.ToVector3();
             var actualPosition = response.MovementState.Position.ToVector3();
             var distance = Vector3.Distance(predictionPosition, actualPosition);
             if (distance > 0.1f)
@@ -115,23 +117,21 @@ public class MyClientMovementDriver : MonoBehaviour
                 Debug.LogFormat("Diff: {0}", distance);
                 Debug.LogFormat("Replaying input from {0} to {1}", response.Timestamp + 1, lastFrame);
 
-                Controller.transform.position = actualPosition;
-                SaveMovementState(response.Timestamp);
+                // SaveMovementState(response.Timestamp);
+                var previousState = response.MovementState;
+                movementState[response.Timestamp] = previousState;
 
                 // Replay inputs until lastFrame, storing movementstates.
                 for (var i = response.Timestamp + 1; i <= lastFrame; i++)
                 {
                     Debug.LogFormat("[Replaying Frame {0} ({1})]", i, rewindColors[rewindColorIndex]);
                     Debug.LogFormat("Input {0}", InputToString(inputState[i]));
-                    Debug.LogFormat("Previous Position {0}", movementState[i]);
-                    Debug.LogFormat("Previous Velocity {0}", GetVelocity(i));
+                    Debug.LogFormat("Previous Position {0}", movementState[i].Position.ToVector3());
+                    Debug.LogFormat("Previous Velocity {0}", movementState[i].Velocity.ToVector3());
 
-                    MyMovementUtils.ApplyInput(Controller, inputState[i], i, GetVelocity(i), movementProcessors);
+                    movementState[i] = MyMovementUtils.ApplyInput(Controller, inputState[i], movementState[i - 1], movementProcessors);
 
-                    SaveMovementState(i);
-
-
-                    Debug.LogFormat("Adjusted Position: {0}", movementState[i]);
+                    Debug.LogFormat("Adjusted Position: {0}", movementState[i].Position.ToVector3());
                     Debug.DrawLine(
                         Controller.transform.position,
                         Controller.transform.position + Vector3.up * 500,
@@ -149,7 +149,6 @@ public class MyClientMovementDriver : MonoBehaviour
 
             // Remove the previous last confirmed state, keep this one around for potential velocity calculation
             movementState.Remove(response.Timestamp - 2);
-            MyMovementUtils.CleanProcessors(movementProcessors, response.Timestamp - 2);
         }
         else
         {
@@ -221,28 +220,20 @@ public class MyClientMovementDriver : MonoBehaviour
         return clientRequest;
     }
 
-    private void SaveMovementState(int frame)
-    {
-        // Debug.LogFormat("[Client] {0} = {1}", frame, controller.transform.position);
-        movementState[frame] = Controller.transform.position;
-    }
-
     private void SaveInputState(ClientRequest request)
     {
         inputState.Add(lastFrame, request);
     }
 
-    public Vector3 GetVelocity(int frame)
+    public MovementState GetState(int frame)
     {
-        // return the difference of the previous 2 movement states.
-        if (movementState.TryGetValue(frame - 2, out var before) &&
-            movementState.TryGetValue(frame - 1, out var after))
-        {
-            return (after - before) / MyMovementUtils.FrameLength;
-        }
+        movementState.TryGetValue(frame, out var state);
+        return state;
+    }
 
-        Debug.LogWarningFormat("Looking for velocity for frame {0}", frame);
-        return Vector3.zero;
+    public MovementState GetLatestState()
+    {
+        return lastMovementState;
     }
 
     private void OnGUI()
@@ -294,7 +285,7 @@ public class MyClientMovementDriver : MonoBehaviour
         for (var i = lastFrame; movementState.ContainsKey(i); i--)
         {
             Gizmos.color = Color.Lerp(Color.red, Color.white, c / movementState.Count);
-            Gizmos.DrawWireSphere(movementState[i], 0.5f);
+            Gizmos.DrawWireSphere(movementState[i].Position.ToVector3(), 0.5f);
             c += 1;
         }
     }

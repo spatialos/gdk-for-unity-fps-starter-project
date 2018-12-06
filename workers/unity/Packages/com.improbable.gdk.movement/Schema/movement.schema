@@ -19,6 +19,10 @@ type ClientRequest {
 
 type MovementState {
     improbable.gdk.standardtypes.IntAbsolute position = 1;
+    improbable.gdk.standardtypes.IntAbsolute velocity = 2;
+    float sprint_cooldown = 3;
+    bool can_jump = 4;
+    bool did_jump = 5;
 }
 
 type ServerResponse {
