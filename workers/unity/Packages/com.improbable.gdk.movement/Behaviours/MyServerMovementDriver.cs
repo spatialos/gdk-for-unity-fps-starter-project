@@ -38,7 +38,7 @@ public class MyServerMovementDriver : MonoBehaviour
     private ClientRequest lastInput;
 
     private readonly Queue<ClientRequest> clientInputs = new Queue<ClientRequest>();
-    private readonly Dictionary<int, Vector3> movementState = new Dictionary<int, Vector3>();
+    private readonly Dictionary<int, MovementState> movementState = new Dictionary<int, MovementState>();
 
     private readonly MyMovementUtils.IMovementProcessor[] movementProcessors =
     {
@@ -147,8 +147,8 @@ public class MyServerMovementDriver : MonoBehaviour
                 MyMovementUtils.ApplyInput(
                     controller, lastInput, lastFrame, GetVelocity(lastFrame), movementProcessors);
 
-                SaveMovementState();
-                SendMovement();
+                var state = SaveMovementState();
+                SendMovement(state);
 
                 // Remove movement state from 10 frames ago
                 movementState.Remove(lastFrame - 10);
@@ -160,10 +160,12 @@ public class MyServerMovementDriver : MonoBehaviour
     }
 
 
-    private void SaveMovementState()
+    private MovementState SaveMovementState()
     {
         // Debug.LogFormat("[Server] {0} = {1}", ToClienfCf(lastFrame), controller.transform.position - origin);
-        movementState.Add(lastFrame, controller.transform.position);
+        var state = new MovementState((controller.transform.position - origin).ToIntAbsolute());
+        movementState.Add(lastFrame, state);
+        return state;
     }
 
     private readonly Queue<float> bufferSizeQueue = new Queue<float>(100);
@@ -186,13 +188,11 @@ public class MyServerMovementDriver : MonoBehaviour
         clientDilation = lastFrame % 100 == 0 ? Mathf.FloorToInt(error) : 0;
     }
 
-    private void SendMovement()
+    private void SendMovement(MovementState state)
     {
-        var position = controller.transform.position - origin;
-
         var response = new ServerResponse
         {
-            Position = position.ToIntAbsolute(),
+            MovementState = state,
             Timestamp = lastInput.Timestamp,
             Yaw = lastInput.CameraYaw,
             Pitch = lastInput.CameraPitch,
@@ -207,10 +207,11 @@ public class MyServerMovementDriver : MonoBehaviour
         positionTick -= 1;
         if (positionTick <= 0)
         {
+            var pos = state.Position.ToVector3();
             positionTick = PositionRate;
             spatialPosition.Send(new Position.Update()
             {
-                Coords = new Option<Coordinates>(new Coordinates(position.x, position.y, position.z))
+                Coords = new Option<Coordinates>(new Coordinates(pos.x, pos.y, pos.z))
             });
         }
     }
@@ -220,7 +221,7 @@ public class MyServerMovementDriver : MonoBehaviour
         // return the difference of the previous 2 movement states.
         if (movementState.TryGetValue(frame - 2, out var before) && movementState.TryGetValue(frame - 1, out var after))
         {
-            return (after - before) / MyMovementUtils.FrameLength;
+            return (after.Position.ToVector3() - before.Position.ToVector3()) / MyMovementUtils.FrameLength;
         }
 
         return Vector3.zero;

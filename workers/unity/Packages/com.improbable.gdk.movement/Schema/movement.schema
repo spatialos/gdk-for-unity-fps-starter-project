@@ -17,8 +17,12 @@ type ClientRequest {
 	int32 camera_yaw = 12;
 }
 
+type MovementState {
+    improbable.gdk.standardtypes.IntAbsolute position = 1;
+}
+
 type ServerResponse {
-	improbable.gdk.standardtypes.IntAbsolute position = 1;
+	MovementState movement_state = 1;
 	int32 timestamp = 2;
 	int32 applied_dilation = 3;
 	int32 next_dilation = 4;

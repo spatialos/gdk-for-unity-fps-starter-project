@@ -105,7 +105,7 @@ public class MyClientMovementDriver : MonoBehaviour
         {
             // Check if server agrees, which it always should.
             var predictionPosition = movementState[response.Timestamp];
-            var actualPosition = response.Position.ToVector3();
+            var actualPosition = response.MovementState.Position.ToVector3();
             var distance = Vector3.Distance(predictionPosition, actualPosition);
             if (distance > 0.1f)
             {
