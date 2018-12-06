@@ -50,6 +50,8 @@ namespace Fps
         private Coroutine requestingRespawnCoroutine;
         private readonly JumpMovement jumpMovement = new JumpMovement();
         private readonly MyMovementUtils.SprintCooldown sprintCooldown = new MyMovementUtils.SprintCooldown();
+        private readonly MyMovementUtils.RestoreStateProcessor restoreState = new MyMovementUtils.RestoreStateProcessor();
+        private readonly MyMovementUtils.RemoveWorkerOrigin removeOrigin = new MyMovementUtils.RemoveWorkerOrigin();
         private CommandFrameSystem commandFrame;
 
         private Vector3 from;
@@ -63,11 +65,15 @@ namespace Fps
             movement = GetComponent<MyClientMovementDriver>();
             movement.SetMovementProcessors(new MyMovementUtils.IMovementProcessor[]
             {
+                restoreState,
                 new StandardMovement(),
                 sprintCooldown,
                 jumpMovement,
                 new MyMovementUtils.Gravity(),
                 new MyMovementUtils.TerminalVelocity(),
+                new MyMovementUtils.ApplyMovementProcessor(),
+                removeOrigin,
+                new MyMovementUtils.AdjustVelocity(),
             });
             shooting = GetComponent<ClientShooting>();
             shotRayProvider = GetComponent<ShotRayProvider>();
@@ -87,6 +93,9 @@ namespace Fps
             spatialComponent = GetComponent<SpatialOSComponent>();
             commandFrame = spatialComponent.World.GetExistingManager<CommandFrameSystem>();
 
+            restoreState.Origin = spatialComponent.Worker.Origin;
+            removeOrigin.Origin = spatialComponent.Worker.Origin;
+
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
             health.OnRespawn += OnRespawn;
@@ -97,7 +106,7 @@ namespace Fps
             // Don't allow controls if in the menu.
             if (ScreenUIController.InEscapeMenu)
             {
-                Animations(false);
+                Animations(new MovementState());
                 return;
             }
 
@@ -184,15 +193,17 @@ namespace Fps
                 isJumpPressed, isSprinting, isAiming,
                 rotation.y, newPitch);
 
+            var state = movement.GetLatestState();
+
             //Check for sprint cooldown
-            if (sprintCooldown.GetCooldown(commandFrame.CurrentFrame - 1) <= 0 && !isSprinting)
+            if (sprintCooldown.GetCooldown(state) <= 0 && !isSprinting)
             {
                 HandleShooting(shootPressed, shootHeld);
             }
 
             Aiming(isAiming);
 
-            Animations(jumpMovement.DidJump(commandFrame.CurrentFrame));
+            Animations(state);
 
             t += Time.deltaTime / CommandFrameSystem.FrameLength;
             if (t > 1.0f)
@@ -225,6 +236,11 @@ namespace Fps
             {
                 // Debug.LogFormat("Frame {0}, t:{1:00.00}, nextAvailable:{2}",
                 //     commandFrame.CurrentFrame, t, nextAvailable);
+
+                Debug.DrawLine(ControllerProxy.transform.position, ControllerProxy.transform.position + Vector3.up * 6f, Color.green, 2);
+                var pos = movement.GetLatestState().Position.ToVector3();
+                Debug.DrawLine(pos, pos + Vector3.up * 5f, Color.red, 2);
+
                 next = ControllerProxy.transform.position;
                 nextAvailable = true;
 
@@ -287,14 +303,14 @@ namespace Fps
             }
         }
 
-        private void Animations(bool isJumping)
+        private void Animations(MovementState state)
         {
             fpsAnimator.SetAiming(gunState.Data.IsAiming);
             fpsAnimator.SetGrounded(MyMovementUtils.IsGrounded(movement.Controller));
-            fpsAnimator.SetMovement(movement.GetVelocity(commandFrame.CurrentFrame));
+            fpsAnimator.SetMovement(state.Velocity.ToVector3());
             fpsAnimator.SetPitch(pitchTransform.transform.localEulerAngles.x);
 
-            if (isJumping)
+            if (state.DidJump)
             {
                 fpsAnimator.Jump();
             }

@@ -51,7 +51,10 @@ namespace Improbable.Gdk.Movement
             // Send the update using the new position.
             var response = new ServerResponse
             {
-                MovementState = new MovementState(positionNoOffset.ToIntAbsolute()),
+                MovementState = new MovementState()
+                {
+                    Position = positionNoOffset.ToIntAbsolute()
+                },
                 // JumpPressed = request.JumpPressed,
                 Timestamp = request.Timestamp,
                 // TimeDelta = request.TimeDelta

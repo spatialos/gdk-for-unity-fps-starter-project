@@ -1,52 +1,42 @@
-﻿using System.Collections.Generic;
-using Improbable.Gdk.Movement;
+﻿using Improbable.Gdk.Movement;
+using Improbable.Gdk.StandardTypes;
 using UnityEngine;
 
 public class JumpMovement : MyMovementUtils.IMovementProcessor
 {
-    private Dictionary<int, bool> jumpState = new Dictionary<int, bool>();
-    private Dictionary<int, bool> jumped = new Dictionary<int, bool>();
-
-    public Vector3 GetMovement(CharacterController controller, ClientRequest input, int frame, Vector3 velocity,
-        Vector3 previous)
+    public bool Process(CharacterController controller, ClientRequest input, MovementState previousState,
+        ref MovementState newState)
     {
-        var result = previous;
-
         var grounded = MyMovementUtils.IsGrounded(controller);
-        jumpState.TryGetValue(frame - 1, out var canJump);
+        var canJump = previousState.CanJump;
         var jumpPressed = input.JumpPressed;
 
         if (grounded && canJump && jumpPressed)
         {
-            result.y = MyMovementUtils.movementSettings.StartingJumpSpeed;
-            jumped[frame] = true;
+            newState.Velocity =
+                (newState.Velocity.ToVector3() + Vector3.up * MyMovementUtils.movementSettings.StartingJumpSpeed)
+                .ToIntAbsolute();
+            newState.DidJump = true;
         }
         else
         {
-            jumped[frame] = false;
+            newState.DidJump = false;
         }
 
         if (!jumpPressed && grounded)
         {
-            jumpState[frame] = true;
+            newState.CanJump = true;
         }
         else
         {
-            jumpState[frame] = false;
+            newState.CanJump = false;
         }
 
-        return result;
+        return true;
     }
 
-    public void Clean(int frame)
+    public bool DidJump(MovementState state)
     {
-        // remove old jump state.
-        jumpState.Remove(frame);
-    }
-
-    public bool DidJump(int frame)
-    {
-        jumped.TryGetValue(frame, out var result);
-        return result;
+        return state.DidJump;
     }
 }

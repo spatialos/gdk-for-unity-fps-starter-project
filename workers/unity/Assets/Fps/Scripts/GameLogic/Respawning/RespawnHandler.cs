@@ -42,7 +42,10 @@ namespace Fps
             var (spawnPosition, spawnYaw, spawnPitch) = SpawnPoints.GetRandomSpawnPoint();
             var newLatest = new ServerResponse
             {
-                MovementState = new MovementState(spawnPosition.ToIntAbsolute()),
+                MovementState = new MovementState()
+                {
+                    Position = spawnPosition.ToIntAbsolute()
+                },
                 // JumpPressed = false,
                 Timestamp = serverMovement.Data.Latest.Timestamp,
                 // TimeDelta = 0

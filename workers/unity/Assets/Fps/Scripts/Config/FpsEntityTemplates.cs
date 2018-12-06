@@ -47,7 +47,10 @@ namespace Fps
 
             var serverResponse = new ServerResponse
             {
-                MovementState = new MovementState(spawnPosition.ToIntAbsolute())
+                MovementState = new MovementState()
+                {
+                    Position = spawnPosition.ToIntAbsolute()
+                }
             };
 
             var serverMovement = ServerMovement.Component.CreateSchemaComponentData(serverResponse);

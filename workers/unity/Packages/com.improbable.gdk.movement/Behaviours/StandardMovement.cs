@@ -1,12 +1,13 @@
 ﻿using Improbable.Gdk.Movement;
+using Improbable.Gdk.StandardTypes;
 using UnityEngine;
 
 public class StandardMovement : MyMovementUtils.IMovementProcessor
 {
-    public Vector3 GetMovement(CharacterController controller, ClientRequest input, int frame, Vector3 velocity,
-        Vector3 previous)
+    public bool Process(CharacterController controller, ClientRequest input, MovementState previousState,
+        ref MovementState newState)
     {
-        var newVelocity = velocity;
+        var newVelocity = previousState.Velocity.ToVector3();
         var speed = MyMovementUtils.movementSettings.MovementSpeed.RunSpeed;
         if (input.AimPressed)
         {
@@ -52,11 +53,8 @@ public class StandardMovement : MyMovementUtils.IMovementProcessor
             newVelocity.z = controlledMovement.y;
         }
 
-        return newVelocity;
-    }
+        newState.Velocity = newVelocity.ToIntAbsolute();
 
-    public void Clean(int frame)
-    {
-        // Do nothing, no state stored.
+        return true;
     }
 }
