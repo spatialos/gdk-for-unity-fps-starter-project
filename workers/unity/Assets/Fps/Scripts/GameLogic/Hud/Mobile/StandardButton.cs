@@ -5,17 +5,19 @@ using UnityEngine.UI;
 [SelectionBase]
 public class StandardButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
 {
+    [Tooltip("How long after pressing the button will register another press")]
     public float CooldownTime;
 
+    [Tooltip("Whether a click dragged out of the button area ends the press or not")]
     public bool RestrictPressToButtonArea;
 
+    [Tooltip("The hitbox used to detect if click is dragged out of the button area")]
     public Graphic Hitbox;
 
     private float lastPressedTime;
-
     private bool isPressed;
 
-    public bool IsPressed { get; }
+    public bool IsPressed => isPressed;
 
     private StandardButtonAnimator[] animator;
 
@@ -31,6 +33,8 @@ public class StandardButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
                 if (graphic.raycastTarget)
                 {
                     Hitbox = graphic;
+					Debug.LogWarning($"Automatically located and added Hitbox reference to button {gameObject.name}.");
+					break;
                 }
             }
 
@@ -105,6 +109,7 @@ public class StandardButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
             return;
         }
 
+		// TODO Drag event
         var relativeCursorPoint = Hitbox.rectTransform.InverseTransformPoint(eventData.position);
         if (!Hitbox.rectTransform.rect.Contains(relativeCursorPoint))
         {
