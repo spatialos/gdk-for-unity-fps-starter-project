@@ -49,9 +49,5 @@ public class MobileControls : MonoBehaviour, IControlProvider
         {
             Debug.LogError("Failed to find MobileUIController");
         }
-        else
-        {
-            Debug.Log($"ui set to {controller.gameObject.name}");
-        }
     }
 }

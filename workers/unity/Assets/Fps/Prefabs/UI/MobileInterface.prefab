@@ -147,7 +147,7 @@ GameObject:
   - component: {fileID: 114855412059819096}
   - component: {fileID: 114679237835823288}
   m_Layer: 5
-  m_Name: MobileUI
+  m_Name: MobileInterface
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1065,11 +1065,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ffa109f630511248b88ab8d402e4adf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  JumpButton: {fileID: 0}
-  ADSButton: {fileID: 0}
-  FireButtonLeft: {fileID: 0}
-  FireButtonRight: {fileID: 0}
-  LeftStickKnob: {fileID: 0}
+  JumpButton: {fileID: 114956568090173484}
+  ADSButton: {fileID: 114689043392189638}
+  FireButtonLeft: {fileID: 114052065903882648}
+  FireButtonRight: {fileID: 114908544291319284}
+  LeftStickKnob: {fileID: 224723853911467564}
   LeftStickMaxDistance: 100
 --- !u!114 &114689043392189638
 MonoBehaviour:
@@ -1666,7 +1666,7 @@ RectTransform:
   m_GameObject: {fileID: 1226452987490336}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 224900524416605204}
   - {fileID: 224250207045118550}
@@ -1674,10 +1674,10 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224343879397006024
 RectTransform:
   m_ObjectHideFlags: 1

@@ -114,7 +114,7 @@ public class StandardButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         {
             return;
         }
-        
+
         OnButtonDrag?.Invoke(eventData);
 
         if (RestrictPressToButtonArea)
