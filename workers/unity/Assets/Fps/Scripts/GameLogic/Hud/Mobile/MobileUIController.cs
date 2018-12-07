@@ -8,6 +8,8 @@ public class MobileUIController : MonoBehaviour
     public StandardButton ADSButton;
     public StandardButton FireButtonLeft;
     public StandardButton FireButtonRight;
+    public StandardButton MenuButton;
+
     public RectTransform LeftStickKnob;
     public float LeftStickMaxDistance = 100;
 
@@ -20,6 +22,7 @@ public class MobileUIController : MonoBehaviour
         FireButtonRight.OnButtonDown += StartFiringRight;
         FireButtonLeft.OnButtonUp += StopFiring;
         FireButtonRight.OnButtonUp += StopFiring;
+        MenuButton.OnButtonDown += OpenMenu;
     }
 
     private void OnDisable()
@@ -30,7 +33,7 @@ public class MobileUIController : MonoBehaviour
         FireButtonRight.OnButtonDown -= StartFiringRight;
         FireButtonLeft.OnButtonUp -= StopFiring;
         FireButtonRight.OnButtonUp -= StopFiring;
-
+        MenuButton.OnButtonDown -= OpenMenu;
         numActiveFireButtons = 0;
     }
 
@@ -60,6 +63,11 @@ public class MobileUIController : MonoBehaviour
         numActiveFireButtons--;
     }
 
+    private void OpenMenu(PointerEventData data)
+    {
+        MenuPressed = true;
+    }
+
     private int numActiveFireButtons;
 
     public bool AreFiring => numActiveFireButtons > 0;
@@ -67,6 +75,7 @@ public class MobileUIController : MonoBehaviour
 
     public bool JumpPressed { get; private set; }
     public bool ShootPressed { get; private set; }
+    public bool MenuPressed { get; private set; }
     public bool AreAiming { get; private set; }
 
     public Vector2 LookDelta => analogueControls.LookDelta;
@@ -90,9 +99,9 @@ public class MobileUIController : MonoBehaviour
         ShootPressed = false;
     }
 
-    void OnGUI()
+    private void OnGUI()
     {
         GUI.color = Color.magenta;
-        GUI.Label(new Rect(0,Screen.height/2, Screen.width, Screen.height /2), numActiveFireButtons.ToString());
+        GUI.Label(new Rect(0, Screen.height / 2f, Screen.width, Screen.height / 2f), numActiveFireButtons.ToString());
     }
 }

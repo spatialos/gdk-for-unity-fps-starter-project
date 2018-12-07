@@ -4,12 +4,11 @@ public class MobileControls : MonoBehaviour, IControlProvider
 {
     private MobileUIController controller;
 
-    // Mobile controls polls state of the UI control class and filters data to be used by other classes
-    // UI control class subscribes to buttons underneath it
     public float MovementScalar = 0.01f;
     public float LookScalar = 0.33f;
     public float SprintMaxAngle = 30f;
     public float SprintDistanceThreshold = 100;
+
     public Vector3 Movement
     {
         get
@@ -39,7 +38,7 @@ public class MobileControls : MonoBehaviour, IControlProvider
     public bool ShootHeld => controller.AreFiring;
 
     public bool ConnectPressed { get; }
-    public bool MenuPressed { get; }
+    public bool MenuPressed => controller.MenuPressed;
     public bool RespawnPressed { get; }
 
     private void Awake()
