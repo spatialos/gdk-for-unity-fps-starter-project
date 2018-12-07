@@ -1,117 +1,98 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class MobileUIController : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
+[RequireComponent(typeof(MobileUIAnalogueControls))]
+public class MobileUIController : MonoBehaviour
 {
-    public bool AreMoving;
-    public bool AreLooking;
-    public bool AreAiming;
-    public bool JumpPressed;
-
-    public StandardButton MoveButton;
-    public StandardButton LookButton;
     public StandardButton JumpButton;
+    public StandardButton ADSButton;
+    public StandardButton FireButtonLeft;
+    public StandardButton FireButtonRight;
+    public RectTransform LeftStickKnob;
+    public float LeftStickMaxDistance = 100;
 
-    public Vector2 moveDelta;
-    public Vector2 moveTotal;
-    private int moveTouchId;
-    private Vector2 moveStartPoint;
 
-    public Vector2 lookDelta;
-    public Vector2 lookTotal;
-    private int lookTouchId;
-    private Vector2 lookStartPoint;
-
-    public void OnPointerDown(PointerEventData eventData)
+    private void OnEnable()
     {
-        var pointOnLeftOfScreen = eventData.position.x < Screen.width / 2f;
-        if (pointOnLeftOfScreen)
-        {
-            if (!AreMoving)
-            {
-                StartTrackingMove(eventData);
-            }
-            else if (!AreLooking)
-            {
-                StartTrackingLook(eventData);
-            }
-        }
-        else
-        {
-            if (!AreLooking)
-            {
-                StartTrackingLook(eventData);
-            }
-            else if (!AreMoving)
-            {
-                StartTrackingMove(eventData);
-            }
-        }
-
-        Debug.Log(
-            $"OnPointerDown id " +
-            $"{eventData.pointerId} on " +
-            $"{(pointOnLeftOfScreen ? "Left" : "Right")} " +
-            $"of screen.");
+        JumpButton.OnButtonDown += Jump;
+        ADSButton.OnButtonDown += ToggleADS;
+        FireButtonLeft.OnButtonDown += StartFiringLeft;
+        FireButtonRight.OnButtonDown += StartFiringRight;
+        FireButtonLeft.OnButtonUp += StopFiring;
+        FireButtonRight.OnButtonUp += StopFiring;
     }
 
-
-    public void OnDrag(PointerEventData eventData)
+    private void OnDisable()
     {
-        Debug.Log($"Dragging with id {eventData.pointerId}");
-        if (AreMoving && eventData.pointerId == moveTouchId)
-        {
-            moveDelta = eventData.delta;
-            moveTotal = eventData.position - moveStartPoint;
-            Debug.Log($"moveDelta: {moveDelta} moveTotal: {moveTotal}");
-        }
+        JumpButton.OnButtonDown -= Jump;
+        ADSButton.OnButtonDown -= ToggleADS;
+        FireButtonLeft.OnButtonDown -= StartFiringLeft;
+        FireButtonRight.OnButtonDown -= StartFiringRight;
+        FireButtonLeft.OnButtonUp -= StopFiring;
+        FireButtonRight.OnButtonUp -= StopFiring;
 
-        if (AreLooking && eventData.pointerId == lookTouchId)
-        {
-            lookDelta = eventData.delta;
-            lookTotal = eventData.position - lookStartPoint;
-        }
+        numActiveFireButtons = 0;
     }
 
-    public void OnPointerUp(PointerEventData eventData)
+    private void Jump(PointerEventData data)
     {
-        if (AreMoving && eventData.pointerId == moveTouchId)
-        {
-            StopTrackingMove();
-        }
-
-        if (AreLooking && eventData.pointerId == lookTouchId)
-        {
-            StopTrackingLook();
-        }
+        JumpPressed = true;
     }
 
-    private void StartTrackingMove(PointerEventData eventData)
+    private void ToggleADS(PointerEventData data)
     {
-        AreMoving = true;
-        moveTouchId = eventData.pointerId;
-        moveStartPoint = eventData.position;
-        Debug.Log($"Tracking movement for id {moveTouchId}");
+        AreAiming = !AreAiming;
     }
 
-    private void StartTrackingLook(PointerEventData eventData)
+    private void StartFiringRight(PointerEventData data)
     {
-        AreLooking = true;
-        lookTouchId = eventData.pointerId;
-        lookStartPoint = eventData.position;
+        numActiveFireButtons++;
     }
 
-    private void StopTrackingMove()
+    private void StartFiringLeft(PointerEventData data)
     {
-        AreMoving = false;
-        moveDelta = Vector2.zero;
-        moveTotal = Vector2.zero;
+        analogueControls.AddBlacklistedFingerId(data.pointerId);
+        numActiveFireButtons++;
     }
 
-    private void StopTrackingLook()
+    private void StopFiring(PointerEventData data)
     {
-        lookDelta = Vector2.zero;
-        lookTotal = Vector2.zero;
-        AreLooking = false;
+        numActiveFireButtons--;
+    }
+
+    private int numActiveFireButtons;
+
+    public bool AreFiring => numActiveFireButtons > 0;
+
+
+    public bool JumpPressed { get; private set; }
+    public bool ShootPressed { get; private set; }
+    public bool AreAiming { get; private set; }
+
+    public Vector2 LookDelta => analogueControls.LookDelta;
+    public Vector2 MoveTotal => analogueControls.MoveTotal;
+
+    private MobileUIAnalogueControls analogueControls;
+
+    private void Awake()
+    {
+        analogueControls = GetComponent<MobileUIAnalogueControls>();
+    }
+
+    private void Update()
+    {
+        LeftStickKnob.localPosition = Vector3.ClampMagnitude(MoveTotal, LeftStickMaxDistance);
+    }
+
+    private void LateUpdate()
+    {
+        JumpPressed = false;
+        ShootPressed = false;
+    }
+
+    void OnGUI()
+    {
+        GUI.color = Color.magenta;
+        GUI.Label(new Rect(0,Screen.height/2, Screen.width, Screen.height /2), numActiveFireButtons.ToString());
     }
 }
