@@ -14,10 +14,15 @@ public class StandardButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     [Tooltip("The hitbox used to detect if click is dragged out of the button area")]
     public Graphic Hitbox;
 
-    private float lastPressedTime;
-    private bool isPressed;
+    public bool IsPressed { get; private set; }
 
-    public bool IsPressed => isPressed;
+    public delegate void ButtonEvent(PointerEventData eventData);
+
+    public ButtonEvent OnButtonDown;
+    public ButtonEvent OnButtonUp;
+    public ButtonEvent OnButtonDrag;
+
+    private float lastPressedTime;
 
     private StandardButtonAnimator[] animator;
 
@@ -33,12 +38,13 @@ public class StandardButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
                 if (graphic.raycastTarget)
                 {
                     Hitbox = graphic;
-					Debug.LogWarning($"Automatically located and added Hitbox reference to button {gameObject.name}.");
-					break;
+                    Debug.LogWarning($"Automatically located and added Hitbox reference to button {gameObject.name}. " +
+                        $"You may want to assign your own!\n");
+                    break;
                 }
             }
 
-            Debug.LogWarning($"No hitbox found for button {gameObject.name}!");
+            Debug.LogWarning($"No hitbox found for button {gameObject.name}!\n");
         }
     }
 
@@ -46,6 +52,7 @@ public class StandardButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     {
         animator = GetComponentsInChildren<StandardButtonAnimator>();
     }
+
 
     private void Start()
     {
@@ -62,34 +69,33 @@ public class StandardButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
             return;
         }
 
-        Press();
+        Press(data);
     }
 
     public void OnPointerUp(PointerEventData data)
     {
-        if (!isPressed)
+        if (!IsPressed)
         {
             return;
         }
 
-        EndPress();
+        EndPress(data);
     }
 
-    private void Press()
+    private void Press(PointerEventData eventData)
     {
-        isPressed = true;
-
+        IsPressed = true;
         foreach (var anim in animator)
         {
             anim.PlayAnimation(StandardButtonAnimator.EAnimType.OnDown);
             anim.QueueAnimation(StandardButtonAnimator.EAnimType.Pressed);
         }
 
-        //TODO Fire event
         lastPressedTime = Time.time;
+        OnButtonDown?.Invoke(eventData);
     }
 
-    private void EndPress()
+    private void EndPress(PointerEventData eventData)
     {
         foreach (var anim in animator)
         {
@@ -97,23 +103,27 @@ public class StandardButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
             anim.QueueAnimation(StandardButtonAnimator.EAnimType.Idle);
         }
 
-        // TODO Fire event
-        isPressed = false;
+        IsPressed = false;
+        OnButtonUp?.Invoke(eventData);
     }
 
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (!RestrictPressToButtonArea)
+        if (!IsPressed)
         {
             return;
         }
+        
+        OnButtonDrag?.Invoke(eventData);
 
-		// TODO Drag event
-        var relativeCursorPoint = Hitbox.rectTransform.InverseTransformPoint(eventData.position);
-        if (!Hitbox.rectTransform.rect.Contains(relativeCursorPoint))
+        if (RestrictPressToButtonArea)
         {
-            EndPress();
+            var relativeCursorPoint = Hitbox.rectTransform.InverseTransformPoint(eventData.position);
+            if (!Hitbox.rectTransform.rect.Contains(relativeCursorPoint))
+            {
+                EndPress(eventData);
+            }
         }
     }
 }
