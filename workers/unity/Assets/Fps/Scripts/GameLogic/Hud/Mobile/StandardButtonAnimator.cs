@@ -14,7 +14,7 @@ public class StandardButtonAnimator : MonoBehaviour
     public float PressedAnimationTimeScale = 1;
     public float OnUpAnimationTimeScale = 1;
 
-    private Animation animation;
+    private Animation anim;
 
     public enum EAnimType
     {
@@ -26,7 +26,7 @@ public class StandardButtonAnimator : MonoBehaviour
 
     private void Awake()
     {
-        animation = GetComponent<Animation>();
+        anim = GetComponent<Animation>();
     }
 
     private void SetAnimationSpeed(AnimationClip clip, float speed)
@@ -36,7 +36,7 @@ public class StandardButtonAnimator : MonoBehaviour
             return;
         }
 
-        animation[clip.name].speed = speed;
+        anim[clip.name].speed = speed;
     }
 
     public void PlayAnimation(EAnimType animType)
@@ -49,14 +49,14 @@ public class StandardButtonAnimator : MonoBehaviour
             return;
         }
 
-        if (animation.isPlaying)
+        if (anim.isPlaying)
         {
-            animation.Stop();
+            anim.Stop();
         }
 
         SetClipToStart(animType);
         SetAnimationSpeed(clip, speed);
-        animation.Play(clip.name);
+        anim.Play(clip.name);
     }
 
     public void QueueAnimation(EAnimType animType)
@@ -71,7 +71,7 @@ public class StandardButtonAnimator : MonoBehaviour
 
         SetClipToStart(animType);
         SetAnimationSpeed(clip, speed);
-        animation.PlayQueued(clip.name);
+        anim.PlayQueued(clip.name);
     }
 
     private AnimationClip GetClip(EAnimType animType)
@@ -116,7 +116,7 @@ public class StandardButtonAnimator : MonoBehaviour
             return;
         }
 
-        animation[clip.name].normalizedTime = animation[clip.name].speed >= 0f ? 0f : 1f;
+        anim[clip.name].normalizedTime = anim[clip.name].speed >= 0f ? 0f : 1f;
     }
 
     public void SetClipToEnd(EAnimType animType)
@@ -127,6 +127,6 @@ public class StandardButtonAnimator : MonoBehaviour
             return;
         }
 
-        animation[clip.name].normalizedTime = animation[clip.name].speed >= 0f ? 1f : 0f;
+        anim[clip.name].normalizedTime = anim[clip.name].speed >= 0f ? 1f : 0f;
     }
 }
