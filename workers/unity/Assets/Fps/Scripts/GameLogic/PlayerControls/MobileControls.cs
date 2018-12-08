@@ -36,6 +36,11 @@ public class MobileControls : MonoBehaviour, IControlProvider
     {
         get
         {
+            if (ShootHeld)
+            {
+                return false;
+            }
+
             var totalDistance = mobileInterface.MoveTotal.magnitude;
             var angle = Vector2.Angle(mobileInterface.MoveTotal, Vector2.up);
             return angle <= SprintMaxAngle && totalDistance > SprintDistanceThreshold;
@@ -78,7 +83,7 @@ public class MobileControls : MonoBehaviour, IControlProvider
                 mobileInterface = realMobileInterface;
                 break;
             }
-            
+
             yield return null;
         }
     }
