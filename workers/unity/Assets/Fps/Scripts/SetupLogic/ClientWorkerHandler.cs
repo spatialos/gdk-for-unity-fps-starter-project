@@ -1,4 +1,4 @@
-﻿#define FORCE_MOBILE
+﻿//#define FORCE_MOBILE
 
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -38,11 +38,11 @@ namespace Fps
 
 #if (UNITY_IOS || UNITY_ANDROID || FORCE_MOBILE)
             screenUIControllerMobile.gameObject.SetActive(true);
-            screenUIControllerDesktop.gameObject.SetActive(false);
+            screenUIControllerDesktop?.gameObject.SetActive(false);
             screenUIController = screenUIControllerMobile;
 #else
             screenUIController = screenUIControllerDesktop;
-            screenUIControllerMobile.gameObject.SetActive(false);
+            screenUIControllerMobile?.gameObject.SetActive(false);
             screenUIControllerDesktop.gameObject.SetActive(true);
 #endif
         }
