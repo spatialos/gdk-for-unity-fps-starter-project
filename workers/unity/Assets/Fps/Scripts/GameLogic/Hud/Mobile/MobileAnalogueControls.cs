@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MobileUIAnalogueControls : MonoBehaviour
+public class MobileAnalogueControls : MonoBehaviour
 {
     private bool areMoving;
     private bool areLooking;
@@ -21,11 +21,6 @@ public class MobileUIAnalogueControls : MonoBehaviour
 
     private readonly List<int> blacklistedFingerIds = new List<int>();
 
-#if UNITY_EDITOR
-    public bool DrawDebugInfo;
-#endif
-    private string debugGuiText;
-
     public void AddBlacklistedFingerId(int fingerId)
     {
         blacklistedFingerIds.Add(fingerId);
@@ -33,31 +28,11 @@ public class MobileUIAnalogueControls : MonoBehaviour
 
     private void Update()
     {
-        debugGuiText = "";
-
         CheckForStoppedTouches();
         CheckForStartedTouches();
 
-        CheckMoveTouch();
-        CheckLookTouch();
-
-        if (areMoving)
-        {
-            debugGuiText +=
-                $"\n\n" +
-                $"MOVE id: {moveFingerId} \t" +
-                $"phase: {GetTouchFromFingerId(moveFingerId).phase} \t" +
-                $"pos: {GetTouchFromFingerId(moveFingerId).position}\n";
-        }
-
-        if (areLooking)
-        {
-            debugGuiText +=
-                $"\n\n" +
-                $"LOOK id: {lookFingerId} \t" +
-                $"phase: {GetTouchFromFingerId(lookFingerId).phase} \t" +
-                $"pos: {GetTouchFromFingerId(lookFingerId).position}\n";
-        }
+        UpdateMoveTouch();
+        UpdateLookTouch();
     }
 
 
@@ -98,41 +73,39 @@ public class MobileUIAnalogueControls : MonoBehaviour
 
     private void CheckForStartedTouches()
     {
-        for (var i = 0; i < Input.touchCount; i++)
+        foreach (var touch in Input.touches)
         {
-            var touch = Input.touches[i];
-
-            debugGuiText += $"id: {touch.fingerId} \tphase: {touch.phase} \t pos: {touch.position}\n";
-
-            if (touch.phase == TouchPhase.Began)
+            if (touch.phase != TouchPhase.Began)
             {
-                if (blacklistedFingerIds.Contains(touch.fingerId))
-                {
-                    continue;
-                }
+                continue;
+            }
 
-                var leftOfScreen = touch.position.x < Screen.width / 2f;
-                if (leftOfScreen)
+            if (blacklistedFingerIds.Contains(touch.fingerId))
+            {
+                continue;
+            }
+
+            var leftOfScreen = touch.position.x < Screen.width / 2f;
+            if (leftOfScreen)
+            {
+                if (!areMoving)
                 {
-                    if (!areMoving)
-                    {
-                        StartTrackingMove(touch);
-                    }
-                    else if (!areLooking)
-                    {
-                        StartTrackingLook(touch);
-                    }
+                    StartTrackingMove(touch);
                 }
-                else
+                else if (!areLooking)
                 {
-                    if (!areLooking)
-                    {
-                        StartTrackingLook(touch);
-                    }
-                    else if (!areMoving)
-                    {
-                        StartTrackingMove(touch);
-                    }
+                    StartTrackingLook(touch);
+                }
+            }
+            else
+            {
+                if (!areLooking)
+                {
+                    StartTrackingLook(touch);
+                }
+                else if (!areMoving)
+                {
+                    StartTrackingMove(touch);
                 }
             }
         }
@@ -141,7 +114,7 @@ public class MobileUIAnalogueControls : MonoBehaviour
     }
 
 
-    private void CheckMoveTouch()
+    private void UpdateMoveTouch()
     {
         if (!areMoving)
         {
@@ -154,7 +127,7 @@ public class MobileUIAnalogueControls : MonoBehaviour
         moveLastPosition = position;
     }
 
-    private void CheckLookTouch()
+    private void UpdateLookTouch()
     {
         if (!areLooking)
         {
@@ -223,45 +196,6 @@ public class MobileUIAnalogueControls : MonoBehaviour
             }
         }
 
-        throw NoTouchFoundException(fingerId);
+        throw new ArgumentException($"No touch found with fingerId {fingerId}");
     }
-
-    private Exception NoTouchFoundException(int fingerId)
-    {
-        return new ArgumentException($"No touch found with fingerId {fingerId}");
-    }
-
-#if UNITY_EDITOR
-
-    private void OnGUI()
-    {
-        if (!DrawDebugInfo)
-        {
-            return;
-        }
-
-        GUI.Label(new Rect(0, 0, Screen.width, Screen.height), debugGuiText);
-
-        var wt = UnityEditor.EditorGUIUtility.whiteTexture;
-
-        if (areLooking)
-        {
-            GUI.color = Color.green;
-            GUI.DrawTexture(new Rect(lookStartPosition.x, Screen.height - lookStartPosition.y, 30, 30), wt);
-
-            var lookAbsolute = lookStartPosition + LookTotal;
-            GUI.DrawTexture(new Rect(lookAbsolute.x, Screen.height - lookAbsolute.y, 20, 20), wt);
-        }
-
-        if (areMoving)
-        {
-            GUI.color = Color.blue;
-            GUI.DrawTexture(new Rect(moveStartPosition.x, Screen.height - moveStartPosition.y, 30, 30), wt);
-
-            var moveAbsolute = moveStartPosition + MoveTotal;
-            GUI.DrawTexture(new Rect(moveAbsolute.x, Screen.height - moveAbsolute.y, 20, 20), wt);
-        }
-    }
-
-#endif
 }

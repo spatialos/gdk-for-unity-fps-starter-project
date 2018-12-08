@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-[RequireComponent(typeof(MobileUIAnalogueControls))]
-public class MobileUIController : MonoBehaviour
+[RequireComponent(typeof(MobileAnalogueControls))]
+public class MobileInterface : MonoBehaviour, IMobileInterface
 {
     public StandardButton JumpButton;
     public StandardButton ADSButton;
@@ -13,6 +13,16 @@ public class MobileUIController : MonoBehaviour
     public RectTransform LeftStickKnob;
     public float LeftStickMaxDistance = 100;
 
+    public bool ShowHitboxes;
+
+    private void OnValidate()
+    {
+        var buttons = GetComponentsInChildren<StandardButton>();
+        foreach (var button in buttons)
+        {
+            button.Hitbox.color = new Color(1, 0, 0, ShowHitboxes ? .3f : 0);
+        }
+    }
 
     private void OnEnable()
     {
@@ -81,11 +91,11 @@ public class MobileUIController : MonoBehaviour
     public Vector2 LookDelta => analogueControls.LookDelta;
     public Vector2 MoveTotal => analogueControls.MoveTotal;
 
-    private MobileUIAnalogueControls analogueControls;
+    private MobileAnalogueControls analogueControls;
 
     private void Awake()
     {
-        analogueControls = GetComponent<MobileUIAnalogueControls>();
+        analogueControls = GetComponent<MobileAnalogueControls>();
     }
 
     private void Update()
@@ -97,11 +107,6 @@ public class MobileUIController : MonoBehaviour
     {
         JumpPressed = false;
         ShootPressed = false;
-    }
-
-    private void OnGUI()
-    {
-        GUI.color = Color.magenta;
-        GUI.Label(new Rect(0, Screen.height / 2f, Screen.width, Screen.height / 2f), numActiveFireButtons.ToString());
+        MenuPressed = false;
     }
 }
