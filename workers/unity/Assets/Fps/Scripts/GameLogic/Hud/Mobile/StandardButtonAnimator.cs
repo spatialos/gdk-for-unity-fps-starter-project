@@ -16,7 +16,7 @@ public class StandardButtonAnimator : MonoBehaviour
 
     private Animation anim;
 
-    public enum EAnimType
+    public enum AnimType
     {
         Idle,
         OnDown,
@@ -39,7 +39,7 @@ public class StandardButtonAnimator : MonoBehaviour
         anim[clip.name].speed = speed;
     }
 
-    public void PlayAnimation(EAnimType animType)
+    public void PlayAnimation(AnimType animType)
     {
         var clip = GetClip(animType);
         var speed = GetSpeed(animType);
@@ -59,7 +59,7 @@ public class StandardButtonAnimator : MonoBehaviour
         anim.Play(clip.name);
     }
 
-    public void QueueAnimation(EAnimType animType)
+    public void QueueAnimation(AnimType animType)
     {
         var clip = GetClip(animType);
         var speed = GetSpeed(animType);
@@ -74,41 +74,41 @@ public class StandardButtonAnimator : MonoBehaviour
         anim.PlayQueued(clip.name);
     }
 
-    private AnimationClip GetClip(EAnimType animType)
+    private AnimationClip GetClip(AnimType animType)
     {
         switch (animType)
         {
-            case EAnimType.Idle:
+            case AnimType.Idle:
                 return IdleAnimation;
-            case EAnimType.OnDown:
+            case AnimType.OnDown:
                 return OnDownAnimation;
-            case EAnimType.Pressed:
+            case AnimType.Pressed:
                 return PressedAnimation;
-            case EAnimType.OnUp:
+            case AnimType.OnUp:
                 return OnUpAnimation;
             default:
                 throw new ArgumentOutOfRangeException(nameof(animType), animType, null);
         }
     }
 
-    private float GetSpeed(EAnimType animType)
+    private float GetSpeed(AnimType animType)
     {
         switch (animType)
         {
-            case EAnimType.Idle:
+            case AnimType.Idle:
                 return IdleAnimationTimeScale;
-            case EAnimType.OnDown:
+            case AnimType.OnDown:
                 return OnDownAnimationTimeScale;
-            case EAnimType.Pressed:
+            case AnimType.Pressed:
                 return PressedAnimationTimeScale;
-            case EAnimType.OnUp:
+            case AnimType.OnUp:
                 return OnUpAnimationTimeScale;
             default:
                 throw new ArgumentOutOfRangeException(nameof(animType), animType, null);
         }
     }
 
-    public void SetClipToStart(EAnimType animType)
+    public void SetClipToStart(AnimType animType)
     {
         var clip = GetClip(animType);
         if (!clip)
@@ -119,7 +119,7 @@ public class StandardButtonAnimator : MonoBehaviour
         anim[clip.name].normalizedTime = anim[clip.name].speed >= 0f ? 0f : 1f;
     }
 
-    public void SetClipToEnd(EAnimType animType)
+    public void SetClipToEnd(AnimType animType)
     {
         var clip = GetClip(animType);
         if (!clip)

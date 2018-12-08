@@ -28,6 +28,7 @@ public class MobileInterface : MonoBehaviour, IMobileInterface
     {
         JumpButton.OnButtonDown += Jump;
         ADSButton.OnButtonDown += ToggleADS;
+        ADSButton.OnButtonUp += ToggleADS;
         FireButtonLeft.OnButtonDown += StartFiringLeft;
         FireButtonRight.OnButtonDown += StartFiringRight;
         FireButtonLeft.OnButtonUp += StopFiring;
@@ -39,6 +40,7 @@ public class MobileInterface : MonoBehaviour, IMobileInterface
     {
         JumpButton.OnButtonDown -= Jump;
         ADSButton.OnButtonDown -= ToggleADS;
+        ADSButton.OnButtonUp -= ToggleADS;
         FireButtonLeft.OnButtonDown -= StartFiringLeft;
         FireButtonRight.OnButtonDown -= StartFiringRight;
         FireButtonLeft.OnButtonUp -= StopFiring;

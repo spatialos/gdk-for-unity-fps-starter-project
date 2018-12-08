@@ -14,7 +14,11 @@ public class StandardButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     [Tooltip("The hitbox used to detect if click is dragged out of the button area")]
     public Graphic Hitbox;
 
-    public bool IsPressed { get; private set; }
+    public bool Togglable;
+
+    private bool isPressed;
+
+    public bool IsPressed => isPressed;
 
     public delegate void ButtonEvent(PointerEventData eventData);
 
@@ -38,7 +42,8 @@ public class StandardButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
                 if (graphic.raycastTarget)
                 {
                     Hitbox = graphic;
-                    Debug.LogWarning($"Automatically located and added Hitbox reference to button {gameObject.name}. " +
+                    Debug.LogWarning(
+                        $"Automatically located and added Hitbox reference to button {gameObject.name}.\n" +
                         $"You may want to assign your own!\n");
                     break;
                 }
@@ -58,7 +63,9 @@ public class StandardButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     {
         foreach (var anim in animator)
         {
-            anim.PlayAnimation(StandardButtonAnimator.EAnimType.Idle);
+            anim.PlayAnimation(IsPressed
+                ? StandardButtonAnimator.AnimType.Pressed
+                : StandardButtonAnimator.AnimType.Idle);
         }
     }
 
@@ -69,61 +76,91 @@ public class StandardButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
             return;
         }
 
-        Press(data);
+        if (Togglable)
+        {
+            Toggle(data);
+        }
+        else
+        {
+            Press(data);
+        }
     }
 
     public void OnPointerUp(PointerEventData data)
     {
-        if (!IsPressed)
+        if (!IsPressed || Togglable)
         {
             return;
         }
 
-        EndPress(data);
+        Release(data);
+    }
+
+    private void Toggle(PointerEventData eventData)
+    {
+        if (IsPressed)
+        {
+            Release(eventData);
+        }
+        else
+        {
+            Press(eventData);
+        }
     }
 
     private void Press(PointerEventData eventData)
     {
-        IsPressed = true;
+        if (isPressed)
+        {
+            return;
+        }
+
+        isPressed = true;
         foreach (var anim in animator)
         {
-            anim.PlayAnimation(StandardButtonAnimator.EAnimType.OnDown);
-            anim.QueueAnimation(StandardButtonAnimator.EAnimType.Pressed);
+            anim.PlayAnimation(StandardButtonAnimator.AnimType.OnDown);
+            anim.QueueAnimation(StandardButtonAnimator.AnimType.Pressed);
         }
 
         lastPressedTime = Time.time;
         OnButtonDown?.Invoke(eventData);
     }
 
-    private void EndPress(PointerEventData eventData)
+    private void Release(PointerEventData eventData)
     {
-        foreach (var anim in animator)
+        if (!isPressed)
         {
-            anim.PlayAnimation(StandardButtonAnimator.EAnimType.OnUp);
-            anim.QueueAnimation(StandardButtonAnimator.EAnimType.Idle);
+            return;
         }
 
-        IsPressed = false;
+        isPressed = false;
+        foreach (var anim in animator)
+        {
+            anim.PlayAnimation(StandardButtonAnimator.AnimType.OnUp);
+            anim.QueueAnimation(StandardButtonAnimator.AnimType.Idle);
+        }
+
         OnButtonUp?.Invoke(eventData);
     }
 
-
     public void OnDrag(PointerEventData eventData)
     {
-        if (!IsPressed)
+        if (!IsPressed || Togglable)
         {
             return;
         }
 
         OnButtonDrag?.Invoke(eventData);
 
-        if (RestrictPressToButtonArea)
+        if (!RestrictPressToButtonArea)
         {
-            var relativeCursorPoint = Hitbox.rectTransform.InverseTransformPoint(eventData.position);
-            if (!Hitbox.rectTransform.rect.Contains(relativeCursorPoint))
-            {
-                EndPress(eventData);
-            }
+            return;
+        }
+
+        var relativeCursorPoint = Hitbox.rectTransform.InverseTransformPoint(eventData.position);
+        if (!Hitbox.rectTransform.rect.Contains(relativeCursorPoint))
+        {
+            Release(eventData);
         }
     }
 }
