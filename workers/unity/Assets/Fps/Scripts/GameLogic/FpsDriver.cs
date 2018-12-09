@@ -72,6 +72,11 @@ namespace Fps
 
         private void Update()
         {
+            if (controller.MenuPressed)
+            {
+                ClientWorkerHandler.ScreenUIController.TryOpenSettingsMenu();
+            }
+
             // Don't allow controls if in the menu.
             if (ScreenUIController.InEscapeMenu)
             {
