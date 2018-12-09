@@ -16,9 +16,7 @@ public class StandardButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     public bool Togglable;
 
-    private bool isPressed;
-
-    public bool IsPressed => isPressed;
+    public bool IsPressed { get; private set; }
 
     public delegate void ButtonEvent(PointerEventData eventData);
 
@@ -28,40 +26,68 @@ public class StandardButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     private float lastPressedTime;
 
-    private StandardButtonAnimator[] animator;
+    private StandardButtonAnimator[] animators;
 
     private void OnValidate()
     {
         CooldownTime = Mathf.Max(0, CooldownTime);
+        OnValidateCheckHitbox();
+    }
 
-        if (Hitbox == null)
+    private void OnValidateCheckHitbox()
+    {
+        if (Hitbox != null)
         {
-            var allGraphics = GetComponentsInChildren<Graphic>();
-            foreach (var graphic in allGraphics)
+            return;
+        }
+
+        var allGraphics = GetComponentsInChildren<Graphic>();
+        foreach (var graphic in allGraphics)
+        {
+            if (!graphic.raycastTarget)
             {
-                if (graphic.raycastTarget)
-                {
-                    Hitbox = graphic;
-                    Debug.LogWarning(
-                        $"Automatically located and added Hitbox reference to button {gameObject.name}.\n" +
-                        $"You may want to assign your own!\n");
-                    break;
-                }
+                continue;
             }
 
-            Debug.LogWarning($"No hitbox found for button {gameObject.name}!\n");
+            Hitbox = graphic;
+            Debug.LogWarning(
+                $"Automatically located and added Hitbox reference to button {gameObject.name}.\n" +
+                $"You may want to assign your own!\n");
+            break;
         }
+
+        Debug.LogWarning($"No hitbox found for button {gameObject.name}!\n");
     }
 
     private void Awake()
     {
-        animator = GetComponentsInChildren<StandardButtonAnimator>();
+        animators = GetComponentsInChildren<StandardButtonAnimator>();
+    }
+
+    // Presently it is assumed the player is dead if the UI is disabled, so reset everything
+    private void OnDisable()
+    {
+        SetPressedTo(false);
     }
 
 
+    public void SetPressedTo(bool pressed)
+    {
+        // Not terribly nice passing in null PointerEventData refs here,
+        // but unsure of a better solution for now
+        if (pressed)
+        {
+            Press(null);
+        }
+        else
+        {
+            Release(null);
+        }
+    }
+
     private void Start()
     {
-        foreach (var anim in animator)
+        foreach (var anim in animators)
         {
             anim.PlayAnimation(IsPressed
                 ? StandardButtonAnimator.AnimType.Pressed
@@ -86,14 +112,14 @@ public class StandardButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         }
     }
 
-    public void OnPointerUp(PointerEventData data)
+    public void OnPointerUp(PointerEventData eventData)
     {
         if (!IsPressed || Togglable)
         {
             return;
         }
 
-        Release(data);
+        Release(eventData);
     }
 
     private void Toggle(PointerEventData eventData)
@@ -110,13 +136,13 @@ public class StandardButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     private void Press(PointerEventData eventData)
     {
-        if (isPressed)
+        if (IsPressed)
         {
             return;
         }
 
-        isPressed = true;
-        foreach (var anim in animator)
+        IsPressed = true;
+        foreach (var anim in animators)
         {
             anim.PlayAnimation(StandardButtonAnimator.AnimType.OnDown);
             anim.QueueAnimation(StandardButtonAnimator.AnimType.Pressed);
@@ -128,13 +154,13 @@ public class StandardButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     private void Release(PointerEventData eventData)
     {
-        if (!isPressed)
+        if (!IsPressed)
         {
             return;
         }
 
-        isPressed = false;
-        foreach (var anim in animator)
+        IsPressed = false;
+        foreach (var anim in animators)
         {
             anim.PlayAnimation(StandardButtonAnimator.AnimType.OnUp);
             anim.QueueAnimation(StandardButtonAnimator.AnimType.Idle);
