@@ -176,17 +176,17 @@ public class StandardButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
             return;
         }
 
-        OnButtonDrag?.Invoke(eventData);
-
-        if (!RestrictPressToButtonArea)
+        if (RestrictPressToButtonArea)
         {
+            var relativeCursorPoint = Hitbox.rectTransform.InverseTransformPoint(eventData.position);
+            if (!Hitbox.rectTransform.rect.Contains(relativeCursorPoint))
+            {
+                Release(eventData);
+            }
+
             return;
         }
 
-        var relativeCursorPoint = Hitbox.rectTransform.InverseTransformPoint(eventData.position);
-        if (!Hitbox.rectTransform.rect.Contains(relativeCursorPoint))
-        {
-            Release(eventData);
-        }
+        OnButtonDrag?.Invoke(eventData);
     }
 }
