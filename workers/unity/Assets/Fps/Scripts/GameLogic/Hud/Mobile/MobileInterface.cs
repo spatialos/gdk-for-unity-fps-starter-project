@@ -4,12 +4,14 @@ using UnityEngine.EventSystems;
 [RequireComponent(typeof(MobileAnalogueControls))]
 public class MobileInterface : MonoBehaviour, IMobileInterface
 {
+    // TODO Could be possible to use Unity's inspector actions/events to hook these up instead?
+    // I.e. StandardButtons are responsible for setting up links to MobileInterface
+
     public StandardButton JumpButton;
     public StandardButton ADSButton;
     public StandardButton FireButtonLeft;
     public StandardButton FireButtonRight;
     public StandardButton MenuButton;
-
     public RectTransform LeftStickKnob;
     public float LeftStickMaxDistance = 100;
 
@@ -46,8 +48,10 @@ public class MobileInterface : MonoBehaviour, IMobileInterface
         FireButtonLeft.OnButtonUp -= StopFiring;
         FireButtonRight.OnButtonUp -= StopFiring;
         MenuButton.OnButtonDown -= OpenMenu;
+
         numActiveFireButtons = 0;
     }
+
 
     private void Jump(PointerEventData data)
     {
@@ -66,7 +70,11 @@ public class MobileInterface : MonoBehaviour, IMobileInterface
 
     private void StartFiringLeft(PointerEventData data)
     {
-        analogueControls.AddBlacklistedFingerId(data.pointerId);
+        if (data != null)
+        {
+            analogueControls.AddBlacklistedFingerId(data.pointerId);
+        }
+
         numActiveFireButtons++;
     }
 
