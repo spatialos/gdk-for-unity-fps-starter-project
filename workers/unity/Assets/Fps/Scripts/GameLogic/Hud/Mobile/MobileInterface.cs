@@ -17,6 +17,18 @@ public class MobileInterface : MonoBehaviour, IMobileInterface
 
     public bool ShowHitboxes;
 
+    public Vector2 LookDelta => analogueControls.LookDelta;
+    public Vector2 MoveTotal => analogueControls.MoveTotal;
+    public bool JumpPressed { get; private set; }
+    public bool ShootPressed { get; private set; }
+    public bool MenuPressed { get; private set; }
+    public bool AreFiring => numActiveFireButtons > 0;
+    public bool AreAiming { get; private set; }
+
+    private int numActiveFireButtons;
+
+    private MobileAnalogueControls analogueControls;
+
     private void OnValidate()
     {
         var buttons = GetComponentsInChildren<StandardButton>();
@@ -24,6 +36,23 @@ public class MobileInterface : MonoBehaviour, IMobileInterface
         {
             button.Hitbox.color = new Color(1, 0, 0, ShowHitboxes ? .3f : 0);
         }
+    }
+
+    private void Awake()
+    {
+        analogueControls = GetComponent<MobileAnalogueControls>();
+    }
+
+    private void Update()
+    {
+        LeftStickKnob.localPosition = Vector3.ClampMagnitude(MoveTotal, LeftStickMaxDistance);
+    }
+
+    private void LateUpdate()
+    {
+        JumpPressed = false;
+        ShootPressed = false;
+        MenuPressed = false;
     }
 
     private void OnEnable()
@@ -63,11 +92,6 @@ public class MobileInterface : MonoBehaviour, IMobileInterface
         AreAiming = !AreAiming;
     }
 
-    private void StartFiringRight(PointerEventData data)
-    {
-        numActiveFireButtons++;
-    }
-
     private void StartFiringLeft(PointerEventData data)
     {
         if (data != null)
@@ -75,6 +99,11 @@ public class MobileInterface : MonoBehaviour, IMobileInterface
             analogueControls.AddBlacklistedFingerId(data.pointerId);
         }
 
+        numActiveFireButtons++;
+    }
+
+    private void StartFiringRight(PointerEventData data)
+    {
         numActiveFireButtons++;
     }
 
@@ -86,37 +115,5 @@ public class MobileInterface : MonoBehaviour, IMobileInterface
     private void OpenMenu(PointerEventData data)
     {
         MenuPressed = true;
-    }
-
-    private int numActiveFireButtons;
-
-    public bool AreFiring => numActiveFireButtons > 0;
-
-
-    public bool JumpPressed { get; private set; }
-    public bool ShootPressed { get; private set; }
-    public bool MenuPressed { get; private set; }
-    public bool AreAiming { get; private set; }
-
-    public Vector2 LookDelta => analogueControls.LookDelta;
-    public Vector2 MoveTotal => analogueControls.MoveTotal;
-
-    private MobileAnalogueControls analogueControls;
-
-    private void Awake()
-    {
-        analogueControls = GetComponent<MobileAnalogueControls>();
-    }
-
-    private void Update()
-    {
-        LeftStickKnob.localPosition = Vector3.ClampMagnitude(MoveTotal, LeftStickMaxDistance);
-    }
-
-    private void LateUpdate()
-    {
-        JumpPressed = false;
-        ShootPressed = false;
-        MenuPressed = false;
     }
 }
