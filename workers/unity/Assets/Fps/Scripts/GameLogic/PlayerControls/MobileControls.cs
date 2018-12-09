@@ -10,7 +10,8 @@ public class MobileControls : MonoBehaviour, IControlProvider
     public float SprintMaxAngle = 30f;
     public float SprintDistanceThreshold = 100;
 
-
+    // TODO Currently YawDelta/PitchDelta is untested on different devices. Probably needs some more love to resolve
+    // DPI/physical screen size differences.
     public float YawDelta => mobileInterface.LookDelta.x * LookScalar;
     public float PitchDelta => mobileInterface.LookDelta.y * LookScalar;
     public bool AreAiming => mobileInterface.AreAiming;
@@ -19,14 +20,21 @@ public class MobileControls : MonoBehaviour, IControlProvider
     public bool ShootPressed => mobileInterface.ShootPressed;
     public bool ShootHeld => mobileInterface.AreFiring;
 
-    public bool MenuPressed => mobileInterface.MenuPressed; // TODO is this hooked up anywhere?
-    public bool ConnectPressed { get; } // TODO is this used anywhere?
+    public bool MenuPressed => mobileInterface.MenuPressed;
+    public bool ConnectPressed { get; } // Not used
 
+    // TODO Currently Movement is untested on different devices. Probably needs some more love to resolve
+    // DPI/physical screen size differences.
     public Vector3 Movement
     {
         get
         {
             var totalDistance = mobileInterface.MoveTotal.magnitude;
+            if (totalDistance <= 0f)
+            {
+                return Vector3.zero;
+            }
+
             var speed = Mathf.Min(totalDistance, 1f / MovementScalar) * MovementScalar;
             return new Vector3(mobileInterface.MoveTotal.x, 0, mobileInterface.MoveTotal.y).normalized * speed;
         }
@@ -47,6 +55,7 @@ public class MobileControls : MonoBehaviour, IControlProvider
         }
     }
 
+    // Respawn is triggered by a new touch on any part of screen
     public bool RespawnPressed
     {
         get
