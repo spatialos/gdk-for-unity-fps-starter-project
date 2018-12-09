@@ -4,17 +4,18 @@ using UnityEngine;
 
 public class MobileAnalogueControls : MonoBehaviour
 {
+    public Vector2 MoveDelta { get; private set; }
+    public Vector2 MoveTotal { get; private set; }
+    public Vector2 LookDelta { get; private set; }
+    public Vector2 LookTotal { get; private set; }
+
     private bool areMoving;
     private bool areLooking;
 
-    public Vector2 MoveDelta { get; private set; }
-    public Vector2 MoveTotal { get; private set; }
     private int moveFingerId;
     private Vector2 moveStartPosition;
     private Vector2 moveLastPosition;
 
-    public Vector2 LookDelta { get; private set; }
-    public Vector2 LookTotal { get; private set; }
     private int lookFingerId;
     private Vector2 lookStartPosition;
     private Vector2 lookLastPosition;
@@ -33,6 +34,14 @@ public class MobileAnalogueControls : MonoBehaviour
 
         UpdateMoveTouch();
         UpdateLookTouch();
+    }
+
+    private void OnDisable()
+    {
+        LookDelta = Vector2.zero;
+        LookTotal = Vector2.zero;
+        MoveDelta = Vector2.zero;
+        MoveTotal = Vector2.zero;
     }
 
 
