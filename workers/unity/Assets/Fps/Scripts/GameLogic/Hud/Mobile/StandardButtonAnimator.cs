@@ -4,6 +4,8 @@ using UnityEngine;
 [RequireComponent(typeof(Animation))]
 public class StandardButtonAnimator : MonoBehaviour
 {
+    // START These properties are manually drawn in StandardButtonAnimatorInspector
+
     public AnimationClip IdleAnimation;
     public AnimationClip OnDownAnimation;
     public AnimationClip PressedAnimation;
@@ -13,6 +15,9 @@ public class StandardButtonAnimator : MonoBehaviour
     public float OnDownAnimationTimeScale = 1;
     public float PressedAnimationTimeScale = 1;
     public float OnUpAnimationTimeScale = 1;
+
+    // END
+    // Add new properties after here (unless if manually drawing them)
 
     private Animation anim;
 
