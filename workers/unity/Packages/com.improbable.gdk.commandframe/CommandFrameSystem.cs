@@ -7,11 +7,11 @@ using UnityEngine.Experimental.XR;
 public class CommandFrameSystem : ComponentSystem
 {
     public int CurrentFrame = 0;
-    public const float FrameLength = 1 / 32f;
+    public const float FrameLength = 1 / 28f;
     public bool NewFrame = false;
 
     public float ManualFudge = 1f;
-    public float ServerAdjustment = 1f;
+    public float ServerAdjustment = 0f;
 
     private float remainder = 0;
 
