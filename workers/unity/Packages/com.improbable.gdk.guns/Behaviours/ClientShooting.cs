@@ -1,12 +1,15 @@
-using Improbable.Gdk.GameObjectRepresentation;
+using Improbable.Gdk.Core;
 using Improbable.Gdk.StandardTypes;
+using Improbable.Gdk.Subscriptions;
+using Unity.Entities;
 using UnityEngine;
 
 namespace Improbable.Gdk.Guns
 {
     public class ClientShooting : MonoBehaviour, IRequiresGun
     {
-        [Require] private ShootingComponent.Requirable.Writer shooting;
+        [Require] private ShootingComponentWriter shooting;
+        [Require] private World world;
 
         [SerializeField] private LayerMask shootingLayerMask;
 
@@ -14,14 +17,8 @@ namespace Improbable.Gdk.Guns
         private float nextShotTime;
         private GunSettings gunSettings;
         private Trigger shotTrigger;
-        private SpatialOSComponent spatial;
 
         public bool IsOnCooldown => nextShotTime > Time.time;
-
-        private void OnEnable()
-        {
-            spatial = GetComponent<SpatialOSComponent>();
-        }
 
         private void Start()
         {
@@ -75,10 +72,10 @@ namespace Improbable.Gdk.Guns
             {
                 hitSomething = true;
                 hitLocation = hit.point;
-                var spatialEntity = hit.transform.root.GetComponent<SpatialOSComponent>();
+                var spatialEntity = hit.transform.root.GetComponent<LinkedEntityComponent>();
                 if (spatialEntity != null)
                 {
-                    entityId = spatialEntity.SpatialEntityId.Id;
+                    entityId = spatialEntity.EntityId.Id;
                 }
             }
 
@@ -86,11 +83,11 @@ namespace Improbable.Gdk.Guns
             {
                 EntityId = entityId,
                 HitSomething = hitSomething,
-                HitLocation = (hitLocation - spatial.Worker.Origin).ToIntAbsolute(),
-                HitOrigin = (ray.origin - spatial.Worker.Origin).ToIntAbsolute()
+                HitLocation = (hitLocation - world.GetExistingManager<WorkerSystem>().Origin).ToIntAbsolute(),
+                HitOrigin = (ray.origin - world.GetExistingManager<WorkerSystem>().Origin).ToIntAbsolute()
             };
 
-            shooting.SendShots(shotInfo);
+            shooting.SendShotsEvent(shotInfo);
         }
     }
 }

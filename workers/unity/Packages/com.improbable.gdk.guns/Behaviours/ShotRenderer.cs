@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.ObjectPooling;
 using Improbable.Gdk.StandardTypes;
+using Improbable.Gdk.Subscriptions;
 using UnityEngine;
 
 namespace Improbable.Gdk.Guns
@@ -17,8 +17,8 @@ namespace Improbable.Gdk.Guns
             public float End;
         }
 
-        [Require] private ShootingComponent.Requirable.Reader shooting;
-        [Require] private GunStateComponent.Requirable.Reader gunState;
+        [Require] private ShootingComponentReader shooting;
+        [Require] private GunStateComponentReader gunState;
 
         [Tooltip(
             "Over this distance, the bullet's actual position (in a straight line to the target) is lerped with the direction directly out from the gun (to smooth out firing shots from a moving barrel).")]
@@ -64,7 +64,7 @@ namespace Improbable.Gdk.Guns
 
         private void OnEnable()
         {
-            shooting.OnShots += ShotFired;
+            shooting.OnShotsEvent += ShotFired;
         }
 
         private void OnDisable()

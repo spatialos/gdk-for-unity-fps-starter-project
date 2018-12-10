@@ -1,17 +1,17 @@
 ﻿using Improbable.Common;
 using Improbable.Gdk.Core;
-using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.Guns;
 using Improbable.Gdk.Health;
+using Improbable.Gdk.Subscriptions;
 using UnityEngine;
 
 namespace Fps
 {
     public class FovManager : MonoBehaviour
     {
-        [Require] private GunComponent.Requirable.Reader gun;
-        [Require] private GunStateComponent.Requirable.Reader gunState;
-        [Require] private HealthComponent.Requirable.Reader health;
+        [Require] private GunComponentReader gun;
+        [Require] private GunStateComponentReader gunState;
+        [Require] private HealthComponentReader health;
 
         private new Camera camera;
         private float defaultFov;
@@ -27,10 +27,10 @@ namespace Fps
 
         private void OnEnable()
         {
-            gun.GunIdUpdated += OnGunChanged;
-            gunState.IsAimingUpdated += OnAimingChanged;
-            health.OnHealthModified += CheckForDeathModifier;
-            health.OnRespawn += OnRespawn;
+            gun.OnGunIdUpdate += OnGunChanged;
+            gunState.OnIsAimingUpdate += OnAimingChanged;
+            health.OnHealthModifiedEvent += CheckForDeathModifier;
+            health.OnRespawnEvent += OnRespawn;
             RecalculateFov();
         }
 

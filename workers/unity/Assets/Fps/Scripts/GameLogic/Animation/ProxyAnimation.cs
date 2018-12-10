@@ -1,8 +1,8 @@
 ﻿using Improbable.Gdk.Core;
-using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.Guns;
 using Improbable.Gdk.Movement;
 using Improbable.Gdk.StandardTypes;
+using Improbable.Gdk.Subscriptions;
 using UnityEngine;
 
 namespace Fps
@@ -10,9 +10,9 @@ namespace Fps
     [RequireComponent(typeof(FpsAnimator), typeof(ProxyMovementDriver))]
     public class ProxyAnimation : MonoBehaviour
     {
-        [Require] private GunStateComponent.Requirable.Reader gunState;
-        [Require] private ServerMovement.Requirable.Reader serverMovement;
-        [Require] private ClientRotation.Requirable.Reader clientRotation;
+        [Require] private GunStateComponentReader gunState;
+        [Require] private ServerMovementReader serverMovement;
+        [Require] private ClientRotationReader clientRotation;
 
         [Tooltip(
             "If proxy players do not receive ServerMovement component updates for this many Unity updates, they will return to idle.")]
@@ -33,9 +33,9 @@ namespace Fps
 
         private void OnEnable()
         {
-            gunState.IsAimingUpdated += OnAiming;
-            serverMovement.LatestUpdated += OnMovement;
-            clientRotation.LatestUpdated += OnRotation;
+            gunState.OnIsAimingUpdate += OnAiming;
+            serverMovement.OnLatestUpdate += OnMovement;
+            clientRotation.OnLatestUpdate += OnRotation;
 
             OnAiming(gunState.Data.IsAiming);
             OnRotation(clientRotation.Data.Latest);

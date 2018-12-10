@@ -1,6 +1,6 @@
 using Improbable;
 using Improbable.Gdk.Core;
-using Improbable.Gdk.GameObjectRepresentation;
+using Improbable.Gdk.Subscriptions;
 using Improbable.PlayerLifecycle;
 using Improbable.Worker.CInterop;
 using UnityEngine;
@@ -9,8 +9,7 @@ namespace Fps
 {
     public class ConnectionController : MonoBehaviour
     {
-        [Require] private PlayerCreator.Requirable.CommandRequestSender commandSender;
-        [Require] private PlayerCreator.Requirable.CommandResponseHandler responseHandler;
+        [Require] private PlayerCreatorCommandSender commandSender;
 
         private GameObject canvasCameraObj;
         private ScreenUIController screenUIController;
@@ -23,32 +22,10 @@ namespace Fps
             connectButton = screenUIController.ConnectScreen.GetComponentInChildren<Animator>();
         }
 
-        private void OnEnable()
-        {
-            if (responseHandler != null)
-            {
-                responseHandler.OnCreatePlayerResponse += OnCreatePlayerResponse;
-            }
-        }
-
         public void InformOfUI(GameObject canvasCameraObj, ScreenUIController screenUIController)
         {
             this.canvasCameraObj = canvasCameraObj;
             this.screenUIController = screenUIController;
-        }
-
-        private void OnCreatePlayerResponse(PlayerCreator.CreatePlayer.ReceivedResponse obj)
-        {
-            if (obj.StatusCode == StatusCode.Success)
-            {
-                canvasCameraObj.SetActive(false);
-                screenUIController.ConnectScreen.SetActive(false);
-                screenUIController.InGameHud.SetActive(true);
-            }
-            else
-            {
-                connectButton.SetTrigger("FailedToSpawn");
-            }
         }
 
         private void Update()
@@ -58,7 +35,9 @@ namespace Fps
                 return;
             }
 
-            clientWorkerConnector = clientWorkerConnector ?? ClientWorkerHandler.ClientWorkerConnector;
+            clientWorkerConnector = clientWorkerConnector
+                ? clientWorkerConnector
+                : ClientWorkerHandler.ClientWorkerConnector;
 
             if (clientWorkerConnector != null && clientWorkerConnector.Worker != null)
             {
@@ -80,7 +59,22 @@ namespace Fps
         private void SpawnPlayer()
         {
             var request = new CreatePlayerRequestType(new Vector3f { X = 0, Y = 0, Z = 0 });
-            commandSender.SendCreatePlayerRequest(new EntityId(1), request);
+            commandSender.SendCreatePlayerCommand(new PlayerCreator.CreatePlayer.Request(new EntityId(1), request),
+                OnCreatePlayerResponse);
+        }
+
+        private void OnCreatePlayerResponse(PlayerCreator.CreatePlayer.ReceivedResponse obj)
+        {
+            if (obj.StatusCode == StatusCode.Success)
+            {
+                canvasCameraObj.SetActive(false);
+                screenUIController.ConnectScreen.SetActive(false);
+                screenUIController.InGameHud.SetActive(true);
+            }
+            else
+            {
+                connectButton.SetTrigger("FailedToSpawn");
+            }
         }
 
         public void ConnectAction()

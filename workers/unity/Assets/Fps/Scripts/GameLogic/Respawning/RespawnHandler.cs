@@ -1,42 +1,43 @@
 ﻿using System.Collections;
 using Improbable;
 using Improbable.Common;
-using Improbable.Gdk.GameObjectRepresentation;
+using Improbable.Gdk.Core;
 using Improbable.Gdk.Health;
 using Improbable.Gdk.Movement;
 using Improbable.Gdk.StandardTypes;
+using Improbable.Gdk.Subscriptions;
+using Unity.Entities;
 using UnityEngine;
 
 namespace Fps
 {
     public class RespawnHandler : MonoBehaviour
     {
-        [Require] private HealthComponent.Requirable.CommandRequestHandler respawnRequests;
-        [Require] private HealthComponent.Requirable.Writer health;
-        [Require] private ServerMovement.Requirable.Writer serverMovement;
-        [Require] private Position.Requirable.Writer spatialPosition;
-
-        private SpatialOSComponent spatial;
+        [Require] private HealthComponentCommandReceiver respawnRequests;
+        [Require] private HealthComponentWriter health;
+        [Require] private ServerMovementWriter serverMovement;
+        [Require] private PositionWriter spatialPosition;
+        [Require] private World world;
 
         private void OnEnable()
         {
-            respawnRequests.OnRequestRespawnRequest += OnRequestRespawn;
-            spatial = GetComponent<SpatialOSComponent>();
+            respawnRequests.OnRequestRespawnRequestReceived += OnRequestRespawn;
         }
 
         private void OnDisable()
         {
+            respawnRequests.OnRequestRespawnRequestReceived -= OnRequestRespawn;
             StopAllCoroutines();
         }
 
-        private void OnRequestRespawn(HealthComponent.RequestRespawn.RequestResponder request)
+        private void OnRequestRespawn(HealthComponent.RequestRespawn.ReceivedRequest request)
         {
             // Reset the player's health.
             var healthUpdate = new HealthComponent.Update
             {
                 Health = health.Data.MaxHealth
             };
-            health.Send(healthUpdate);
+            health.SendUpdate(healthUpdate);
 
             // Move to a spawn point (position and rotation)
             var (spawnPosition, spawnYaw, spawnPitch) = SpawnPoints.GetRandomSpawnPoint();
@@ -52,9 +53,9 @@ namespace Fps
             {
                 Latest = newLatest
             };
-            serverMovement.Send(serverMovementUpdate);
+            serverMovement.SendUpdate(serverMovementUpdate);
 
-            transform.position = spawnPosition + spatial.Worker.Origin;
+            transform.position = spawnPosition + world.GetExistingManager<WorkerSystem>().Origin;
 
             var forceRotationRequest = new RotationUpdate
             {
@@ -62,13 +63,15 @@ namespace Fps
                 Pitch = spawnPitch.ToInt1k(),
                 TimeDelta = 0
             };
-            serverMovement.SendForcedRotation(forceRotationRequest);
+            serverMovement.SendForcedRotationEvent(forceRotationRequest);
 
             // Trigger the respawn event.
-            health.SendRespawn(new Empty());
+            health.SendRespawnEvent(new Empty());
 
             // Update spatial position in the next frame.
             StartCoroutine(SetSpatialPosition(spawnPosition));
+            respawnRequests.SendRequestRespawnResponse(new HealthComponent.RequestRespawn.Response(
+                request.RequestId, new Empty()));
         }
 
         private IEnumerator SetSpatialPosition(Vector3 position)
@@ -78,7 +81,7 @@ namespace Fps
             {
                 Coords = position.ToSpatialCoordinates()
             };
-            spatialPosition.Send(spatialPositionUpdate);
+            spatialPosition.SendUpdate(spatialPositionUpdate);
         }
     }
 }

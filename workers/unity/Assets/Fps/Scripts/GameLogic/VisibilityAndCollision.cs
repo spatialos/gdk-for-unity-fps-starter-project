@@ -1,13 +1,13 @@
 using System.Collections.Generic;
-using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.Health;
+using Improbable.Gdk.Subscriptions;
 using UnityEngine;
 
 namespace Fps
 {
     public class VisibilityAndCollision : MonoBehaviour
     {
-        [Require] private HealthComponent.Requirable.Reader health;
+        [Require] private HealthComponentReader health;
 
         private bool isVisible = true;
 
@@ -21,7 +21,7 @@ namespace Fps
 
         private void OnEnable()
         {
-            health.HealthUpdated += HealthUpdated;
+            health.OnHealthUpdate += HealthUpdated;
             UpdateVisibility();
         }
 

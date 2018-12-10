@@ -1,14 +1,17 @@
-using Improbable.Gdk.GameObjectRepresentation;
+using Improbable.Gdk.Core;
 using Improbable.Gdk.StandardTypes;
+using Improbable.Gdk.Subscriptions;
 using Improbable.Worker.CInterop;
+using Unity.Entities;
 using UnityEngine;
 
 namespace Improbable.Gdk.Movement
 {
     public class ProxyMovementDriver : GroundCheckingDriver
     {
-        [Require] private ServerMovement.Requirable.Reader server;
-        [Require] private ClientRotation.Requirable.Reader client;
+        [Require] private ServerMovementReader server;
+        [Require] private ClientRotationReader client;
+        [Require] private World world;
 
         [SerializeField] private RotationConstraints rotationConstraints = new RotationConstraints
         {
@@ -16,9 +19,6 @@ namespace Improbable.Gdk.Movement
             YAxisRotation = true,
             ZAxisRotation = true
         };
-
-        private SpatialOSComponent spatialOSComponent;
-        private Vector3 origin;
 
         //Rotation Variables
         private float timeLeftToRotate;
@@ -29,11 +29,8 @@ namespace Improbable.Gdk.Movement
 
         private void OnEnable()
         {
-            spatialOSComponent = GetComponent<SpatialOSComponent>();
-            origin = spatialOSComponent.Worker.Origin;
-
-            server.LatestUpdated += OnServerUpdate;
-            client.LatestUpdated += OnClientUpdate;
+            server.OnLatestUpdate += OnServerUpdate;
+            client.OnLatestUpdate += OnClientUpdate;
 
             OnClientUpdate(client.Data.Latest);
             OnServerUpdate(server.Data.Latest);
@@ -55,7 +52,8 @@ namespace Improbable.Gdk.Movement
                 return;
             }
 
-            Interpolate(movement.Position.ToVector3() + origin, movement.TimeDelta);
+            Interpolate(movement.Position.ToVector3() + world.GetExistingManager<WorkerSystem>().Origin,
+                movement.TimeDelta);
         }
 
         public void UpdateRotation(Quaternion targetQuaternion, float timeDelta)
