@@ -104,7 +104,7 @@ public class MyServerMovementDriver : MonoBehaviour
 
         request.Movement.X = nextInputFrame;
         nextInputFrame += 1;
-        //Debug.Log($"[{lastFrame} should get applied on frame: {request.Movement.X}");
+        // Debug.Log($"[Server {lastFrame}] should get applied on frame: {request.Movement.X}");
 
         // Debug.Log($"[Server {lastFrame}] Add Client Input: {request.Timestamp} ({clientInputs.Count})");
         clientInputs.Add(request);
@@ -155,7 +155,7 @@ public class MyServerMovementDriver : MonoBehaviour
                 {
                     // Debug.LogWarning($"[Server {lastFrame}] Input Missing!");
                     // Repeat last frame, but increment timestamp?
-                    //Debug.LogFormat($"[{lastFrame} No client input, repeat previous");
+                    // Debug.LogFormat($"[Server {lastFrame}] No client input, repeat previous");
                     lastInput.Timestamp += 1;
                 }
 
@@ -174,9 +174,6 @@ public class MyServerMovementDriver : MonoBehaviour
 
     private void SendMovement(MovementState state, int clientFrame)
     {
-        // Debug.LogFormat($"[{lastFrame} Sending state, last input: {lastInput.Timestamp}, next server: {lastInput.Movement.X}" +
-        //     $"inferred cf: {clientFrame}");
-        //
         // Debug.Log($"[Server:{lastFrame}] Send Response: {clientFrame}");
 
         var response = new ServerResponse
@@ -217,15 +214,7 @@ public class MyServerMovementDriver : MonoBehaviour
         if (lastFrame % 50 == 0)
         {
             var error = bufferAvg - frameBuffer;
-            if (error < -0.75f)
-            {
-                clientDilation = -2;
-            }
-            else if (error > 0.75f)
-            {
-                clientDilation = 2;
-            }
-            else if (error < -0.3f)
+            if (error < -0.3f)
             {
                 clientDilation = -1;
             }

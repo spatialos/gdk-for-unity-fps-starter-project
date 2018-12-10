@@ -5,7 +5,7 @@ using UnityEngine;
 public class StandardMovement : MyMovementUtils.IMovementProcessor
 {
     public bool Process(CharacterController controller, ClientRequest input, MovementState previousState,
-        ref MovementState newState)
+        ref MovementState newState, float deltaTime)
     {
         if (newState.DidTeleport)
         {
