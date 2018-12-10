@@ -206,70 +206,44 @@ namespace Fps
 
             Animations(state);
 
-            t += Time.deltaTime / CommandFrameSystem.FrameLength;
-            if (t > 1.0f)
-            {
-                if (nextAvailable)
-                {
-                    t -= 1.0f;
-                    if (didTeleport)
-                    {
-                        from = next;
-                        to = next;
-                        didTeleport = false;
-                    }
-                    else
-                    {
-                        from = to;
-                        to = next;
-                    }
-
-                    nextAvailable = false;
-                }
-                else
-                {
-                    // go back by a frame?
-                    // Debug.LogFormat("Next not ready, go back a frame.");
-                    t -= Time.deltaTime / CommandFrameSystem.FrameLength;
-                }
-            }
-
+            // t += Time.deltaTime / CommandFrameSystem.FrameLength;
+            // if (t > 1.0f)
+            // {
+            //     if (nextAvailable)
+            //     {
+            //         t -= 1.0f;
+            //         if (didTeleport)
+            //         {
+            //             from = next;
+            //             to = next;
+            //             didTeleport = false;
+            //         }
+            //         else
+            //         {
+            //             from = to;
+            //             to = next;
+            //         }
+            //
+            //         nextAvailable = false;
+            //     }
+            //     else
+            //     {
+            //         // go back by a frame?
+            //         // Debug.LogFormat("Next not ready, go back a frame.");
+            //         t -= Time.deltaTime / CommandFrameSystem.FrameLength;
+            //     }
+            // }
+            //
             var oldPosition = transform.position;
-            transform.position = Vector3.Lerp(from, to, t);
-            fpsVelocity = (transform.position - oldPosition).magnitude / Time.deltaTime;
+            oldPosition.y = 0;
+            // transform.position = Vector3.Lerp(from, to, t);
+            transform.position = ControllerProxy.transform.position;
+            var newPosition = transform.position;
+            newPosition.y = 0;
+            fpsVelocity = (newPosition - oldPosition).magnitude / Time.deltaTime;
         }
 
         private float fpsVelocity = -1;
-
-        private void LateUpdate()
-        {
-            if (commandFrame.NewFrame)
-            {
-                // Debug.LogFormat("Frame {0}, t:{1:00.00}, nextAvailable:{2}",
-                //     commandFrame.CurrentFrame, t, nextAvailable);
-
-                Debug.DrawLine(ControllerProxy.transform.position, ControllerProxy.transform.position + Vector3.up * 6f, Color.green, 2);
-                var state = movement.GetLatestState();
-                var pos = state.Position.ToVector3();
-                Debug.DrawLine(pos, pos + Vector3.up * 5f, Color.red, 2);
-
-                next = pos;
-                nextAvailable = true;
-                if (state.DidTeleport)
-                {
-                    didTeleport = true;
-                }
-
-                if (t + Time.deltaTime / CommandFrameSystem.FrameLength < 1.0f)
-                {
-                    // Debug.LogFormat("More than a frame behind, fast forward a tiny bit");
-                    t += 0.001f;
-                }
-
-                // from = to;
-                // to = ControllerProxy.transform.position;
-            }
-        }
 
         private IEnumerator RequestRespawn()
         {

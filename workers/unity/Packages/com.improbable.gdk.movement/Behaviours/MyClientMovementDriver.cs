@@ -21,6 +21,7 @@ public class MyClientMovementDriver : MonoBehaviour
 
     private int lastFrame = -1;
     private MovementState lastMovementState = new MovementState();
+    private int confirmedFrame = -1;
 
     private bool forwardThisFrame;
     private bool backThisFrame;
@@ -91,6 +92,43 @@ public class MyClientMovementDriver : MonoBehaviour
 
         ProcessServerResponses();
         UpdateInRateStates();
+
+        // Calculate Partial update.
+        var remainder = commandFrame.GetRemainder();
+        if (remainder > 0)
+        {
+            if (!inputState.ContainsKey(lastFrame))
+            {
+                Debug.LogWarning($"[Client {lastFrame}] No input state found for {lastFrame}");
+                return;
+            }
+
+            if (!movementState.ContainsKey(lastFrame - 1))
+            {
+                Debug.LogWarning($"[Client {lastFrame}] No movement state found for {lastFrame - 1}");
+                return;
+            }
+
+            MyMovementUtils.ApplyPartialInput(Controller, inputState[lastFrame], movementState[lastFrame - 1],
+                movementProcessors, remainder);
+        }
+        else if (remainder < 0)
+        {
+            if (!inputState.ContainsKey(lastFrame - 1))
+            {
+                Debug.LogWarning($"[Client {lastFrame}] No input state found for {(lastFrame - 1)}");
+                return;
+            }
+
+            if (!movementState.ContainsKey(lastFrame - 2))
+            {
+                Debug.LogWarning($"[Client {lastFrame}] No movement state found for {(lastFrame - 2)}");
+                return;
+            }
+
+            MyMovementUtils.ApplyPartialInput(Controller, inputState[lastFrame - 1], movementState[lastFrame - 2],
+                movementProcessors, CommandFrameSystem.FrameLength + remainder);
+        }
     }
 
     public void AddInput(bool forward, bool back, bool left, bool right, bool jump, bool sprint, bool aim, float yaw, float pitch)
@@ -117,7 +155,14 @@ public class MyClientMovementDriver : MonoBehaviour
         {
             var response = serverResponses.Dequeue();
 
-            // Debug.LogFormat($"[{lastFrame}] Server response: {response.Timestamp}");
+            //Debug.LogFormat($"[{lastFrame}] Server response: {response.Timestamp}");
+
+            if (response.Timestamp < confirmedFrame)
+            {
+                //Debug.LogWarning($"[Client {lastFrame}] Server resent already confirmed frame: {response.Timestamp}");
+                continue;
+            }
+
             if (movementState.ContainsKey(response.Timestamp))
             {
                 // Check if server agrees, which it always should.
@@ -161,17 +206,20 @@ public class MyClientMovementDriver : MonoBehaviour
                 }
                 else
                 {
-                    // Debug.LogFormat("[Client] {0} confirmed", response.Timestamp);
+                    //Debug.LogFormat("[Client] {0} confirmed", response.Timestamp);
                 }
 
+                //Debug.Log($"[Client {lastFrame}] Remove confirmed input for {response.Timestamp}");
+                confirmedFrame = response.Timestamp;
                 inputState.Remove(response.Timestamp);
+
 
                 // Remove the previous last confirmed state, keep this one around for potential velocity calculation
                 movementState.Remove(response.Timestamp - 2);
             }
             else
             {
-                Debug.LogWarningFormat("Don't have movement state for cf {0}", response.Timestamp);
+                Debug.LogWarning($"[Client {lastFrame}] Don't have movement state for cf {response.Timestamp}");
             }
 
             // update dilation

@@ -8,7 +8,8 @@ public class MyMovementUtils
 {
     public interface IMovementProcessor
     {
-        bool Process(CharacterController controller, ClientRequest input, MovementState previousState, ref MovementState newState);
+        bool Process(CharacterController controller, ClientRequest input, MovementState previousState,
+            ref MovementState newState, float deltaTime);
     }
 
     public static bool ShowDebug;
@@ -35,7 +36,7 @@ public class MyMovementUtils
         public Vector3 Origin = Vector3.zero;
 
         public bool Process(CharacterController controller, ClientRequest input, MovementState previousState,
-            ref MovementState newState)
+            ref MovementState newState, float deltaTime)
         {
             RestoreToState(controller, previousState, Origin);
             return true;
@@ -50,7 +51,7 @@ public class MyMovementUtils
     public class TerminalVelocity : IMovementProcessor
     {
         public bool Process(CharacterController controller, ClientRequest input, MovementState previousState,
-            ref MovementState newState)
+            ref MovementState newState, float deltaTime)
         {
             newState.Velocity = Vector3.ClampMagnitude(newState.Velocity.ToVector3(), movementSettings.TerminalVelocity)
                 .ToIntAbsolute();
@@ -61,7 +62,7 @@ public class MyMovementUtils
     public class Gravity : IMovementProcessor
     {
         public bool Process(CharacterController controller, ClientRequest input, MovementState previousState,
-            ref MovementState newState)
+            ref MovementState newState, float deltaTime)
         {
             if (newState.DidTeleport)
             {
@@ -71,11 +72,11 @@ public class MyMovementUtils
             var velocity = newState.Velocity.ToVector3();
             if (IsGrounded(controller) && velocity.y <= 0)
             {
-                velocity.y = -movementSettings.GroundedFallSpeed * FrameLength;
+                velocity.y = -movementSettings.GroundedFallSpeed * deltaTime;
             }
             else
             {
-                velocity += Vector3.down * movementSettings.Gravity * FrameLength;
+                velocity += Vector3.down * movementSettings.Gravity * deltaTime;
             }
 
             newState.Velocity = velocity.ToIntAbsolute();
@@ -87,7 +88,7 @@ public class MyMovementUtils
     public class SprintCooldown : IMovementProcessor
     {
         public bool Process(CharacterController controller, ClientRequest input, MovementState previousState,
-            ref MovementState newState)
+            ref MovementState newState, float deltaTime)
         {
             if (newState.DidTeleport)
             {
@@ -101,7 +102,7 @@ public class MyMovementUtils
             }
             else
             {
-                newState.SprintCooldown = Mathf.Max(previousState.SprintCooldown - FrameLength, 0);
+                newState.SprintCooldown = Mathf.Max(previousState.SprintCooldown - deltaTime, 0);
             }
 
             return true;
@@ -116,7 +117,7 @@ public class MyMovementUtils
     public class ApplyMovementProcessor : IMovementProcessor
     {
         public bool Process(CharacterController controller, ClientRequest input, MovementState previousState,
-            ref MovementState newState)
+            ref MovementState newState, float deltaTime)
         {
             if (newState.DidTeleport)
             {
@@ -128,7 +129,7 @@ public class MyMovementUtils
 
             if (controller.enabled)
             {
-                controller.Move(newState.Velocity.ToVector3() * FrameLength);
+                controller.Move(newState.Velocity.ToVector3() * deltaTime);
             }
 
             newState.Position = controller.transform.position.ToIntAbsolute();
@@ -142,7 +143,7 @@ public class MyMovementUtils
         public Vector3 Origin;
 
         public bool Process(CharacterController controller, ClientRequest input, MovementState previousState,
-            ref MovementState newState)
+            ref MovementState newState, float deltaTime)
         {
             newState.Position = (newState.Position.ToVector3() - Origin).ToIntAbsolute();
             return true;
@@ -152,7 +153,7 @@ public class MyMovementUtils
     public class AdjustVelocity : IMovementProcessor
     {
         public bool Process(CharacterController controller, ClientRequest input, MovementState previousState,
-            ref MovementState newState)
+            ref MovementState newState, float deltaTime)
         {
             // Don't adjust velocity if we teleported, since that would not produce a valid velocity.
             if (newState.DidTeleport)
@@ -162,7 +163,7 @@ public class MyMovementUtils
 
             var oldPosition = previousState.Position.ToVector3();
             var newPosition = newState.Position.ToVector3();
-            newState.Velocity = ((newPosition - oldPosition) / FrameLength).ToIntAbsolute();
+            newState.Velocity = ((newPosition - oldPosition) / deltaTime).ToIntAbsolute();
 
             return true;
         }
@@ -183,7 +184,7 @@ public class MyMovementUtils
         }
 
         public bool Process(CharacterController controller, ClientRequest input, MovementState previousState,
-            ref MovementState newState)
+            ref MovementState newState, float deltaTime)
         {
             if (hasTeleport)
             {
@@ -206,10 +207,16 @@ public class MyMovementUtils
     public static MovementState ApplyInput(
         CharacterController controller, ClientRequest input, MovementState previousState, IMovementProcessor[] processors)
     {
-        MovementState newState = new MovementState();
-        for (int i = 0; i < processors.Length; i++)
+        return ApplyPartialInput(controller, input, previousState, processors, CommandFrameSystem.FrameLength);
+    }
+
+    public static MovementState ApplyPartialInput(CharacterController controller, ClientRequest input,
+        MovementState previousState, IMovementProcessor[] processors, float deltaTime)
+    {
+        var newState = new MovementState();
+        for (var i = 0; i < processors.Length; i++)
         {
-            if (!processors[i].Process(controller, input, previousState, ref newState))
+            if (!processors[i].Process(controller, input, previousState, ref newState, deltaTime))
             {
                 break;
             }
@@ -259,6 +266,4 @@ public class MyMovementUtils
             return value;
         }
     }
-
-
 }
