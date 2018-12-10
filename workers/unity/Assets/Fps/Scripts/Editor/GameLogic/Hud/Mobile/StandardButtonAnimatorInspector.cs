@@ -6,7 +6,6 @@ using UnityEngine;
 [CanEditMultipleObjects]
 public class StandardButtonAnimatorInspector : Editor
 {
-
     private SerializedProperty m_IdleProp;
     private SerializedProperty m_OnDownProp;
     private SerializedProperty m_OnUpProp;
@@ -17,7 +16,7 @@ public class StandardButtonAnimatorInspector : Editor
     private SerializedProperty m_OnUpSpeedProp;
     private SerializedProperty m_PressedSpeedProp;
 
-    void OnEnable()
+    private void OnEnable()
     {
         m_IdleProp = serializedObject.FindProperty("IdleAnimation");
         m_OnDownProp = serializedObject.FindProperty("OnDownAnimation");
@@ -33,26 +32,38 @@ public class StandardButtonAnimatorInspector : Editor
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
-        EditorGUILayout.PropertyField(m_IdleProp);
-        EditorGUILayout.PropertyField(m_OnDownProp);
-        EditorGUILayout.PropertyField(m_PressedProp);
-        EditorGUILayout.PropertyField(m_OnUpProp);
 
+        DrawPropertiesExcluding(serializedObject,
+            m_IdleProp.name,
+            m_OnDownProp.name,
+            m_PressedProp.name,
+            m_OnUpProp.name,
+            m_IdleSpeedProp.name,
+            m_OnDownSpeedProp.name,
+            m_PressedSpeedProp.name,
+            m_OnUpSpeedProp.name);
+        
+        GUILayout.Space(10);
+
+        EditorGUILayout.PropertyField(m_IdleProp);
         if (m_IdleProp.objectReferenceValue != null)
         {
             EditorGUILayout.PropertyField(m_IdleSpeedProp);
         }
 
+        EditorGUILayout.PropertyField(m_OnDownProp);
         if (m_OnDownProp.objectReferenceValue != null)
         {
             EditorGUILayout.PropertyField(m_OnDownSpeedProp);
         }
 
+        EditorGUILayout.PropertyField(m_PressedProp);
         if (m_PressedProp.objectReferenceValue != null)
         {
             EditorGUILayout.PropertyField(m_PressedSpeedProp);
         }
 
+        EditorGUILayout.PropertyField(m_OnUpProp);
         if (m_OnUpProp.objectReferenceValue != null)
         {
             EditorGUILayout.PropertyField(m_OnUpSpeedProp);
