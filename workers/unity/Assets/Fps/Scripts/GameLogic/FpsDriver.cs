@@ -127,17 +127,6 @@ namespace Fps
                 return;
             }
 
-            // Manually fudge command frame length.
-            if (Input.GetKeyDown(KeyCode.I))
-            {
-                commandFrame.ManualFudge -= 0.05f;
-            }
-
-            if (Input.GetKeyDown(KeyCode.O))
-            {
-                commandFrame.ManualFudge += 0.05f;
-            }
-
             // Debug
             if (Input.GetKeyDown(KeyCode.K))
             {

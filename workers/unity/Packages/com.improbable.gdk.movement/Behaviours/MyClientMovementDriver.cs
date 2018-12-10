@@ -313,13 +313,11 @@ public class MyClientMovementDriver : MonoBehaviour
         }
 
         GUI.Label(new Rect(10, 10, 700, 20),
-            string.Format("Frame: {0:00.00}, Fudge: {1:00.00}, Adjustment: {2:00.00}, rate: {3:00.00}, avg: {4:00.00}, var: {5:00.00}",
+            string.Format("Frame: {0:00.00}, Server Adjustment: {1:00.00}, Adjustment: {2:00.00}, Frames Left: {3:00.00}",
                 CommandFrameSystem.FrameLength,
-                commandFrame.ManualFudge,
                 commandFrame.ServerAdjustment,
-                GetInputSendRate(),
-                averageRate,
-                rateVar));
+                commandFrame.currentFrameAdjustment * 1000f,
+                commandFrame.adjustmentFramesLeft));
     }
 
     private Queue<float> outRate = new Queue<float>(50);
