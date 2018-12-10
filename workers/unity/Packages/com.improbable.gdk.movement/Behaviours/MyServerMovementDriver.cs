@@ -21,13 +21,15 @@ public class MyServerMovementDriver : MonoBehaviour
     private Vector3 origin;
 
     private int lastFrame = -1;
-    private bool hasInput = false;
-
-    private int nextExpectedInput = -1;
-    private int nextServerFrame = -1;
+    private int firstFrame = -1;
     private int frameBuffer = 5;
+    private int nextInputFrame = -1;
 
-    private float clientDilation = 1f;
+    private float clientDilation = 0f;
+    private int bufferCount = 0;
+    private float bufferAvg = 0;
+    private const float BufferAlpha = 0.99f;
+    private int emptySamples = 0;
 
     private float rtt = (5 - 1) * 2 * CommandFrameSystem.FrameLength;
     private const float RttAlpha = 0.95f;
@@ -35,9 +37,9 @@ public class MyServerMovementDriver : MonoBehaviour
     private const int PositionRate = 30;
     private int positionTick = 0;
 
-    private ClientRequest lastInput;
+    private ClientRequest lastInput = new ClientRequest() { Timestamp = -1 };
 
-    private readonly Queue<ClientRequest> clientInputs = new Queue<ClientRequest>();
+    private readonly List<ClientRequest> clientInputs = new List<ClientRequest>();
     private readonly Dictionary<int, MovementState> movementState = new Dictionary<int, MovementState>();
 
     private readonly MyMovementUtils.RestoreStateProcessor restoreState = new MyMovementUtils.RestoreStateProcessor();
@@ -83,39 +85,34 @@ public class MyServerMovementDriver : MonoBehaviour
 
     private void OnClientInputReceived(ClientRequest request)
     {
-        // Debug.LogFormat("[Server] Received client frame {0} on frame {1}",
-        //     request.Timestamp, lastFrame);
-        UpdateRtt(request);
+        //Debug.LogFormat($"[{lastFrame}] Client Request: {request.Timestamp}");
+
+        // Debug.Log($"[Server:{lastFrame}] Receive Client Input {request.Timestamp}");
 
         if (lastFrame < 0)
         {
             return;
         }
 
-        // If this is the first client input, use it for the next cf + Buffer.
-        if (!hasInput)
+        if (firstFrame < 0)
         {
-            nextExpectedInput = request.Timestamp;
-            nextServerFrame = lastFrame + frameBuffer;
-
-            Debug.LogFormat("[Server] First Client frame {0}, applied on server frame {1}. Current frame {2}",
-                nextExpectedInput, nextServerFrame, lastFrame);
-
-            hasInput = true;
+            firstFrame = lastFrame + frameBuffer;
+            nextInputFrame = firstFrame;
+            movementState[firstFrame - 1] = server.Data.Latest.MovementState;
+            //Debug.Log($"[{lastFrame}] First Input received, applied on {firstFrame}, offset: {clientFrameOffset}");
         }
 
-        if (request.Timestamp != nextExpectedInput)
+        request.Movement.X = nextInputFrame;
+        nextInputFrame += 1;
+        //Debug.Log($"[{lastFrame} should get applied on frame: {request.Movement.X}");
+
+        // Debug.Log($"[Server {lastFrame}] Add Client Input: {request.Timestamp} ({clientInputs.Count})");
+        clientInputs.Add(request);
+
+        if (firstFrame < lastFrame)
         {
-            Debug.LogWarningFormat(
-                "[Server] Expected input frame {0}, but received {1}", nextExpectedInput, request.Timestamp);
+            UpdateRtt(request);
         }
-
-        request.Movement.X = nextServerFrame;
-
-        clientInputs.Enqueue(request);
-
-        nextServerFrame++;
-        nextExpectedInput++;
     }
 
     private void UpdateRtt(ClientRequest request)
@@ -124,7 +121,7 @@ public class MyServerMovementDriver : MonoBehaviour
         {
             var sample = Time.time - (request.AppliedDilation / 100000f);
             rtt = RttAlpha * rtt + (1 - RttAlpha) * sample;
-            frameBuffer = Mathf.CeilToInt(rtt / (2 * CommandFrameSystem.FrameLength) + 1);
+            frameBuffer = Mathf.CeilToInt(rtt / (2 * CommandFrameSystem.FrameLength)) + 2;
         }
     }
 
@@ -132,7 +129,7 @@ public class MyServerMovementDriver : MonoBehaviour
     {
         if (commandFrame.NewFrame)
         {
-            if (!hasInput)
+            if (firstFrame < 0)
             {
                 lastFrame = commandFrame.CurrentFrame;
                 return;
@@ -142,75 +139,50 @@ public class MyServerMovementDriver : MonoBehaviour
             {
                 lastFrame += 1;
 
+                if (lastFrame < firstFrame)
+                {
+                    //Debug.LogFormat($"[{lastFrame}] Skipping frame until first frame: {firstFrame}");
+                    continue;
+                }
+
                 if (clientInputs.Count > 0)
                 {
-                    var nextInputFrame = clientInputs.Peek().Movement.X;
-                    if (nextInputFrame == lastFrame)
-                    {
-                        lastInput = clientInputs.Dequeue();
-                    }
-                    else if (nextInputFrame < lastFrame)
-                    {
-                        Debug.LogWarningFormat("Next Input for frame: {0}, but next frame is: {1}",
-                            nextInputFrame, lastFrame);
-                    }
+                    lastInput = clientInputs[0];
+                    clientInputs.RemoveAt(0);
+                    // Debug.Log($"[Server {lastFrame}] Dequeue Client input {lastFrame} ({clientInputs.Count})");
                 }
                 else
                 {
-                    nextServerFrame += 1;
+                    // Debug.LogWarning($"[Server {lastFrame}] Input Missing!");
+                    // Repeat last frame, but increment timestamp?
+                    //Debug.LogFormat($"[{lastFrame} No client input, repeat previous");
+                    lastInput.Timestamp += 1;
                 }
 
                 movementState.TryGetValue(lastFrame - 1, out var previousState);
                 var state = MyMovementUtils.ApplyInput(controller, lastInput, previousState, movementProcessors);
                 movementState[lastFrame] = state;
-                SendMovement(state);
+                SendMovement(state, lastInput.Timestamp);
 
                 // Remove movement state from 10 frames ago
                 movementState.Remove(lastFrame - 10);
             }
 
-            UpdateDilation();
+            UpdateBufferAdjustment();
         }
     }
 
-
-    private MovementState SaveMovementState()
+    private void SendMovement(MovementState state, int clientFrame)
     {
-        // Debug.LogFormat("[Server] {0} = {1}", ToClienfCf(lastFrame), controller.transform.position - origin);
-        var state = new MovementState()
-        {
-            Position = (controller.transform.position - origin).ToIntAbsolute()
-        };
-        movementState.Add(lastFrame, state);
-        return state;
-    }
+        // Debug.LogFormat($"[{lastFrame} Sending state, last input: {lastInput.Timestamp}, next server: {lastInput.Movement.X}" +
+        //     $"inferred cf: {clientFrame}");
+        //
+        // Debug.Log($"[Server:{lastFrame}] Send Response: {clientFrame}");
 
-    private readonly Queue<float> bufferSizeQueue = new Queue<float>(100);
-
-    private void UpdateDilation()
-    {
-        // Don't do anything until the buffer's full for the first time.
-
-        if (bufferSizeQueue.Count < 100)
-        {
-            bufferSizeQueue.Enqueue(clientInputs.Count);
-            return;
-        }
-
-        bufferSizeQueue.Dequeue();
-        bufferSizeQueue.Enqueue(clientInputs.Count);
-
-        var error = bufferSizeQueue.Average() - frameBuffer;
-
-        clientDilation = lastFrame % 100 == 0 ? Mathf.FloorToInt(error) : 0;
-    }
-
-    private void SendMovement(MovementState state)
-    {
         var response = new ServerResponse
         {
             MovementState = state,
-            Timestamp = lastInput.Timestamp,
+            Timestamp = clientFrame,
             Yaw = lastInput.CameraYaw,
             Pitch = lastInput.CameraPitch,
             Aiming = lastInput.AimPressed,
@@ -233,9 +205,46 @@ public class MyServerMovementDriver : MonoBehaviour
         }
     }
 
+    private void UpdateBufferAdjustment()
+    {
+        bufferCount = clientInputs.Count;
+        bufferAvg = BufferAlpha * bufferAvg + (1 - BufferAlpha) * bufferCount;
+        if (bufferCount == 0)
+        {
+            emptySamples++;
+        }
+
+        if (lastFrame % 50 == 0)
+        {
+            var error = bufferAvg - frameBuffer;
+            if (error < -0.75f)
+            {
+                clientDilation = -2;
+            }
+            else if (error > 0.75f)
+            {
+                clientDilation = 2;
+            }
+            else if (error < -0.3f)
+            {
+                clientDilation = -1;
+            }
+            else if (error > 0.3f)
+            {
+                clientDilation = 1;
+            }
+
+            emptySamples = 0;
+        }
+        else
+        {
+            clientDilation = 0;
+        }
+    }
+
     public void Teleport(Vector3 spawnPosition)
     {
-        Debug.LogFormat("Mark Teleport Processor with position: {0}", spawnPosition);
+        //Debug.LogFormat("Mark Teleport Processor with position: {0}", spawnPosition);
         teleportProcessor.Teleport(spawnPosition);
     }
 
@@ -252,13 +261,11 @@ public class MyServerMovementDriver : MonoBehaviour
         var delta = clientInputs.Count - frameBuffer;
 
         GUI.Label(new Rect(10, 100 + renderLine * 20, 700, 20),
-            string.Format("Input Buffer: {0:00}, d: {1:00.00}, cd: {2:00.00}, RTT: {3:00.0}, B: {4}",
-                clientInputs.Count, delta, clientDilation, rtt * 1000f, frameBuffer));
+            string.Format("Input Buffer Sample: {0:00}, Avg: {1:00.00}, cd: {2:00.00}, RTT: {3:00.0}, B: {4}, Empty: {5}",
+                bufferCount, bufferAvg, clientDilation, rtt * 1000f, frameBuffer, emptySamples));
 
         GUI.Label(new Rect(10, 300, 700, 20),
             string.Format("Frame: {0}, Length: {1:00.0}, Remainder: {2:00.0}",
                 commandFrame.CurrentFrame, CommandFrameSystem.FrameLength * 1000f, commandFrame.GetRemainder() * 1000f));
     }
-
-
 }

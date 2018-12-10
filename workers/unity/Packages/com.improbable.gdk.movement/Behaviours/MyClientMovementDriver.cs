@@ -42,13 +42,17 @@ public class MyClientMovementDriver : MonoBehaviour
     private Dictionary<int, MovementState> movementState = new Dictionary<int, MovementState>();
     private Dictionary<int, ClientRequest> inputState = new Dictionary<int, ClientRequest>();
 
+    private Queue<ServerResponse> serverResponses = new Queue<ServerResponse>();
+
     private MyMovementUtils.IMovementProcessor[] movementProcessors = { };
 
     private void OnEnable()
     {
         spatial = GetComponent<SpatialOSComponent>();
         commandFrame = spatial.World.GetExistingManager<CommandFrameSystem>();
-        commandFrame.CurrentFrame = 0;
+        commandFrame.CurrentFrame = 1;
+        movementState[0] = serverMovement.Data.Latest.MovementState;
+        lastFrame = 0;
         serverMovement.OnServerMovement += OnServerMovement;
 
         Cursor.visible = false;
@@ -85,6 +89,7 @@ public class MyClientMovementDriver : MonoBehaviour
             commandFrame.ServerAdjustment = nextDilation;
         }
 
+        ProcessServerResponses();
         UpdateInRateStates();
     }
 
@@ -103,64 +108,79 @@ public class MyClientMovementDriver : MonoBehaviour
 
     private void OnServerMovement(ServerResponse response)
     {
-        if (movementState.ContainsKey(response.Timestamp))
+        serverResponses.Enqueue(response);
+    }
+
+    private void ProcessServerResponses()
+    {
+        while (serverResponses.Count > 0)
         {
-            // Check if server agrees, which it always should.
-            var predictionPosition = movementState[response.Timestamp].Position.ToVector3();
-            var actualPosition = response.MovementState.Position.ToVector3();
-            var distance = Vector3.Distance(predictionPosition, actualPosition);
-            if (distance > 0.1f)
+            var response = serverResponses.Dequeue();
+
+            // Debug.LogFormat($"[{lastFrame}] Server response: {response.Timestamp}");
+            if (movementState.ContainsKey(response.Timestamp))
             {
-                Debug.LogFormat("Mispredicted cf {0}", response.Timestamp);
-                Debug.LogFormat("Predicted: {0}", predictionPosition);
-                Debug.LogFormat("Actual: {0}", actualPosition);
-                Debug.LogFormat("Diff: {0}", distance);
-                Debug.LogFormat("Replaying input from {0} to {1}", response.Timestamp + 1, lastFrame);
-
-                // SaveMovementState(response.Timestamp);
-                var previousState = response.MovementState;
-                movementState[response.Timestamp] = previousState;
-
-                // Replay inputs until lastFrame, storing movementstates.
-                for (var i = response.Timestamp + 1; i <= lastFrame; i++)
+                // Check if server agrees, which it always should.
+                var predictionPosition = movementState[response.Timestamp].Position.ToVector3();
+                var actualPosition = response.MovementState.Position.ToVector3();
+                var distance = Vector3.Distance(predictionPosition, actualPosition);
+                if (distance > 0.1f)
                 {
-                    Debug.LogFormat("[Replaying Frame {0} ({1})]", i, rewindColors[rewindColorIndex]);
-                    Debug.LogFormat("Input {0}", InputToString(inputState[i]));
-                    Debug.LogFormat("Previous Position {0}", movementState[i].Position.ToVector3());
-                    Debug.LogFormat("Previous Velocity {0}", movementState[i].Velocity.ToVector3());
+                    Debug.LogFormat("Mispredicted cf {0}", response.Timestamp);
+                    Debug.LogFormat("Predicted: {0}", predictionPosition);
+                    Debug.LogFormat("Actual: {0}", actualPosition);
+                    Debug.LogFormat("Diff: {0}", distance);
+                    Debug.LogFormat("Replaying input from {0} to {1}", response.Timestamp + 1, lastFrame);
 
-                    movementState[i] = MyMovementUtils.ApplyInput(Controller, inputState[i], movementState[i - 1], movementProcessors);
+                    // SaveMovementState(response.Timestamp);
+                    var previousState = response.MovementState;
+                    movementState[response.Timestamp] = previousState;
+                    MyMovementUtils.RestoreToState(Controller, previousState, spatial.Worker.Origin);
 
-                    Debug.LogFormat("Adjusted Position: {0}", movementState[i].Position.ToVector3());
-                    Debug.DrawLine(
-                        Controller.transform.position,
-                        Controller.transform.position + Vector3.up * 500,
-                        rewindColors[rewindColorIndex], 100f);
+                    // Replay inputs until lastFrame, storing movementstates.
+                    var i = response.Timestamp + 1;
+                    while (i <= lastFrame)
+                    {
+                        Debug.LogFormat("[Replaying Frame {0} ({1})]", i, rewindColors[rewindColorIndex]);
+                        Debug.LogFormat("Input {0}", InputToString(inputState[i]));
+                        Debug.LogFormat("Previous Position {0}", movementState[i].Position.ToVector3());
+                        Debug.LogFormat("Previous Velocity {0}", movementState[i].Velocity.ToVector3());
+
+                        movementState[i] = MyMovementUtils.ApplyInput(Controller, inputState[i], movementState[i - 1], movementProcessors);
+
+                        //Debug.LogFormat("Adjusted Position: {0}", movementState[i].Position.ToVector3());
+                        Debug.DrawLine(
+                            Controller.transform.position,
+                            Controller.transform.position + Vector3.up * 500,
+                            rewindColors[rewindColorIndex], 100f);
+
+                        i++;
+                    }
+
+                    rewindColorIndex = (rewindColorIndex + 1) % rewindColors.Length;
+                }
+                else
+                {
+                    // Debug.LogFormat("[Client] {0} confirmed", response.Timestamp);
                 }
 
-                rewindColorIndex = (rewindColorIndex + 1) % rewindColors.Length;
+                inputState.Remove(response.Timestamp);
+
+                // Remove the previous last confirmed state, keep this one around for potential velocity calculation
+                movementState.Remove(response.Timestamp - 2);
             }
             else
             {
-                // Debug.LogFormat("[Client] {0} confirmed", response.Timestamp);
+                Debug.LogWarningFormat("Don't have movement state for cf {0}", response.Timestamp);
             }
 
-            inputState.Remove(response.Timestamp);
-
-            // Remove the previous last confirmed state, keep this one around for potential velocity calculation
-            movementState.Remove(response.Timestamp - 2);
+            // update dilation
+            // commandFrame.ServerAdjustment = response.TimeDelta;
+            // commandFrame.ServerAdjustment = response.NextDilation / 100000f;
+            nextDilation = response.NextDilation / 100000f;
+            lastServerTimestamp = response.AppliedDilation;
+            lastServerTimestampReceived = Time.time;
         }
-        else
-        {
-            // Debug.LogWarningFormat("Don't have movement state for cf {0}", response.Timestamp);
-        }
-
-        // update dilation
-        // commandFrame.ServerAdjustment = response.TimeDelta;
-        // commandFrame.ServerAdjustment = response.NextDilation / 100000f;
-        nextDilation = response.NextDilation / 100000f;
-        lastServerTimestamp = response.AppliedDilation;
-        lastServerTimestampReceived = Time.time;
     }
 
     private float lastInputSentTime = -1;
@@ -213,10 +233,11 @@ public class MyClientMovementDriver : MonoBehaviour
             AppliedDilation = lastServerTimestamp + (Time.time - lastServerTimestampReceived) * 100000f
         };
 
+        // Debug.Log($"[Client:{lastFrame}] Send Input");
         movement.SendClientInput(clientRequest);
 
         UpdateInputSendRate();
-        // Debug.LogFormat("[Client] Sent {0}", clientRequest.Timestamp);
+        // //Debug.LogFormat("[Client] Sent {0}", clientRequest.Timestamp);
         return clientRequest;
     }
 

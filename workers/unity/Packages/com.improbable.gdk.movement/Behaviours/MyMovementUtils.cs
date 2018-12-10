@@ -37,10 +37,14 @@ public class MyMovementUtils
         public bool Process(CharacterController controller, ClientRequest input, MovementState previousState,
             ref MovementState newState)
         {
-            controller.transform.position = previousState.Position.ToVector3() + Origin;
-
+            RestoreToState(controller, previousState, Origin);
             return true;
         }
+    }
+
+    public static void RestoreToState(CharacterController controller, MovementState state, Vector3 origin)
+    {
+        controller.transform.position = state.Position.ToVector3() + origin;
     }
 
     public class TerminalVelocity : IMovementProcessor
