@@ -25,7 +25,6 @@ public class MyServerMovementDriver : MonoBehaviour
     private int lastFrame = -1;
     private int firstFrame = -1;
     private int frameBuffer = 5;
-    private int nextInputFrame = -1;
     private int lastSentFrame = -1;
 
     private float clientDilation = 0f;
@@ -88,7 +87,7 @@ public class MyServerMovementDriver : MonoBehaviour
         restoreState.Origin = spatial.Worker.Origin;
         removeWorkerOrigin.Origin = spatial.Worker.Origin;
 
-        clientInput.OnClientInput += OnClientInputReceived;
+        clientInput.BufferUpdated += ClientInputOnBufferUpdated;
 
         lastFrame = commandFrame.CurrentFrame;
 
@@ -97,15 +96,45 @@ public class MyServerMovementDriver : MonoBehaviour
         clientInputs.Clear();
         movementState.Clear();
 
-        var proxy = GetComponent<MyServerProxyDriver>();
-        proxy.GetInitialRequests(clientInputs);
-
-        Debug.Log($"[Server-{workerIndex} {lastFrame} Found {clientInputs.Count} pending inputs, confirm frame: " +
-            $"{server.Data.Latest.Timestamp}");
+        bufferAvg = server.Data.BufferSizeAvg;
+        rtt = server.Data.Rtt;
 
         firstFrame = -1;
 
         origin = spatial.Worker.Origin;
+    }
+
+    private void ClientInputOnBufferUpdated(List<ClientRequest> buffer)
+    {
+        if (lastFrame < 0)
+        {
+            return;
+        }
+
+        if (firstFrame < 0)
+        {
+            // Debug.Log($"[Server-{workerIndex}] First Frame Setup.");
+            firstFrame = lastFrame + frameBuffer;
+            movementState[firstFrame - 1] = server.Data.Latest.MovementState;
+
+            //Debug.Log($"[{lastFrame}] First Input received, applied on {firstFrame}, offset: {clientFrameOffset}");
+        }
+
+        // Debug.Log($"[Server {lastFrame}] Clearing {clientInputs.Count} inputs.");
+        clientInputs.Clear();
+        foreach (var request in buffer)
+        {
+            if (request.Timestamp > lastSentFrame)
+            {
+                clientInputs.Add(request);
+            }
+        }
+        // Debug.Log($"[Server {lastFrame}] Added {clientInputs.Count} inputs.");
+
+        if (firstFrame < lastFrame && clientInputs.Count > 0)
+        {
+            UpdateRtt(clientInputs.Last());
+        }
     }
 
     private void OnDisable()
@@ -120,32 +149,6 @@ public class MyServerMovementDriver : MonoBehaviour
         //Debug.LogFormat($"[{lastFrame}] Client Request: {request.Timestamp}");
 
         // Debug.Log($"[Server:{lastFrame}] Receive Client Input {request.Timestamp}");
-
-        if (lastFrame < 0)
-        {
-            return;
-        }
-
-        if (firstFrame < 0)
-        {
-            Debug.Log($"[Server-{workerIndex}] First Frame Setup.");
-            firstFrame = lastFrame + frameBuffer;
-            nextInputFrame = firstFrame;
-            movementState[firstFrame - 1] = server.Data.Latest.MovementState;
-            //Debug.Log($"[{lastFrame}] First Input received, applied on {firstFrame}, offset: {clientFrameOffset}");
-        }
-
-        request.Movement.X = nextInputFrame;
-        nextInputFrame += 1;
-        // Debug.Log($"[Server {lastFrame}] should get applied on frame: {request.Movement.X}");
-
-        // Debug.Log($"[Server {lastFrame}] Add Client Input: {request.Timestamp} ({clientInputs.Count})");
-        clientInputs.Add(request);
-
-        if (firstFrame < lastFrame)
-        {
-            UpdateRtt(request);
-        }
     }
 
     private void UpdateRtt(ClientRequest request)
@@ -155,6 +158,7 @@ public class MyServerMovementDriver : MonoBehaviour
             var sample = Time.time - (request.AppliedDilation / 100000f);
             rtt = RttAlpha * rtt + (1 - RttAlpha) * sample;
             frameBuffer = Mathf.CeilToInt(rtt / (2 * CommandFrameSystem.FrameLength)) + 2;
+            // Debug.Log($"[Server {lastFrame}] Update Frame Buffer to {frameBuffer}");
         }
     }
 
@@ -186,16 +190,13 @@ public class MyServerMovementDriver : MonoBehaviour
                 }
                 else
                 {
-                    // Debug.LogWarning($"[Server {lastFrame}] Input Missing!");
-                    // Repeat last frame, but increment timestamp?
-                    // Debug.LogFormat($"[Server {lastFrame}] No client input, repeat previous");
-                    lastInput.Timestamp += 1;
+                    lastInput.Timestamp = lastInput.Timestamp + 1;
                 }
 
                 movementState.TryGetValue(lastFrame - 1, out var previousState);
                 var state = MyMovementUtils.ApplyInput(controller, lastInput, previousState, movementProcessors);
                 movementState[lastFrame] = state;
-                SendMovement(state, lastInput.Timestamp);
+                SendMovement(state);
 
                 // Remove movement state from 10 frames ago
                 movementState.Remove(lastFrame - 10);
@@ -205,14 +206,14 @@ public class MyServerMovementDriver : MonoBehaviour
         }
     }
 
-    private void SendMovement(MovementState state, int clientFrame)
+    private void SendMovement(MovementState state)
     {
         // Debug.Log($"[Server:{lastFrame}] Send Response: {clientFrame}");
 
         var response = new ServerResponse
         {
             MovementState = state,
-            Timestamp = clientFrame,
+            Timestamp = lastInput.Timestamp,
             Yaw = lastInput.CameraYaw,
             Pitch = lastInput.CameraPitch,
             Aiming = lastInput.AimPressed,
@@ -220,7 +221,12 @@ public class MyServerMovementDriver : MonoBehaviour
             AppliedDilation = (int) (Time.time * 100000f)
         };
         server.SendServerMovement(response);
-        var update = new ServerMovement.Update { Latest = response };
+        var update = new ServerMovement.Update
+        {
+            Latest = response,
+            BufferSizeAvg = bufferAvg,
+            Rtt = rtt
+        };
         server.Send(update);
 
         positionTick -= 1;
@@ -234,7 +240,12 @@ public class MyServerMovementDriver : MonoBehaviour
             });
         }
 
-        lastSentFrame = clientFrame;
+        if (lastInput.Timestamp <= lastSentFrame)
+        {
+            Debug.LogWarning($"[Server {lastFrame}] Sending Duplicate Frame. Last Frame: {lastSentFrame}, sending {lastInput.Timestamp}");
+        }
+
+        lastSentFrame = lastInput.Timestamp;
     }
 
     private void UpdateBufferAdjustment()

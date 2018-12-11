@@ -102,6 +102,15 @@ namespace Fps
             health.OnRespawn += OnRespawn;
         }
 
+        private void OnDestroy()
+        {
+            if (ControllerProxy != null)
+            {
+                Debug.Log($"Destroying Proxy for {name}");
+                Destroy(ControllerProxy);
+            }
+        }
+
         private void Update()
         {
             // Don't allow controls if in the menu.

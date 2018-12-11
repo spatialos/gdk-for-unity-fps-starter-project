@@ -47,14 +47,17 @@ component ClientMovement {
   id = 2020;
 
   ClientRequest latest = 1;
-	event ClientRequest client_input;
+  list<ClientRequest> buffer = 2;
+  event ClientRequest client_input;
 }
 
 component ServerMovement {
   id = 2021;
 
   ServerResponse latest = 1;
-	event ServerResponse server_movement;
+  float buffer_size_avg = 2;
+  float rtt = 3;
+  event ServerResponse server_movement;
   event RotationUpdate forced_rotation;
 }
 
