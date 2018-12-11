@@ -5,9 +5,6 @@ public class MobileInterfaceStandIn : IMobileInterface
 {
     public Vector2 MoveTotal { get; }
     public Vector2 LookDelta { get; }
-    public bool AreAiming { get; }
-    public bool JumpPressed { get; }
-    public bool ShootPressed { get; }
-    public bool AreFiring { get; }
-    public bool MenuPressed { get; }
+    public bool UpHeld { get; }
+    public bool DownHeld { get; }
 }

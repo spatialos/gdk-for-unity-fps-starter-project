@@ -7,11 +7,8 @@ public class MobileInterface : MonoBehaviour, IMobileInterface
     // TODO Could be possible to use Unity's inspector actions/events to hook these up instead?
     // I.e. StandardButtons are responsible for setting up links to MobileInterface
 
-    public StandardButton JumpButton;
-    public StandardButton ADSButton;
-    public StandardButton FireButtonLeft;
-    public StandardButton FireButtonRight;
-    public StandardButton MenuButton;
+    public StandardButton UpButton;
+    public StandardButton DownButton;
     public RectTransform LeftStickKnob;
     public float LeftStickMaxDistance = 100;
 
@@ -57,63 +54,43 @@ public class MobileInterface : MonoBehaviour, IMobileInterface
 
     private void OnEnable()
     {
-        JumpButton.OnButtonDown += Jump;
-        ADSButton.OnButtonDown += ToggleADS;
-        ADSButton.OnButtonUp += ToggleADS;
-        FireButtonLeft.OnButtonDown += StartFiringLeft;
-        FireButtonRight.OnButtonDown += StartFiringRight;
-        FireButtonLeft.OnButtonUp += StopFiring;
-        FireButtonRight.OnButtonUp += StopFiring;
-        MenuButton.OnButtonDown += OpenMenu;
+        UpButton.OnButtonDown += StartUp;
+        DownButton.OnButtonDown += StartDown;
+        UpButton.OnButtonUp += StopUp;
+        DownButton.OnButtonUp += StopDown;
+    }
+
+    private void StopDown(PointerEventData eventdata)
+    {
+        DownHeld = false;
+    }
+
+    private void StopUp(PointerEventData eventdata)
+    {
+        UpHeld = false;
+    }
+
+    private void StartDown(PointerEventData eventdata)
+    {
+        DownHeld = true;
+    }
+
+    public bool UpHeld { get; private set; }
+    public bool DownHeld { get; private set; }
+
+    private void StartUp(PointerEventData eventdata)
+    {
+        UpHeld = true;
     }
 
     private void OnDisable()
     {
-        JumpButton.OnButtonDown -= Jump;
-        ADSButton.OnButtonDown -= ToggleADS;
-        ADSButton.OnButtonUp -= ToggleADS;
-        FireButtonLeft.OnButtonDown -= StartFiringLeft;
-        FireButtonRight.OnButtonDown -= StartFiringRight;
-        FireButtonLeft.OnButtonUp -= StopFiring;
-        FireButtonRight.OnButtonUp -= StopFiring;
-        MenuButton.OnButtonDown -= OpenMenu;
-
+        UpButton.OnButtonDown -= StartUp;
+        DownButton.OnButtonDown -= StartDown;
+        UpButton.OnButtonUp -= StopUp;
+        DownButton.OnButtonUp -= StopDown;
         numActiveFireButtons = 0;
     }
 
 
-    private void Jump(PointerEventData data)
-    {
-        JumpPressed = true;
-    }
-
-    private void ToggleADS(PointerEventData data)
-    {
-        AreAiming = !AreAiming;
-    }
-
-    private void StartFiringLeft(PointerEventData data)
-    {
-        if (data != null)
-        {
-            analogueControls.AddBlacklistedFingerId(data.pointerId);
-        }
-
-        numActiveFireButtons++;
-    }
-
-    private void StartFiringRight(PointerEventData data)
-    {
-        numActiveFireButtons++;
-    }
-
-    private void StopFiring(PointerEventData data)
-    {
-        numActiveFireButtons--;
-    }
-
-    private void OpenMenu(PointerEventData data)
-    {
-        MenuPressed = true;
-    }
 }

@@ -12,16 +12,18 @@ public class MobileControls : MonoBehaviour, IControlProvider
 
     // TODO Currently YawDelta/PitchDelta is untested on different devices. Probably needs some more love to resolve
     // DPI/physical screen size differences.
+    public bool RespawnPressed { get; }
     public float YawDelta => mobileInterface.LookDelta.x * LookScalar;
     public float PitchDelta => mobileInterface.LookDelta.y * LookScalar;
-    public bool AreAiming => mobileInterface.AreAiming;
+    public bool AreAiming { get; }
+    public bool AreSprinting { get; }
+    public bool JumpPressed { get; }
+    public bool ShootPressed { get; }
+    public bool ShootHeld { get; }
+    public bool ConnectPressed { get; }
 
-    public bool JumpPressed => mobileInterface.JumpPressed;
-    public bool ShootPressed => mobileInterface.ShootPressed;
-    public bool ShootHeld => mobileInterface.AreFiring;
-
-    public bool MenuPressed => mobileInterface.MenuPressed;
-    public bool ConnectPressed { get; } // Not used
+    public bool UpHeld => mobileInterface.UpHeld;
+    public bool DownHeld => mobileInterface.DownHeld;
 
     // TODO Currently Movement is untested on different devices. Probably needs some more love to resolve
     // DPI/physical screen size differences.
@@ -40,37 +42,7 @@ public class MobileControls : MonoBehaviour, IControlProvider
         }
     }
 
-    public bool AreSprinting
-    {
-        get
-        {
-            if (ShootHeld)
-            {
-                return false;
-            }
-
-            var totalDistance = mobileInterface.MoveTotal.magnitude;
-            var angle = Vector2.Angle(mobileInterface.MoveTotal, Vector2.up);
-            return angle <= SprintMaxAngle && totalDistance > SprintDistanceThreshold;
-        }
-    }
-
-    // Respawn is triggered by a new touch on any part of screen
-    public bool RespawnPressed
-    {
-        get
-        {
-            foreach (var touch in Input.touches)
-            {
-                if (touch.phase == TouchPhase.Began)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-    }
+    public bool MenuPressed { get; }
 
 
     private void Awake()
