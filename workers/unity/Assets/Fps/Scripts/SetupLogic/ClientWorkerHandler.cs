@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Improbable.Gdk.Core;
+using Improbable.Gdk.Mobile;
+using UnityEngine;
 using UnityEngine.Serialization;
 
 namespace Fps
@@ -18,9 +20,9 @@ namespace Fps
 
         private GameObject currentClientWorker;
         private ConnectionController connectionController;
-        private ClientWorkerConnector workerConnector;
+        private AndroidClientWorkerConnector androidWorkerConnector;
 
-        public static ClientWorkerConnector ClientWorkerConnector => Instance.workerConnector;
+        public static WorkerConnector ClientWorkerConnector => Instance.androidWorkerConnector;
         public static ConnectionController ConnectionController => Instance.connectionController;
         public static ScreenUIController ScreenUIController => Instance.screenUIController;
         public bool ForceMobileMode;
@@ -33,12 +35,11 @@ namespace Fps
         private void Awake()
         {
             Instance = this;
-            bool mobileMode=false;
+            var mobileMode = false;
 
 #if (UNITY_IOS || UNITY_ANDROID)
             mobileMode = true;
 #endif
-
 
             if (mobileMode || ForceMobileMode)
             {
@@ -78,21 +79,28 @@ namespace Fps
             }
 
             currentClientWorker = Instantiate(clientWorkerPrefab);
-            workerConnector = currentClientWorker.GetComponent<ClientWorkerConnector>();
+            androidWorkerConnector = currentClientWorker.GetComponent<AndroidClientWorkerConnector>();
+            if (androidWorkerConnector)
+            {
+                androidWorkerConnector.UseIpAddressFromArguments();
+                androidWorkerConnector.TryConnect();
+            }
+
             connectionController = currentClientWorker.GetComponent<ConnectionController>();
             connectionController.InformOfUI(canvasCameraObj, screenUIController);
         }
 
         private void DisconnectCheck()
         {
-            if (workerConnector != null
-                && workerConnector.Worker != null
-                && !workerConnector.Worker.Connection.IsConnected)
+            if (androidWorkerConnector != null
+                && androidWorkerConnector.Worker != null
+                && !androidWorkerConnector.Worker.Connection.IsConnected)
             {
                 screenUIController.OnDisconnect();
                 Destroy(currentClientWorker);
             }
         }
+
 
         public void Quit()
         {

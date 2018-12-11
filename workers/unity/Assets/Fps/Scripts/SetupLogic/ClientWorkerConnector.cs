@@ -9,8 +9,8 @@ namespace Fps
     [RequireComponent(typeof(ConnectionController))]
     public class ClientWorkerConnector : WorkerConnectorBase
     {
-        private const string AuthPlayer = "Prefabs/UnityClient/Authoritative/Player";
-        private const string NonAuthPlayer = "Prefabs/UnityClient/NonAuthoritative/Player";
+        private const string AuthPlayer = "Prefabs/AndroidClient/Authoritative/Player";
+        private const string NonAuthPlayer = "Prefabs/AndroidClient/NonAuthoritative/Player";
 
         private ConnectionController connectScreen;
 

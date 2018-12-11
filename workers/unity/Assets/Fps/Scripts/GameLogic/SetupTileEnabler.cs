@@ -6,10 +6,10 @@ namespace Fps
     {
         private void OnEnable()
         {
-            foreach (var levelTile in ClientWorkerHandler.ClientWorkerConnector.LevelTiles)
+            /*foreach (var levelTile in ClientWorkerHandler.ClientWorkerConnector.LevelTiles)
             {
                 levelTile.PlayerTransform = transform;
-            }
+            }*/
         }
     }
 }

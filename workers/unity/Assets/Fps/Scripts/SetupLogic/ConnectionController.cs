@@ -15,7 +15,7 @@ namespace Fps
         private GameObject canvasCameraObj;
         private ScreenUIController screenUIController;
         private Animator connectButton;
-        private ClientWorkerConnector clientWorkerConnector;
+        private WorkerConnector clientWorkerConnector;
 
         private void Start()
         {
