@@ -1,5 +1,5 @@
 {
-  "template": "small",
+  "template": "small_loadbalancer_v2",
   "world": {
     "chunkEdgeLengthMeters": 50,
     "snapshots": {
@@ -13,6 +13,28 @@
       {
         "name": "bridge_qos_max_timeout",
         "value": "0"
+      },
+      {
+        "name": "max_bridge_module_load",
+        "value": "500"
+      },
+      {
+        "name": "enable_turf_enforcer_in_flight_updates",
+        "value": "true"
+      }
+    ]
+  },
+  "load_balancing": {
+    "layer_configurations": [
+      {
+        "layer": "UnityGameLogic",
+        "rectangle_grid": {
+          "cols": 2,
+          "rows": 1
+        },
+        "options": {
+          "manual_worker_connection_only": true
+        } 
       }
     ]
   },
