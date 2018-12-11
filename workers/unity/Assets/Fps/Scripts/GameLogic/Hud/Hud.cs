@@ -28,7 +28,7 @@ namespace Fps
 
         private void Awake()
         {
-            screenUIController = GameObject.Find("OnScreenUI").GetComponent<ScreenUIController>();
+            screenUIController = ClientWorkerHandler.ScreenUIController;
             healthBarController = screenUIController.GetComponentInChildren<HealthBarController>(true);
 
             postProcessObject = GameObject.FindGameObjectWithTag("PostProcessing");

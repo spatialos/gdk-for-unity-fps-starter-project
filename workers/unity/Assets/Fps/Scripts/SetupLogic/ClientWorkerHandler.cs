@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Fps
 {
@@ -8,7 +9,12 @@ namespace Fps
 
         [SerializeField] private GameObject clientWorkerPrefab;
         [SerializeField] private GameObject canvasCameraObj;
-        [SerializeField] private ScreenUIController screenUIController;
+
+        [FormerlySerializedAs("screenUIController")] [SerializeField]
+        private ScreenUIController screenUIControllerDesktop;
+
+        [SerializeField] private ScreenUIController screenUIControllerMobile;
+        private ScreenUIController screenUIController;
 
         private GameObject currentClientWorker;
         private ConnectionController connectionController;
@@ -16,6 +22,8 @@ namespace Fps
 
         public static ClientWorkerConnector ClientWorkerConnector => Instance.workerConnector;
         public static ConnectionController ConnectionController => Instance.connectionController;
+        public static ScreenUIController ScreenUIController => Instance.screenUIController;
+        public bool ForceMobileMode;
 
         public static void CreateClient()
         {
@@ -25,6 +33,30 @@ namespace Fps
         private void Awake()
         {
             Instance = this;
+            bool mobileMode=false;
+
+#if (UNITY_IOS || UNITY_ANDROID)
+            mobileMode = true;
+#endif
+
+
+            if (mobileMode || ForceMobileMode)
+            {
+                if (ForceMobileMode)
+                {
+                    Debug.LogWarning("Mobile mode is being forced on ClientWorkerHandler");
+                }
+
+                screenUIControllerMobile.gameObject.SetActive(true);
+                screenUIControllerDesktop?.gameObject.SetActive(false);
+                screenUIController = screenUIControllerMobile;
+            }
+            else
+            {
+                screenUIController = screenUIControllerDesktop;
+                screenUIControllerMobile?.gameObject.SetActive(false);
+                screenUIControllerDesktop.gameObject.SetActive(true);
+            }
         }
 
         private void Start()
