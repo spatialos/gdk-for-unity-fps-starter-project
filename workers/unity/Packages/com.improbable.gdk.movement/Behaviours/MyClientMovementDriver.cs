@@ -40,8 +40,8 @@ public class MyClientMovementDriver : MonoBehaviour
 
     private int rewindColorIndex = 0;
 
-    private Dictionary<int, MovementState> movementState = new Dictionary<int, MovementState>();
-    private Dictionary<int, ClientRequest> inputState = new Dictionary<int, ClientRequest>();
+    private SortedDictionary<int, MovementState> movementState = new SortedDictionary<int, MovementState>();
+    private SortedDictionary<int, ClientRequest> inputState = new SortedDictionary<int, ClientRequest>();
 
     private Queue<ServerResponse> serverResponses = new Queue<ServerResponse>();
 
@@ -146,6 +146,7 @@ public class MyClientMovementDriver : MonoBehaviour
 
     private void OnServerMovement(ServerResponse response)
     {
+        // Debug.Log($"[Client {lastFrame}] Received state: {response.Timestamp} CF: {confirmedFrame}");
         serverResponses.Enqueue(response);
     }
 
@@ -209,7 +210,7 @@ public class MyClientMovementDriver : MonoBehaviour
                     //Debug.LogFormat("[Client] {0} confirmed", response.Timestamp);
                 }
 
-                //Debug.Log($"[Client {lastFrame}] Remove confirmed input for {response.Timestamp}");
+                // Debug.Log($"[Client {lastFrame}] Remove confirmed input for {response.Timestamp}");
                 confirmedFrame = response.Timestamp;
                 inputState.Remove(response.Timestamp);
 
@@ -228,6 +229,15 @@ public class MyClientMovementDriver : MonoBehaviour
             nextDilation = response.NextDilation / 100000f;
             lastServerTimestamp = response.AppliedDilation;
             lastServerTimestampReceived = Time.time;
+        }
+
+        var keys = inputState.Keys.ToArray();
+        foreach (var key in keys)
+        {
+            if (key < confirmedFrame)
+            {
+                inputState.Remove(key);
+            }
         }
     }
 
@@ -281,8 +291,14 @@ public class MyClientMovementDriver : MonoBehaviour
             AppliedDilation = lastServerTimestamp + (Time.time - lastServerTimestampReceived) * 100000f
         };
 
+        var unackedInput = new List<ClientRequest>(inputState.Values) { clientRequest };
+
         // Debug.Log($"[Client:{lastFrame}] Send Input");
-        movement.SendClientInput(clientRequest);
+        // movement.SendClientInput(clientRequest);
+        movement.Send(new ClientMovement.Update
+        {
+            Buffer = unackedInput
+        });
 
         UpdateInputSendRate();
         // //Debug.LogFormat("[Client] Sent {0}", clientRequest.Timestamp);
@@ -291,6 +307,7 @@ public class MyClientMovementDriver : MonoBehaviour
 
     private void SaveInputState(ClientRequest request)
     {
+        // Debug.Log($"[Client {lastFrame}] Save input state timestamp: {request.Timestamp}. ConfirmFrame: {confirmedFrame}");
         inputState.Add(lastFrame, request);
     }
 
@@ -312,12 +329,18 @@ public class MyClientMovementDriver : MonoBehaviour
             return;
         }
 
+        var minKey = inputState.Count > 0 ? inputState.Keys.Min() : -1;
+        var maxKey = inputState.Count > 0 ? inputState.Keys.Max() : -1;
+
         GUI.Label(new Rect(10, 10, 700, 20),
-            string.Format("Frame: {0:00.00}, Server Adjustment: {1:00.00}, Adjustment: {2:00.00}, Frames Left: {3:00.00}",
-                CommandFrameSystem.FrameLength,
-                commandFrame.ServerAdjustment,
-                commandFrame.currentFrameAdjustment * 1000f,
-                commandFrame.adjustmentFramesLeft));
+            $"Fr: {(CommandFrameSystem.FrameLength * 1000f)}," +
+            $"Svr Adj: {commandFrame.ServerAdjustment}," +
+            $"Adj: {(commandFrame.currentFrameAdjustment * 1000f)}," +
+            $"FL: {commandFrame.adjustmentFramesLeft}," +
+            $"CF: {confirmedFrame}," +
+            $"LB: {inputState.Count} ({serverMovement.Data.BufferSizeAvg})," +
+            $"SB: {movement.Data.Buffer.Count}," +
+            $"B: {minKey} - {maxKey}");
     }
 
     private Queue<float> outRate = new Queue<float>(50);

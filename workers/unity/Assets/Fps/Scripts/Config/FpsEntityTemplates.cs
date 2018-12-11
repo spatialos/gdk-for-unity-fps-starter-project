@@ -12,8 +12,8 @@ namespace Fps
 {
     public static class FpsEntityTemplates
     {
-        private static readonly List<string> AllWorkerAttributes =
-            new List<string> { WorkerUtils.UnityGameLogic, WorkerUtils.UnityClient, WorkerUtils.SimulatedPlayer };
+        private static readonly System.Collections.Generic.List<string> AllWorkerAttributes =
+            new System.Collections.Generic.List<string> { WorkerUtils.UnityGameLogic, WorkerUtils.UnityClient, WorkerUtils.SimulatedPlayer };
 
         public static EntityTemplate Spawner()
         {
@@ -54,14 +54,14 @@ namespace Fps
                 }
             };
 
-            var serverMovement = ServerMovement.Component.CreateSchemaComponentData(serverResponse);
+            var serverMovement = ServerMovement.Component.CreateSchemaComponentData(serverResponse, 0, 0);
             var clientMovementData = new ClientRequest();
             var rotationUpdate = new RotationUpdate
             {
                 Yaw = spawnYaw.ToInt1k(),
                 Pitch = spawnPitch.ToInt1k()
             };
-            var clientMovement = ClientMovement.Component.CreateSchemaComponentData(clientMovementData);
+            var clientMovement = ClientMovement.Component.CreateSchemaComponentData(clientMovementData, new List<ClientRequest>());
             var clientRotation = ClientRotation.Component.CreateSchemaComponentData(rotationUpdate);
             var shootingComponent = ShootingComponent.Component.CreateSchemaComponentData();
             var gunStateComponent = GunStateComponent.Component.CreateSchemaComponentData(false);
