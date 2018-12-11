@@ -26,34 +26,7 @@
       ],
       "load_balancing": {
         "auto_hex_grid": {
-          "num_workers": 1
-        }
-      }
-    },
-    {
-      "worker_type": "SimulatedPlayerCoordinator",
-      "flags": [
-        {
-          "name": "world_size",
-          "value": "small"
-        },
-        {
-          "name": "fps_simulated_players_per_coordinator",
-          "value": "0"
-        },
-        {
-          "name": "fps_simulated_players_creation_interval",
-          "value": "2"
-        }
-      ],
-      "permissions": [
-        {
-          "all": {}
-        }
-      ],
-      "load_balancing": {
-        "auto_hex_grid": {
-          "num_workers": 1
+          "num_workers": 4
         }
       }
     },

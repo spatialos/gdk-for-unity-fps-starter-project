@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Improbable;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.Movement;
 using Improbable.Gdk.StandardTypes;
+using Improbable.Worker.CInterop;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
@@ -24,6 +26,7 @@ public class MyServerMovementDriver : MonoBehaviour
     private int firstFrame = -1;
     private int frameBuffer = 5;
     private int nextInputFrame = -1;
+    private int lastSentFrame = -1;
 
     private float clientDilation = 0f;
     private int bufferCount = 0;
@@ -48,8 +51,15 @@ public class MyServerMovementDriver : MonoBehaviour
 
     private MyMovementUtils.IMovementProcessor[] movementProcessors;
 
+    public int workerIndex = -1;
+
+    private static int nextWorkerIndex = 0;
+
     private void Awake()
     {
+        workerIndex = nextWorkerIndex;
+        nextWorkerIndex++;
+
         controller = GetComponent<CharacterController>();
         renderLine = nextRenderLine;
         nextRenderLine += 1;
@@ -80,7 +90,29 @@ public class MyServerMovementDriver : MonoBehaviour
 
         clientInput.OnClientInput += OnClientInputReceived;
 
+        lastFrame = commandFrame.CurrentFrame;
+
+        Debug.Log($"[Server-{workerIndex} {lastFrame}] Enabled");
+
+        clientInputs.Clear();
+        movementState.Clear();
+
+        var proxy = GetComponent<MyServerProxyDriver>();
+        proxy.GetInitialRequests(clientInputs);
+
+        Debug.Log($"[Server-{workerIndex} {lastFrame} Found {clientInputs.Count} pending inputs, confirm frame: " +
+            $"{server.Data.Latest.Timestamp}");
+
+        firstFrame = -1;
+
         origin = spatial.Worker.Origin;
+    }
+
+    private void OnDisable()
+    {
+        Debug.Log($"[Server-{workerIndex} {lastFrame}] Disabled.");
+        Debug.Log($"[Server-{workerIndex} {lastFrame}] have {clientInputs.Count} pending.");
+        Debug.Log($"[Server-{workerIndex} {lastFrame}] last sent frame: {lastSentFrame}");
     }
 
     private void OnClientInputReceived(ClientRequest request)
@@ -96,6 +128,7 @@ public class MyServerMovementDriver : MonoBehaviour
 
         if (firstFrame < 0)
         {
+            Debug.Log($"[Server-{workerIndex}] First Frame Setup.");
             firstFrame = lastFrame + frameBuffer;
             nextInputFrame = firstFrame;
             movementState[firstFrame - 1] = server.Data.Latest.MovementState;
@@ -200,6 +233,8 @@ public class MyServerMovementDriver : MonoBehaviour
                 Coords = new Option<Coordinates>(new Coordinates(pos.x, pos.y, pos.z))
             });
         }
+
+        lastSentFrame = clientFrame;
     }
 
     private void UpdateBufferAdjustment()
@@ -211,7 +246,7 @@ public class MyServerMovementDriver : MonoBehaviour
             emptySamples++;
         }
 
-        if (lastFrame % 50 == 0)
+        if (lastFrame % CommandFrameSystem.AdjustmentFrames == 0)
         {
             var error = bufferAvg - frameBuffer;
             if (error < -0.3f)
