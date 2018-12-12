@@ -31,6 +31,8 @@ public class MyMovementUtils
         InAirDamping = 0.05f
     };
 
+    public const int ConstantInputBufferExtra = 2;
+
     public class RestoreStateProcessor : IMovementProcessor
     {
         public Vector3 Origin = Vector3.zero;
@@ -232,6 +234,11 @@ public class MyMovementUtils
     // {
     //     return Physics.CheckSphere(controller.transform.position, 0.1f, LayerMask.GetMask("Default"));
     // }
+
+    public static int CalculateInputBufferSize(float rtt)
+    {
+        return Mathf.CeilToInt(rtt / (2 * CommandFrameSystem.FrameLength)) + ConstantInputBufferExtra;
+    }
 
     public class PidController
     {

@@ -67,14 +67,7 @@ public class MyClientMovementDriver : MonoBehaviour
     {
         var rtt = serverMovement.Data.Rtt;
 
-        if (rtt > 0)
-        {
-            frameBuffer = Mathf.CeilToInt(serverMovement.Data.Rtt / (2 * CommandFrameSystem.FrameLength)) + 1;
-        }
-        else
-        {
-            frameBuffer = 100;
-        }
+        frameBuffer = rtt > 0 ? MyMovementUtils.CalculateInputBufferSize(rtt) : 100;
     }
 
     private void Update()
@@ -87,8 +80,15 @@ public class MyClientMovementDriver : MonoBehaviour
                 commandFrame.Resume();
                 return;
             }
+            else if (inputState.Count < movement.Data.Buffer.Count)
+            {
+                Debug.Log($"[Client {lastFrame}] Paused, buffer now: {inputState.Count}");
+                movement.Send(new ClientMovement.Update()
+                {
+                    Buffer = new List<ClientRequest>(inputState.Values)
+                });
+            }
         }
-
 
         if (commandFrame.NewFrame)
         {
@@ -100,7 +100,7 @@ public class MyClientMovementDriver : MonoBehaviour
                 movementState.TryGetValue(lastFrame - 1, out var previousState);
                 lastMovementState = MyMovementUtils.ApplyInput(Controller, input, previousState, movementProcessors);
                 movementState[lastFrame] = lastMovementState;
-                SaveInputState(input);
+                inputState.Add(lastFrame, input);
             }
 
             forwardThisFrame = false;
@@ -294,12 +294,6 @@ public class MyClientMovementDriver : MonoBehaviour
 
         // //Debug.LogFormat("[Client] Sent {0}", clientRequest.Timestamp);
         return clientRequest;
-    }
-
-    private void SaveInputState(ClientRequest request)
-    {
-        // Debug.Log($"[Client {lastFrame}] Save input state timestamp: {request.Timestamp}. ConfirmFrame: {confirmedFrame}");
-        inputState.Add(lastFrame, request);
     }
 
     public MovementState GetLatestState()

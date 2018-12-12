@@ -140,7 +140,7 @@ public class MyServerMovementDriver : MonoBehaviour
         {
             var sample = Time.time - (request.AppliedDilation / 100000f);
             rtt = RttAlpha * rtt + (1 - RttAlpha) * sample;
-            frameBuffer = Mathf.CeilToInt(rtt / (2 * CommandFrameSystem.FrameLength)) + 1;
+            frameBuffer = MyMovementUtils.CalculateInputBufferSize(rtt);
             // Debug.Log($"[Server {lastFrame}] Update Frame Buffer to {frameBuffer}");
         }
     }
