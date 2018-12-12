@@ -46,9 +46,7 @@ type RotationUpdate {
 component ClientMovement {
   id = 2020;
 
-  ClientRequest latest = 1;
-  list<ClientRequest> buffer = 2;
-  event ClientRequest client_input;
+  list<ClientRequest> buffer = 1;
 }
 
 component ServerMovement {

@@ -55,13 +55,12 @@ namespace Fps
             };
 
             var serverMovement = ServerMovement.Component.CreateSchemaComponentData(serverResponse, 0, 0);
-            var clientMovementData = new ClientRequest();
             var rotationUpdate = new RotationUpdate
             {
                 Yaw = spawnYaw.ToInt1k(),
                 Pitch = spawnPitch.ToInt1k()
             };
-            var clientMovement = ClientMovement.Component.CreateSchemaComponentData(clientMovementData, new List<ClientRequest>());
+            var clientMovement = ClientMovement.Component.CreateSchemaComponentData(new List<ClientRequest>());
             var clientRotation = ClientRotation.Component.CreateSchemaComponentData(rotationUpdate);
             var shootingComponent = ShootingComponent.Component.CreateSchemaComponentData();
             var gunStateComponent = GunStateComponent.Component.CreateSchemaComponentData(false);

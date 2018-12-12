@@ -17,7 +17,7 @@ public class MyServerProxyDriver : MonoBehaviour
     private void OnEnable()
     {
         server.OnServerMovement += ServerOnOnServerMovement;
-        clientInput.OnClientInput += ClientInputOnOnClientInput;
+        // clientInput.OnClientInput += ClientInputOnOnClientInput;
         server.AuthorityChanged += ServerOnAuthorityChanged;
 
         workerIndex = GetComponent<MyServerMovementDriver>().workerIndex;

@@ -302,8 +302,8 @@ namespace Improbable.Gdk.Movement
                         // TimeDelta = timeDelta,
                         Timestamp = messageStamp
                     };
-                    var update = new ClientMovement.Update { Latest = new Option<ClientRequest>(clientRequest) };
-                    client.Send(update);
+                    // var update = new ClientMovement.Update { Latest = new Option<ClientRequest>(clientRequest) };
+                    // client.Send(update);
                     lastMovementStationary = !anyMovement;
                     didJump = false;
                     anyUpdate = true;
