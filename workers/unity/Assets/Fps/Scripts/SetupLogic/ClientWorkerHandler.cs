@@ -1,4 +1,5 @@
-﻿using Improbable.Gdk.Core;
+﻿using System.Collections.Generic;
+using Improbable.Gdk.Core;
 using Improbable.Gdk.Mobile;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -7,6 +8,9 @@ namespace Fps
 {
     public class ClientWorkerHandler : MonoBehaviour
     {
+        // TODO Rename this to AndroidWorkerHandler (AndroidClientWorkerHandler?), remove mobile directive switch,
+        // TODO and restore original ClientWorkerHandler class.
+        
         private static ClientWorkerHandler Instance;
 
         [SerializeField] private GameObject clientWorkerPrefab;
@@ -21,6 +25,8 @@ namespace Fps
         private GameObject currentClientWorker;
         private ConnectionController connectionController;
         private AndroidWorkerConnector androidWorkerConnector;
+
+        public static List<TileEnabler> LevelTiles => Instance.androidWorkerConnector.LevelTiles;
 
         public static WorkerConnector ClientWorkerConnector => Instance.androidWorkerConnector;
         public static ConnectionController ConnectionController => Instance.connectionController;
@@ -77,7 +83,7 @@ namespace Fps
             {
                 Destroy(currentClientWorker);
             }
-            
+
             currentClientWorker = Instantiate(clientWorkerPrefab);
             androidWorkerConnector = currentClientWorker.GetComponent<AndroidWorkerConnector>();
             if (androidWorkerConnector)
