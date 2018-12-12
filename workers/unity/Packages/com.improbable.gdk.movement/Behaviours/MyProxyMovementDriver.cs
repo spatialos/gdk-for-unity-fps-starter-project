@@ -146,4 +146,14 @@ public class MyProxyMovementDriver : MonoBehaviour
         GUI.Label(new Rect(10, 500, 700, 30), string.Format("Buffer Size: {0}, average: {1:00.00}, length: {2}",
             movementBuffer.Count, bufferAverage, frameLength));
     }
+
+    public bool IsGrounded()
+    {
+        if (movementBuffer.Count > 0)
+        {
+            return movementBuffer[0].MovementState.IsGrounded;
+        }
+
+        return true;
+    }
 }

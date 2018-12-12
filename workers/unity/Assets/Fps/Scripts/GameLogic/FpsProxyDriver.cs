@@ -22,10 +22,18 @@ public class FpsProxyDriver : MonoBehaviour
         movement.Controller = ControllerProxy.GetComponent<CharacterController>();
     }
 
+    private void OnDestroy()
+    {
+        if (ControllerProxy != null)
+        {
+            Destroy(ControllerProxy);
+        }
+    }
+
     private void Update()
     {
         animator.SetAiming(movement.GetAiming());
-        animator.SetGrounded(MyMovementUtils.IsGrounded(movement.Controller));
+        animator.SetGrounded(movement.IsGrounded());
         var vel = movement.GetVelocity();
         vel.y = 0;
         animator.SetMovement(vel);

@@ -74,6 +74,7 @@ namespace Fps
                 new MyMovementUtils.TerminalVelocity(),
                 new MyMovementUtils.ApplyMovementProcessor(),
                 removeOrigin,
+                new IsGroundedMovement(),
                 new MyMovementUtils.AdjustVelocity(),
             });
             shooting = GetComponent<ClientShooting>();
@@ -294,7 +295,7 @@ namespace Fps
         private void Animations(MovementState state)
         {
             fpsAnimator.SetAiming(gunState.Data.IsAiming);
-            fpsAnimator.SetGrounded(MyMovementUtils.IsGrounded(movement.Controller));
+            fpsAnimator.SetGrounded(state.IsGrounded);
             fpsAnimator.SetMovement(state.Velocity.ToVector3());
             fpsAnimator.SetPitch(pitchTransform.transform.localEulerAngles.x);
 

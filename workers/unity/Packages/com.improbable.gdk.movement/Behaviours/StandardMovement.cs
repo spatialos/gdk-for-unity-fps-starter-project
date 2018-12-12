@@ -38,7 +38,7 @@ public class StandardMovement : MyMovementUtils.IMovementProcessor
         // multiply by speed determined by sprint.
         inputVector *= speed;
 
-        if (MyMovementUtils.IsGrounded(controller))
+        if (previousState.IsGrounded)
         {
             newVelocity.z = inputVector.z;
             newVelocity.x = inputVector.x;

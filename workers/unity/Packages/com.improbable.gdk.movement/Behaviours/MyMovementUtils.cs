@@ -70,14 +70,17 @@ public class MyMovementUtils
             }
 
             var velocity = newState.Velocity.ToVector3();
-            if (IsGrounded(controller) && velocity.y <= 0)
-            {
-                velocity.y = -movementSettings.GroundedFallSpeed * deltaTime;
-            }
-            else
-            {
-                velocity += Vector3.down * movementSettings.Gravity * deltaTime;
-            }
+
+            velocity += Vector3.down * movementSettings.Gravity * deltaTime;
+
+            // if (previousState.IsGrounded && velocity.y <= 0)
+            // {
+            //     velocity.y = -movementSettings.GroundedFallSpeed * deltaTime;
+            // }
+            // else
+            // {
+            //
+            // }
 
             newState.Velocity = velocity.ToIntAbsolute();
 
@@ -225,10 +228,10 @@ public class MyMovementUtils
         return newState;
     }
 
-    public static bool IsGrounded(CharacterController controller)
-    {
-        return Physics.CheckSphere(controller.transform.position, 0.1f, LayerMask.GetMask("Default"));
-    }
+    // public static bool IsGrounded(CharacterController controller)
+    // {
+    //     return Physics.CheckSphere(controller.transform.position, 0.1f, LayerMask.GetMask("Default"));
+    // }
 
     public class PidController
     {

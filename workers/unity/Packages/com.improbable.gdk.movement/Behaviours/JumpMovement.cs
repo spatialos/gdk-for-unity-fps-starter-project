@@ -12,7 +12,7 @@ public class JumpMovement : MyMovementUtils.IMovementProcessor
             return true;
         }
 
-        var grounded = MyMovementUtils.IsGrounded(controller);
+        var grounded = previousState.IsGrounded;
         var canJump = previousState.CanJump;
         var jumpPressed = input.JumpPressed;
 
