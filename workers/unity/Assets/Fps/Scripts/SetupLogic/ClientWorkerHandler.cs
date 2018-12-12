@@ -10,7 +10,7 @@ namespace Fps
     {
         // TODO Rename this to AndroidWorkerHandler (AndroidClientWorkerHandler?), remove mobile directive switch,
         // TODO and restore original ClientWorkerHandler class.
-        
+
         private static ClientWorkerHandler Instance;
 
         [SerializeField] private GameObject clientWorkerPrefab;
@@ -86,12 +86,6 @@ namespace Fps
 
             currentClientWorker = Instantiate(clientWorkerPrefab);
             androidWorkerConnector = currentClientWorker.GetComponent<AndroidWorkerConnector>();
-            if (androidWorkerConnector)
-            {
-                androidWorkerConnector.UseIpAddressFromArguments();
-                androidWorkerConnector.TryConnect();
-            }
-
             connectionController = currentClientWorker.GetComponent<ConnectionController>();
             connectionController.InformOfUI(canvasCameraObj, screenUIController);
         }
