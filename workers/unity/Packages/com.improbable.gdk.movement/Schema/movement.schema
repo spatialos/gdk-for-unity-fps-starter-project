@@ -24,6 +24,7 @@ type MovementState {
     bool can_jump = 4;
     bool did_jump = 5;
     bool did_teleport = 6;
+    bool is_grounded = 7;
 }
 
 type ServerResponse {

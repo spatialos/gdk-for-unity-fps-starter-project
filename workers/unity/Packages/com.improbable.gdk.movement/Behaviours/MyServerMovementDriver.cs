@@ -72,6 +72,7 @@ public class MyServerMovementDriver : MonoBehaviour
             new MyMovementUtils.TerminalVelocity(),
             new MyMovementUtils.ApplyMovementProcessor(),
             removeWorkerOrigin,
+            new IsGroundedMovement(),
             new MyMovementUtils.AdjustVelocity(),
         };
     }
