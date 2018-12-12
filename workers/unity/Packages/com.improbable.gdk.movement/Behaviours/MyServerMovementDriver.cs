@@ -89,8 +89,6 @@ public class MyServerMovementDriver : MonoBehaviour
 
         lastFrame = commandFrame.CurrentFrame;
 
-        Debug.Log($"[Server-{workerIndex} {lastFrame}] Enabled");
-
         clientInputs.Clear();
         movementState.Clear();
 
@@ -133,13 +131,6 @@ public class MyServerMovementDriver : MonoBehaviour
         {
             UpdateRtt(clientInputs.Last());
         }
-    }
-
-    private void OnDisable()
-    {
-        Debug.Log($"[Server-{workerIndex} {lastFrame}] Disabled.");
-        Debug.Log($"[Server-{workerIndex} {lastFrame}] have {clientInputs.Count} pending.");
-        Debug.Log($"[Server-{workerIndex} {lastFrame}] last sent frame: {lastSentFrame}");
     }
 
     private void UpdateRtt(ClientRequest request)

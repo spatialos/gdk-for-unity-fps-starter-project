@@ -1,4 +1,5 @@
-﻿using Unity.Entities;
+﻿using System.Security.Cryptography;
+using Unity.Entities;
 using UnityEngine;
 using UnityEngine.Experimental.PlayerLoop;
 
@@ -17,8 +18,15 @@ public class CommandFrameSystem : ComponentSystem
     public float currentFrameAdjustment = 0f;
     public int adjustmentFramesLeft = 0;
 
+    private bool isPaused;
+
     protected override void OnUpdate()
     {
+        if (isPaused)
+        {
+            return;
+        }
+
         remainder += Time.deltaTime;
         NewFrame = false;
 
@@ -81,5 +89,20 @@ public class CommandFrameSystem : ComponentSystem
     public float GetRemainder()
     {
         return remainder;
+    }
+
+    public void Pause()
+    {
+        isPaused = true;
+    }
+
+    public void Resume()
+    {
+        isPaused = false;
+    }
+
+    public bool IsPaused()
+    {
+        return isPaused;
     }
 }

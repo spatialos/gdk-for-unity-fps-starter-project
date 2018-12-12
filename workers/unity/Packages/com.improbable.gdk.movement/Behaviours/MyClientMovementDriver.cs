@@ -33,6 +33,10 @@ public class MyClientMovementDriver : MonoBehaviour
     private float yawThisFrame;
     private float pitchThisFrame;
 
+    private const float NetPauseOnBufferSizeMultiplier = 10f;
+    private const float NetResumeOnBufferSizeMultiplier = 1.5f;
+    private int frameBuffer = 1000;
+
     private SortedDictionary<int, MovementState> movementState = new SortedDictionary<int, MovementState>();
     private SortedDictionary<int, ClientRequest> inputState = new SortedDictionary<int, ClientRequest>();
 
@@ -46,6 +50,7 @@ public class MyClientMovementDriver : MonoBehaviour
         commandFrame = spatial.World.GetExistingManager<CommandFrameSystem>();
         commandFrame.CurrentFrame = 1;
         movementState[0] = serverMovement.Data.Latest.MovementState;
+        UpdateFrameBuffer();
         lastFrame = 0;
         serverMovement.OnServerMovement += OnServerMovement;
 
@@ -58,8 +63,33 @@ public class MyClientMovementDriver : MonoBehaviour
         movementProcessors = processors;
     }
 
+    private void UpdateFrameBuffer()
+    {
+        var rtt = serverMovement.Data.Rtt;
+
+        if (rtt > 0)
+        {
+            frameBuffer = Mathf.CeilToInt(serverMovement.Data.Rtt / (2 * CommandFrameSystem.FrameLength)) + 2;
+        }
+        else
+        {
+            frameBuffer = 100;
+        }
+    }
+
     private void Update()
     {
+        if (commandFrame.IsPaused())
+        {
+            if (inputState.Count < frameBuffer * NetResumeOnBufferSizeMultiplier)
+            {
+                Debug.Log($"[Client {lastFrame}] Resuming network with buffer size {inputState.Count}");
+                commandFrame.Resume();
+                return;
+            }
+        }
+
+
         if (commandFrame.NewFrame)
         {
             while (lastFrame < commandFrame.CurrentFrame)
@@ -81,6 +111,12 @@ public class MyClientMovementDriver : MonoBehaviour
             sprintThisFrame = false;
             aimThisFrame = false;
             commandFrame.ServerAdjustment = nextDilation;
+
+            if (inputState.Count > frameBuffer * NetPauseOnBufferSizeMultiplier)
+            {
+                Debug.LogWarning($"[Client {lastFrame}] input buffer {inputState.Count} too large ({frameBuffer})");
+                commandFrame.Pause();
+            }
         }
 
         ProcessServerResponses();
@@ -140,6 +176,8 @@ public class MyClientMovementDriver : MonoBehaviour
     {
         // Debug.Log($"[Client {lastFrame}] Received state: {response.Timestamp} CF: {confirmedFrame}");
         serverResponses.Enqueue(response);
+
+        UpdateFrameBuffer();
     }
 
     private void ProcessServerResponses()
@@ -287,7 +325,8 @@ public class MyClientMovementDriver : MonoBehaviour
             $"CF: {confirmedFrame}," +
             $"LB: {inputState.Count} ({serverMovement.Data.BufferSizeAvg})," +
             $"SB: {movement.Data.Buffer.Count}," +
-            $"B: {minKey} - {maxKey}");
+            $"B: {minKey} - {maxKey}," +
+            $"{(commandFrame.IsPaused() ? "NET PAUSED" : "")}");
     }
 
     private void OnDrawGizmosSelected()
