@@ -1,12 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using Improbable;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.Movement;
 using Improbable.Gdk.StandardTypes;
-using Improbable.Worker.CInterop;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
@@ -142,13 +140,6 @@ public class MyServerMovementDriver : MonoBehaviour
         Debug.Log($"[Server-{workerIndex} {lastFrame}] Disabled.");
         Debug.Log($"[Server-{workerIndex} {lastFrame}] have {clientInputs.Count} pending.");
         Debug.Log($"[Server-{workerIndex} {lastFrame}] last sent frame: {lastSentFrame}");
-    }
-
-    private void OnClientInputReceived(ClientRequest request)
-    {
-        //Debug.LogFormat($"[{lastFrame}] Client Request: {request.Timestamp}");
-
-        // Debug.Log($"[Server:{lastFrame}] Receive Client Input {request.Timestamp}");
     }
 
     private void UpdateRtt(ClientRequest request)

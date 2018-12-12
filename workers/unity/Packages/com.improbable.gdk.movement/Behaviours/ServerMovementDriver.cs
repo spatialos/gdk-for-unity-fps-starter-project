@@ -38,7 +38,7 @@ namespace Improbable.Gdk.Movement
             spatialOSComponent = GetComponent<SpatialOSComponent>();
             origin = spatialOSComponent.Worker.Origin;
 
-            client.LatestUpdated += OnClientUpdate;
+            // client.LatestUpdated += OnClientUpdate;
         }
 
         private void OnClientUpdate(ClientRequest request)

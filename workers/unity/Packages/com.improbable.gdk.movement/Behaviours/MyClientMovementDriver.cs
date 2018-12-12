@@ -14,13 +14,13 @@ public class MyClientMovementDriver : MonoBehaviour
     private SpatialOSComponent spatial;
     private CommandFrameSystem commandFrame;
 
-    private int lastServerTimestamp = 0;
-    private float lastServerTimestampReceived = 0;
+    private int lastServerTimestamp = -1;
+    private float lastServerTimestampReceived = -1;
 
     private float nextDilation = 1f;
 
     private int lastFrame = -1;
-    private MovementState lastMovementState = new MovementState();
+    private MovementState lastMovementState;
     private int confirmedFrame = -1;
 
     private bool forwardThisFrame;
@@ -32,13 +32,6 @@ public class MyClientMovementDriver : MonoBehaviour
     private bool aimThisFrame;
     private float yawThisFrame;
     private float pitchThisFrame;
-
-    private Color[] rewindColors = new Color[]
-    {
-        Color.red, Color.white, Color.yellow, Color.green
-    };
-
-    private int rewindColorIndex = 0;
 
     private SortedDictionary<int, MovementState> movementState = new SortedDictionary<int, MovementState>();
     private SortedDictionary<int, ClientRequest> inputState = new SortedDictionary<int, ClientRequest>();
@@ -91,7 +84,6 @@ public class MyClientMovementDriver : MonoBehaviour
         }
 
         ProcessServerResponses();
-        UpdateInRateStates();
 
         // Calculate Partial update.
         var remainder = commandFrame.GetRemainder();
@@ -187,7 +179,6 @@ public class MyClientMovementDriver : MonoBehaviour
                     var i = response.Timestamp + 1;
                     while (i <= lastFrame)
                     {
-                        Debug.LogFormat("[Replaying Frame {0} ({1})]", i, rewindColors[rewindColorIndex]);
                         Debug.LogFormat("Input {0}", InputToString(inputState[i]));
                         Debug.LogFormat("Previous Position {0}", movementState[i].Position.ToVector3());
                         Debug.LogFormat("Previous Velocity {0}", movementState[i].Velocity.ToVector3());
@@ -197,13 +188,9 @@ public class MyClientMovementDriver : MonoBehaviour
                         //Debug.LogFormat("Adjusted Position: {0}", movementState[i].Position.ToVector3());
                         Debug.DrawLine(
                             Controller.transform.position,
-                            Controller.transform.position + Vector3.up * 500,
-                            rewindColors[rewindColorIndex], 100f);
-
+                            Controller.transform.position + Vector3.up * 500);
                         i++;
                     }
-
-                    rewindColorIndex = (rewindColorIndex + 1) % rewindColors.Length;
                 }
                 else
                 {
@@ -241,39 +228,6 @@ public class MyClientMovementDriver : MonoBehaviour
         }
     }
 
-    private float lastInputSentTime = -1;
-    private List<float> inputSendRate = new List<float>(20);
-
-    private void UpdateInputSendRate()
-    {
-        if (inputSendRate.Count >= 20)
-        {
-            inputSendRate.RemoveAt(0);
-        }
-
-        if (lastInputSentTime > 0)
-        {
-            // we have a last time to compare to.
-            var delta = Time.time - lastInputSentTime;
-            inputSendRate.Add(delta);
-            lastInputSentTime = Time.time;
-        }
-        else
-        {
-            lastInputSentTime = Time.time;
-        }
-    }
-
-    private float GetInputSendRate()
-    {
-        if (inputSendRate.Count > 0)
-        {
-            return inputSendRate.Average() / CommandFrameSystem.FrameLength;
-        }
-
-        return -1;
-    }
-
     private ClientRequest SendInput()
     {
         var clientRequest = new ClientRequest
@@ -300,7 +254,6 @@ public class MyClientMovementDriver : MonoBehaviour
             Buffer = unackedInput
         });
 
-        UpdateInputSendRate();
         // //Debug.LogFormat("[Client] Sent {0}", clientRequest.Timestamp);
         return clientRequest;
     }
@@ -309,12 +262,6 @@ public class MyClientMovementDriver : MonoBehaviour
     {
         // Debug.Log($"[Client {lastFrame}] Save input state timestamp: {request.Timestamp}. ConfirmFrame: {confirmedFrame}");
         inputState.Add(lastFrame, request);
-    }
-
-    public MovementState GetState(int frame)
-    {
-        movementState.TryGetValue(frame, out var state);
-        return state;
     }
 
     public MovementState GetLatestState()
@@ -342,30 +289,6 @@ public class MyClientMovementDriver : MonoBehaviour
             $"SB: {movement.Data.Buffer.Count}," +
             $"B: {minKey} - {maxKey}");
     }
-
-    private Queue<float> outRate = new Queue<float>(50);
-    private float averageRate = 1.0f;
-    private float rateVar = 0.0f;
-
-    private void UpdateInRateStates()
-    {
-        if (outRate.Count >= 50)
-        {
-            outRate.Dequeue();
-        }
-
-        outRate.Enqueue(GetInputSendRate());
-        averageRate = outRate.Average();
-        var absDiffs = 0f;
-
-        foreach (var rate in outRate)
-        {
-            absDiffs += Mathf.Abs(rate - averageRate);
-        }
-
-        rateVar = absDiffs / outRate.Count;
-    }
-
 
     private void OnDrawGizmosSelected()
     {
