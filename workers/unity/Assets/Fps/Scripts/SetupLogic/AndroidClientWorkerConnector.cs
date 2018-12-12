@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.Mobile;
 using UnityEngine;
@@ -76,9 +76,9 @@ namespace Fps
         {
             IpAddress = GetReceptionistHostFromArguments();
 
-            if (!string.IsNullOrEmpty(IpAddress))
+            if (string.IsNullOrEmpty(IpAddress))
             {
-                throw new ArgumentException("Unable to find ip address in arguments");
+                IpAddress = "127.0.0.1";
             }
         }
 

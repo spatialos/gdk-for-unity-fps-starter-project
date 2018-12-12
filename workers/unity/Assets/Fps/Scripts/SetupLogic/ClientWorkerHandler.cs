@@ -20,7 +20,7 @@ namespace Fps
 
         private GameObject currentClientWorker;
         private ConnectionController connectionController;
-        private AndroidClientWorkerConnector androidWorkerConnector;
+        private AndroidWorkerConnector androidWorkerConnector;
 
         public static WorkerConnector ClientWorkerConnector => Instance.androidWorkerConnector;
         public static ConnectionController ConnectionController => Instance.connectionController;
@@ -77,9 +77,9 @@ namespace Fps
             {
                 Destroy(currentClientWorker);
             }
-
+            
             currentClientWorker = Instantiate(clientWorkerPrefab);
-            androidWorkerConnector = currentClientWorker.GetComponent<AndroidClientWorkerConnector>();
+            androidWorkerConnector = currentClientWorker.GetComponent<AndroidWorkerConnector>();
             if (androidWorkerConnector)
             {
                 androidWorkerConnector.UseIpAddressFromArguments();
