@@ -69,7 +69,7 @@ public class MyClientMovementDriver : MonoBehaviour
 
         if (rtt > 0)
         {
-            frameBuffer = Mathf.CeilToInt(serverMovement.Data.Rtt / (2 * CommandFrameSystem.FrameLength)) + 2;
+            frameBuffer = Mathf.CeilToInt(serverMovement.Data.Rtt / (2 * CommandFrameSystem.FrameLength)) + 1;
         }
         else
         {
