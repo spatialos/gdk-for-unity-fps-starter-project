@@ -74,6 +74,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4173280778572240}
   - component: {fileID: 114111161770966694}
+  - component: {fileID: 114787201713034806}
   m_Layer: 0
   m_Name: Tile_Bare_2
   m_TagString: Untagged
@@ -311,3 +312,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerTransform: {fileID: 0}
   IsClient: 0
+--- !u!114 &114787201713034806
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1990942035996346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c7664287f770c47a9c53bffc90963b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ignoreLods: 0
+  MaxBakedScaleSize: 36

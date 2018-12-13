@@ -468,6 +468,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4792175581166870}
   - component: {fileID: 114394060315943342}
+  - component: {fileID: 114064962640787118}
   m_Layer: 0
   m_Name: Tile02
   m_TagString: Untagged
@@ -2438,6 +2439,19 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &114064962640787118
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1757965225133614}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c7664287f770c47a9c53bffc90963b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ignoreLods: 0
+  MaxBakedScaleSize: 36
 --- !u!114 &114394060315943342
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2449,6 +2463,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 834cfda29cc04cfca5066eec0a4f98d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PlayerTransform: {fileID: 0}
+  IsClient: 0
 --- !u!114 &114584368293652274
 MonoBehaviour:
   m_ObjectHideFlags: 1
