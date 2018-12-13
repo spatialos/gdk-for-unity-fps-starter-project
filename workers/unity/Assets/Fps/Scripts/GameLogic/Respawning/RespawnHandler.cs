@@ -26,7 +26,6 @@ namespace Fps
 
         private void OnDisable()
         {
-            respawnRequests.OnRequestRespawnRequestReceived -= OnRequestRespawn;
             StopAllCoroutines();
         }
 

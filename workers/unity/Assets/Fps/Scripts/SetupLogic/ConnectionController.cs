@@ -1,15 +1,15 @@
 using Improbable;
 using Improbable.Gdk.Core;
-using Improbable.Gdk.Subscriptions;
 using Improbable.PlayerLifecycle;
 using Improbable.Worker.CInterop;
 using UnityEngine;
+using Entity = Unity.Entities.Entity;
 
 namespace Fps
 {
     public class ConnectionController : MonoBehaviour
     {
-        [Require] private PlayerCreatorCommandSender commandSender;
+        private PlayerCreatorCommandSender commandSender;
 
         private GameObject canvasCameraObj;
         private ScreenUIController screenUIController;
@@ -41,6 +41,8 @@ namespace Fps
 
             if (clientWorkerConnector != null && clientWorkerConnector.Worker != null)
             {
+                // TODO(Andrew): Investigate a better way to get a command sender...
+                commandSender = new PlayerCreatorCommandSender(Entity.Null, clientWorkerConnector.Worker.World);
                 // Worker successfully connected
                 if (connectButton.GetCurrentAnimatorStateInfo(0).IsName("ConnectingState"))
                 {

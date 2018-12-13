@@ -26,13 +26,13 @@ namespace Fps
         [Require] private GunStateComponentWriter gunState;
         [Require] private HealthComponentReader health;
         [Require] private HealthComponentCommandSender commandSender;
+        [Require] private EntityId entityId;
 
         private ClientMovementDriver movement;
         private ClientShooting shooting;
         private ShotRayProvider shotRayProvider;
         private FpsAnimator fpsAnimator;
         private GunManager currentGun;
-        private LinkedEntityComponent linkedEntityComponent;
 
         private readonly Vector3[] cachedDirectionVectors = new Vector3[16];
         [SerializeField] private Transform pitchTransform;
@@ -61,8 +61,6 @@ namespace Fps
 
         private void OnEnable()
         {
-            linkedEntityComponent = GetComponent<LinkedEntityComponent>();
-
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
             serverMovement.OnForcedRotationEvent += OnForcedRotation;
@@ -166,7 +164,7 @@ namespace Fps
             while (true)
             {
                 commandSender?.SendRequestRespawnCommand(new HealthComponent.RequestRespawn.Request(
-                    linkedEntityComponent.EntityId, new Empty()));
+                    entityId, new Empty()));
                 yield return new WaitForSeconds(2);
             }
         }

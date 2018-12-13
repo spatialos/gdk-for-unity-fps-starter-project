@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class SimulatedPlayerProxyManager : MonoBehaviour
 {
-    private EntityId entityId;
+    [Require] private EntityId entityId;
+
     private SimulatedPlayerCoordinatorWorkerConnector coordinator;
 
     private void Start()
@@ -12,8 +13,6 @@ public class SimulatedPlayerProxyManager : MonoBehaviour
         coordinator = FindObjectOfType<SimulatedPlayerCoordinatorWorkerConnector>();
         if (coordinator != null)
         {
-            var linkedEntityComponent = GetComponent<LinkedEntityComponent>();
-            entityId = linkedEntityComponent.EntityId;
             coordinator.RegisterProxyPrefabForEntity(entityId, gameObject);
         }
     }

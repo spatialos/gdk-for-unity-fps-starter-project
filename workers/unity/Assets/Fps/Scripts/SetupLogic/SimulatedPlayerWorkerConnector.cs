@@ -2,7 +2,6 @@ using System;
 using Fps;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectCreation;
-using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.PlayerLifecycle;
 
 public class SimulatedPlayerWorkerConnector : DefaultWorkerConnector
@@ -18,8 +17,6 @@ public class SimulatedPlayerWorkerConnector : DefaultWorkerConnector
     protected override void HandleWorkerConnectionEstablished()
     {
         PlayerLifecycleHelper.AddClientSystems(Worker.World);
-
-        GameObjectRepresentationHelper.AddSystems(Worker.World);
 
         var fallback = new GameObjectCreatorFromMetadata(Worker.WorkerType,
             Worker.Origin, Worker.LogDispatcher);

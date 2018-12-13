@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SimulatedPlayerManager : MonoBehaviour
 {
-    private EntityId entityId;
+    [Require] private EntityId entityId;
     private SimulatedPlayerCoordinatorWorkerConnector coordinator;
 
     private void Start()
@@ -12,8 +12,6 @@ public class SimulatedPlayerManager : MonoBehaviour
         coordinator = FindObjectOfType<SimulatedPlayerCoordinatorWorkerConnector>();
         if (coordinator != null)
         {
-            var linkedEntityComponent = GetComponent<LinkedEntityComponent>();
-            entityId = linkedEntityComponent.EntityId;
             coordinator.RegisterLocalSimulatedPlayer(entityId, gameObject);
         }
     }

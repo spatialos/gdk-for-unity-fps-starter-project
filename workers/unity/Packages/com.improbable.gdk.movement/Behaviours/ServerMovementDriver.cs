@@ -1,3 +1,4 @@
+using Improbable.Gdk.Core;
 using Improbable.Gdk.StandardTypes;
 using Improbable.Gdk.Subscriptions;
 using Unity.Entities;
@@ -16,7 +17,6 @@ namespace Improbable.Gdk.Movement
         [SerializeField, HideInInspector] private float spatialPositionUpdateDelta;
 
         private Vector3 lastPosition;
-        private Vector3 origin;
         private float lastSpatialPositionTime;
 
         // Cache the update delta values.
@@ -43,7 +43,7 @@ namespace Improbable.Gdk.Movement
             // Move the player by the given delta.
             Move(request.Movement.ToVector3());
 
-            var positionNoOffset = transform.position - origin;
+            var positionNoOffset = transform.position - world.GetExistingManager<WorkerSystem>().Origin;
 
             // Send the update using the new position.
             var response = new ServerResponse

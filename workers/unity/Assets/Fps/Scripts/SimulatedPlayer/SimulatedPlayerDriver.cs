@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using Improbable.Common;
+using Improbable.Gdk.Core;
 using Improbable.Gdk.Guns;
 using Improbable.Gdk.Health;
 using Improbable.Gdk.Movement;
@@ -22,10 +23,10 @@ public class SimulatedPlayerDriver : MonoBehaviour
 
     [Require] private HealthComponentReader HealthReader;
     [Require] private HealthComponentCommandSender HealthCommands;
+    [Require] private EntityId entityId;
 
     private ClientMovementDriver movementDriver;
     private ClientShooting shooting;
-    private LinkedEntityComponent linkedEntityComponent;
     private NavMeshAgent agent;
     private SimulatedPlayerCoordinatorWorkerConnector coordinator;
 
@@ -67,7 +68,6 @@ public class SimulatedPlayerDriver : MonoBehaviour
     {
         HealthReader.OnHealthModifiedEvent += OnHealthModified;
         HealthReader.OnRespawnEvent += OnRespawn;
-        linkedEntityComponent = GetComponent<LinkedEntityComponent>();
         SetPlayerState(PlayerState.LookingForTarget);
     }
 
@@ -285,10 +285,10 @@ public class SimulatedPlayerDriver : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(5);
-            if (HealthCommands != null && linkedEntityComponent != null)
+            if (HealthCommands != null)
             {
                 HealthCommands.SendRequestRespawnCommand(
-                    new HealthComponent.RequestRespawn.Request(linkedEntityComponent.EntityId, new Empty()));
+                    new HealthComponent.RequestRespawn.Request(entityId, new Empty()));
             }
         }
     }

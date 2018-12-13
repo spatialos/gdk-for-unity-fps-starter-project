@@ -30,12 +30,6 @@ namespace Fps
             health.OnRespawnEvent += OnRespawn;
         }
 
-        private void OnDisable()
-        {
-            ragdollSpawner.OnRagdollSpawned -= SetRagdoll;
-            health.OnRespawnEvent -= OnRespawn;
-        }
-
         private void SetRagdoll(GameObject ragdollObject)
         {
             ragdoll = ragdollObject.GetComponent<PoolableRagdoll>();

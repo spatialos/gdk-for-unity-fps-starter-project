@@ -24,7 +24,7 @@ namespace Improbable.Gdk.Guns
             instantiatedGun = Instantiate(settings.GunModel, gunSocket);
             instantiatedGun.transform.SetParent(gunSocket);
             instantiatedGun.transform.localPosition = Vector3.zero;
-            instantiatedGun.transform.localEulerAngles = Vector3.zero;
+             instantiatedGun.transform.localEulerAngles = Vector3.zero;
 
             Gun = instantiatedGun.GetComponent<GunHandle>();
 
