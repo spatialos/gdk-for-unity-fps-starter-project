@@ -376,6 +376,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4122871558346230}
   - component: {fileID: 114283729340377856}
+  - component: {fileID: 114549104783707492}
   m_Layer: 0
   m_Name: Tile09
   m_TagString: Untagged
@@ -756,7 +757,6 @@ MeshRenderer:
   m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 2100000, guid: 0eaa540306a85a743ae6f026c45abf60, type: 2}
-  - {fileID: 2100000, guid: 0eaa540306a85a743ae6f026c45abf60, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -791,7 +791,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: 0eaa540306a85a743ae6f026c45abf60, type: 2}
   - {fileID: 2100000, guid: 0eaa540306a85a743ae6f026c45abf60, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -967,7 +966,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: 0eaa540306a85a743ae6f026c45abf60, type: 2}
   - {fileID: 2100000, guid: 0eaa540306a85a743ae6f026c45abf60, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -1213,7 +1211,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: 0eaa540306a85a743ae6f026c45abf60, type: 2}
   - {fileID: 2100000, guid: 0eaa540306a85a743ae6f026c45abf60, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -1851,6 +1848,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 834cfda29cc04cfca5066eec0a4f98d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PlayerTransform: {fileID: 0}
+  IsClient: 0
 --- !u!114 &114289054150905786
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1873,3 +1872,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbd12cde1ebf5034ebd7051385e8bac5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114549104783707492
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1848096759057558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c7664287f770c47a9c53bffc90963b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ignoreLods: 0
+  MaxBakedScaleSize: 36

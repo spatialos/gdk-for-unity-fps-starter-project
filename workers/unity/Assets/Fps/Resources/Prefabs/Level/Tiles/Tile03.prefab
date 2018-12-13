@@ -126,6 +126,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4354091387559476}
   - component: {fileID: 114230148126258796}
+  - component: {fileID: 114413083968303272}
   m_Layer: 0
   m_Name: Tile03
   m_TagString: Untagged
@@ -2272,6 +2273,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 834cfda29cc04cfca5066eec0a4f98d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PlayerTransform: {fileID: 0}
+  IsClient: 0
+--- !u!114 &114413083968303272
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1366525222565432}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c7664287f770c47a9c53bffc90963b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ignoreLods: 0
+  MaxBakedScaleSize: 36
 --- !u!114 &114511306060010258
 MonoBehaviour:
   m_ObjectHideFlags: 1

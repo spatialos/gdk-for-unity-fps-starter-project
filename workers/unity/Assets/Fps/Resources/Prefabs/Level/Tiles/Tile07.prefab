@@ -662,6 +662,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4418261659588258}
   - component: {fileID: 114733524417571548}
+  - component: {fileID: 114405718180784160}
   m_Layer: 0
   m_Name: Tile07
   m_TagString: Untagged
@@ -3176,6 +3177,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbd12cde1ebf5034ebd7051385e8bac5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114405718180784160
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1990833270802730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c7664287f770c47a9c53bffc90963b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ignoreLods: 0
+  MaxBakedScaleSize: 36
 --- !u!114 &114733524417571548
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3187,6 +3201,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 834cfda29cc04cfca5066eec0a4f98d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PlayerTransform: {fileID: 0}
+  IsClient: 0
 --- !u!205 &205200082534294962
 LODGroup:
   m_ObjectHideFlags: 1
