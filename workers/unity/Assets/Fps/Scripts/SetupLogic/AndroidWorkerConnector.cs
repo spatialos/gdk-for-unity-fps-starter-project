@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace Fps
 {
-    public class AndroidWorkerConnector : AndroidClientWorkerConnector
+    public class AndroidWorkerConnector : AndroidClientWorkerConnector, ITileProvider
     {
         private const string AuthPlayer = "Prefabs/AndroidClient/Authoritative/Player";
         private const string NonAuthPlayer = "Prefabs/AndroidClient/NonAuthoritative/Player";
@@ -27,7 +27,8 @@ namespace Fps
 
         private ConnectionController connectScreen;
 
-        public List<TileEnabler> LevelTiles = new List<TileEnabler>();
+        private List<TileEnabler> levelTiles = new List<TileEnabler>();
+        public List<TileEnabler> LevelTiles => levelTiles;
 
         private ConnectionController connectionController;
 
@@ -124,8 +125,8 @@ namespace Fps
             levelInstance = Instantiate(levelToLoad, transform.position, transform.rotation);
             levelInstance.name = $"{levelToLoad.name}({Worker.WorkerType})";
 
-            levelInstance.GetComponentsInChildren<TileEnabler>(true, LevelTiles);
-            foreach (var tileEnabler in LevelTiles)
+            levelInstance.GetComponentsInChildren<TileEnabler>(true, levelTiles);
+            foreach (var tileEnabler in levelTiles)
             {
                 tileEnabler.IsClient = true;
             }

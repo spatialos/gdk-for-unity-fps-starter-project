@@ -7,14 +7,15 @@ using Improbable.Gdk.PlayerLifecycle;
 namespace Fps
 {
     [RequireComponent(typeof(ConnectionController))]
-    public class ClientWorkerConnector : WorkerConnectorBase
+    public class ClientWorkerConnector : WorkerConnectorBase, ITileProvider
     {
-        private const string AuthPlayer = "Prefabs/AndroidClient/Authoritative/Player";
-        private const string NonAuthPlayer = "Prefabs/AndroidClient/NonAuthoritative/Player";
+        private const string AuthPlayer = "Prefabs/UnityClient/Authoritative/Player";
+        private const string NonAuthPlayer = "Prefabs/UnityClient/NonAuthoritative/Player";
 
         private ConnectionController connectScreen;
 
-        public List<TileEnabler> LevelTiles = new List<TileEnabler>();
+        private List<TileEnabler> levelTiles = new List<TileEnabler>();
+        public List<TileEnabler> LevelTiles => levelTiles;
 
         private ConnectionController connectionController;
 
@@ -67,8 +68,8 @@ namespace Fps
         {
             base.LoadWorld();
 
-            levelInstance.GetComponentsInChildren<TileEnabler>(true, LevelTiles);
-            foreach (var tileEnabler in LevelTiles)
+            levelInstance.GetComponentsInChildren<TileEnabler>(true, levelTiles);
+            foreach (var tileEnabler in levelTiles)
             {
                 tileEnabler.IsClient = true;
             }
