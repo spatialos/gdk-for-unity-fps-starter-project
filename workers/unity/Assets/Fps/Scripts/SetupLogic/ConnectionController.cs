@@ -39,7 +39,6 @@ namespace Fps
 
         private void OnCreatePlayerResponse(PlayerCreator.CreatePlayer.ReceivedResponse obj)
         {
-            Debug.LogError("OnCreatePlayerResponse");
             if (obj.StatusCode == StatusCode.Success)
             {
                 canvasCameraObj.SetActive(false);
