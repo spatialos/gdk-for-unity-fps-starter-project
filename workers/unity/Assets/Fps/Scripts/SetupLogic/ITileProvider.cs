@@ -3,5 +3,5 @@ using Fps;
 
 public interface ITileProvider
 {
-	List<TileEnabler> LevelTiles { get; }
+    List<TileEnabler> LevelTiles { get; }
 }
