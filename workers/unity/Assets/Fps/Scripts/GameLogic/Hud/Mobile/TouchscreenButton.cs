@@ -3,7 +3,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 [SelectionBase]
-public class StandardButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
+public class TouchscreenButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
 {
     [Tooltip("How long after pressing the button will register another press")]
     public float CooldownTime;
@@ -26,7 +26,7 @@ public class StandardButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     private float lastPressedTime;
 
-    private StandardButtonAnimator[] animators;
+    private TouchscreenButtonAnimator[] animators;
 
     private void OnValidate()
     {
@@ -61,7 +61,7 @@ public class StandardButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     private void Awake()
     {
-        animators = GetComponentsInChildren<StandardButtonAnimator>();
+        animators = GetComponentsInChildren<TouchscreenButtonAnimator>();
     }
 
     // Presently it is assumed the player is dead if the UI is disabled, so reset everything
@@ -90,8 +90,8 @@ public class StandardButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         foreach (var anim in animators)
         {
             anim.PlayAnimation(IsPressed
-                ? StandardButtonAnimator.AnimType.Pressed
-                : StandardButtonAnimator.AnimType.Idle);
+                ? TouchscreenButtonAnimator.AnimType.Pressed
+                : TouchscreenButtonAnimator.AnimType.Idle);
         }
     }
 
@@ -144,8 +144,8 @@ public class StandardButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         IsPressed = true;
         foreach (var anim in animators)
         {
-            anim.PlayAnimation(StandardButtonAnimator.AnimType.OnDown);
-            anim.QueueAnimation(StandardButtonAnimator.AnimType.Pressed);
+            anim.PlayAnimation(TouchscreenButtonAnimator.AnimType.OnDown);
+            anim.QueueAnimation(TouchscreenButtonAnimator.AnimType.Pressed);
         }
 
         lastPressedTime = Time.time;
@@ -162,8 +162,8 @@ public class StandardButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         IsPressed = false;
         foreach (var anim in animators)
         {
-            anim.PlayAnimation(StandardButtonAnimator.AnimType.OnUp);
-            anim.QueueAnimation(StandardButtonAnimator.AnimType.Idle);
+            anim.PlayAnimation(TouchscreenButtonAnimator.AnimType.OnUp);
+            anim.QueueAnimation(TouchscreenButtonAnimator.AnimType.Idle);
         }
 
         OnButtonUp?.Invoke(eventData);

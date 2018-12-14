@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(StandardButtonAnimator))]
+[CustomEditor(typeof(TouchscreenButtonAnimator))]
 [CanEditMultipleObjects]
 public class StandardButtonAnimatorInspector : Editor
 {
@@ -79,7 +79,7 @@ public class StandardButtonAnimatorInspector : Editor
 
     private void ApplyAnimationsToComponent()
     {
-        var buttonAnimator = target as StandardButtonAnimator;
+        var buttonAnimator = target as TouchscreenButtonAnimator;
         var animation = buttonAnimator.GetComponent<Animation>();
         var clipNames = new List<string>();
         foreach (AnimationState state in animation)

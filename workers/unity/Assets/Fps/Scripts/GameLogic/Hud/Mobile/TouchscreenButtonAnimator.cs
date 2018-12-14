@@ -2,7 +2,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Animation))]
-public class StandardButtonAnimator : MonoBehaviour
+public class TouchscreenButtonAnimator : MonoBehaviour
 {
     // START These properties are manually drawn in StandardButtonAnimatorInspector
 

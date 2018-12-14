@@ -7,11 +7,11 @@ public class MobileUI : MonoBehaviour, IMobileUI
     // TODO Could be possible to use Unity's inspector actions/events to hook these up instead?
     // I.e. StandardButtons are responsible for setting up links to MobileUI
 
-    public StandardButton JumpButton;
-    public StandardButton ADSButton;
-    public StandardButton FireButtonLeft;
-    public StandardButton FireButtonRight;
-    public StandardButton MenuButton;
+    public TouchscreenButton JumpButton;
+    public TouchscreenButton ADSButton;
+    public TouchscreenButton FireButtonLeft;
+    public TouchscreenButton FireButtonRight;
+    public TouchscreenButton MenuButton;
     public RectTransform LeftStickKnob;
     public float LeftStickMaxDistance = 100;
 
@@ -31,7 +31,7 @@ public class MobileUI : MonoBehaviour, IMobileUI
 
     private void OnValidate()
     {
-        var buttons = GetComponentsInChildren<StandardButton>();
+        var buttons = GetComponentsInChildren<TouchscreenButton>();
         foreach (var button in buttons)
         {
             button.Hitbox.color = new Color(1, 0, 0, ShowHitboxes ? .3f : 0);
