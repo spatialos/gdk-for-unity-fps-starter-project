@@ -1,11 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
+/// <summary>
+///     Gathers all MeshFilters in object and its children, and combines them all into 1 mesh
+///     with sub-meshes and materials.
+///     Additionally, stores original object scaling to vertex colours.
+///     Currently does NOT support source meshes with more than 1 material on them.
+/// </summary>
 public class MeshCombiner : MonoBehaviour
 {
+    // TODO remove LOD behaviour
+
     public bool ignoreLods;
+
+    public int MaxBakedScaleSize = 36;
 
     private void Awake()
     {
@@ -24,7 +33,8 @@ public class MeshCombiner : MonoBehaviour
 
         // Gather + combine
         var materialsAndMeshes = GatherMaterialsAndMeshes(root);
-        var allMaterialsCombined = CombineMaterialsAndMeshes(root, materialsAndMeshes);
+        var orderedKeys = GetOrderedKeys(materialsAndMeshes);
+        var allMaterialsCombined = CombineMaterialsAndMeshes(root, materialsAndMeshes, orderedKeys);
 
         // Apply to components
         var meshFilter = root.GetComponent<MeshFilter>();
@@ -41,21 +51,32 @@ public class MeshCombiner : MonoBehaviour
             meshRenderer = root.gameObject.AddComponent<MeshRenderer>();
         }
 
-        meshRenderer.sharedMaterials = materialsAndMeshes.Keys.ToArray();
+        meshRenderer.sharedMaterials = orderedKeys;
 
         // Restore position
         root.transform.position = rootInitPos;
         root.transform.rotation = rootInitRot;
     }
 
-    private static Mesh CombineMaterialsAndMeshes(Transform root,
-        Dictionary<Material, List<CombineInstance>> materialsAndMeshes)
+    private static Material[] GetOrderedKeys(Dictionary<Material, List<CombineInstance>> materialsAndMeshes)
     {
-        var materials = materialsAndMeshes.Keys;
+        var orderedKeys = new Material[materialsAndMeshes.Keys.Count];
+        var k = 0;
+        foreach (var key in materialsAndMeshes.Keys)
+        {
+            orderedKeys[k++] = key;
+        }
 
+        return orderedKeys;
+    }
+
+    private static Mesh CombineMaterialsAndMeshes(Transform root,
+        IReadOnlyDictionary<Material, List<CombineInstance>> materialsAndMeshes,
+        IEnumerable<Material> orderedMaterials)
+    {
         var singleMaterialsCombinedInstances = new List<CombineInstance>();
 
-        foreach (var material in materials)
+        foreach (var material in orderedMaterials)
         {
             var sourceMeshes = materialsAndMeshes[material];
             var singleMaterialCombined = new Mesh();
@@ -108,8 +129,6 @@ public class MeshCombiner : MonoBehaviour
 
 
             var meshRenderer = meshFilter.GetComponent<MeshRenderer>();
-
-            // TODO Look at grabbing more than 1 material.
 
             var material = meshRenderer.sharedMaterial;
             var combineInstance = new CombineInstance();
@@ -167,8 +186,6 @@ public class MeshCombiner : MonoBehaviour
 
         return lowest;
     }
-
-    public int MaxBakedScaleSize = 36;
 
     private void ApplyScaleToVertexColours(Vector3 objLocalScale, ref Mesh mesh)
     {
