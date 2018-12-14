@@ -4,13 +4,14 @@ using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.Mobile;
+using Improbable.Gdk.Mobile.Android;
 using Improbable.Gdk.PlayerLifecycle;
 using Improbable.Worker.CInterop;
 using UnityEngine;
 
 namespace Fps
 {
-    public class AndroidWorkerConnector : AndroidClientWorkerConnector, ITileProvider
+    public class AndroidWorkerConnector : MobileWorkerConnector, IMobileConnectionController, ITileProvider
     {
         private const string AuthPlayer = "Prefabs/AndroidClient/Authoritative/Player";
         private const string NonAuthPlayer = "Prefabs/AndroidClient/NonAuthoritative/Player";
@@ -31,6 +32,14 @@ namespace Fps
         public List<TileEnabler> LevelTiles => levelTiles;
 
         private ConnectionController connectionController;
+        
+        public string IpAddress { get; set; }
+        public ConnectionScreenController ConnectionScreenController { get; set; }
+
+        public async void TryConnect()
+        {
+            await Connect(WorkerUtils.AndroidClient, new ForwardingDispatcher()).ConfigureAwait(false);
+        }
 
         void Awake()
         {
@@ -42,6 +51,44 @@ namespace Fps
             Application.targetFrameRate = TargetFrameRate;
             UseIpAddressFromArguments();
             await AttemptConnect();
+        }
+
+        public void UseIpAddressFromArguments()
+        {
+            IpAddress = GetReceptionistHostFromArguments();
+
+            if (string.IsNullOrEmpty(IpAddress))
+            {
+                IpAddress = "127.0.0.1";
+            }
+        }
+
+        private string GetReceptionistHostFromArguments()
+        {
+            var arguments = LaunchArguments.GetArguments();
+            var hostIp =
+                CommandLineUtility.GetCommandLineValue(arguments, RuntimeConfigNames.ReceptionistHost, string.Empty);
+            return hostIp;
+        }
+
+        protected override string GetHostIp()
+        {
+#if UNITY_ANDROID
+            if (!string.IsNullOrEmpty(IpAddress))
+            {
+                return IpAddress;
+            }
+
+            if (Application.isMobilePlatform && AndroidDeviceInfo.ActiveDeviceType == MobileDeviceType.Virtual)
+            {
+                return AndroidDeviceInfo.EmulatorDefaultCallbackIp;
+            }
+
+            return RuntimeConfigDefaults.ReceptionistHost;
+#else
+            throw new PlatformNotSupportedException(
+                $"{nameof(AndroidClientWorkerConnector)} can only be used for the Android platform. Please check your build settings.");
+#endif
         }
 
         protected virtual string GetWorkerType()
@@ -67,11 +114,13 @@ namespace Fps
 
         protected override void HandleWorkerConnectionEstablished()
         {
+            ConnectionScreenController.OnConnectionSucceeded();
             var world = Worker.World;
 
             // Only take the Heartbeat from the PlayerLifecycleConfig Client Systems.
             world.GetOrCreateManager<HandlePlayerHeartbeatRequestSystem>();
 
+            WorkerUtils.AddClientSystems(Worker.World);
             GameObjectRepresentationHelper.AddSystems(world);
             var fallback = new GameObjectCreatorFromMetadata(Worker.WorkerType, Worker.Origin, Worker.LogDispatcher);
 
