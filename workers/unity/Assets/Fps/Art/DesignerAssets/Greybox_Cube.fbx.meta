@@ -1,50 +1,20 @@
 fileFormatVersion: 2
-guid: 2813626761d391647baff7f267949c0a
+guid: 7bc8580ae66c94944a9de232f98d1fe7
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
     100000: //RootNode
-    100002: _DesignerAssets_
-    100004: _StarterMap_
-    100006: Railing_1m_LOD0
-    100008: Railing_1m_LOD1
     400000: //RootNode
-    400002: _DesignerAssets_
-    400004: _StarterMap_
-    400006: Railing_1m_LOD0
-    400008: Railing_1m_LOD1
-    2100000: mPlaceholder_Wireframe
-    2100002: lambert9
+    2100000: Spatial_Greybox_Neutral
     2300000: //RootNode
-    2300002: Railing_1m_LOD0
-    2300004: Railing_1m_LOD1
     3300000: //RootNode
-    3300002: Railing_1m_LOD0
-    3300004: Railing_1m_LOD1
-    4300000: Railing_1m
-    4300002: Railing_1m_LOD0
-    4300004: Railing_1m_LOD1
-    6400000: //RootNode
-    6400002: Railing_1m_LOD0
-    6400004: Railing_1m_LOD1
-    20500000: //RootNode
-    2186277476908879412: ImportLogs
+    4300000: Greybox_Cube
   externalObjects:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: lambert1
-    second: {fileID: 2100000, guid: 0b80b529aaa9c31469fbda512a44d702, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: lambert9
-    second: {fileID: 2100000, guid: 0b80b529aaa9c31469fbda512a44d702, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: mPlaceholder_Wireframe
-    second: {fileID: 2100000, guid: 2422375d1ba96a049b21cb89ed52003e, type: 2}
+      name: Spatial_Greybox_Neutral
+    second: {fileID: 2100000, guid: 0eaa540306a85a743ae6f026c45abf60, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
@@ -74,18 +44,16 @@ ModelImporter:
     clipAnimations: []
     isReadable: 1
   meshes:
-    lODScreenPercentages:
-    - 0.25
-    - 0.01
+    lODScreenPercentages: []
     globalScale: 1
     meshCompression: 0
-    addColliders: 1
+    addColliders: 0
     importVisibility: 1
     importBlendShapes: 1
-    importCameras: 0
-    importLights: 0
+    importCameras: 1
+    importLights: 1
     swapUVChannels: 0
-    generateSecondaryUV: 1
+    generateSecondaryUV: 0
     useFileUnits: 1
     optimizeMeshForGPU: 1
     keepQuads: 0
@@ -96,7 +64,7 @@ ModelImporter:
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
-    useFileScale: 0
+    useFileScale: 1
     previousCalculatedGlobalScale: 1
     hasPreviousCalculatedGlobalScale: 0
   tangentSpace:
@@ -104,7 +72,7 @@ ModelImporter:
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
-  importAnimation: 0
+  importAnimation: 1
   copyAvatar: 0
   humanDescription:
     serializedVersion: 2

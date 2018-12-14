@@ -189,8 +189,16 @@ public class MeshCombiner : MonoBehaviour
 
     private void ApplyScaleToVertexColours(Vector3 objLocalScale, ref Mesh mesh)
     {
-        var colors = new Color[mesh.vertexCount];
+        var colors = new Color[mesh.colors.Length];
 
+		for (var i =0; i < mesh.colors.Length; i++) {
+			var c = mesh.colors[i];
+			c.r = Mathf.Clamp(objLocalScale.x / MaxBakedScaleSize, 0f, 1f);
+            c.g = Mathf.Clamp(objLocalScale.y / MaxBakedScaleSize, 0f, 1f);
+            c.b = Mathf.Clamp(objLocalScale.z / MaxBakedScaleSize, 0f, 1f);
+			colors[i] = c;
+		}
+		/*
         var objCol = new Color
         {
             r = Mathf.Clamp(objLocalScale.x / MaxBakedScaleSize, 0f, 1f),
@@ -201,7 +209,7 @@ public class MeshCombiner : MonoBehaviour
         for (var i = 0; i < colors.Length; i++)
         {
             colors[i] = objCol;
-        }
+        }*/
 
         mesh.colors = colors;
     }
