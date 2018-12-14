@@ -79,7 +79,7 @@ public class MobileControls : MonoBehaviour, IControlProvider
         // The InGameHUD enables a frame after the player spawns.
         // To prevent issues, a dummy mobileInterface is used until
         // the real one is found in the scene
-        mobileUI = new MobileUiStandIn();
+        mobileUI = new MobileUIStandIn();
         StartCoroutine(LocateInterface());
     }
 
