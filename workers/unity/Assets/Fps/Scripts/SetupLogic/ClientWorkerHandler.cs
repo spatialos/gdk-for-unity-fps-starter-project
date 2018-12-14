@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using Improbable.Gdk.Core;
+using Improbable.Gdk.Mobile;
+using UnityEngine;
 using UnityEngine.Serialization;
 
 namespace Fps
@@ -10,57 +13,27 @@ namespace Fps
         [SerializeField] private GameObject clientWorkerPrefab;
         [SerializeField] private GameObject canvasCameraObj;
 
-        [FormerlySerializedAs("screenUIController")] [SerializeField]
-        private ScreenUIController screenUIControllerDesktop;
-
-        [SerializeField] private ScreenUIController screenUIControllerMobile;
-        private ScreenUIController screenUIController;
+        [SerializeField] private ScreenUIController screenUIController;
 
         private GameObject currentClientWorker;
         private ConnectionController connectionController;
-        private ClientWorkerConnector workerConnector;
+        private WorkerConnector workerConnector;
+        private ITileProvider tileProvider;
 
-        public static ClientWorkerConnector ClientWorkerConnector => Instance.workerConnector;
+        public static List<TileEnabler> LevelTiles => Instance.tileProvider.LevelTiles;
+
+        public static WorkerConnector ClientWorkerConnector => Instance.workerConnector;
         public static ConnectionController ConnectionController => Instance.connectionController;
         public static ScreenUIController ScreenUIController => Instance.screenUIController;
-        public bool ForceMobileMode;
 
         public static void CreateClient()
         {
             Instance.CreateClientWorker();
         }
 
-        private void Awake()
-        {
-            Instance = this;
-            bool mobileMode=false;
-
-#if (UNITY_IOS || UNITY_ANDROID)
-            mobileMode = true;
-#endif
-
-
-            if (mobileMode || ForceMobileMode)
-            {
-                if (ForceMobileMode)
-                {
-                    Debug.LogWarning("Mobile mode is being forced on ClientWorkerHandler");
-                }
-
-                screenUIControllerMobile.gameObject.SetActive(true);
-                screenUIControllerDesktop?.gameObject.SetActive(false);
-                screenUIController = screenUIControllerMobile;
-            }
-            else
-            {
-                screenUIController = screenUIControllerDesktop;
-                screenUIControllerMobile?.gameObject.SetActive(false);
-                screenUIControllerDesktop.gameObject.SetActive(true);
-            }
-        }
-
         private void Start()
         {
+            Instance = this;
             CreateClientWorker();
         }
 
@@ -78,7 +51,8 @@ namespace Fps
             }
 
             currentClientWorker = Instantiate(clientWorkerPrefab);
-            workerConnector = currentClientWorker.GetComponent<ClientWorkerConnector>();
+            workerConnector = currentClientWorker.GetComponent<WorkerConnector>();
+            tileProvider = workerConnector as ITileProvider;
             connectionController = currentClientWorker.GetComponent<ConnectionController>();
             connectionController.InformOfUI(canvasCameraObj, screenUIController);
         }
@@ -93,6 +67,7 @@ namespace Fps
                 Destroy(currentClientWorker);
             }
         }
+
 
         public void Quit()
         {

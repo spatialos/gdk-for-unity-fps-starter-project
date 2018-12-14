@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using Improbable.Gdk.Mobile;
 
 public class MobileControls : MonoBehaviour, IControlProvider
 {
