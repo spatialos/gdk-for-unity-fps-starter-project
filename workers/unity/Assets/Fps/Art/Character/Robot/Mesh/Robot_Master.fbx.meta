@@ -1447,6 +1447,8 @@ ModelImporter:
     102882: Spine4
     102884: UpperChest
     102886: FPS_Robot_First_Person
+    102888: FPS_Robot_First_Person_LOD0
+    102890: FPS_Robot_First_Person_LOD1
     400000: Chest
     400002: FPS_Robot_LOD0
     400004: FPS_Robot_LOD1
@@ -2891,14 +2893,20 @@ ModelImporter:
     402882: Spine4
     402884: UpperChest
     402886: FPS_Robot_First_Person
+    402888: FPS_Robot_First_Person_LOD0
+    402890: FPS_Robot_First_Person_LOD1
     2100000: lambert1
     2100002: lambert2
+    2300000: FPS_Robot_LOD1
+    3300000: FPS_Robot_LOD1
     4300000: FPS_Robot_LOD0
     4300002: FPS_Robot_LOD1
     4300004: FPS_Robot_LOD2
     4300006: FPS_Robot_LOD3
     4300008: FPS_Robot_LOD4
     4300010: FPS_Robot_First_Person
+    4300012: FPS_Robot_First_Person_LOD0
+    4300014: FPS_Robot_First_Person_LOD1
     9500000: //RootNode
     13700000: FPS_Robot_LOD0
     13700002: FPS_Robot_LOD1
@@ -2906,6 +2914,8 @@ ModelImporter:
     13700006: FPS_Robot_LOD3
     13700008: FPS_Robot_LOD4
     13700010: FPS_Robot_First_Person
+    13700012: FPS_Robot_First_Person_LOD0
+    13700014: FPS_Robot_First_Person_LOD1
     20500000: //RootNode
     2186277476908879412: ImportLogs
   externalObjects:
@@ -10538,7 +10548,6 @@ ModelImporter:
     legStretch: 0.05
     feetSpacing: 0
     rootMotionBoneName: 
-    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
