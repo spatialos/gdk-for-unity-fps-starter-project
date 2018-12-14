@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public interface IMobileInterface
+public interface IMobileUI
 {
     Vector2 MoveTotal { get; }
     Vector2 LookDelta { get; }

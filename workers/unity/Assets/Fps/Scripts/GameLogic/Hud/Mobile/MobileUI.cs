@@ -2,10 +2,10 @@
 using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(MobileAnalogueControls))]
-public class MobileInterface : MonoBehaviour, IMobileInterface
+public class MobileUI : MonoBehaviour, IMobileUI
 {
     // TODO Could be possible to use Unity's inspector actions/events to hook these up instead?
-    // I.e. StandardButtons are responsible for setting up links to MobileInterface
+    // I.e. StandardButtons are responsible for setting up links to MobileUI
 
     public StandardButton JumpButton;
     public StandardButton ADSButton;
