@@ -19,7 +19,7 @@ namespace Fps
 
         private void Start()
         {
-            clientWorkerConnector = gameObject.GetComponent<ClientWorkerConnector>();
+            clientWorkerConnector = gameObject.GetComponent<WorkerConnector>();
             connectButton = screenUIController.ConnectScreen.GetComponentInChildren<Animator>();
         }
 
@@ -39,6 +39,7 @@ namespace Fps
 
         private void OnCreatePlayerResponse(PlayerCreator.CreatePlayer.ReceivedResponse obj)
         {
+            Debug.LogError("OnCreatePlayerResponse");
             if (obj.StatusCode == StatusCode.Success)
             {
                 canvasCameraObj.SetActive(false);
@@ -57,8 +58,6 @@ namespace Fps
             {
                 return;
             }
-
-            clientWorkerConnector = clientWorkerConnector ?? ClientWorkerHandler.ClientWorkerConnector;
 
             if (clientWorkerConnector != null && clientWorkerConnector.Worker != null)
             {
@@ -79,6 +78,7 @@ namespace Fps
 
         private void SpawnPlayer()
         {
+            Debug.LogError("CreatePlayerRequest");
             var request = new CreatePlayerRequestType(new Vector3f { X = 0, Y = 0, Z = 0 });
             commandSender.SendCreatePlayerRequest(new EntityId(1), request);
         }

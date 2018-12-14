@@ -11,7 +11,8 @@ using UnityEngine;
 
 namespace Fps
 {
-    public class AndroidWorkerConnector : MobileWorkerConnector, IMobileConnectionController, ITileProvider
+    [RequireComponent(typeof(ConnectionController))]
+    public class AndroidWorkerConnector : MobileWorkerConnector, ITileProvider
     {
         private const string AuthPlayer = "Prefabs/AndroidClient/Authoritative/Player";
         private const string NonAuthPlayer = "Prefabs/AndroidClient/NonAuthoritative/Player";
@@ -32,9 +33,8 @@ namespace Fps
         public List<TileEnabler> LevelTiles => levelTiles;
 
         private ConnectionController connectionController;
-        
+
         public string IpAddress { get; set; }
-        public ConnectionScreenController ConnectionScreenController { get; set; }
 
         public async void TryConnect()
         {
@@ -114,13 +114,11 @@ namespace Fps
 
         protected override void HandleWorkerConnectionEstablished()
         {
-            ConnectionScreenController.OnConnectionSucceeded();
             var world = Worker.World;
 
             // Only take the Heartbeat from the PlayerLifecycleConfig Client Systems.
             world.GetOrCreateManager<HandlePlayerHeartbeatRequestSystem>();
 
-            WorkerUtils.AddClientSystems(Worker.World);
             GameObjectRepresentationHelper.AddSystems(world);
             var fallback = new GameObjectCreatorFromMetadata(Worker.WorkerType, Worker.Origin, Worker.LogDispatcher);
 

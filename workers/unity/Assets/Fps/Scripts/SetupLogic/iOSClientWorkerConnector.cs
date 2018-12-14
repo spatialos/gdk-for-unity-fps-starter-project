@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Fps
 {
-    public class iOSClientWorkerConnector : MobileWorkerConnector, IMobileConnectionController
+    public class iOSClientWorkerConnector : MobileWorkerConnector
     {
         public string IpAddress { get; set; }
         public ConnectionScreenController ConnectionScreenController { get; set; }
@@ -25,7 +25,6 @@ namespace Fps
         protected override void HandleWorkerConnectionEstablished()
         {
             ConnectionScreenController.OnConnectionSucceeded();
-            WorkerUtils.AddClientSystems(Worker.World);
 
             if (level == null)
             {

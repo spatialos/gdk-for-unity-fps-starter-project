@@ -33,6 +33,7 @@ namespace Fps
 
         private void Start()
         {
+            Instance = this;
             CreateClientWorker();
         }
 
@@ -50,7 +51,7 @@ namespace Fps
             }
 
             currentClientWorker = Instantiate(clientWorkerPrefab);
-            workerConnector = currentClientWorker.GetComponent<AndroidWorkerConnector>();
+            workerConnector = currentClientWorker.GetComponent<WorkerConnector>();
             tileProvider = workerConnector as ITileProvider;
             connectionController = currentClientWorker.GetComponent<ConnectionController>();
             connectionController.InformOfUI(canvasCameraObj, screenUIController);

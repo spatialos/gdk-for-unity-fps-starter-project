@@ -14,10 +14,5 @@ namespace Fps
 
         public const string SimulatedPlayerCoorindator = "SimulatedPlayerCoordinator";
         public const string SimulatedPlayer = "SimulatedPlayer";
-
-        public static void AddClientSystems(World world)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
