@@ -12,7 +12,7 @@ public class SimulatedPlayerCoordinatorWorkerConnector : WorkerConnectorBase
     private const string FlagClientCount = "fps_simulated_players_per_coordinator";
     private const string FlagCreationInterval = "fps_simulated_players_creation_interval";
 
-    private static readonly Vector3 SmallWorldSize = new Vector3(148f, 100f, 148f);
+    private static readonly Vector3 SmallWorldSize = new Vector3(290f, 100f, 290f);
     private static readonly Vector3 LargeWorldSize = new Vector3(1156f, 100f, 1156f);
 
     public GameObject SimulatedPlayerWorkerConnector;
@@ -176,7 +176,13 @@ public class SimulatedPlayerCoordinatorWorkerConnector : WorkerConnectorBase
 
     public Bounds GetWorldBounds()
     {
-        var isSmall = Worker.Connection.GetWorkerFlag("world_size") == "small";
-        return new Bounds(Worker.Origin, isSmall ? SmallWorldSize : LargeWorldSize);
+        var flag = Worker.Connection.GetWorkerFlag("world_size");
+        var size = SmallWorldSize;
+        if (flag == "large")
+        {
+            size = LargeWorldSize;
+        }
+
+        return new Bounds(Worker.Origin, size);
     }
 }

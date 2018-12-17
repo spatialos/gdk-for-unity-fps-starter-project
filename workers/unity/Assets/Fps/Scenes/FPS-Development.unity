@@ -101,8 +101,8 @@ NavMeshSettings:
     agentRadius: 0.25
     agentHeight: 1.75
     agentSlope: 45
-    agentClimb: 0.6
-    ledgeDropHeight: 0
+    agentClimb: 0.3
+    ledgeDropHeight: 4
     maxJumpAcrossDistance: 0
     minRegionArea: 2
     manualCellSize: 0
@@ -1746,7 +1746,12 @@ Prefab:
     - target: {fileID: 114510834623507516, guid: a18c738cbcda9914591d9af24a618907,
         type: 2}
       propertyPath: DefaultSimulatedPlayerCount
-      value: 0
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114510834623507516, guid: a18c738cbcda9914591d9af24a618907,
+        type: 2}
+      propertyPath: DefaultSimulatedPlayerCreationInterval
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a18c738cbcda9914591d9af24a618907, type: 2}

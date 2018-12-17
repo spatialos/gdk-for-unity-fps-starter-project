@@ -5,6 +5,7 @@ using Improbable.Gdk.Guns;
 using Improbable.Gdk.Health;
 using Improbable.Gdk.Movement;
 using Unity.Entities;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -23,16 +24,23 @@ public class SimulatedPlayerDriver : MonoBehaviour
     [Require] private HealthComponent.Requirable.Reader HealthReader;
     [Require] private HealthComponent.Requirable.CommandRequestSender HealthCommands;
 
-    private ClientMovementDriver movementDriver;
+    private MyClientMovementDriver movementDriver;
     private ClientShooting shooting;
     private SpatialOSComponent spatial;
     private NavMeshAgent agent;
     private SimulatedPlayerCoordinatorWorkerConnector coordinator;
+    private CommandFrameSystem commandFrame;
+
+    private readonly JumpMovement jumpMovement = new JumpMovement();
+    private readonly MyMovementUtils.SprintCooldown sprintCooldown = new MyMovementUtils.SprintCooldown();
+    private readonly MyMovementUtils.RestoreStateProcessor restoreState = new MyMovementUtils.RestoreStateProcessor();
+    private readonly MyMovementUtils.RemoveWorkerOrigin removeOrigin = new MyMovementUtils.RemoveWorkerOrigin();
 
     private Vector3 anchorPoint;
     private const float MovementRadius = 50f;
     private const float NavMeshSnapDistance = 5f;
     private const float MinRemainingDistance = 0.3f;
+    private const float MaxAgentDeviation = 1f;
     private bool jumpNext;
     private bool sprintNext;
 
@@ -52,7 +60,20 @@ public class SimulatedPlayerDriver : MonoBehaviour
 
     private void Start()
     {
-        movementDriver = GetComponent<ClientMovementDriver>();
+        movementDriver = GetComponent<MyClientMovementDriver>();
+        movementDriver.SetMovementProcessors(new MyMovementUtils.IMovementProcessor[]
+        {
+            restoreState,
+            new StandardMovement(),
+            sprintCooldown,
+            jumpMovement,
+            new MyMovementUtils.Gravity(),
+            new MyMovementUtils.TerminalVelocity(),
+            new MyMovementUtils.ApplyMovementProcessor(),
+            removeOrigin,
+            new IsGroundedMovement(),
+            new MyMovementUtils.AdjustVelocity(),
+        });
         shooting = GetComponent<ClientShooting>();
         coordinator = FindObjectOfType<SimulatedPlayerCoordinatorWorkerConnector>();
         agent.updatePosition = false;
@@ -68,6 +89,11 @@ public class SimulatedPlayerDriver : MonoBehaviour
         HealthReader.OnHealthModified += OnHealthModified;
         HealthReader.OnRespawn += OnRespawn;
         spatial = GetComponent<SpatialOSComponent>();
+        commandFrame = spatial.World.GetExistingManager<CommandFrameSystem>();
+
+        restoreState.Origin = spatial.Worker.Origin;
+        removeOrigin.Origin = spatial.Worker.Origin;
+
         SetPlayerState(PlayerState.LookingForTarget);
     }
 
@@ -139,32 +165,53 @@ public class SimulatedPlayerDriver : MonoBehaviour
 
     private void Update_LookingForTarget()
     {
-        if (!agent.isOnNavMesh)
+        agent.nextPosition = transform.position;
+
+        var agentDeviation = (agent.nextPosition - transform.position).magnitude;
+
+        if (agent.remainingDistance < MinRemainingDistance || agent.pathStatus == NavMeshPathStatus.PathInvalid || !agent.hasPath)
         {
-            if (NavMesh.SamplePosition(transform.position, out var hit, 0.5f, NavMesh.AllAreas))
-            {
-                agent.Warp(hit.position);
-            }
-        }
-        else if (agent.remainingDistance < MinRemainingDistance || agent.pathStatus == NavMeshPathStatus.PathInvalid ||
-            !agent.hasPath)
-        {
+            Debug.Log($"{name} Setting Random Destination");
             SetRandomDestination();
         }
         else if (agent.pathStatus == NavMeshPathStatus.PathComplete)
         {
-            var velocity = agent.desiredVelocity;
-            velocity.y = 0;
-            if (velocity != Vector3.zero)
+            if (agentDeviation > MaxAgentDeviation)
             {
-                var rotation = Quaternion.LookRotation(velocity, Vector3.up);
-                var speed = sprintNext ? MovementSpeed.Sprint : MovementSpeed.Run;
-                MoveTowards(transform.position + velocity, speed, rotation, jumpNext);
+                agent.Warp(transform.position);
+            }
+
+            var desiredVelocity = agent.desiredVelocity;
+            if (desiredVelocity == Vector3.zero)
+            {
+                SetRandomDestination();
+            }
+            else
+            {
+                var rot = transform.rotation;
+                var flatVelocity = agent.desiredVelocity;
+                flatVelocity.y = 0;
+                var desiredRotation = Quaternion.LookRotation(flatVelocity, Vector3.up);
+
+                rot = Quaternion.RotateTowards(rot, desiredRotation, 360 * Time.deltaTime);
+                transform.rotation = rot;
+
+                var diff = Mathf.Abs(rot.eulerAngles.y - desiredRotation.eulerAngles.y);
+
+                // prob navmesh in front to try and stay on it.
+                var potentialNewPosition = transform.position + transform.forward
+                    * MyMovementUtils.GetMovmentSpeedVelocity(MovementSpeed.Sprint) * Time.deltaTime;
+
+                movementDriver.AddInput(
+                    forward: (diff < 30),
+                    jump: jumpNext,
+                    sprint: sprintNext,
+                    yaw: transform.rotation.eulerAngles.y,
+                    pitch: transform.rotation.eulerAngles.x);
+
                 jumpNext = false;
             }
         }
-
-        agent.nextPosition = transform.position;
     }
 
     private void Update_ShootingTarget()
@@ -176,11 +223,14 @@ public class SimulatedPlayerDriver : MonoBehaviour
             var targetCenter = target.transform.position + Vector3.up + fudgeFactor;
 
             var targetRotation = Quaternion.LookRotation(targetCenter - gunOrigin);
-            var rotationAmount = Quaternion.RotateTowards(transform.rotation, targetRotation, 10f);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 360 * Time.deltaTime);
 
-            var destination = transform.position + (strafeRight ? transform.right : -transform.right);
+            var destination = transform.position + (strafeRight ? transform.right : -transform.right) *
+                MyMovementUtils.GetMovmentSpeedVelocity(MovementSpeed.Run) * Time.deltaTime;
+            var canStrafe = NavMesh.SamplePosition(destination, out var hit, 0.25f, NavMesh.AllAreas);
 
-            MoveTowards(destination, MovementSpeed.Run, rotationAmount, false);
+            movementDriver.AddInput(yaw: transform.rotation.eulerAngles.y, pitch: transform.rotation.eulerAngles.x,
+                right: (canStrafe && strafeRight), left: (canStrafe && !strafeRight));
 
             if (shooting.IsShooting(true) && Mathf.Abs(Quaternion.Angle(targetRotation, transform.rotation)) < 5)
             {
@@ -200,21 +250,6 @@ public class SimulatedPlayerDriver : MonoBehaviour
             target = null;
             SetPlayerState(PlayerState.LookingForTarget);
         }
-    }
-
-    private void MoveTowards(Vector3 destination, MovementSpeed speed, Quaternion rotation, bool jump = false)
-    {
-        var agentPosition = agent.nextPosition;
-        var direction = (destination - agentPosition).normalized;
-        var desiredVelocity = direction * movementDriver.GetSpeed(speed);
-
-        // Setting nextPosition will move the agent towards destination, but is constrained by the navmesh
-        agent.nextPosition += desiredVelocity * Time.deltaTime;
-
-        // Getting nextPosition here will return the constrained position of the agent
-        var actualDirection = (agent.nextPosition - agentPosition).normalized;
-
-        movementDriver.ApplyMovement(actualDirection, rotation, speed, jump);
     }
 
     private bool TargetIsValid()
@@ -269,6 +304,7 @@ public class SimulatedPlayerDriver : MonoBehaviour
     {
         var destination = anchorPoint + Random.insideUnitSphere * MovementRadius;
         destination.y = anchorPoint.y;
+
         if (NavMesh.SamplePosition(destination, out var hit, NavMeshSnapDistance, NavMesh.AllAreas))
         {
             if (worldBounds.Contains(hit.position))
@@ -330,9 +366,13 @@ public class SimulatedPlayerDriver : MonoBehaviour
                 similarPositionsCount++;
                 if (similarPositionsCount >= maxSimilarPositions)
                 {
-                    Debug.LogWarningFormat("{0} got stuck at {1}: agent at {2}, respawning",
-                        name, transform.position, agent.nextPosition);
+                    Debug.LogWarning($"{name} stuck at {transform.position} (agent: {agent.nextPosition}) in state {state}");
+                    Debug.DrawLine(transform.position, transform.position + Vector3.up * 100, Color.red, 200);
+                    Debug.DrawLine(transform.position + Vector3.up * 100,
+                        agent.nextPosition + Vector3.up * 100, Color.yellow, 200);
+                    Debug.DrawLine(agent.nextPosition, agent.nextPosition + Vector3.up * 100, Color.yellow, 200);
 
+                    agent.isStopped = true;
                     SetPlayerState(PlayerState.Dead);
                 }
             }
@@ -343,4 +383,33 @@ public class SimulatedPlayerDriver : MonoBehaviour
             }
         }
     }
+
+#if UNITY_EDITOR
+
+    private void OnDrawGizmos()
+    {
+        if (!Application.isPlaying)
+        {
+            return;
+        }
+
+        var style = new GUIStyle
+        {
+            alignment = TextAnchor.MiddleCenter,
+            fixedWidth = 400,
+            fixedHeight = 300,
+            wordWrap = true,
+            normal = { textColor = Color.white }
+        };
+
+        Handles.Label(transform.position + new Vector3(0, 3, 0),
+            $"Fr: {(CommandFrameSystem.FrameLength * 1000f)}," +
+            $"OnNavmesh: {agent.isOnNavMesh}," +
+            $"PlayerState: {state}," +
+            $"Path Status: {agent.pathStatus}," +
+            $"Target location: {agent.destination}," +
+            $"Desired Velocity: {agent.desiredVelocity}," +
+            $"{(commandFrame.IsPaused() ? "NET PAUSED" : "")}", style);
+    }
+#endif
 }

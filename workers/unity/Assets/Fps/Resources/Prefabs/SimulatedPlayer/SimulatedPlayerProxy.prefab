@@ -20,9 +20,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4236229366250930}
   - component: {fileID: 143911764922542632}
-  - component: {fileID: 114331831050246520}
   - component: {fileID: 114389791648868850}
   - component: {fileID: 208799741926572794}
+  - component: {fileID: 114184667943169034}
   m_Layer: 10
   m_Name: SimulatedPlayerProxy
   m_TagString: Untagged
@@ -117,7 +117,7 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1282037916847036}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &114331831050246520
+--- !u!114 &114184667943169034
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -125,14 +125,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1266140103605188}
   m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ecdad25e8df427c4397e2a22db72b3c6, type: 3}
+  m_Script: {fileID: 11500000, guid: bfcbbbbc85fe3ec4e8c6082af99f36d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  teleportDistanceSqrd: 25
-  rotationConstraints:
-    XAxisRotation: 1
-    YAxisRotation: 1
-    ZAxisRotation: 1
+  Controller: {fileID: 143911764922542632}
 --- !u!114 &114389791648868850
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -27,6 +27,8 @@ public class SimulatedPlayerWorkerConnector : DefaultWorkerConnector
         GameObjectCreationHelper.EnableStandardGameObjectCreation(
             Worker.World,
             new AdvancedEntityPipeline(Worker, AuthPlayer, NonAuthPlayer, fallback));
+
+        Worker.World.GetOrCreateManager<CommandFrameSystem>();
     }
 
     protected override ReceptionistConfig GetReceptionistConfig(string workerType)
