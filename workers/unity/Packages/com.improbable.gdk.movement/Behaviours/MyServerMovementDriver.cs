@@ -200,9 +200,6 @@ public class MyServerMovementDriver : MonoBehaviour, MyMovementUtils.IMovementSt
         {
             MovementState = state,
             Timestamp = lastInput.Timestamp,
-            Yaw = lastInput.CameraYaw,
-            Pitch = lastInput.CameraPitch,
-            Aiming = lastInput.AimPressed,
             NextDilation = (int) (clientDilation * 100000f),
             AppliedDilation = (int) (Time.time * 100000f)
         };

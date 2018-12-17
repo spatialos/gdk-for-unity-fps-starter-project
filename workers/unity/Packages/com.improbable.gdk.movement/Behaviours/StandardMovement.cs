@@ -30,7 +30,7 @@ public class StandardMovement : MyMovementUtils.IMovementProcessor
 
         inputVector.Normalize();
 
-        var rot = Quaternion.Euler(0, input.CameraYaw / 100000f, 0);
+        var rot = Quaternion.Euler(0, input.Yaw / 100000f, 0);
 
         // rotate to face yaw in input.
         inputVector = rot * inputVector;
@@ -59,6 +59,11 @@ public class StandardMovement : MyMovementUtils.IMovementProcessor
         }
 
         newState.Velocity = newVelocity.ToIntAbsolute();
+
+        // TODO: Put this somewhere better, in a seperate processor probably.
+        newState.IsAiming = input.AimPressed;
+        newState.Pitch = input.Pitch;
+        newState.Yaw = input.Yaw;
 
         return true;
     }
