@@ -63,10 +63,18 @@ public class MyClientMovementDriver : MonoBehaviour
         movementState[0] = serverMovement.Data.Latest.MovementState;
         UpdateFrameBuffer();
         lastFrame = 0;
-        serverMovement.OnServerMovement += OnServerMovement;
+        serverMovement.LatestUpdated += ServerMovementOnLatestUpdated;
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    private void ServerMovementOnLatestUpdated(ServerResponse response)
+    {
+        // Debug.Log($"[Client {lastFrame}] Received state: {response.Timestamp} CF: {confirmedFrame}");
+        serverResponses.Enqueue(response);
+
+        UpdateFrameBuffer();
     }
 
     public void SetMovementProcessors(MyMovementUtils.IMovementProcessor[] processors)
@@ -196,14 +204,6 @@ public class MyClientMovementDriver : MonoBehaviour
         {
             pitchThisFrame = pitch;
         }
-    }
-
-    private void OnServerMovement(ServerResponse response)
-    {
-        // Debug.Log($"[Client {lastFrame}] Received state: {response.Timestamp} CF: {confirmedFrame}");
-        serverResponses.Enqueue(response);
-
-        UpdateFrameBuffer();
     }
 
     private void ProcessServerResponses()

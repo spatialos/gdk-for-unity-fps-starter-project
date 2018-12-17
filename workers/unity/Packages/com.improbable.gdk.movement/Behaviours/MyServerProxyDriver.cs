@@ -16,11 +16,23 @@ public class MyServerProxyDriver : MonoBehaviour
 
     private void OnEnable()
     {
-        server.OnServerMovement += ServerOnOnServerMovement;
-        // clientInput.OnClientInput += ClientInputOnOnClientInput;
+        server.LatestUpdated += ServerOnLatestUpdated;
         server.AuthorityChanged += ServerOnAuthorityChanged;
 
         workerIndex = GetComponent<MyServerMovementDriver>().workerIndex;
+    }
+
+    private void ServerOnLatestUpdated(ServerResponse response)
+    {
+        var keys = inputs.Keys.ToArray();
+        foreach (var key in keys)
+        {
+            if (key <= response.Timestamp)
+            {
+                // Debug.Log($"[Server-{workerIndex}] Proxy removing input {key} < {response.Timestamp}");
+                inputs.Remove(key);
+            }
+        }
     }
 
     private void ServerOnAuthorityChanged(Authority auth)
@@ -31,24 +43,6 @@ public class MyServerProxyDriver : MonoBehaviour
             Debug.Log($"[Server-{workerIndex}] {inputs.Count} pending inputs." +
                 $"Confirm Frame: {server.Data.Latest.Timestamp}");
             // inputs.Clear();
-        }
-    }
-
-    private void ClientInputOnOnClientInput(ClientRequest request)
-    {
-        inputs.Add(request.Timestamp, request);
-    }
-
-    private void ServerOnOnServerMovement(ServerResponse response)
-    {
-        var keys = inputs.Keys.ToArray();
-        foreach (var key in keys)
-        {
-            if (key <= response.Timestamp)
-            {
-                // Debug.Log($"[Server-{workerIndex}] Proxy removing input {key} < {response.Timestamp}");
-                inputs.Remove(key);
-            }
         }
     }
 
