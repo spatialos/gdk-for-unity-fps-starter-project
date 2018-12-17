@@ -42,7 +42,7 @@ namespace Fps
             await Connect(WorkerUtils.AndroidClient, new ForwardingDispatcher()).ConfigureAwait(false);
         }
 
-        void Awake()
+        private void Awake()
         {
             connectionController = GetComponent<ConnectionController>();
         }
