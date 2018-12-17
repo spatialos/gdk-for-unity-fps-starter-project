@@ -53,7 +53,8 @@ namespace Improbable.Gdk.Interaction
                 var raycastDetails = raycastInteracts.RaycastAttempts[i];
 
                 RaycastHit rayHit;
-                bool hitObject = Physics.Raycast(raycastDetails.Position, raycastDetails.RaycastDirection, out rayHit, raycastDetails.Radius);
+                var hitObject = Physics.Raycast(raycastDetails.Position, raycastDetails.RaycastDirection, out rayHit,
+                    raycastDetails.Radius);
 
                 if (hitObject)
                 {
@@ -85,7 +86,7 @@ namespace Improbable.Gdk.Interaction
                 // Check all objects, keep track of the current closest object interactable via proximity.
                 var closestEntityId = -1L;
                 var closestSqrDistance = -1f;
-                foreach(var collider in hitObjects)
+                foreach (var collider in hitObjects)
                 {
                     var interactEntityId = GetAndCheckInteractiveObject(collider, InteractionType.Proximity);
                     if (interactEntityId != -1)

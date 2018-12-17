@@ -1,9 +1,9 @@
 ﻿using Unity.Entities;
 
-namespace Fps.GunPickups
+namespace Fps
 {
-	public struct PickupRespawnDelay : IComponentData
-	{
-		public float RechargeTime;
-	}
+    public struct PickupRespawnDelay : IComponentData
+    {
+        public float RechargeTime;
+    }
 }

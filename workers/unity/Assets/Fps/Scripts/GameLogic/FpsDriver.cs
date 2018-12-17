@@ -128,12 +128,12 @@ namespace Fps
             // Gun equipping
             if (isSlot1Pressed)
             {
-                changingGun.AttemptChangeSlot(1);
+                changingGun.AttemptChangeSlot(0);
             }
-            
+
             if (isSlot2Pressed)
             {
-                changingGun.AttemptChangeSlot(2);
+                changingGun.AttemptChangeSlot(1);
             }
 
             // Update the pitch speed with that of the gun if aiming.

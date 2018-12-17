@@ -6,7 +6,7 @@ using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
 
-namespace Fps.GunPickups
+namespace Fps
 {
     public class GunPickupServerSystem : ComponentSystem
     {

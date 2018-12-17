@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Fps.GunPickups
+namespace Fps
 {
     [CustomPropertyDrawer(typeof(SpatialGunDataProperty))]
     public class SpatialGunEditor : PropertyDrawer

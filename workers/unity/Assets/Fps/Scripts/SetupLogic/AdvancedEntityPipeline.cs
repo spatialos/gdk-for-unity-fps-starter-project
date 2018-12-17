@@ -3,7 +3,6 @@ using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.Movement;
 using Improbable.Gdk.StandardTypes;
-using Improbable.Worker;
 using UnityEngine;
 
 public class AdvancedEntityPipeline : IEntityGameObjectCreator

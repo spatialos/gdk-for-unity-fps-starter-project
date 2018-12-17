@@ -2,7 +2,7 @@
 using Improbable.Gdk.Guns;
 using UnityEngine;
 
-namespace Fps.GunPickups
+namespace Fps
 {
     [ExecuteInEditMode]
     [SelectionBase]
@@ -34,7 +34,7 @@ namespace Fps.GunPickups
             // Rename to gun type
             if (realName == "" || name != realName || nameGunId != GunId)
             {
-                GunSettings gunSettings = GunDictionary.Get(GunId);
+                var gunSettings = GunDictionary.Get(GunId);
                 var gunName = gunSettings != null ? gunSettings.name : "InvalidGunID";
 
                 realName = string.Format("GunPickup_{0}", gunName);
@@ -63,7 +63,7 @@ namespace Fps.GunPickups
 
             if (gun != null)
             {
-                GameObject gunPrefab = gun.GunModel;
+                var gunPrefab = gun.GunModel;
                 var instantiated = Instantiate(gunPrefab, SpawnParent);
                 instantiated.transform.localPosition = Vector3.zero;
                 instantiated.transform.localEulerAngles = Vector3.zero;

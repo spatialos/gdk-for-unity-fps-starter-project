@@ -1,16 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Fps.GunPickups
+namespace Fps
 {
     [ExecuteInEditMode]
     public class RotateChild : MonoBehaviour
     {
-
         [SerializeField] private float _speed = 180f;
 
-        void Update()
+        private void Update()
         {
             if (transform.childCount > 0)
             {

@@ -1,12 +1,11 @@
-﻿using Fps.Guns;
-using Improbable.Gdk.Guns;
+﻿using Improbable.Gdk.Guns;
 using UnityEngine;
 
 namespace Fps.GunPickups
 {
     public class GunPickupDisplay : MonoBehaviour
     {
-        [SerializeField] Transform gunSocket;
+        [SerializeField] private Transform gunSocket;
         private GameObject gun;
         private Collider pickupCollider;
 

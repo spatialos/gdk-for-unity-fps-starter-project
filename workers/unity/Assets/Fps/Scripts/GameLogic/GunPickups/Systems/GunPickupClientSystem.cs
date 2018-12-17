@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Fps.GunPickups;
 using Fps.Schema.Shooting;
 using Improbable;
 using Improbable.Gdk.Core;
@@ -7,8 +8,9 @@ using Improbable.Gdk.Interaction;
 using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
+using EntityId = Improbable.Worker.EntityId;
 
-namespace Fps.GunPickups
+namespace Fps
 {
     [UpdateBefore(typeof(InteractableInitializationSystem))]
     public class GunPickupClientSystem : ComponentSystem
@@ -59,15 +61,15 @@ namespace Fps.GunPickups
                     (float) positionCoords.Y,
                     (float) positionCoords.Z);
                 var entity = newPickups.Entities[i];
-                var spatialEntityId = newPickups.SpatialEntityIds[i].EntityId;
+                var spatialEntityId = newPickups.SpatialEntityIds[i].EntityId.Id;
 
-                var gameObject = InstantiateAndLinkGameObject(ref entity, ref position, spatialEntityId);
+                var gameObject = InstantiateAndLinkGameObject(ref entity, ref position, new EntityId(spatialEntityId));
                 var pickupDisplay = gameObject.GetComponent<GunPickupDisplay>();
                 pickupDisplay.SetGunId(pickupComponent.GunId);
                 pickupDisplay.SetEnabled(pickupComponent.IsEnabled);
                 viewCommandBuffer.AddComponent(entity, typeof(GunPickupDisplay), pickupDisplay);
 
-                var interactableTag = gameObject.GetComponent<InteractableTag>();
+                var interactableTag = gameObject.GetComponent<Improbable.Gdk.Interaction.InteractableTag>();
                 if (interactableTag == null)
                 {
                     interactableTag = gameObject.AddComponent<InteractableTag>();
@@ -103,15 +105,8 @@ namespace Fps.GunPickups
             var gameObject = Object.Instantiate(prefab, spawningPosition, spawningRotation);
             gameObject.name = $"{prefab.name}(SpatialOS: {spatialEntityId.Id}, Unity: {entity.Index}/{World.Name})";
 
-            // Add a reference to the GameObject, such that it can be accessed after the entity has been deleted.
-            // instantiatedParents.Add(entity.Index, gameObject);
-
-            // // Add a persistent handle, to detect if the entity has been deleted.
-            // var parentReferenceHandle = new ParentReferenceHandle();
-            // PostUpdateCommands.AddComponent(entity, parentReferenceHandle);
-
             viewCommandBuffer.AddComponent(entity, typeof(Transform), gameObject.transform);
-            linkerSystem.Linker.LinkGameObjectToEntity(gameObject, entity, spatialEntityId, viewCommandBuffer);
+            linkerSystem.Linker.LinkGameObjectToEntity(gameObject, entity, viewCommandBuffer);
 
             return gameObject;
         }
