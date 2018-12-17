@@ -45,6 +45,8 @@ public class MyClientMovementDriver : MonoBehaviour
 
     private MyMovementUtils.IMovementProcessor[] movementProcessors = { };
 
+    private MyMovementUtils.IMovementStateRestorer stateRestorer;
+
     private int debugRow;
 
     private void Awake()
@@ -70,6 +72,11 @@ public class MyClientMovementDriver : MonoBehaviour
     public void SetMovementProcessors(MyMovementUtils.IMovementProcessor[] processors)
     {
         movementProcessors = processors;
+    }
+
+    public void SetStateRestorer(MyMovementUtils.IMovementStateRestorer restorer)
+    {
+        stateRestorer = restorer;
     }
 
     private void UpdateFrameBuffer()
@@ -107,7 +114,8 @@ public class MyClientMovementDriver : MonoBehaviour
 
                 var input = SendInput();
                 movementState.TryGetValue(lastFrame - 1, out var previousState);
-                lastMovementState = MyMovementUtils.ApplyInput(Controller, input, previousState, movementProcessors);
+                stateRestorer?.Restore(previousState);
+                lastMovementState = MyMovementUtils.ApplyInput(input, previousState, movementProcessors);
                 movementState[lastFrame] = lastMovementState;
                 inputState.Add(lastFrame, input);
             }
@@ -146,7 +154,8 @@ public class MyClientMovementDriver : MonoBehaviour
                 return;
             }
 
-            MyMovementUtils.ApplyPartialInput(Controller, inputState[lastFrame], movementState[lastFrame - 1],
+            stateRestorer?.Restore(movementState[lastFrame - 1]);
+            MyMovementUtils.ApplyPartialInput(inputState[lastFrame], movementState[lastFrame - 1],
                 movementProcessors, remainder);
         }
         else if (remainder < 0)
@@ -163,7 +172,8 @@ public class MyClientMovementDriver : MonoBehaviour
                 return;
             }
 
-            MyMovementUtils.ApplyPartialInput(Controller, inputState[lastFrame - 1], movementState[lastFrame - 2],
+            stateRestorer?.Restore(movementState[lastFrame - 2]);
+            MyMovementUtils.ApplyPartialInput(inputState[lastFrame - 1], movementState[lastFrame - 2],
                 movementProcessors, CommandFrameSystem.FrameLength + remainder);
         }
     }
@@ -227,7 +237,7 @@ public class MyClientMovementDriver : MonoBehaviour
                     // SaveMovementState(response.Timestamp);
                     var previousState = response.MovementState;
                     movementState[response.Timestamp] = previousState;
-                    MyMovementUtils.RestoreToState(Controller, previousState, spatial.Worker.Origin);
+                    stateRestorer?.Restore(previousState);
 
                     // Replay inputs until lastFrame, storing movementstates.
                     var i = response.Timestamp + 1;
@@ -237,7 +247,7 @@ public class MyClientMovementDriver : MonoBehaviour
                         Debug.LogFormat("Previous Position {0}", movementState[i].Position.ToVector3());
                         Debug.LogFormat("Previous Velocity {0}", movementState[i].Velocity.ToVector3());
 
-                        movementState[i] = MyMovementUtils.ApplyInput(Controller, inputState[i], movementState[i - 1], movementProcessors);
+                        movementState[i] = MyMovementUtils.ApplyInput(inputState[i], movementState[i - 1], movementProcessors);
 
                         //Debug.LogFormat("Adjusted Position: {0}", movementState[i].Position.ToVector3());
                         Debug.DrawLine(

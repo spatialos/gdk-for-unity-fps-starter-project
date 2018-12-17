@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Improbable.Gdk.Movement;
+﻿using Improbable.Gdk.Movement;
 using Improbable.Gdk.StandardTypes;
 using UnityEngine;
 
@@ -8,8 +6,13 @@ public class MyMovementUtils
 {
     public interface IMovementProcessor
     {
-        bool Process(CharacterController controller, ClientRequest input, MovementState previousState,
+        bool Process(ClientRequest input, MovementState previousState,
             ref MovementState newState, float deltaTime);
+    }
+
+    public interface IMovementStateRestorer
+    {
+        void Restore(MovementState state);
     }
 
     public static bool ShowDebug;
@@ -33,26 +36,9 @@ public class MyMovementUtils
 
     public const int ConstantInputBufferExtra = 2;
 
-    public class RestoreStateProcessor : IMovementProcessor
-    {
-        public Vector3 Origin = Vector3.zero;
-
-        public bool Process(CharacterController controller, ClientRequest input, MovementState previousState,
-            ref MovementState newState, float deltaTime)
-        {
-            RestoreToState(controller, previousState, Origin);
-            return true;
-        }
-    }
-
-    public static void RestoreToState(CharacterController controller, MovementState state, Vector3 origin)
-    {
-        controller.transform.position = state.Position.ToVector3() + origin;
-    }
-
     public class TerminalVelocity : IMovementProcessor
     {
-        public bool Process(CharacterController controller, ClientRequest input, MovementState previousState,
+        public bool Process(ClientRequest input, MovementState previousState,
             ref MovementState newState, float deltaTime)
         {
             newState.Velocity = Vector3.ClampMagnitude(newState.Velocity.ToVector3(), movementSettings.TerminalVelocity)
@@ -63,7 +49,7 @@ public class MyMovementUtils
 
     public class Gravity : IMovementProcessor
     {
-        public bool Process(CharacterController controller, ClientRequest input, MovementState previousState,
+        public bool Process(ClientRequest input, MovementState previousState,
             ref MovementState newState, float deltaTime)
         {
             if (newState.DidTeleport)
@@ -75,15 +61,6 @@ public class MyMovementUtils
 
             velocity += Vector3.down * movementSettings.Gravity * deltaTime;
 
-            // if (previousState.IsGrounded && velocity.y <= 0)
-            // {
-            //     velocity.y = -movementSettings.GroundedFallSpeed * deltaTime;
-            // }
-            // else
-            // {
-            //
-            // }
-
             newState.Velocity = velocity.ToIntAbsolute();
 
             return true;
@@ -92,7 +69,7 @@ public class MyMovementUtils
 
     public class SprintCooldown : IMovementProcessor
     {
-        public bool Process(CharacterController controller, ClientRequest input, MovementState previousState,
+        public bool Process(ClientRequest input, MovementState previousState,
             ref MovementState newState, float deltaTime)
         {
             if (newState.DidTeleport)
@@ -119,9 +96,16 @@ public class MyMovementUtils
         }
     }
 
-    public class ApplyMovementProcessor : IMovementProcessor
+    public class CharacterControllerMovement : IMovementProcessor
     {
-        public bool Process(CharacterController controller, ClientRequest input, MovementState previousState,
+        private readonly CharacterController controller;
+
+        public CharacterControllerMovement(CharacterController controller)
+        {
+            this.controller = controller;
+        }
+
+        public bool Process(ClientRequest input, MovementState previousState,
             ref MovementState newState, float deltaTime)
         {
             if (newState.DidTeleport)
@@ -147,7 +131,7 @@ public class MyMovementUtils
     {
         public Vector3 Origin;
 
-        public bool Process(CharacterController controller, ClientRequest input, MovementState previousState,
+        public bool Process(ClientRequest input, MovementState previousState,
             ref MovementState newState, float deltaTime)
         {
             newState.Position = (newState.Position.ToVector3() - Origin).ToIntAbsolute();
@@ -157,7 +141,7 @@ public class MyMovementUtils
 
     public class AdjustVelocity : IMovementProcessor
     {
-        public bool Process(CharacterController controller, ClientRequest input, MovementState previousState,
+        public bool Process(ClientRequest input, MovementState previousState,
             ref MovementState newState, float deltaTime)
         {
             // Don't adjust velocity if we teleported, since that would not produce a valid velocity.
@@ -188,7 +172,7 @@ public class MyMovementUtils
             teleportPosition = position + Origin;
         }
 
-        public bool Process(CharacterController controller, ClientRequest input, MovementState previousState,
+        public bool Process(ClientRequest input, MovementState previousState,
             ref MovementState newState, float deltaTime)
         {
             if (hasTeleport)
@@ -209,19 +193,19 @@ public class MyMovementUtils
 
     public const float FrameLength = CommandFrameSystem.FrameLength;
 
-    public static MovementState ApplyInput(
-        CharacterController controller, ClientRequest input, MovementState previousState, IMovementProcessor[] processors)
+    public static MovementState ApplyInput(ClientRequest input, MovementState previousState,
+        IMovementProcessor[] processors)
     {
-        return ApplyPartialInput(controller, input, previousState, processors, CommandFrameSystem.FrameLength);
+        return ApplyPartialInput(input, previousState, processors, CommandFrameSystem.FrameLength);
     }
 
-    public static MovementState ApplyPartialInput(CharacterController controller, ClientRequest input,
+    public static MovementState ApplyPartialInput(ClientRequest input,
         MovementState previousState, IMovementProcessor[] processors, float deltaTime)
     {
         var newState = new MovementState();
         for (var i = 0; i < processors.Length; i++)
         {
-            if (!processors[i].Process(controller, input, previousState, ref newState, deltaTime))
+            if (!processors[i].Process(input, previousState, ref newState, deltaTime))
             {
                 break;
             }
@@ -229,11 +213,6 @@ public class MyMovementUtils
 
         return newState;
     }
-
-    // public static bool IsGrounded(CharacterController controller)
-    // {
-    //     return Physics.CheckSphere(controller.transform.position, 0.1f, LayerMask.GetMask("Default"));
-    // }
 
     public static int CalculateInputBufferSize(float rtt)
     {

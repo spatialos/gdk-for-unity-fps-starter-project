@@ -8,7 +8,7 @@ using Improbable.Gdk.StandardTypes;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
-public class MyServerMovementDriver : MonoBehaviour
+public class MyServerMovementDriver : MonoBehaviour, MyMovementUtils.IMovementStateRestorer
 {
     [Require] private ClientMovement.Requirable.Reader clientInput;
     [Require] private ServerMovement.Requirable.Writer server;
@@ -42,11 +42,12 @@ public class MyServerMovementDriver : MonoBehaviour
     private readonly List<ClientRequest> clientInputs = new List<ClientRequest>();
     private readonly Dictionary<int, MovementState> movementState = new Dictionary<int, MovementState>();
 
-    private readonly MyMovementUtils.RestoreStateProcessor restoreState = new MyMovementUtils.RestoreStateProcessor();
     private readonly MyMovementUtils.RemoveWorkerOrigin removeWorkerOrigin = new MyMovementUtils.RemoveWorkerOrigin();
     private readonly MyMovementUtils.TeleportProcessor teleportProcessor = new MyMovementUtils.TeleportProcessor();
 
     private MyMovementUtils.IMovementProcessor[] movementProcessors;
+
+    private MyMovementUtils.IMovementStateRestorer stateRestorer;
 
     public int workerIndex = -1;
 
@@ -63,18 +64,19 @@ public class MyServerMovementDriver : MonoBehaviour
 
         movementProcessors = new MyMovementUtils.IMovementProcessor[]
         {
-            restoreState,
             teleportProcessor,
             new StandardMovement(),
             new MyMovementUtils.SprintCooldown(),
             new JumpMovement(),
             new MyMovementUtils.Gravity(),
             new MyMovementUtils.TerminalVelocity(),
-            new MyMovementUtils.ApplyMovementProcessor(),
+            new MyMovementUtils.CharacterControllerMovement(controller),
             removeWorkerOrigin,
             new IsGroundedMovement(),
             new MyMovementUtils.AdjustVelocity(),
         };
+
+        stateRestorer = this;
     }
 
     private void OnEnable()
@@ -83,7 +85,6 @@ public class MyServerMovementDriver : MonoBehaviour
         commandFrame = spatial.World.GetExistingManager<CommandFrameSystem>();
 
         teleportProcessor.Origin = spatial.Worker.Origin;
-        restoreState.Origin = spatial.Worker.Origin;
         removeWorkerOrigin.Origin = spatial.Worker.Origin;
 
         clientInput.BufferUpdated += ClientInputOnBufferUpdated;
@@ -177,7 +178,9 @@ public class MyServerMovementDriver : MonoBehaviour
                 }
 
                 movementState.TryGetValue(lastFrame - 1, out var previousState);
-                var state = MyMovementUtils.ApplyInput(controller, lastInput, previousState, movementProcessors);
+                // shouldn't need to call restore here.
+                stateRestorer.Restore(previousState);
+                var state = MyMovementUtils.ApplyInput(lastInput, previousState, movementProcessors);
                 movementState[lastFrame] = state;
                 SendMovement(state);
 
@@ -285,5 +288,10 @@ public class MyServerMovementDriver : MonoBehaviour
         GUI.Label(new Rect(10, 300, 700, 20),
             string.Format("Frame: {0}, Length: {1:00.0}, Remainder: {2:00.0}",
                 commandFrame.CurrentFrame, CommandFrameSystem.FrameLength * 1000f, commandFrame.GetRemainder() * 1000f));
+    }
+
+    public void Restore(MovementState state)
+    {
+        controller.transform.position = state.Position.ToVector3() + spatial.Worker.Origin;
     }
 }

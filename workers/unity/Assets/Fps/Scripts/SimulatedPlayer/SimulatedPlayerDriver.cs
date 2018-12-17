@@ -33,7 +33,6 @@ public class SimulatedPlayerDriver : MonoBehaviour
 
     private readonly JumpMovement jumpMovement = new JumpMovement();
     private readonly MyMovementUtils.SprintCooldown sprintCooldown = new MyMovementUtils.SprintCooldown();
-    private readonly MyMovementUtils.RestoreStateProcessor restoreState = new MyMovementUtils.RestoreStateProcessor();
     private readonly MyMovementUtils.RemoveWorkerOrigin removeOrigin = new MyMovementUtils.RemoveWorkerOrigin();
 
     private Vector3 anchorPoint;
@@ -63,13 +62,12 @@ public class SimulatedPlayerDriver : MonoBehaviour
         movementDriver = GetComponent<MyClientMovementDriver>();
         movementDriver.SetMovementProcessors(new MyMovementUtils.IMovementProcessor[]
         {
-            restoreState,
             new StandardMovement(),
             sprintCooldown,
             jumpMovement,
             new MyMovementUtils.Gravity(),
             new MyMovementUtils.TerminalVelocity(),
-            new MyMovementUtils.ApplyMovementProcessor(),
+            new MyMovementUtils.CharacterControllerMovement(GetComponent<CharacterController>()),
             removeOrigin,
             new IsGroundedMovement(),
             new MyMovementUtils.AdjustVelocity(),
@@ -91,7 +89,6 @@ public class SimulatedPlayerDriver : MonoBehaviour
         spatial = GetComponent<SpatialOSComponent>();
         commandFrame = spatial.World.GetExistingManager<CommandFrameSystem>();
 
-        restoreState.Origin = spatial.Worker.Origin;
         removeOrigin.Origin = spatial.Worker.Origin;
 
         SetPlayerState(PlayerState.LookingForTarget);
