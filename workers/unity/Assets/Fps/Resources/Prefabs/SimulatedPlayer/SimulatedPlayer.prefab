@@ -23,10 +23,9 @@ GameObject:
   - component: {fileID: 195516011689417046}
   - component: {fileID: 114099301705431196}
   - component: {fileID: 143213819140892078}
-  - component: {fileID: 114774703231759244}
   - component: {fileID: 114077868185640900}
   - component: {fileID: 114349539066892404}
-  - component: {fileID: 114779873026297234}
+  - component: {fileID: 114184127199004570}
   m_Layer: 10
   m_Name: SimulatedPlayer
   m_TagString: Untagged
@@ -52,6 +51,24 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1547754909298886
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4817990478910646}
+  - component: {fileID: 33909610977457796}
+  - component: {fileID: 23445390083676982}
+  - component: {fileID: 65851169036923960}
+  m_Layer: 10
+  m_Name: Cube
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!4 &4236229366250930
 Transform:
   m_ObjectHideFlags: 1
@@ -63,6 +80,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4302216771986588}
+  - {fileID: 4817990478910646}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -79,6 +97,54 @@ Transform:
   m_Father: {fileID: 4236229366250930}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4817990478910646
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1547754909298886}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0.5}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4236229366250930}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!23 &23445390083676982
+MeshRenderer:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1547754909298886}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
+  m_Materials:
+  - {fileID: 2100000, guid: 73c176f402d2c2f4d929aa5da7585d17, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
 --- !u!23 &23478364152830144
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -121,6 +187,25 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1526163379184060}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!33 &33909610977457796
+MeshFilter:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1547754909298886}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &65851169036923960
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1547754909298886}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &114077868185640900
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -147,6 +232,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c52bca3cbffa4d4ca38256a1a1b3357, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114184127199004570
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1266140103605188}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0af318b72580e0d4ca4e5108a8a95523, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Controller: {fileID: 143213819140892078}
 --- !u!114 &114349539066892404
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -158,54 +255,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c2a62b7f39e5cc4ebc9cc90b4243763, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114774703231759244
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1266140103605188}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3914475562c91fe4db45424efe19c38b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  teleportDistanceSqrd: 25
-  groundedRadius: 0.2
-  groundLayerMask:
-    serializedVersion: 2
-    m_Bits: 1
-  transformUpdateHz: 15
-  rotationUpdateHz: 15
-  transformUpdateDelta: 0.06666667
-  rotationUpdateDelta: 0.06666667
-  movementSettings:
-    MovementSpeed:
-      WalkSpeed: 2.5
-      RunSpeed: 4
-      SprintSpeed: 6
-    SprintCooldown: 0.2
-    Gravity: 25
-    StartingJumpSpeed: 8
-    TerminalVelocity: 40
-    GroundedFallSpeed: 3.5
-    AirControlModifier: 0.25
-    InAirDamping: 0.5
-  rotationConstraints:
-    XAxisRotation: 1
-    YAxisRotation: 1
-    ZAxisRotation: 0
---- !u!114 &114779873026297234
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1266140103605188}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a26382f57abcf24aa8b96ce9bf51d71, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slideFriction: 0.8
 --- !u!114 &114780642311106078
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -255,7 +304,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 1266140103605188}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.25
+  m_Radius: 0.5
   m_Speed: 1
   m_Acceleration: 8
   avoidancePriority: 50

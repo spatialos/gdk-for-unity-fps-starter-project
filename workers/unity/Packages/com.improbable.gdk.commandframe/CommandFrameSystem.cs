@@ -7,7 +7,7 @@ using UnityEngine.Experimental.PlayerLoop;
 public class CommandFrameSystem : ComponentSystem
 {
     public int CurrentFrame = 0;
-    public const float FrameLength = 1 / 28f;
+    public const float FrameLength = 1 / 11f;
     public const int AdjustmentFrames = 20;
     public const float FrameAdjustment = FrameLength / AdjustmentFrames;
     public bool NewFrame;

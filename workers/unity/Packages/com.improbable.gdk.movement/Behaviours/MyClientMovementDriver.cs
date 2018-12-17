@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Improbable.Gdk.GameObjectRepresentation;
@@ -43,6 +44,14 @@ public class MyClientMovementDriver : MonoBehaviour
     private Queue<ServerResponse> serverResponses = new Queue<ServerResponse>();
 
     private MyMovementUtils.IMovementProcessor[] movementProcessors = { };
+
+    private int debugRow;
+
+    private void Awake()
+    {
+        debugRow = nextRow;
+        nextRow++;
+    }
 
     private void OnEnable()
     {
@@ -159,7 +168,7 @@ public class MyClientMovementDriver : MonoBehaviour
         }
     }
 
-    public void AddInput(bool forward, bool back, bool left, bool right, bool jump, bool sprint, bool aim, float yaw, float pitch)
+    public void AddInput(bool forward = false, bool back = false, bool left = false, bool right = false, bool jump = false, bool sprint = false, bool aim = false, float yaw = -1, float pitch = -1)
     {
         forwardThisFrame |= forward;
         backThisFrame |= back;
@@ -168,8 +177,15 @@ public class MyClientMovementDriver : MonoBehaviour
         jumpThisFrame |= jump;
         sprintThisFrame |= sprint;
         aimThisFrame |= aim;
-        yawThisFrame = yaw;
-        pitchThisFrame = pitch;
+        if (yaw >= 0)
+        {
+            yawThisFrame = yaw;
+        }
+
+        if (pitchThisFrame >= 0)
+        {
+            pitchThisFrame = pitch;
+        }
     }
 
     private void OnServerMovement(ServerResponse response)
@@ -301,6 +317,8 @@ public class MyClientMovementDriver : MonoBehaviour
         return lastMovementState;
     }
 
+    private static int nextRow = 0;
+
     private void OnGUI()
     {
         if (!MyMovementUtils.ShowDebug)
@@ -311,7 +329,7 @@ public class MyClientMovementDriver : MonoBehaviour
         var minKey = inputState.Count > 0 ? inputState.Keys.Min() : -1;
         var maxKey = inputState.Count > 0 ? inputState.Keys.Max() : -1;
 
-        GUI.Label(new Rect(10, 10, 700, 20),
+        GUI.Label(new Rect(10, 10 + debugRow * 20, 700, 20),
             $"Fr: {(CommandFrameSystem.FrameLength * 1000f)}," +
             $"Svr Adj: {commandFrame.ServerAdjustment}," +
             $"Adj: {(commandFrame.currentFrameAdjustment * 1000f)}," +

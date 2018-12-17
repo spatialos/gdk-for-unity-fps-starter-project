@@ -240,6 +240,21 @@ public class MyMovementUtils
         return Mathf.CeilToInt(rtt / (2 * CommandFrameSystem.FrameLength)) + ConstantInputBufferExtra;
     }
 
+    public static float GetMovmentSpeedVelocity(MovementSpeed speed)
+    {
+        switch (speed)
+        {
+            case MovementSpeed.Walk:
+                return movementSettings.MovementSpeed.WalkSpeed;
+            case MovementSpeed.Run:
+                return movementSettings.MovementSpeed.RunSpeed;
+            case MovementSpeed.Sprint:
+                return movementSettings.MovementSpeed.SprintSpeed;
+            default:
+                return -1;
+        }
+    }
+
     public class PidController
     {
         public float Kp;
