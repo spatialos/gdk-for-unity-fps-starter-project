@@ -8,7 +8,7 @@ public class IsGroundedMovement : MyMovementUtils.IMovementProcessor
 {
     private const float DeltaThreshold = 0.1f;
 
-    public bool Process(CharacterController controller, ClientRequest input, MovementState previousState,
+    public bool Process(ClientRequest input, MovementState previousState,
         ref MovementState newState, float deltaTime)
     {
         var desiredMovement = (newState.Velocity.ToVector3() * deltaTime).y;

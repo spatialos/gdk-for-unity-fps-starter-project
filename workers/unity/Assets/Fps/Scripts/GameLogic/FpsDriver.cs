@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Security.Authentication;
 using Improbable.Common;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectRepresentation;
@@ -10,7 +11,7 @@ using UnityEngine;
 
 namespace Fps
 {
-    public class FpsDriver : MonoBehaviour
+    public class FpsDriver : MonoBehaviour, MyMovementUtils.IMovementStateRestorer
     {
         [System.Serializable]
         private struct CameraSettings
@@ -28,13 +29,13 @@ namespace Fps
         [SerializeField] public GameObject ControllerProxy;
 
         private MyClientMovementDriver movement;
+        private CharacterController controller;
         private ClientShooting shooting;
         private ShotRayProvider shotRayProvider;
         private FpsAnimator fpsAnimator;
         private GunManager currentGun;
         private SpatialOSComponent spatialComponent;
 
-        private readonly Vector3[] cachedDirectionVectors = new Vector3[16];
         [SerializeField] private Transform pitchTransform;
         [SerializeField] private new Camera camera;
 
@@ -50,33 +51,30 @@ namespace Fps
         private Coroutine requestingRespawnCoroutine;
         private readonly JumpMovement jumpMovement = new JumpMovement();
         private readonly MyMovementUtils.SprintCooldown sprintCooldown = new MyMovementUtils.SprintCooldown();
-        private readonly MyMovementUtils.RestoreStateProcessor restoreState = new MyMovementUtils.RestoreStateProcessor();
         private readonly MyMovementUtils.RemoveWorkerOrigin removeOrigin = new MyMovementUtils.RemoveWorkerOrigin();
-        private CommandFrameSystem commandFrame;
 
         private Vector3 from;
         private Vector3 to;
         private Vector3 next;
         private float t;
-        private bool nextAvailable = false;
-        private bool didTeleport = false;
 
         private void Awake()
         {
             movement = GetComponent<MyClientMovementDriver>();
+            controller = ControllerProxy.GetComponent<CharacterController>();
             movement.SetMovementProcessors(new MyMovementUtils.IMovementProcessor[]
             {
-                restoreState,
                 new StandardMovement(),
                 sprintCooldown,
                 jumpMovement,
                 new MyMovementUtils.Gravity(),
                 new MyMovementUtils.TerminalVelocity(),
-                new MyMovementUtils.ApplyMovementProcessor(),
+                new MyMovementUtils.CharacterControllerMovement(controller),
                 removeOrigin,
                 new IsGroundedMovement(),
                 new MyMovementUtils.AdjustVelocity(),
             });
+            movement.SetStateRestorer(this);
             shooting = GetComponent<ClientShooting>();
             shotRayProvider = GetComponent<ShotRayProvider>();
             fpsAnimator = GetComponent<FpsAnimator>();
@@ -93,9 +91,7 @@ namespace Fps
         private void OnEnable()
         {
             spatialComponent = GetComponent<SpatialOSComponent>();
-            commandFrame = spatialComponent.World.GetExistingManager<CommandFrameSystem>();
 
-            restoreState.Origin = spatialComponent.Worker.Origin;
             removeOrigin.Origin = spatialComponent.Worker.Origin;
 
             Cursor.lockState = CursorLockMode.Locked;
@@ -313,6 +309,11 @@ namespace Fps
             }
 
             GUI.Label(new Rect(10, 400, 700, 20), string.Format("fps vel: {0:00.00}", fpsVelocity));
+        }
+
+        public void Restore(MovementState state)
+        {
+            controller.transform.position = state.Position.ToVector3() + spatialComponent.Worker.Origin;
         }
     }
 }
