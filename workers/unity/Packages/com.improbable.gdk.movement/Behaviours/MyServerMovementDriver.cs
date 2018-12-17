@@ -137,9 +137,9 @@ public class MyServerMovementDriver : MonoBehaviour, MyMovementUtils.IMovementSt
 
     private void UpdateRtt(ClientRequest request)
     {
-        if (request.AppliedDilation > 0)
+        if (request.LastReceivedServerTime > 0)
         {
-            var sample = Time.time - (request.AppliedDilation / 100000f);
+            var sample = Time.time - (request.LastReceivedServerTime / 100000f);
             rtt = RttAlpha * rtt + (1 - RttAlpha) * sample;
             frameBuffer = MyMovementUtils.CalculateInputBufferSize(rtt);
             // Debug.Log($"[Server {lastFrame}] Update Frame Buffer to {frameBuffer}");
@@ -200,8 +200,8 @@ public class MyServerMovementDriver : MonoBehaviour, MyMovementUtils.IMovementSt
         {
             MovementState = state,
             Timestamp = lastInput.Timestamp,
-            NextDilation = (int) (clientDilation * 100000f),
-            AppliedDilation = (int) (Time.time * 100000f)
+            NextFrameAdjustment = (int) (clientDilation * 100000f),
+            ServerTime = (int) (Time.time * 100000f)
         };
         var update = new ServerMovement.Update
         {

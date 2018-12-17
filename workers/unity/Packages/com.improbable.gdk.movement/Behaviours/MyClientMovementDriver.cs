@@ -277,8 +277,8 @@ public class MyClientMovementDriver : MonoBehaviour
             // update dilation
             // commandFrame.ServerAdjustment = response.TimeDelta;
             // commandFrame.ServerAdjustment = response.NextDilation / 100000f;
-            nextDilation = response.NextDilation / 100000f;
-            lastServerTimestamp = response.AppliedDilation;
+            nextDilation = response.NextFrameAdjustment / 100000f;
+            lastServerTimestamp = response.ServerTime;
             lastServerTimestampReceived = Time.time;
         }
 
@@ -306,7 +306,7 @@ public class MyClientMovementDriver : MonoBehaviour
             Yaw = (int) (yawThisFrame * 100000f),
             Pitch = (int) (pitchThisFrame * 100000f),
             Timestamp = lastFrame,
-            AppliedDilation = lastServerTimestamp + (Time.time - lastServerTimestampReceived) * 100000f
+            LastReceivedServerTime = lastServerTimestamp + (Time.time - lastServerTimestampReceived) * 100000f
         };
 
         var unackedInput = new List<ClientRequest>(inputState.Values) { clientRequest };
