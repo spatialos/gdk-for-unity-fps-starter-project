@@ -5,7 +5,7 @@ import "from_gdk_packages/com.improbable.gdk.standardtypes/standardtypes.schema"
 type ClientRequest {
 	improbable.gdk.standardtypes.IntDelta movement = 1;
 	int32 timestamp = 2;
-	float applied_dilation = 3;
+	float last_received_server_time = 3;
 	bool jump_pressed = 4;
 	bool forward_pressed = 5;
 	bool back_pressed = 6;
@@ -33,8 +33,8 @@ type MovementState {
 type ServerResponse {
 	MovementState movement_state = 1;
 	int32 timestamp = 2;
-	int32 applied_dilation = 3;
-	int32 next_dilation = 4;
+	int32 server_time = 3;
+	int32 next_frame_adjustment = 4;
 }
 
 component ClientMovement {
