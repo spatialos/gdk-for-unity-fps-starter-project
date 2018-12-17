@@ -4,9 +4,9 @@ public interface IMobileUI
 {
     Vector2 MoveTotal { get; }
     Vector2 LookDelta { get; }
-    bool AreAiming { get; }
+    bool IsAiming { get; }
     bool JumpPressed { get; }
     bool ShootPressed { get; }
-    bool AreFiring { get; }
+    bool ShootHeld { get; }
     bool MenuPressed { get; }
 }

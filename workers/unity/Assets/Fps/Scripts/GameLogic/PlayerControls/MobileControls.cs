@@ -15,11 +15,11 @@ public class MobileControls : MonoBehaviour, IControlProvider
     // DPI/physical screen size differences.
     public float YawDelta => mobileUI.LookDelta.x * LookScalar;
     public float PitchDelta => mobileUI.LookDelta.y * LookScalar;
-    public bool AreAiming => mobileUI.AreAiming;
+    public bool IsAiming => mobileUI.IsAiming;
 
     public bool JumpPressed => mobileUI.JumpPressed;
     public bool ShootPressed => mobileUI.ShootPressed;
-    public bool ShootHeld => mobileUI.AreFiring;
+    public bool ShootHeld => mobileUI.ShootHeld;
 
     public bool MenuPressed => mobileUI.MenuPressed;
     public bool ConnectPressed { get; } // Not used

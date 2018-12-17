@@ -7,7 +7,7 @@ public interface IControlProvider
     bool RespawnPressed { get; }
     float YawDelta { get; }
     float PitchDelta { get; }
-    bool AreAiming { get; }
+    bool IsAiming { get; }
     bool AreSprinting { get; }
     bool JumpPressed { get; }
     bool ShootPressed { get; }

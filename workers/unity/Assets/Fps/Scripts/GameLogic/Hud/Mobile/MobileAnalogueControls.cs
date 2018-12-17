@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MobileAnalogueControls : MonoBehaviour
@@ -19,13 +18,6 @@ public class MobileAnalogueControls : MonoBehaviour
     private int lookFingerId;
     private Vector2 lookStartPosition;
     private Vector2 lookLastPosition;
-
-    private readonly List<int> blacklistedFingerIds = new List<int>();
-
-    public void AddBlacklistedFingerId(int fingerId)
-    {
-        blacklistedFingerIds.Add(fingerId);
-    }
 
     private void Update()
     {
@@ -89,11 +81,6 @@ public class MobileAnalogueControls : MonoBehaviour
                 continue;
             }
 
-            if (blacklistedFingerIds.Contains(touch.fingerId))
-            {
-                continue;
-            }
-
             var leftOfScreen = touch.position.x < Screen.width / 2f;
             if (leftOfScreen)
             {
@@ -118,8 +105,6 @@ public class MobileAnalogueControls : MonoBehaviour
                 }
             }
         }
-
-        blacklistedFingerIds.Clear();
     }
 
 

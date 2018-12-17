@@ -5,9 +5,9 @@ public class MobileUIStandIn : IMobileUI
 {
     public Vector2 MoveTotal { get; }
     public Vector2 LookDelta { get; }
-    public bool AreAiming { get; }
+    public bool IsAiming { get; }
     public bool JumpPressed { get; }
     public bool ShootPressed { get; }
-    public bool AreFiring { get; }
+    public bool ShootHeld { get; }
     public bool MenuPressed { get; }
 }

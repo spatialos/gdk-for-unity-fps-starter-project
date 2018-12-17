@@ -9,8 +9,7 @@ public class MobileUI : MonoBehaviour, IMobileUI
 
     public TouchscreenButton JumpButton;
     public TouchscreenButton ADSButton;
-    public TouchscreenButton FireButtonLeft;
-    public TouchscreenButton FireButtonRight;
+    public TouchscreenButton FireButton;
     public TouchscreenButton MenuButton;
     public RectTransform LeftStickKnob;
     public float LeftStickMaxDistance = 100;
@@ -22,10 +21,8 @@ public class MobileUI : MonoBehaviour, IMobileUI
     public bool JumpPressed { get; private set; }
     public bool ShootPressed { get; private set; }
     public bool MenuPressed { get; private set; }
-    public bool AreFiring => numActiveFireButtons > 0;
-    public bool AreAiming { get; private set; }
-
-    private int numActiveFireButtons;
+    public bool IsAiming { get; private set; }
+    public bool ShootHeld { get; private set; }
 
     private MobileAnalogueControls analogueControls;
 
@@ -60,10 +57,8 @@ public class MobileUI : MonoBehaviour, IMobileUI
         JumpButton.OnButtonDown += Jump;
         ADSButton.OnButtonDown += ToggleADS;
         ADSButton.OnButtonUp += ToggleADS;
-        FireButtonLeft.OnButtonDown += StartFiringLeft;
-        FireButtonRight.OnButtonDown += StartFiringRight;
-        FireButtonLeft.OnButtonUp += StopFiring;
-        FireButtonRight.OnButtonUp += StopFiring;
+        FireButton.OnButtonDown += StartFiring;
+        FireButton.OnButtonUp += StopFiring;
         MenuButton.OnButtonDown += OpenMenu;
     }
 
@@ -72,13 +67,9 @@ public class MobileUI : MonoBehaviour, IMobileUI
         JumpButton.OnButtonDown -= Jump;
         ADSButton.OnButtonDown -= ToggleADS;
         ADSButton.OnButtonUp -= ToggleADS;
-        FireButtonLeft.OnButtonDown -= StartFiringLeft;
-        FireButtonRight.OnButtonDown -= StartFiringRight;
-        FireButtonLeft.OnButtonUp -= StopFiring;
-        FireButtonRight.OnButtonUp -= StopFiring;
+        FireButton.OnButtonDown -= StartFiring;
+        FireButton.OnButtonUp -= StopFiring;
         MenuButton.OnButtonDown -= OpenMenu;
-
-        numActiveFireButtons = 0;
     }
 
 
@@ -89,27 +80,17 @@ public class MobileUI : MonoBehaviour, IMobileUI
 
     private void ToggleADS(PointerEventData data)
     {
-        AreAiming = !AreAiming;
+        IsAiming = !IsAiming;
     }
 
-    private void StartFiringLeft(PointerEventData data)
+    private void StartFiring(PointerEventData data)
     {
-        if (data != null)
-        {
-            analogueControls.AddBlacklistedFingerId(data.pointerId);
-        }
-
-        numActiveFireButtons++;
-    }
-
-    private void StartFiringRight(PointerEventData data)
-    {
-        numActiveFireButtons++;
+        ShootHeld = true;
     }
 
     private void StopFiring(PointerEventData data)
     {
-        numActiveFireButtons--;
+        ShootHeld = false;
     }
 
     private void OpenMenu(PointerEventData data)

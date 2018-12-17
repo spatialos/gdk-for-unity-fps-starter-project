@@ -110,7 +110,7 @@ namespace Fps
             var pitchDelta = controller.PitchDelta;
 
             // Modifiers
-            var isAiming = controller.AreAiming;
+            var isAiming = controller.IsAiming;
             var isSprinting = controller.AreSprinting;
 
             var isJumpPressed = controller.JumpPressed;
