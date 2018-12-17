@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 0
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 0}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -428,16 +428,6 @@ Prefab:
       propertyPath: screenUIController
       value: 
       objectReference: {fileID: 714677615}
-    - target: {fileID: 114220086504602960, guid: 928af08170e7d0243a977f4f26fe42a0,
-        type: 2}
-      propertyPath: screenUIControllerDesktop
-      value: 
-      objectReference: {fileID: 714677615}
-    - target: {fileID: 114220086504602960, guid: 928af08170e7d0243a977f4f26fe42a0,
-        type: 2}
-      propertyPath: screenUIControllerMobile
-      value: 
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 928af08170e7d0243a977f4f26fe42a0, type: 2}
   m_IsPrefabAsset: 0
