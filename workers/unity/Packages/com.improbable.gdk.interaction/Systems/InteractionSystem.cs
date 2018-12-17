@@ -62,7 +62,7 @@ namespace Improbable.Gdk.Interaction
                     {
                         var commandSender = raycastInteracts.InteractRequestSenders[i];
                         var interactRequest = InteractableComponent.Interact.CreateRequest(
-                            new Worker.EntityId(interactEntityId),
+                            new EntityId(interactEntityId),
                             new InteractRequest(raycastInteracts.SpatialEntityIds[i].EntityId.Id)
                         );
                         commandSender.RequestsToSend.Add(interactRequest);
@@ -103,7 +103,7 @@ namespace Improbable.Gdk.Interaction
                 {
                     var commandSender = proximityInteracts.InteractRequestSenders[i];
                     var interactRequest = InteractableComponent.Interact.CreateRequest(
-                        new Worker.EntityId(closestEntityId),
+                        new EntityId(closestEntityId),
                         new InteractRequest(proximityInteracts.SpatialEntityIds[i].EntityId.Id)
                     );
                     commandSender.RequestsToSend.Add(interactRequest);
@@ -121,7 +121,7 @@ namespace Improbable.Gdk.Interaction
 
                 var commandSender = triggerInteracts.InteractRequestSenders[i];
                 var interactRequest = InteractableComponent.Interact.CreateRequest(
-                    new Worker.EntityId(triggerDetails.TargetEntityId),
+                    new EntityId(triggerDetails.TargetEntityId),
                     new InteractRequest(triggerInteracts.SpatialEntityIds[i].EntityId.Id)
                 );
                 commandSender.RequestsToSend.Add(interactRequest);
