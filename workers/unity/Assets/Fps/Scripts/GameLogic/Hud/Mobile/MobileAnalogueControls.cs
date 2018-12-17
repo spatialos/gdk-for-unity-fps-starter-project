@@ -37,11 +37,6 @@ public class MobileAnalogueControls : MonoBehaviour
         MoveTotal = Vector2.zero;
     }
 
-    public void AdjustMoveStartPosition(Vector2 offset)
-    {
-        moveStartPosition += offset;
-    }
-
     private void CheckForStoppedTouches()
     {
         if (areMoving)
@@ -198,6 +193,11 @@ public class MobileAnalogueControls : MonoBehaviour
         }
 
         throw new ArgumentException($"No touch found with fingerId {fingerId}");
+    }
+
+    public void AdjustMoveStartPosition(Vector2 offset)
+    {
+        moveStartPosition += offset;
     }
 
     private void DrawMoveAreaGUI()
