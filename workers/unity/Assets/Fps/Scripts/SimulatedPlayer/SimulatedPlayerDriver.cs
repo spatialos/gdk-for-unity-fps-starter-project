@@ -4,12 +4,13 @@ using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.Guns;
 using Improbable.Gdk.Health;
 using Improbable.Gdk.Movement;
+using Improbable.Gdk.StandardTypes;
 using Unity.Entities;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class SimulatedPlayerDriver : MonoBehaviour
+public class SimulatedPlayerDriver : MonoBehaviour, MyMovementUtils.IMovementStateRestorer
 {
     public enum PlayerState
     {
@@ -30,6 +31,7 @@ public class SimulatedPlayerDriver : MonoBehaviour
     private NavMeshAgent agent;
     private SimulatedPlayerCoordinatorWorkerConnector coordinator;
     private CommandFrameSystem commandFrame;
+    private CharacterController controller;
 
     private readonly JumpMovement jumpMovement = new JumpMovement();
     private readonly MyMovementUtils.SprintCooldown sprintCooldown = new MyMovementUtils.SprintCooldown();
@@ -59,6 +61,7 @@ public class SimulatedPlayerDriver : MonoBehaviour
 
     private void Start()
     {
+        controller = GetComponent<CharacterController>();
         movementDriver = GetComponent<MyClientMovementDriver>();
         movementDriver.SetMovementProcessors(new MyMovementUtils.IMovementProcessor[]
         {
@@ -67,11 +70,12 @@ public class SimulatedPlayerDriver : MonoBehaviour
             jumpMovement,
             new MyMovementUtils.Gravity(),
             new MyMovementUtils.TerminalVelocity(),
-            new MyMovementUtils.CharacterControllerMovement(GetComponent<CharacterController>()),
+            new MyMovementUtils.CharacterControllerMovement(controller),
             removeOrigin,
             new IsGroundedMovement(),
             new MyMovementUtils.AdjustVelocity(),
         });
+        movementDriver.SetStateRestorer(this);
         shooting = GetComponent<ClientShooting>();
         coordinator = FindObjectOfType<SimulatedPlayerCoordinatorWorkerConnector>();
         agent.updatePosition = false;
@@ -379,6 +383,11 @@ public class SimulatedPlayerDriver : MonoBehaviour
                 similarPositionsCount = 0;
             }
         }
+    }
+
+    public void Restore(MovementState movementState)
+    {
+        controller.transform.position = movementState.Position.ToVector3() + spatial.Worker.Origin;
     }
 
 #if UNITY_EDITOR
