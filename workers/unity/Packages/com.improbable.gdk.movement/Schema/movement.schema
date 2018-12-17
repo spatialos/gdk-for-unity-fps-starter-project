@@ -13,8 +13,8 @@ type ClientRequest {
 	bool right_pressed = 8;
 	bool sprint_pressed = 9;
 	bool aim_pressed = 10;
-	int32 camera_pitch = 11;
-	int32 camera_yaw = 12;
+	int32 pitch = 11;
+	int32 yaw = 12;
 }
 
 type MovementState {
@@ -25,6 +25,9 @@ type MovementState {
     bool did_jump = 5;
     bool did_teleport = 6;
     bool is_grounded = 7;
+    int32 pitch = 8;
+    int32 yaw = 9;
+    bool is_aiming = 10;
 }
 
 type ServerResponse {
@@ -32,9 +35,6 @@ type ServerResponse {
 	int32 timestamp = 2;
 	int32 applied_dilation = 3;
 	int32 next_dilation = 4;
-	int32 yaw = 5;
-	int32 pitch = 6;
-	bool aiming = 7;
 }
 
 type RotationUpdate {

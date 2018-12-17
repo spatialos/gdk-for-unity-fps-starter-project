@@ -71,11 +71,11 @@ public class MyProxyMovementDriver : MonoBehaviour
         var fromPosition = from.MovementState.Position.ToVector3() + spatial.Worker.Origin;
         var toPosition = to.MovementState.Position.ToVector3() + spatial.Worker.Origin;
         var rot = Controller.transform.rotation.eulerAngles;
-        var fromRot = Quaternion.Euler(from.Pitch / 100000f, from.Yaw / 100000f, rot.z);
-        var toRot = Quaternion.Euler(to.Pitch / 100000f, to.Yaw / 100000f, rot.z);
+        var fromRot = Quaternion.Euler(from.MovementState.Pitch / 100000f, from.MovementState.Yaw / 100000f, rot.z);
+        var toRot = Quaternion.Euler(to.MovementState.Pitch / 100000f, to.MovementState.Yaw / 100000f, rot.z);
 
         velocity = (toPosition - fromPosition) / CommandFrameSystem.FrameLength;
-        aiming = from.Aiming;
+        aiming = from.MovementState.IsAiming;
 
         var t = remainder / CommandFrameSystem.FrameLength;
 

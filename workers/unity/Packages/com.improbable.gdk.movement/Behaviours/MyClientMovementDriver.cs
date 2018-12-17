@@ -303,8 +303,8 @@ public class MyClientMovementDriver : MonoBehaviour
             JumpPressed = jumpThisFrame,
             SprintPressed = sprintThisFrame,
             AimPressed = aimThisFrame,
-            CameraYaw = (int) (yawThisFrame * 100000f),
-            CameraPitch = (int) (pitchThisFrame * 100000f),
+            Yaw = (int) (yawThisFrame * 100000f),
+            Pitch = (int) (pitchThisFrame * 100000f),
             Timestamp = lastFrame,
             AppliedDilation = lastServerTimestamp + (Time.time - lastServerTimestampReceived) * 100000f
         };
@@ -370,6 +370,6 @@ public class MyClientMovementDriver : MonoBehaviour
             request.ForwardPressed, request.BackPressed,
             request.RightPressed, request.LeftPressed,
             request.JumpPressed, request.SprintPressed,
-            request.CameraYaw, request.CameraPitch);
+            request.Yaw, request.Pitch);
     }
 }
