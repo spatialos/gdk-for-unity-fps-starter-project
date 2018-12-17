@@ -1,7 +1,3 @@
-using System;
-using System.Diagnostics;
-using Unity.Entities;
-
 namespace Fps
 {
     public static class WorkerUtils
