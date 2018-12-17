@@ -53,12 +53,12 @@
     },
     {
       "worker_type": "AndroidClient",
-	  "flags": [
+      "flags": [
         {
           "name": "world_size",
           "value": "small"
         }
-      ],	  
+      ],      
       "permissions": [{
           "all": {}
       }],
@@ -68,12 +68,12 @@
     },
     {
       "worker_type": "iOSClient",
-	  "flags": [
+      "flags": [
         {
           "name": "world_size",
           "value": "small"
         }
-      ],	  
+      ],      
       "permissions": [{
           "all": {}
       }],
@@ -81,7 +81,7 @@
         "singleton_worker": {}
       }
     }, 
-	{
+    {
       "worker_type": "SimulatedPlayer",
       "flags": [
         {
