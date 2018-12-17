@@ -203,7 +203,6 @@ public class MyServerMovementDriver : MonoBehaviour, MyMovementUtils.IMovementSt
             NextDilation = (int) (clientDilation * 100000f),
             AppliedDilation = (int) (Time.time * 100000f)
         };
-        server.SendServerMovement(response);
         var update = new ServerMovement.Update
         {
             Latest = response,

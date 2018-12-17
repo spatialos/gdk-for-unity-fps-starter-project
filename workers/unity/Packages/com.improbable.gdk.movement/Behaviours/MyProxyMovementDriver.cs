@@ -32,10 +32,10 @@ public class MyProxyMovementDriver : MonoBehaviour
     {
         spatial = GetComponent<SpatialOSComponent>();
         commandFrame = spatial.World.GetExistingManager<CommandFrameSystem>();
-        server.OnServerMovement += OnServerMovement;
+        server.LatestUpdated += ServerOnLatestUpdated;
     }
 
-    private void OnServerMovement(ServerResponse response)
+    private void ServerOnLatestUpdated(ServerResponse response)
     {
         // replace entire buffer with this update.
         if (response.MovementState.DidTeleport)

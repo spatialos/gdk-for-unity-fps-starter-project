@@ -55,13 +55,7 @@ namespace Fps
             };
 
             var serverMovement = ServerMovement.Component.CreateSchemaComponentData(serverResponse, 0, 0);
-            var rotationUpdate = new RotationUpdate
-            {
-                Yaw = spawnYaw.ToInt1k(),
-                Pitch = spawnPitch.ToInt1k()
-            };
             var clientMovement = ClientMovement.Component.CreateSchemaComponentData(new List<ClientRequest>());
-            var clientRotation = ClientRotation.Component.CreateSchemaComponentData(rotationUpdate);
             var shootingComponent = ShootingComponent.Component.CreateSchemaComponentData();
             var gunStateComponent = GunStateComponent.Component.CreateSchemaComponentData(false);
             var gunComponent = GunComponent.Component.CreateSchemaComponentData(PlayerGunSettings.DefaultGunIndex);
@@ -82,7 +76,6 @@ namespace Fps
                 .SetReadAcl(AllWorkerAttributes)
                 .AddComponent(serverMovement, gameLogic)
                 .AddComponent(clientMovement, client)
-                .AddComponent(clientRotation, client)
                 .AddComponent(shootingComponent, client)
                 .AddComponent(gunComponent, gameLogic)
                 .AddComponent(gunStateComponent, client)
