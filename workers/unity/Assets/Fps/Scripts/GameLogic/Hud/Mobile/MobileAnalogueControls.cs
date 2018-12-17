@@ -8,6 +8,7 @@ public class MobileAnalogueControls : MonoBehaviour
     public Vector2 LookDelta { get; private set; }
     public Vector2 LookTotal { get; private set; }
 
+
     private bool areMoving;
     private bool areLooking;
 
@@ -36,6 +37,10 @@ public class MobileAnalogueControls : MonoBehaviour
         MoveTotal = Vector2.zero;
     }
 
+    public void AdjustMoveStartPosition(Vector2 offset)
+    {
+        moveStartPosition += offset;
+    }
 
     private void CheckForStoppedTouches()
     {
@@ -117,6 +122,8 @@ public class MobileAnalogueControls : MonoBehaviour
 
         var position = GetTouchFromFingerId(moveFingerId).position;
         MoveTotal = position - moveStartPosition;
+
+
         MoveDelta = position - moveLastPosition;
         moveLastPosition = position;
     }
@@ -191,5 +198,10 @@ public class MobileAnalogueControls : MonoBehaviour
         }
 
         throw new ArgumentException($"No touch found with fingerId {fingerId}");
+    }
+
+    private void DrawMoveAreaGUI()
+    {
+        GUI.Box(new Rect(moveStartPosition.x - 100, Screen.height - (moveStartPosition.y + 100), 200, 200), "");
     }
 }

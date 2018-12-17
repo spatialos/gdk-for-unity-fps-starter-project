@@ -10,4 +10,5 @@ public class MobileUIStandIn : IMobileUI
     public bool ShootPressed { get; }
     public bool ShootHeld { get; }
     public bool MenuPressed { get; }
+    public float MaxStickDistance { get; }
 }

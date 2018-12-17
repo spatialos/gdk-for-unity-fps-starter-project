@@ -9,4 +9,5 @@ public interface IMobileUI
     bool ShootPressed { get; }
     bool ShootHeld { get; }
     bool MenuPressed { get; }
+    float MaxStickDistance { get; }
 }

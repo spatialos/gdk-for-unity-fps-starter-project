@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using UnityEngine;
-using Improbable.Gdk.Mobile;
 
 public class MobileControls : MonoBehaviour, IControlProvider
 {
@@ -9,7 +8,7 @@ public class MobileControls : MonoBehaviour, IControlProvider
     public float MovementScalar = 0.01f;
     public float LookScalar = 0.33f;
     public float SprintMaxAngle = 30f;
-    public float SprintDistanceThreshold = 100;
+    public float SprintDistanceThreshold => mobileUI.MaxStickDistance;
 
     // TODO Currently YawDelta/PitchDelta is untested on different devices. Probably needs some more love to resolve
     // DPI/physical screen size differences.

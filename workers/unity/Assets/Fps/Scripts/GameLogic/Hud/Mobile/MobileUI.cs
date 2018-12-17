@@ -12,10 +12,15 @@ public class MobileUI : MonoBehaviour, IMobileUI
     public TouchscreenButton FireButton;
     public TouchscreenButton MenuButton;
     public RectTransform LeftStickKnob;
-    public float LeftStickMaxDistance = 100;
+
+
+    public float StickMoveDistance = 100;
+    public float SprintDistanceBuffer = 30;
 
     public bool ShowHitboxes;
 
+
+    public float MaxStickDistance => StickMoveDistance;
     public Vector2 LookDelta => analogueControls.LookDelta;
     public Vector2 MoveTotal => analogueControls.MoveTotal;
     public bool JumpPressed { get; private set; }
@@ -42,7 +47,30 @@ public class MobileUI : MonoBehaviour, IMobileUI
 
     private void Update()
     {
-        LeftStickKnob.localPosition = Vector3.ClampMagnitude(MoveTotal, LeftStickMaxDistance);
+        if (MoveTotal.x < -MaxStickDistance)
+        {
+            var diff = MoveTotal.x + MaxStickDistance;
+            analogueControls.AdjustMoveStartPosition(new Vector2(diff, 0));
+        }
+        else if (MoveTotal.x > MaxStickDistance)
+        {
+            var diff = MoveTotal.x - MaxStickDistance;
+            analogueControls.AdjustMoveStartPosition(new Vector2(diff, 0));
+        }
+
+        if (MoveTotal.y < -MaxStickDistance)
+        {
+            var diff = MoveTotal.y + MaxStickDistance;
+            analogueControls.AdjustMoveStartPosition(new Vector2(0, diff));
+        }
+        else if (MoveTotal.y > MaxStickDistance + SprintDistanceBuffer)
+        {
+            var diff = MoveTotal.y - (MaxStickDistance + SprintDistanceBuffer);
+            analogueControls.AdjustMoveStartPosition(new Vector2(0, diff));
+        }
+
+
+        LeftStickKnob.localPosition = Vector3.ClampMagnitude(MoveTotal, MaxStickDistance);
     }
 
     private void LateUpdate()
