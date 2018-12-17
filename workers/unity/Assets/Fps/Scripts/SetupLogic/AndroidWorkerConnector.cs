@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Improbable.Gdk.Core;
@@ -87,7 +88,7 @@ namespace Fps
             return RuntimeConfigDefaults.ReceptionistHost;
 #else
             throw new PlatformNotSupportedException(
-                $"{nameof(AndroidClientWorkerConnector)} can only be used for the Android platform. Please check your build settings.");
+                $"{nameof(AndroidWorkerConnector)} can only be used for the Android platform. Please check your build settings.");
 #endif
         }
 
