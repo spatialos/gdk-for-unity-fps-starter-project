@@ -1,18 +1,62 @@
 using System;
+using System.Threading.Tasks;
 using Fps;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.PlayerLifecycle;
+using Improbable.Worker.CInterop.Alpha;
+using UnityEngine;
 
 public class SimulatedPlayerWorkerConnector : DefaultWorkerConnector
 {
     private const string AuthPlayer = "Prefabs/SimulatedPlayer/SimulatedPlayer";
     private const string NonAuthPlayer = "Prefabs/SimulatedPlayer/SimulatedPlayerProxy";
 
-    private async void Start()
+    public string LoginToken;
+    public string PlayerIdentityToken;
+
+    private bool connectToRemoteDeployment;
+
+    public async Task ConnectSimulatedPlayer(ILogDispatcher logDispatcher, string SimulatedPlayerDevAuthTokenId, string SimulatedPlayerTargetDeployment)
     {
-        await Connect(WorkerUtils.SimulatedPlayer, new ForwardingDispatcher());
+        Debug.Log(SimulatedPlayerTargetDeployment);
+        if (!string.IsNullOrEmpty(SimulatedPlayerTargetDeployment))
+        {
+            var playerIdentityTokenResponse = DevelopmentAuthentication.CreateDevelopmentPlayerIdentityTokenAsync("locator.improbable.io", 444,
+                new PlayerIdentityTokenRequest
+                {
+                    DevelopmentAuthenticationTokenId = SimulatedPlayerDevAuthTokenId,
+                    DisplayName = "",
+                    PlayerId = ""
+                }).Get();
+            PlayerIdentityToken = playerIdentityTokenResponse?.PlayerIdentityToken;
+
+            logDispatcher.HandleLog(LogType.Warning, new LogEvent("PIT:" + PlayerIdentityToken));
+
+            var loginTokenResponse = DevelopmentAuthentication.CreateDevelopmentLoginTokensAsync("locator.improbable.io", 444,
+                new LoginTokensRequest
+                {
+                    PlayerIdentityToken = PlayerIdentityToken,
+                    WorkerType = "SimulatedPlayer"
+                }).Get();
+
+            if (loginTokenResponse?.LoginTokens != null)
+            {
+                foreach (var loginTokenDetails in loginTokenResponse.Value.LoginTokens)
+                {
+                    if (loginTokenDetails.DeploymentName == SimulatedPlayerTargetDeployment)
+                    {
+                        LoginToken = loginTokenDetails.LoginToken;
+                    }
+                }
+            }
+
+            logDispatcher.HandleLog(LogType.Warning, new LogEvent("LT: " + LoginToken));
+            connectToRemoteDeployment = true;
+        }
+
+        await Connect(WorkerUtils.UnityClient, new ForwardingDispatcher());
     }
 
     protected override void HandleWorkerConnectionEstablished()
@@ -29,6 +73,11 @@ public class SimulatedPlayerWorkerConnector : DefaultWorkerConnector
             new AdvancedEntityPipeline(Worker, AuthPlayer, NonAuthPlayer, fallback));
     }
 
+    protected override ConnectionService GetConnectionService()
+    {
+        return connectToRemoteDeployment ? ConnectionService.AlphaLocator : ConnectionService.Receptionist;
+    }
+
     protected override ReceptionistConfig GetReceptionistConfig(string workerType)
     {
         var config = base.GetReceptionistConfig(workerType);
@@ -37,5 +86,21 @@ public class SimulatedPlayerWorkerConnector : DefaultWorkerConnector
         config.WorkerId = $"{workerType}-{Guid.NewGuid()}";
 
         return config;
+    }
+
+    protected override AlphaLocatorConfig GetAlphaLocatorConfig()
+    {
+        return new AlphaLocatorConfig
+        {
+            LocatorHost = "locator.improbable.io",
+            LocatorParameters = new LocatorParameters
+            {
+                PlayerIdentity = new PlayerIdentityCredentials
+                {
+                    LoginToken = LoginToken,
+                    PlayerIdentityToken = PlayerIdentityToken,
+                }
+            }
+        };
     }
 }

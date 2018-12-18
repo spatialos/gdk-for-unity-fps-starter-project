@@ -13,7 +13,7 @@ namespace Fps
     public static class FpsEntityTemplates
     {
         private static readonly List<string> AllWorkerAttributes =
-            new List<string> { WorkerUtils.UnityGameLogic, WorkerUtils.UnityClient, WorkerUtils.SimulatedPlayer };
+            new List<string> { WorkerUtils.UnityGameLogic, WorkerUtils.UnityClient };
 
         public static EntityTemplate Spawner()
         {
@@ -25,16 +25,6 @@ namespace Fps
                 .SetPersistence(true)
                 .SetReadAcl(gameLogic)
                 .AddComponent(PlayerCreator.Component.CreateSchemaComponentData(), gameLogic)
-                .Build();
-        }
-
-        public static EntityTemplate SimulatedPlayerCoordinatorTrigger()
-        {
-            return EntityBuilder.Begin()
-                .AddPosition(0, 0, 0, WorkerUtils.SimulatedPlayerCoorindator)
-                .AddMetadata("SimulatedPlayerCoordinatorTrigger", WorkerUtils.SimulatedPlayerCoorindator)
-                .SetPersistence(true)
-                .SetReadAcl(WorkerUtils.SimulatedPlayerCoorindator)
                 .Build();
         }
 
@@ -86,6 +76,16 @@ namespace Fps
                 .AddComponent(healthComponent, gameLogic)
                 .AddComponent(healthRegenComponent, gameLogic)
                 .AddPlayerLifecycleComponents(workerId, client, gameLogic)
+                .Build();
+        }
+
+        public static EntityTemplate SimulatedPlayerCoordinatorTrigger()
+        {
+            return EntityBuilder.Begin()
+                .AddPosition(0, 0, 0, WorkerUtils.SimulatedPlayerCoordinator)
+                .AddMetadata("SimulatedPlayerCoordinatorTrigger", WorkerUtils.SimulatedPlayerCoordinator)
+                .SetPersistence(true)
+                .SetReadAcl(WorkerUtils.SimulatedPlayerCoordinator)
                 .Build();
         }
     }
