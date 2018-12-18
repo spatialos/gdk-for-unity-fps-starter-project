@@ -16,16 +16,13 @@ namespace Fps
         [Require] private ServerMovement.Requirable.Writer serverMovement;
         [Require] private Position.Requirable.Writer spatialPosition;
 
-        private MyServerMovementDriver movementDriver;
-
-        private SpatialOSComponent spatial;
+        private FpsServerDriver movementDriver;
 
         private void OnEnable()
         {
             respawnRequests.OnRequestRespawnRequest += OnRequestRespawn;
-            spatial = GetComponent<SpatialOSComponent>();
 
-            movementDriver = GetComponent<MyServerMovementDriver>();
+            movementDriver = GetComponent<FpsServerDriver>();
         }
 
         private void OnDisable()

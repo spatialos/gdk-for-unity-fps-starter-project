@@ -48,6 +48,10 @@ public class MyClientMovementDriver : MonoBehaviour
 
     private MyMovementUtils.IMovementStateRestorer stateRestorer;
 
+    private MyMovementUtils.ICustomMovementProcessor customProcessor;
+    private Type customInputType;
+    private Type customStateType;
+
     private int debugRow;
 
     private void Awake()
@@ -88,6 +92,11 @@ public class MyClientMovementDriver : MonoBehaviour
         stateRestorer = restorer;
     }
 
+    public void SetCustomProcessor(MyMovementUtils.ICustomMovementProcessor processor)
+    {
+        customProcessor = processor;
+    }
+
     private void UpdateFrameBuffer()
     {
         var rtt = serverMovement.Data.Rtt;
@@ -97,6 +106,11 @@ public class MyClientMovementDriver : MonoBehaviour
 
     private void Update()
     {
+        if (stateRestorer == null || customProcessor == null)
+        {
+            return;
+        }
+
         if (commandFrame.IsPaused())
         {
             if (inputState.Count < frameBuffer * NetResumeOnBufferSizeMultiplier)
@@ -124,7 +138,10 @@ public class MyClientMovementDriver : MonoBehaviour
                 var input = SendInput();
                 movementState.TryGetValue(lastFrame - 1, out var previousState);
                 stateRestorer?.Restore(previousState);
-                lastMovementState = MyMovementUtils.ApplyInput(input, previousState, movementProcessors);
+
+                lastMovementState = MyMovementUtils.ApplyCustomInput(input, previousState, customProcessor);
+                // lastMovementState = MyMovementUtils.ApplyInput(input, previousState, movementProcessors);
+
                 movementState[lastFrame] = lastMovementState;
                 inputState.Add(lastFrame, input);
             }
@@ -164,8 +181,8 @@ public class MyClientMovementDriver : MonoBehaviour
             }
 
             stateRestorer?.Restore(movementState[lastFrame - 1]);
-            MyMovementUtils.ApplyPartialInput(inputState[lastFrame], movementState[lastFrame - 1],
-                movementProcessors, remainder);
+            MyMovementUtils.ApplyPartialCustomInput(inputState[lastFrame], movementState[lastFrame - 1],
+                customProcessor, remainder);
         }
         else if (remainder < 0)
         {
@@ -182,8 +199,8 @@ public class MyClientMovementDriver : MonoBehaviour
             }
 
             stateRestorer?.Restore(movementState[lastFrame - 2]);
-            MyMovementUtils.ApplyPartialInput(inputState[lastFrame - 1], movementState[lastFrame - 2],
-                movementProcessors, CommandFrameSystem.FrameLength + remainder);
+            MyMovementUtils.ApplyPartialCustomInput(inputState[lastFrame - 1], movementState[lastFrame - 2],
+                customProcessor, CommandFrameSystem.FrameLength + remainder);
         }
     }
 
@@ -248,7 +265,8 @@ public class MyClientMovementDriver : MonoBehaviour
                         Debug.LogFormat("Previous Position {0}", movementState[i].Position.ToVector3());
                         Debug.LogFormat("Previous Velocity {0}", movementState[i].Velocity.ToVector3());
 
-                        movementState[i] = MyMovementUtils.ApplyInput(inputState[i], movementState[i - 1], movementProcessors);
+                        movementState[i] =
+                            MyMovementUtils.ApplyCustomInput(inputState[i], movementState[i - 1], customProcessor);
 
                         //Debug.LogFormat("Adjusted Position: {0}", movementState[i].Position.ToVector3());
                         Debug.DrawLine(

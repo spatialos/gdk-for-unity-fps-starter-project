@@ -1,4 +1,5 @@
-﻿using Improbable.Gdk.Movement;
+﻿using Improbable.Fps.Custommovement;
+using Improbable.Gdk.Movement;
 using Improbable.Gdk.StandardTypes;
 using UnityEngine;
 
@@ -8,6 +9,11 @@ public class MyMovementUtils
     {
         bool Process(ClientRequest input, MovementState previousState,
             ref MovementState newState, float deltaTime);
+    }
+
+    public interface ICustomMovementProcessor
+    {
+        MovementState Process(CustomInput input, MovementState previousState, float deltaTime);
     }
 
     public interface IMovementStateRestorer
@@ -212,6 +218,18 @@ public class MyMovementUtils
         }
 
         return newState;
+    }
+
+    public static MovementState ApplyCustomInput(
+        ClientRequest input, MovementState previousState, ICustomMovementProcessor customProcessor)
+    {
+        return ApplyPartialCustomInput(input, previousState, customProcessor, CommandFrameSystem.FrameLength);
+    }
+
+    public static MovementState ApplyPartialCustomInput(
+        ClientRequest input, MovementState previousState, ICustomMovementProcessor customProcessor, float deltaTime)
+    {
+        return customProcessor.Process(input.Input, previousState, deltaTime);
     }
 
     public static int CalculateInputBufferSize(float rtt)
