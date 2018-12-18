@@ -44,7 +44,7 @@ namespace Improbable.Gdk.Movement
         private void OnClientUpdate(ClientRequest request)
         {
             // Move the player by the given delta.
-            Move(request.Movement.ToVector3());
+            Move(request.Input.Movement.ToVector3());
 
             var positionNoOffset = transform.position - origin;
 

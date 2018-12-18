@@ -14,23 +14,23 @@ public class StandardMovement : MyMovementUtils.IMovementProcessor
 
         var newVelocity = previousState.Velocity.ToVector3();
         var speed = MyMovementUtils.movementSettings.MovementSpeed.RunSpeed;
-        if (input.AimPressed)
+        if (input.Input.AimPressed)
         {
             speed = MyMovementUtils.movementSettings.MovementSpeed.WalkSpeed;
         }
-        else if (input.SprintPressed)
+        else if (input.Input.SprintPressed)
         {
             speed = MyMovementUtils.movementSettings.MovementSpeed.SprintSpeed;
         }
 
         var inputVector = new Vector3(
-            input.RightPressed ? 1 : (input.LeftPressed) ? -1 : 0,
+            input.Input.RightPressed ? 1 : (input.Input.LeftPressed) ? -1 : 0,
             0,
-            input.ForwardPressed ? 1 : (input.BackPressed ? -1 : 0));
+            input.Input.ForwardPressed ? 1 : (input.Input.BackPressed ? -1 : 0));
 
         inputVector.Normalize();
 
-        var rot = Quaternion.Euler(0, input.Yaw / 100000f, 0);
+        var rot = Quaternion.Euler(0, input.Input.Yaw / 100000f, 0);
 
         // rotate to face yaw in input.
         inputVector = rot * inputVector;
@@ -61,9 +61,9 @@ public class StandardMovement : MyMovementUtils.IMovementProcessor
         newState.Velocity = newVelocity.ToIntAbsolute();
 
         // TODO: Put this somewhere better, in a seperate processor probably.
-        newState.IsAiming = input.AimPressed;
-        newState.Pitch = input.Pitch;
-        newState.Yaw = input.Yaw;
+        newState.IsAiming = input.Input.AimPressed;
+        newState.Pitch = input.Input.Pitch;
+        newState.Yaw = input.Input.Yaw;
 
         return true;
     }

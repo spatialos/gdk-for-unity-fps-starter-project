@@ -78,7 +78,7 @@ public class MyMovementUtils
                 return true;
             }
 
-            if (input.SprintPressed)
+            if (input.Input.SprintPressed)
             {
                 newState.SprintCooldown = movementSettings.SprintCooldown;
             }

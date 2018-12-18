@@ -1,20 +1,12 @@
 package improbable.gdk.movement;
 
 import "from_gdk_packages/com.improbable.gdk.standardtypes/standardtypes.schema";
+import "custom_movement.schema";
 
 type ClientRequest {
-	improbable.gdk.standardtypes.IntDelta movement = 1;
-	int32 timestamp = 2;
-	float last_received_server_time = 3;
-	bool jump_pressed = 4;
-	bool forward_pressed = 5;
-	bool back_pressed = 6;
-	bool left_pressed = 7;
-	bool right_pressed = 8;
-	bool sprint_pressed = 9;
-	bool aim_pressed = 10;
-	int32 pitch = 11;
-	int32 yaw = 12;
+	int32 timestamp = 1;
+	float last_received_server_time = 2;
+	improbable.fps.custommovement.CustomInput input = 3;
 }
 
 type MovementState {
@@ -35,6 +27,7 @@ type ServerResponse {
 	int32 timestamp = 2;
 	int32 server_time = 3;
 	int32 next_frame_adjustment = 4;
+  improbable.fps.custommovement.CustomState state = 5;
 }
 
 component ClientMovement {
