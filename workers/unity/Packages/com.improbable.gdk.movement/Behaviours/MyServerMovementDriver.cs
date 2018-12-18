@@ -178,6 +178,7 @@ public class MyServerMovementDriver : MonoBehaviour, MyMovementUtils.IMovementSt
                 }
 
                 movementState.TryGetValue(lastFrame - 1, out var previousState);
+
                 // shouldn't need to call restore here.
                 stateRestorer.Restore(previousState);
                 var state = MyMovementUtils.ApplyInput(lastInput, previousState, movementProcessors);

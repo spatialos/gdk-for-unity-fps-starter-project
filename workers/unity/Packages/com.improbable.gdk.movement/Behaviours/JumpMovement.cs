@@ -14,7 +14,7 @@ public class JumpMovement : MyMovementUtils.IMovementProcessor
 
         var grounded = previousState.IsGrounded;
         var canJump = previousState.CanJump;
-        var jumpPressed = input.JumpPressed;
+        var jumpPressed = input.Input.JumpPressed;
 
         if (grounded && canJump && jumpPressed)
         {

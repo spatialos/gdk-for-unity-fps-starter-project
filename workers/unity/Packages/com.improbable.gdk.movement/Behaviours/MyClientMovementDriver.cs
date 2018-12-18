@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Improbable.Fps.Custommovement;
 using UnityEngine;
 using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.Movement;
@@ -296,15 +297,18 @@ public class MyClientMovementDriver : MonoBehaviour
     {
         var clientRequest = new ClientRequest
         {
-            ForwardPressed = forwardThisFrame,
-            BackPressed = backThisFrame,
-            LeftPressed = leftThisFrame,
-            RightPressed = rightThisFrame,
-            JumpPressed = jumpThisFrame,
-            SprintPressed = sprintThisFrame,
-            AimPressed = aimThisFrame,
-            Yaw = (int) (yawThisFrame * 100000f),
-            Pitch = (int) (pitchThisFrame * 100000f),
+            Input = new CustomInput()
+            {
+                ForwardPressed = forwardThisFrame,
+                BackPressed = backThisFrame,
+                LeftPressed = leftThisFrame,
+                RightPressed = rightThisFrame,
+                JumpPressed = jumpThisFrame,
+                SprintPressed = sprintThisFrame,
+                AimPressed = aimThisFrame,
+                Yaw = (int) (yawThisFrame * 100000f),
+                Pitch = (int) (pitchThisFrame * 100000f)
+            },
             Timestamp = lastFrame,
             LastReceivedServerTime = lastServerTimestamp + (Time.time - lastServerTimestampReceived) * 100000f
         };
@@ -367,9 +371,9 @@ public class MyClientMovementDriver : MonoBehaviour
     private string InputToString(ClientRequest request)
     {
         return string.Format("[F:{0} B:{1} R:{2} L:{3}, J:{4}, S:{5}, Yaw:{6}, Pitch:{7}]",
-            request.ForwardPressed, request.BackPressed,
-            request.RightPressed, request.LeftPressed,
-            request.JumpPressed, request.SprintPressed,
-            request.Yaw, request.Pitch);
+            request.Input.ForwardPressed, request.Input.BackPressed,
+            request.Input.RightPressed, request.Input.LeftPressed,
+            request.Input.JumpPressed, request.Input.SprintPressed,
+            request.Input.Yaw, request.Input.Pitch);
     }
 }
