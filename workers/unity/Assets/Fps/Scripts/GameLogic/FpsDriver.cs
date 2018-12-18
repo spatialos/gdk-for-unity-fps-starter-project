@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Security.Authentication;
 using Improbable.Common;
+using Improbable.Fps.Custommovement;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.Guns;
@@ -11,7 +12,7 @@ using UnityEngine;
 
 namespace Fps
 {
-    public class FpsDriver : MonoBehaviour, MyMovementUtils.IMovementStateRestorer
+    public class FpsDriver : MonoBehaviour, MyMovementUtils.IMovementStateRestorer, MyMovementUtils.ICustomMovementProcessor
     {
         [System.Serializable]
         private struct CameraSettings
@@ -53,6 +54,8 @@ namespace Fps
         private readonly MyMovementUtils.SprintCooldown sprintCooldown = new MyMovementUtils.SprintCooldown();
         private readonly MyMovementUtils.RemoveWorkerOrigin removeOrigin = new MyMovementUtils.RemoveWorkerOrigin();
 
+        private MyMovementUtils.IMovementProcessor[] processors;
+
         private Vector3 from;
         private Vector3 to;
         private Vector3 next;
@@ -62,7 +65,7 @@ namespace Fps
         {
             movement = GetComponent<MyClientMovementDriver>();
             controller = ControllerProxy.GetComponent<CharacterController>();
-            movement.SetMovementProcessors(new MyMovementUtils.IMovementProcessor[]
+            processors = new MyMovementUtils.IMovementProcessor[]
             {
                 new StandardMovement(),
                 sprintCooldown,
@@ -73,8 +76,9 @@ namespace Fps
                 removeOrigin,
                 new IsGroundedMovement(),
                 new MyMovementUtils.AdjustVelocity(),
-            });
+            };
             movement.SetStateRestorer(this);
+            movement.SetCustomProcessor(this);
             shooting = GetComponent<ClientShooting>();
             shotRayProvider = GetComponent<ShotRayProvider>();
             fpsAnimator = GetComponent<FpsAnimator>();
@@ -314,6 +318,24 @@ namespace Fps
         public void Restore(MovementState state)
         {
             controller.transform.position = state.Position.ToVector3() + spatialComponent.Worker.Origin;
+        }
+
+        public MovementState Process(CustomInput input, MovementState previousState, float deltaTime)
+        {
+            var newState = new MovementState();
+            var wrappedInput = new ClientRequest()
+            {
+                Input = input
+            };
+            for (var i = 0; i < processors.Length; i++)
+            {
+                if (!processors[i].Process(wrappedInput, previousState, ref newState, deltaTime))
+                {
+                    break;
+                }
+            }
+
+            return newState;
         }
     }
 }

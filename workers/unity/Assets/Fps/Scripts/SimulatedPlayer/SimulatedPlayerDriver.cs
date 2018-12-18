@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using Improbable.Common;
+using Improbable.Fps.Custommovement;
 using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.Guns;
 using Improbable.Gdk.Health;
@@ -10,7 +11,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class SimulatedPlayerDriver : MonoBehaviour, MyMovementUtils.IMovementStateRestorer
+public class SimulatedPlayerDriver : MonoBehaviour, MyMovementUtils.IMovementStateRestorer, MyMovementUtils.ICustomMovementProcessor
 {
     public enum PlayerState
     {
@@ -53,6 +54,7 @@ public class SimulatedPlayerDriver : MonoBehaviour, MyMovementUtils.IMovementSta
     private bool strafeRight;
 
     private Bounds worldBounds;
+    private MyMovementUtils.IMovementProcessor[] movementProcessors;
 
     private void Awake()
     {
@@ -63,7 +65,9 @@ public class SimulatedPlayerDriver : MonoBehaviour, MyMovementUtils.IMovementSta
     {
         controller = GetComponent<CharacterController>();
         movementDriver = GetComponent<MyClientMovementDriver>();
-        movementDriver.SetMovementProcessors(new MyMovementUtils.IMovementProcessor[]
+        movementDriver.SetCustomProcessor(this);
+        movementDriver.SetStateRestorer(this);
+        movementProcessors = new MyMovementUtils.IMovementProcessor[]
         {
             new StandardMovement(),
             sprintCooldown,
@@ -74,8 +78,7 @@ public class SimulatedPlayerDriver : MonoBehaviour, MyMovementUtils.IMovementSta
             removeOrigin,
             new IsGroundedMovement(),
             new MyMovementUtils.AdjustVelocity(),
-        });
-        movementDriver.SetStateRestorer(this);
+        };
         shooting = GetComponent<ClientShooting>();
         coordinator = FindObjectOfType<SimulatedPlayerCoordinatorWorkerConnector>();
         agent.updatePosition = false;
@@ -172,7 +175,6 @@ public class SimulatedPlayerDriver : MonoBehaviour, MyMovementUtils.IMovementSta
 
         if (agent.remainingDistance < MinRemainingDistance || agent.pathStatus == NavMeshPathStatus.PathInvalid || !agent.hasPath)
         {
-            Debug.Log($"{name} Setting Random Destination");
             SetRandomDestination();
         }
         else if (agent.pathStatus == NavMeshPathStatus.PathComplete)
@@ -388,6 +390,24 @@ public class SimulatedPlayerDriver : MonoBehaviour, MyMovementUtils.IMovementSta
     public void Restore(MovementState movementState)
     {
         controller.transform.position = movementState.Position.ToVector3() + spatial.Worker.Origin;
+    }
+
+    public MovementState Process(CustomInput input, MovementState previousState, float deltaTime)
+    {
+        var newState = new MovementState();
+        var wrappedInput = new ClientRequest()
+        {
+            Input = input
+        };
+        for (var i = 0; i < movementProcessors.Length; i++)
+        {
+            if (!movementProcessors[i].Process(wrappedInput, previousState, ref newState, deltaTime))
+            {
+                break;
+            }
+        }
+
+        return newState;
     }
 
 #if UNITY_EDITOR
