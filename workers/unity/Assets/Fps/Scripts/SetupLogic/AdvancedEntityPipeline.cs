@@ -39,28 +39,16 @@ public class AdvancedEntityPipeline : IEntityGameObjectCreator
         var prefabName = entity.GetComponent<Metadata.Component>().EntityType;
         if (prefabName.Equals(PlayerMetadata))
         {
-            var clientMovement = entity.GetComponent<ClientMovement.Component>();
-            if (entity.GetComponent<EntityAcl.Component>().ComponentWriteAcl
-                .TryGetValue(clientMovement.ComponentId, out var clientMovementWrite))
-            {
-                var authority = false;
-                foreach (var attributeSet in clientMovementWrite.AttributeSet)
-                {
-                    if (attributeSet.Attribute.Contains(workerIdAttribute))
-                    {
-                        authority = true;
-                    }
-                }
+            var authority = entity.HasComponent<ClientMovement.Component>();
 
-                var serverPosition = entity.GetComponent<ServerMovement.Component>();
-                var position = serverPosition.Latest.MovementState.Position.ToVector3() + worker.Origin;
+            var serverPosition = entity.GetComponent<ServerMovement.Component>();
+            var position = serverPosition.Latest.MovementState.Position.ToVector3() + worker.Origin;
 
-                var prefab = authority ? cachedAuthPlayer : cachedNonAuthPlayer;
-                var gameObject = Object.Instantiate(prefab, position, Quaternion.identity);
+            var prefab = authority ? cachedAuthPlayer : cachedNonAuthPlayer;
+            var gameObject = Object.Instantiate(prefab, position, Quaternion.identity);
 
-                gameObject.name = GetGameObjectName(prefab, entity, worker);
-                return gameObject;
-            }
+            gameObject.name = GetGameObjectName(prefab, entity, worker);
+            return gameObject;
         }
 
         return fallback.OnEntityCreated(entity);
