@@ -15,11 +15,11 @@ namespace Fps
         private GameObject canvasCameraObj;
         private ScreenUIController screenUIController;
         private Animator connectButton;
-        private ClientWorkerConnector clientWorkerConnector;
+        private WorkerConnector clientWorkerConnector;
 
         private void Start()
         {
-            clientWorkerConnector = gameObject.GetComponent<ClientWorkerConnector>();
+            clientWorkerConnector = gameObject.GetComponent<WorkerConnector>();
             connectButton = screenUIController.ConnectScreen.GetComponentInChildren<Animator>();
         }
 
@@ -57,8 +57,6 @@ namespace Fps
             {
                 return;
             }
-
-            clientWorkerConnector = clientWorkerConnector ?? ClientWorkerHandler.ClientWorkerConnector;
 
             if (clientWorkerConnector != null && clientWorkerConnector.Worker != null)
             {

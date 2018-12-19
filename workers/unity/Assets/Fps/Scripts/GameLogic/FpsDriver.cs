@@ -34,7 +34,6 @@ namespace Fps
         private GunManager currentGun;
         private SpatialOSComponent spatialComponent;
 
-        private readonly Vector3[] cachedDirectionVectors = new Vector3[16];
         [SerializeField] private Transform pitchTransform;
         [SerializeField] private new Camera camera;
 
@@ -49,6 +48,8 @@ namespace Fps
         private bool isRequestingRespawn;
         private Coroutine requestingRespawnCoroutine;
 
+        private IControlProvider controller;
+
         private void Awake()
         {
             movement = GetComponent<ClientMovementDriver>();
@@ -56,7 +57,7 @@ namespace Fps
             shotRayProvider = GetComponent<ShotRayProvider>();
             fpsAnimator = GetComponent<FpsAnimator>();
             currentGun = GetComponent<GunManager>();
-            CreateDirectionCache();
+            controller = GetComponent<IControlProvider>();
         }
 
         private void OnEnable()
@@ -71,6 +72,11 @@ namespace Fps
 
         private void Update()
         {
+            if (controller.MenuPressed)
+            {
+                ClientWorkerHandler.ScreenUIController.TryOpenSettingsMenu();
+            }
+
             // Don't allow controls if in the menu.
             if (ScreenUIController.InEscapeMenu)
             {
@@ -87,7 +93,7 @@ namespace Fps
 
             if (health.Data.Health == 0)
             {
-                if (Input.GetKeyDown(KeyCode.Space))
+                if (controller.RespawnPressed)
                 {
                     isRequestingRespawn = true;
                     requestingRespawnCoroutine = StartCoroutine(RequestRespawn());
@@ -97,26 +103,22 @@ namespace Fps
             }
 
             // Movement
-            var forward = Input.GetKey(KeyCode.W);
-            var backward = Input.GetKey(KeyCode.S);
-            var left = Input.GetKey(KeyCode.A);
-            var right = Input.GetKey(KeyCode.D);
-
-            var toMove = transform.rotation * GetDirectionFromCache(forward, backward, left, right);
-            var onlyForward = forward && !(backward || left || right);
+            var toMove = transform.rotation * controller.Movement;
 
             // Rotation
-            var yawDelta = Input.GetAxis("Mouse X");
-            var pitchDelta = Input.GetAxis("Mouse Y");
+            var yawDelta = controller.YawDelta;
+            var pitchDelta = controller.PitchDelta;
 
             // Modifiers
-            var isAiming = Input.GetMouseButton(1);
-            var isSprinting = Input.GetKey(KeyCode.LeftShift) && onlyForward;
-            var isJumpPressed = Input.GetKeyDown(KeyCode.Space);
+            var isAiming = controller.IsAiming;
+            var isSprinting = controller.AreSprinting;
+
+            var isJumpPressed = controller.JumpPressed;
 
             // Events
-            var shootPressed = Input.GetMouseButtonDown(0);
-            var shootHeld = Input.GetMouseButton(0);
+            var shootPressed = controller.ShootPressed;
+            var shootHeld = controller.ShootHeld;
+
 
             // Update the pitch speed with that of the gun if aiming.
             var yawSpeed = cameraSettings.YawSpeed;
@@ -224,44 +226,9 @@ namespace Fps
 
         private void OnForcedRotation(RotationUpdate forcedRotation)
         {
-            var newPitch = Mathf.Clamp(forcedRotation.Pitch.ToFloat1k(), -cameraSettings.MaxPitch, -cameraSettings.MinPitch);
+            var newPitch = Mathf.Clamp(forcedRotation.Pitch.ToFloat1k(), -cameraSettings.MaxPitch,
+                -cameraSettings.MinPitch);
             pitchTransform.localRotation = Quaternion.Euler(newPitch, 0, 0);
-        }
-
-        // Cache the direction vectors to avoid having to normalize every time.
-        private void CreateDirectionCache()
-        {
-            for (var i = 0; i < cachedDirectionVectors.Length; i++)
-            {
-                cachedDirectionVectors[i] = Vector3.zero;
-            }
-
-            var forwardRight = new Vector3(1, 0, 1).normalized;
-            var forwardLeft = new Vector3(-1, 0, 1).normalized;
-            var backwardRight = new Vector3(1, 0, -1).normalized;
-            var backwardLeft = new Vector3(-1, 0, -1).normalized;
-
-            cachedDirectionVectors[1] = Vector3.forward;
-            cachedDirectionVectors[2] = Vector3.back;
-            cachedDirectionVectors[4] = Vector3.right;
-            cachedDirectionVectors[5] = forwardRight;
-            cachedDirectionVectors[6] = backwardRight;
-            cachedDirectionVectors[8] = Vector3.left;
-            cachedDirectionVectors[9] = forwardLeft;
-            cachedDirectionVectors[10] = backwardLeft;
-        }
-
-        private Vector3 GetDirectionFromCache(
-            bool forward,
-            bool backward,
-            bool left,
-            bool right)
-        {
-            var directionIndex = forward & !backward ? 1 : 0;
-            directionIndex += backward & !forward ? 2 : 0;
-            directionIndex += right & !left ? 4 : 0;
-            directionIndex += left & !right ? 8 : 0;
-            return cachedDirectionVectors[directionIndex];
         }
     }
 }
