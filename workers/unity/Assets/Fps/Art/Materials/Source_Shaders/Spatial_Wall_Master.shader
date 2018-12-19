@@ -1,7 +1,7 @@
 // Shader created with Shader Forge v1.38 
 // Shader Forge (c) Freya Holmer - http://www.acegikmo.com/shaderforge/
 // Note: Manually altering this data may prevent you from opening it in Shader Forge
-/*SF_DATA;ver:1.38;sub:START;pass:START;ps:flbk:,iptp:0,cusa:False,bamd:0,cgin:,lico:1,lgpr:1,limd:3,spmd:1,trmd:0,grmd:0,uamb:True,mssp:True,bkdf:True,hqlp:False,rprd:True,enco:False,rmgx:True,imps:True,rpth:0,vtps:0,hqsc:True,nrmq:1,nrsp:0,vomd:0,spxs:False,tesm:0,olmd:1,culm:0,bsrc:0,bdst:1,dpts:2,wrdp:True,dith:0,atcv:False,rfrpo:True,rfrpn:Refraction,coma:15,ufog:True,aust:True,igpj:False,qofs:0,qpre:1,rntp:1,fgom:False,fgoc:False,fgod:False,fgor:False,fgmd:0,fgcr:0.5,fgcg:0.5,fgcb:0.5,fgca:1,fgde:0.01,fgrn:0,fgrf:300,stcl:False,atwp:False,stva:128,stmr:255,stmw:255,stcp:6,stps:0,stfa:0,stfz:0,ofsf:0,ofsu:0,f2p0:False,fnsp:False,fnfb:False,fsmp:False;n:type:ShaderForge.SFN_Final,id:2865,x:32721,y:32711,varname:node_2865,prsc:2|diff-7518-OUT,spec-7879-OUT,gloss-3348-OUT,normal-7621-RGB,amdfl-2703-RGB,amspl-2703-RGB;n:type:ShaderForge.SFN_Vector1,id:7879,x:32407,y:32728,varname:node_7879,prsc:2,v1:0;n:type:ShaderForge.SFN_Tex2d,id:594,x:31899,y:32777,ptovrint:False,ptlb:T_Main,ptin:_T_Main,varname:_T_Main,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,tex:44c4899883df42548bfbcc4119521f8d,ntxv:0,isnm:False|UVIN-4155-OUT;n:type:ShaderForge.SFN_Tex2d,id:7621,x:31899,y:33029,ptovrint:False,ptlb:T_Normal,ptin:_T_Normal,varname:_T_Normal,prsc:2,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,tex:344e82c3f8c38814493a68ebdd13a446,ntxv:3,isnm:True|UVIN-4155-OUT;n:type:ShaderForge.SFN_AmbientLight,id:2703,x:32407,y:32890,varname:node_2703,prsc:2;n:type:ShaderForge.SFN_Multiply,id:3348,x:32407,y:32777,varname:node_3348,prsc:2|A-594-G,B-594-G;n:type:ShaderForge.SFN_ObjectScale,id:1271,x:30795,y:32559,varname:node_1271,prsc:2,rcp:False;n:type:ShaderForge.SFN_Append,id:8739,x:31101,y:32576,varname:node_8739,prsc:2|A-1271-X,B-1271-Y;n:type:ShaderForge.SFN_Divide,id:308,x:31269,y:32713,varname:node_308,prsc:2|A-8739-OUT,B-721-OUT;n:type:ShaderForge.SFN_Vector1,id:721,x:31034,y:32787,varname:node_721,prsc:2,v1:4;n:type:ShaderForge.SFN_TexCoord,id:1054,x:31105,y:32932,varname:node_1054,prsc:2,uv:0,uaff:False;n:type:ShaderForge.SFN_Multiply,id:4155,x:31469,y:32956,varname:node_4155,prsc:0|A-308-OUT,B-1054-UVOUT;n:type:ShaderForge.SFN_Multiply,id:7518,x:32135,y:32580,varname:node_7518,prsc:2|A-3892-RGB,B-594-R;n:type:ShaderForge.SFN_Color,id:3892,x:31886,y:32472,ptovrint:False,ptlb:Colour_Tint,ptin:_Colour_Tint,varname:_Colour_Tint,prsc:0,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,c1:0.4,c2:0.4,c3:0.4,c4:1;proporder:7621-594-3892;pass:END;sub:END;*/
+/*SF_DATA;ver:1.38;sub:START;pass:START;ps:flbk:,iptp:0,cusa:False,bamd:0,cgin:,lico:1,lgpr:1,limd:3,spmd:1,trmd:0,grmd:0,uamb:True,mssp:True,bkdf:True,hqlp:False,rprd:True,enco:False,rmgx:True,imps:True,rpth:0,vtps:0,hqsc:True,nrmq:1,nrsp:0,vomd:0,spxs:False,tesm:0,olmd:1,culm:0,bsrc:0,bdst:1,dpts:2,wrdp:True,dith:0,atcv:False,rfrpo:True,rfrpn:Refraction,coma:15,ufog:True,aust:True,igpj:False,qofs:0,qpre:1,rntp:1,fgom:False,fgoc:False,fgod:False,fgor:False,fgmd:0,fgcr:0.7176471,fgcg:0.8352942,fgcb:0.9450981,fgca:1,fgde:0.001,fgrn:0,fgrf:300,stcl:False,atwp:False,stva:128,stmr:255,stmw:255,stcp:6,stps:0,stfa:0,stfz:0,ofsf:0,ofsu:0,f2p0:False,fnsp:False,fnfb:False,fsmp:False;n:type:ShaderForge.SFN_Final,id:2865,x:32721,y:32711,varname:node_2865,prsc:2|diff-7518-OUT,spec-7879-OUT,gloss-3348-OUT,normal-7621-RGB,amdfl-2703-RGB,amspl-2703-RGB;n:type:ShaderForge.SFN_Vector1,id:7879,x:32407,y:32728,varname:node_7879,prsc:2,v1:0;n:type:ShaderForge.SFN_Tex2d,id:594,x:31899,y:32777,ptovrint:False,ptlb:T_Main,ptin:_T_Main,varname:_T_Main,prsc:0,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,tex:44c4899883df42548bfbcc4119521f8d,ntxv:0,isnm:False|UVIN-308-OUT;n:type:ShaderForge.SFN_Tex2d,id:7621,x:31899,y:33029,ptovrint:False,ptlb:T_Normal,ptin:_T_Normal,varname:_T_Normal,prsc:0,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,tex:344e82c3f8c38814493a68ebdd13a446,ntxv:3,isnm:True|UVIN-308-OUT;n:type:ShaderForge.SFN_AmbientLight,id:2703,x:32407,y:32890,varname:node_2703,prsc:2;n:type:ShaderForge.SFN_Multiply,id:3348,x:32407,y:32777,varname:node_3348,prsc:2|A-594-G,B-594-G;n:type:ShaderForge.SFN_Append,id:8739,x:30874,y:32820,varname:node_8739,prsc:0|A-254-R,B-254-G;n:type:ShaderForge.SFN_Divide,id:308,x:31390,y:32739,varname:node_308,prsc:0|A-529-OUT,B-721-OUT;n:type:ShaderForge.SFN_Vector1,id:721,x:31149,y:32881,varname:node_721,prsc:2,v1:4;n:type:ShaderForge.SFN_Multiply,id:7518,x:32135,y:32580,varname:node_7518,prsc:2|A-3892-RGB,B-594-R;n:type:ShaderForge.SFN_Color,id:3892,x:31886,y:32472,ptovrint:False,ptlb:Colour_Tint,ptin:_Colour_Tint,varname:_Colour_Tint,prsc:0,glob:False,taghide:False,taghdr:False,tagprd:False,tagnsco:False,tagnrm:False,c1:0.4,c2:0.4,c3:0.4,c4:1;n:type:ShaderForge.SFN_FragmentPosition,id:2849,x:30243,y:32789,varname:node_2849,prsc:2;n:type:ShaderForge.SFN_Vector3,id:499,x:30311,y:32637,varname:node_499,prsc:0,v1:2,v2:-0.5,v3:2;n:type:ShaderForge.SFN_Add,id:7685,x:30510,y:32735,varname:node_7685,prsc:2|A-499-OUT,B-2849-XYZ;n:type:ShaderForge.SFN_ComponentMask,id:254,x:30680,y:32725,varname:node_254,prsc:0,cc1:0,cc2:1,cc3:2,cc4:-1|IN-7685-OUT;n:type:ShaderForge.SFN_Lerp,id:529,x:31102,y:32751,varname:node_529,prsc:2|A-6776-OUT,B-8739-OUT,T-9676-OUT;n:type:ShaderForge.SFN_NormalVector,id:2489,x:30330,y:32957,prsc:2,pt:False;n:type:ShaderForge.SFN_Abs,id:9676,x:30731,y:33006,varname:node_9676,prsc:2|IN-8765-OUT;n:type:ShaderForge.SFN_Dot,id:8765,x:30539,y:33006,varname:node_8765,prsc:2,dt:0|A-2489-OUT,B-8494-OUT;n:type:ShaderForge.SFN_Vector3,id:8494,x:30330,y:33100,varname:node_8494,prsc:0,v1:0,v2:0,v3:1;n:type:ShaderForge.SFN_Append,id:6776,x:30874,y:32694,varname:node_6776,prsc:0|A-254-G,B-254-B;proporder:7621-594-3892;pass:END;sub:END;*/
 
 Shader "Spatial/Spatial_Wall_Master" {
     Properties {
@@ -44,28 +44,25 @@ Shader "Spatial/Spatial_Wall_Master" {
                 float4 vertex : POSITION;
                 float3 normal : NORMAL;
                 float4 tangent : TANGENT;
-                float2 texcoord0 : TEXCOORD0;
                 float2 texcoord1 : TEXCOORD1;
                 float2 texcoord2 : TEXCOORD2;
             };
             struct VertexOutput {
                 float4 pos : SV_POSITION;
-                float2 uv0 : TEXCOORD0;
-                float2 uv1 : TEXCOORD1;
-                float2 uv2 : TEXCOORD2;
-                float4 posWorld : TEXCOORD3;
-                float3 normalDir : TEXCOORD4;
-                float3 tangentDir : TEXCOORD5;
-                float3 bitangentDir : TEXCOORD6;
-                LIGHTING_COORDS(7,8)
-                UNITY_FOG_COORDS(9)
+                float2 uv1 : TEXCOORD0;
+                float2 uv2 : TEXCOORD1;
+                float4 posWorld : TEXCOORD2;
+                float3 normalDir : TEXCOORD3;
+                float3 tangentDir : TEXCOORD4;
+                float3 bitangentDir : TEXCOORD5;
+                LIGHTING_COORDS(6,7)
+                UNITY_FOG_COORDS(8)
                 #if defined(LIGHTMAP_ON) || defined(UNITY_SHOULD_SAMPLE_SH)
-                    float4 ambientOrLightmapUV : TEXCOORD10;
+                    float4 ambientOrLightmapUV : TEXCOORD9;
                 #endif
             };
             VertexOutput vert (VertexInput v) {
                 VertexOutput o = (VertexOutput)0;
-                o.uv0 = v.texcoord0;
                 o.uv1 = v.texcoord1;
                 o.uv2 = v.texcoord2;
                 #ifdef LIGHTMAP_ON
@@ -79,8 +76,6 @@ Shader "Spatial/Spatial_Wall_Master" {
                 o.normalDir = UnityObjectToWorldNormal(v.normal);
                 o.tangentDir = normalize( mul( unity_ObjectToWorld, float4( v.tangent.xyz, 0.0 ) ).xyz );
                 o.bitangentDir = normalize(cross(o.normalDir, o.tangentDir) * v.tangent.w);
-                float3 recipObjScale = float3( length(unity_WorldToObject[0].xyz), length(unity_WorldToObject[1].xyz), length(unity_WorldToObject[2].xyz) );
-                float3 objScale = 1.0/recipObjScale;
                 o.posWorld = mul(unity_ObjectToWorld, v.vertex);
                 float3 lightColor = _LightColor0.rgb;
                 o.pos = UnityObjectToClipPos( v.vertex );
@@ -89,13 +84,12 @@ Shader "Spatial/Spatial_Wall_Master" {
                 return o;
             }
             float4 frag(VertexOutput i) : COLOR {
-                float3 recipObjScale = float3( length(unity_WorldToObject[0].xyz), length(unity_WorldToObject[1].xyz), length(unity_WorldToObject[2].xyz) );
-                float3 objScale = 1.0/recipObjScale;
                 i.normalDir = normalize(i.normalDir);
                 float3x3 tangentTransform = float3x3( i.tangentDir, i.bitangentDir, i.normalDir);
                 float3 viewDirection = normalize(_WorldSpaceCameraPos.xyz - i.posWorld.xyz);
-                fixed2 node_4155 = ((float2(objScale.r,objScale.g)/4.0)*i.uv0);
-                float3 _T_Normal_var = UnpackNormal(tex2D(_T_Normal,TRANSFORM_TEX(node_4155, _T_Normal)));
+                fixed3 node_254 = (fixed3(2,-0.5,2)+i.posWorld.rgb).rgb;
+                fixed2 node_308 = (lerp(float2(node_254.g,node_254.b),float2(node_254.r,node_254.g),abs(dot(i.normalDir,fixed3(0,0,1))))/4.0);
+                fixed3 _T_Normal_var = UnpackNormal(tex2D(_T_Normal,TRANSFORM_TEX(node_308, _T_Normal)));
                 float3 normalLocal = _T_Normal_var.rgb;
                 float3 normalDirection = normalize(mul( normalLocal, tangentTransform )); // Perturbed normals
                 float3 viewReflectDirection = reflect( -viewDirection, normalDirection );
@@ -108,7 +102,7 @@ Shader "Spatial/Spatial_Wall_Master" {
                 float Pi = 3.141592654;
                 float InvPi = 0.31830988618;
 ///////// Gloss:
-                float4 _T_Main_var = tex2D(_T_Main,TRANSFORM_TEX(node_4155, _T_Main));
+                fixed4 _T_Main_var = tex2D(_T_Main,TRANSFORM_TEX(node_308, _T_Main));
                 float gloss = (_T_Main_var.g*_T_Main_var.g);
                 float perceptualRoughness = 1.0 - (_T_Main_var.g*_T_Main_var.g);
                 float roughness = perceptualRoughness * perceptualRoughness;
@@ -237,32 +231,27 @@ Shader "Spatial/Spatial_Wall_Master" {
                 float4 vertex : POSITION;
                 float3 normal : NORMAL;
                 float4 tangent : TANGENT;
-                float2 texcoord0 : TEXCOORD0;
                 float2 texcoord1 : TEXCOORD1;
                 float2 texcoord2 : TEXCOORD2;
             };
             struct VertexOutput {
                 float4 pos : SV_POSITION;
-                float2 uv0 : TEXCOORD0;
-                float2 uv1 : TEXCOORD1;
-                float2 uv2 : TEXCOORD2;
-                float4 posWorld : TEXCOORD3;
-                float3 normalDir : TEXCOORD4;
-                float3 tangentDir : TEXCOORD5;
-                float3 bitangentDir : TEXCOORD6;
-                LIGHTING_COORDS(7,8)
-                UNITY_FOG_COORDS(9)
+                float2 uv1 : TEXCOORD0;
+                float2 uv2 : TEXCOORD1;
+                float4 posWorld : TEXCOORD2;
+                float3 normalDir : TEXCOORD3;
+                float3 tangentDir : TEXCOORD4;
+                float3 bitangentDir : TEXCOORD5;
+                LIGHTING_COORDS(6,7)
+                UNITY_FOG_COORDS(8)
             };
             VertexOutput vert (VertexInput v) {
                 VertexOutput o = (VertexOutput)0;
-                o.uv0 = v.texcoord0;
                 o.uv1 = v.texcoord1;
                 o.uv2 = v.texcoord2;
                 o.normalDir = UnityObjectToWorldNormal(v.normal);
                 o.tangentDir = normalize( mul( unity_ObjectToWorld, float4( v.tangent.xyz, 0.0 ) ).xyz );
                 o.bitangentDir = normalize(cross(o.normalDir, o.tangentDir) * v.tangent.w);
-                float3 recipObjScale = float3( length(unity_WorldToObject[0].xyz), length(unity_WorldToObject[1].xyz), length(unity_WorldToObject[2].xyz) );
-                float3 objScale = 1.0/recipObjScale;
                 o.posWorld = mul(unity_ObjectToWorld, v.vertex);
                 float3 lightColor = _LightColor0.rgb;
                 o.pos = UnityObjectToClipPos( v.vertex );
@@ -271,13 +260,12 @@ Shader "Spatial/Spatial_Wall_Master" {
                 return o;
             }
             float4 frag(VertexOutput i) : COLOR {
-                float3 recipObjScale = float3( length(unity_WorldToObject[0].xyz), length(unity_WorldToObject[1].xyz), length(unity_WorldToObject[2].xyz) );
-                float3 objScale = 1.0/recipObjScale;
                 i.normalDir = normalize(i.normalDir);
                 float3x3 tangentTransform = float3x3( i.tangentDir, i.bitangentDir, i.normalDir);
                 float3 viewDirection = normalize(_WorldSpaceCameraPos.xyz - i.posWorld.xyz);
-                fixed2 node_4155 = ((float2(objScale.r,objScale.g)/4.0)*i.uv0);
-                float3 _T_Normal_var = UnpackNormal(tex2D(_T_Normal,TRANSFORM_TEX(node_4155, _T_Normal)));
+                fixed3 node_254 = (fixed3(2,-0.5,2)+i.posWorld.rgb).rgb;
+                fixed2 node_308 = (lerp(float2(node_254.g,node_254.b),float2(node_254.r,node_254.g),abs(dot(i.normalDir,fixed3(0,0,1))))/4.0);
+                fixed3 _T_Normal_var = UnpackNormal(tex2D(_T_Normal,TRANSFORM_TEX(node_308, _T_Normal)));
                 float3 normalLocal = _T_Normal_var.rgb;
                 float3 normalDirection = normalize(mul( normalLocal, tangentTransform )); // Perturbed normals
                 float3 lightDirection = normalize(lerp(_WorldSpaceLightPos0.xyz, _WorldSpaceLightPos0.xyz - i.posWorld.xyz,_WorldSpaceLightPos0.w));
@@ -289,7 +277,7 @@ Shader "Spatial/Spatial_Wall_Master" {
                 float Pi = 3.141592654;
                 float InvPi = 0.31830988618;
 ///////// Gloss:
-                float4 _T_Main_var = tex2D(_T_Main,TRANSFORM_TEX(node_4155, _T_Main));
+                fixed4 _T_Main_var = tex2D(_T_Main,TRANSFORM_TEX(node_308, _T_Main));
                 float gloss = (_T_Main_var.g*_T_Main_var.g);
                 float perceptualRoughness = 1.0 - (_T_Main_var.g*_T_Main_var.g);
                 float roughness = perceptualRoughness * perceptualRoughness;
@@ -362,39 +350,38 @@ Shader "Spatial/Spatial_Wall_Master" {
             uniform fixed4 _Colour_Tint;
             struct VertexInput {
                 float4 vertex : POSITION;
-                float2 texcoord0 : TEXCOORD0;
+                float3 normal : NORMAL;
                 float2 texcoord1 : TEXCOORD1;
                 float2 texcoord2 : TEXCOORD2;
             };
             struct VertexOutput {
                 float4 pos : SV_POSITION;
-                float2 uv0 : TEXCOORD0;
-                float2 uv1 : TEXCOORD1;
-                float2 uv2 : TEXCOORD2;
-                float4 posWorld : TEXCOORD3;
+                float2 uv1 : TEXCOORD0;
+                float2 uv2 : TEXCOORD1;
+                float4 posWorld : TEXCOORD2;
+                float3 normalDir : TEXCOORD3;
             };
             VertexOutput vert (VertexInput v) {
                 VertexOutput o = (VertexOutput)0;
-                o.uv0 = v.texcoord0;
                 o.uv1 = v.texcoord1;
                 o.uv2 = v.texcoord2;
-                float3 recipObjScale = float3( length(unity_WorldToObject[0].xyz), length(unity_WorldToObject[1].xyz), length(unity_WorldToObject[2].xyz) );
-                float3 objScale = 1.0/recipObjScale;
+                o.normalDir = UnityObjectToWorldNormal(v.normal);
                 o.posWorld = mul(unity_ObjectToWorld, v.vertex);
                 o.pos = UnityMetaVertexPosition(v.vertex, v.texcoord1.xy, v.texcoord2.xy, unity_LightmapST, unity_DynamicLightmapST );
                 return o;
             }
             float4 frag(VertexOutput i) : SV_Target {
-                float3 recipObjScale = float3( length(unity_WorldToObject[0].xyz), length(unity_WorldToObject[1].xyz), length(unity_WorldToObject[2].xyz) );
-                float3 objScale = 1.0/recipObjScale;
+                i.normalDir = normalize(i.normalDir);
                 float3 viewDirection = normalize(_WorldSpaceCameraPos.xyz - i.posWorld.xyz);
+                float3 normalDirection = i.normalDir;
                 UnityMetaInput o;
                 UNITY_INITIALIZE_OUTPUT( UnityMetaInput, o );
                 
                 o.Emission = 0;
                 
-                fixed2 node_4155 = ((float2(objScale.r,objScale.g)/4.0)*i.uv0);
-                float4 _T_Main_var = tex2D(_T_Main,TRANSFORM_TEX(node_4155, _T_Main));
+                fixed3 node_254 = (fixed3(2,-0.5,2)+i.posWorld.rgb).rgb;
+                fixed2 node_308 = (lerp(float2(node_254.g,node_254.b),float2(node_254.r,node_254.g),abs(dot(i.normalDir,fixed3(0,0,1))))/4.0);
+                fixed4 _T_Main_var = tex2D(_T_Main,TRANSFORM_TEX(node_308, _T_Main));
                 float3 diffColor = (_Colour_Tint.rgb*_T_Main_var.r);
                 float specularMonochrome;
                 float3 specColor;
