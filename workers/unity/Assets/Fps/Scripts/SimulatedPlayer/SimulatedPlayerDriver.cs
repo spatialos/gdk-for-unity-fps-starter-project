@@ -6,12 +6,13 @@ using Improbable.Gdk.Guns;
 using Improbable.Gdk.Health;
 using Improbable.Gdk.Movement;
 using Improbable.Gdk.StandardTypes;
+using Improbable.Worker.CInterop;
 using Unity.Entities;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class SimulatedPlayerDriver : MonoBehaviour, MyMovementUtils.IMovementStateRestorer, MyMovementUtils.ICustomMovementProcessor
+public class SimulatedPlayerDriver : MonoBehaviour, MyMovementUtils.IMovementStateRestorer
 {
     public enum PlayerState
     {
@@ -27,6 +28,7 @@ public class SimulatedPlayerDriver : MonoBehaviour, MyMovementUtils.IMovementSta
     [Require] private HealthComponent.Requirable.CommandRequestSender HealthCommands;
 
     private MyClientMovementDriver movementDriver;
+    private FpsMovement fpsMovement;
     private ClientShooting shooting;
     private SpatialOSComponent spatial;
     private NavMeshAgent agent;
@@ -54,7 +56,7 @@ public class SimulatedPlayerDriver : MonoBehaviour, MyMovementUtils.IMovementSta
     private bool strafeRight;
 
     private Bounds worldBounds;
-    private MyMovementUtils.IMovementProcessor[] movementProcessors;
+    private MyMovementUtils.IMovementProcessorOLD[] movementProcessorsOld;
 
     private void Awake()
     {
@@ -65,9 +67,10 @@ public class SimulatedPlayerDriver : MonoBehaviour, MyMovementUtils.IMovementSta
     {
         controller = GetComponent<CharacterController>();
         movementDriver = GetComponent<MyClientMovementDriver>();
-        movementDriver.SetCustomProcessor(this);
+        fpsMovement = new FpsMovement(gameObject, controller);
+        movementDriver.SetCustomProcessor(fpsMovement);
         movementDriver.SetStateRestorer(this);
-        movementProcessors = new MyMovementUtils.IMovementProcessor[]
+        movementProcessorsOld = new MyMovementUtils.IMovementProcessorOLD[]
         {
             new StandardMovement(),
             sprintCooldown,
@@ -201,11 +204,7 @@ public class SimulatedPlayerDriver : MonoBehaviour, MyMovementUtils.IMovementSta
 
                 var diff = Mathf.Abs(rot.eulerAngles.y - desiredRotation.eulerAngles.y);
 
-                // prob navmesh in front to try and stay on it.
-                var potentialNewPosition = transform.position + transform.forward
-                    * MyMovementUtils.GetMovmentSpeedVelocity(MovementSpeed.Sprint) * Time.deltaTime;
-
-                movementDriver.AddInput(
+                fpsMovement.AddInput(
                     forward: (diff < 30),
                     jump: jumpNext,
                     sprint: sprintNext,
@@ -232,7 +231,8 @@ public class SimulatedPlayerDriver : MonoBehaviour, MyMovementUtils.IMovementSta
                 MyMovementUtils.GetMovmentSpeedVelocity(MovementSpeed.Run) * Time.deltaTime;
             var canStrafe = NavMesh.SamplePosition(destination, out var hit, 0.25f, NavMesh.AllAreas);
 
-            movementDriver.AddInput(yaw: transform.rotation.eulerAngles.y, pitch: transform.rotation.eulerAngles.x,
+
+            fpsMovement.AddInput(yaw: transform.rotation.eulerAngles.y, pitch: transform.rotation.eulerAngles.x,
                 right: (canStrafe && strafeRight), left: (canStrafe && !strafeRight));
 
             if (shooting.IsShooting(true) && Mathf.Abs(Quaternion.Angle(targetRotation, transform.rotation)) < 5)
@@ -390,24 +390,6 @@ public class SimulatedPlayerDriver : MonoBehaviour, MyMovementUtils.IMovementSta
     public void Restore(MovementState movementState)
     {
         controller.transform.position = movementState.Position.ToVector3() + spatial.Worker.Origin;
-    }
-
-    public MovementState Process(CustomInput input, MovementState previousState, float deltaTime)
-    {
-        var newState = new MovementState();
-        var wrappedInput = new ClientRequest()
-        {
-            Input = input
-        };
-        for (var i = 0; i < movementProcessors.Length; i++)
-        {
-            if (!movementProcessors[i].Process(wrappedInput, previousState, ref newState, deltaTime))
-            {
-                break;
-            }
-        }
-
-        return newState;
     }
 
 #if UNITY_EDITOR
