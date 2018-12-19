@@ -39,4 +39,13 @@ MonoBehaviour:
     CloudBuildConfig:
       BuildPlatforms: 8
       BuildOptions: 16384
+  - WorkerType: AndroidClient
+    ScenesForWorker:
+    - {fileID: 102900000, guid: 92916326a1ceade4a92343dfbc7d64d7, type: 3}
+    LocalBuildConfig:
+      BuildPlatforms: 32
+      BuildOptions: 1
+    CloudBuildConfig:
+      BuildPlatforms: 0
+      BuildOptions: 0
   isInitialised: 1

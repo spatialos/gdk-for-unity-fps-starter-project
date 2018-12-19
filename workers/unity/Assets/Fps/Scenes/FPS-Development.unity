@@ -150,7 +150,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4105036026752776, guid: 928af08170e7d0243a977f4f26fe42a0, type: 2}
       propertyPath: m_RootOrder
-      value: 10
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 114220086504602960, guid: 928af08170e7d0243a977f4f26fe42a0,
         type: 2}
@@ -162,12 +162,6 @@ Prefab:
       propertyPath: screenUIController
       value: 
       objectReference: {fileID: 449129852}
-    - target: {fileID: 114220086504602960, guid: 928af08170e7d0243a977f4f26fe42a0,
-        type: 2}
-      propertyPath: clientWorkerPrefab
-      value: 
-      objectReference: {fileID: 1638104666241782, guid: 075c14fd6c4ad514581b6aaabc0711bb,
-        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 928af08170e7d0243a977f4f26fe42a0, type: 2}
   m_IsPrefabAsset: 0
@@ -783,7 +777,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4977616286773460, guid: 1d177d0ca1e95c646a6a7b9b84364f9b, type: 2}
       propertyPath: m_RootOrder
-      value: 13
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 1620385508151754, guid: 1d177d0ca1e95c646a6a7b9b84364f9b, type: 2}
       propertyPath: m_IsActive
@@ -1161,7 +1155,7 @@ Prefab:
     - target: {fileID: 224593728952598210, guid: d52364553e6842940944c62b73e5e1b1,
         type: 2}
       propertyPath: m_RootOrder
-      value: 9
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 224593728952598210, guid: d52364553e6842940944c62b73e5e1b1,
         type: 2}
@@ -1258,6 +1252,20 @@ Prefab:
       propertyPath: ConnectScreen
       value: 
       objectReference: {fileID: 1345553517}
+    - target: {fileID: 1571076568483720, guid: d52364553e6842940944c62b73e5e1b1, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114477890548796456, guid: d52364553e6842940944c62b73e5e1b1,
+        type: 2}
+      propertyPath: m_Navigation.m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 114477890548796456, guid: d52364553e6842940944c62b73e5e1b1,
+        type: 2}
+      propertyPath: m_Transition
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d52364553e6842940944c62b73e5e1b1, type: 2}
   m_IsPrefabAsset: 0
@@ -1609,7 +1617,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4593588597980260, guid: e4a3eb8590344604db1e998db676a211, type: 2}
       propertyPath: m_RootOrder
-      value: 12
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 1613497914398450, guid: e4a3eb8590344604db1e998db676a211, type: 2}
       propertyPath: m_IsActive
@@ -1681,7 +1689,12 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4527984774241536, guid: a18c738cbcda9914591d9af24a618907, type: 2}
       propertyPath: m_RootOrder
-      value: 11
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 114510834623507516, guid: a18c738cbcda9914591d9af24a618907,
+        type: 2}
+      propertyPath: DefaultSimulatedPlayerCount
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a18c738cbcda9914591d9af24a618907, type: 2}
