@@ -91,7 +91,7 @@ namespace Fps
 
             return RuntimeConfigDefaults.ReceptionistHost;
 #else
-            throw new PlatformNotSupportedException(
+            throw new System.PlatformNotSupportedException(
                 $"{nameof(AndroidWorkerConnector)} can only be used for the Android platform. Please check your build settings.");
 #endif
         }
