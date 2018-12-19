@@ -12,9 +12,8 @@ namespace Fps
 {
     public static class FpsEntityTemplates
     {
-        // TODO Add iOS client here
         private static readonly List<string> AllWorkerAttributes =
-            new List<string> { WorkerUtils.UnityGameLogic, WorkerUtils.UnityClient, WorkerUtils.SimulatedPlayer, WorkerUtils.AndroidClient };
+            new List<string> { WorkerUtils.UnityGameLogic, WorkerUtils.UnityClient, WorkerUtils.SimulatedPlayer, WorkerUtils.AndroidClient, WorkerUtils.iOSClient };
 
         public static EntityTemplate Spawner()
         {

@@ -48,8 +48,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1765859764722708}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7560f16c91e3a949b68d0a088792ff7, type: 3}
+  m_Script: {fileID: 11500000, guid: f06f2bfbdf944f541b6afd42c1ce7c1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   MaxConnectionAttempts: 3
-  level: {fileID: 1613497914398450, guid: e4a3eb8590344604db1e998db676a211, type: 2}
+  forcedIpAddress: 
+  TargetFrameRate: 60
+  SmallLevelPrefab: {fileID: 1613497914398450, guid: e4a3eb8590344604db1e998db676a211,
+    type: 2}
+  LargeLevelPrefab: {fileID: 1620385508151754, guid: 1d177d0ca1e95c646a6a7b9b84364f9b,
+    type: 2}
