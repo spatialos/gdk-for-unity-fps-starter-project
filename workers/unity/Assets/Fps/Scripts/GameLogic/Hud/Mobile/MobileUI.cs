@@ -8,7 +8,7 @@ public class MobileUI : MonoBehaviour, IMobileUI
     // I.e. StandardButtons are responsible for setting up links to MobileUI
 
     public TouchscreenButton JumpButton;
-    public TouchscreenButton ADSButton;
+    public TouchscreenButton AimButton;
     public TouchscreenButton FireButton;
     public TouchscreenButton MenuButton;
     public RectTransform LeftStickKnob;
@@ -83,8 +83,8 @@ public class MobileUI : MonoBehaviour, IMobileUI
     private void OnEnable()
     {
         JumpButton.OnButtonDown += Jump;
-        ADSButton.OnButtonDown += ToggleADS;
-        ADSButton.OnButtonUp += ToggleADS;
+        AimButton.OnButtonDown += ToggleAim;
+        AimButton.OnButtonUp += ToggleAim;
         FireButton.OnButtonDown += StartFiring;
         FireButton.OnButtonUp += StopFiring;
         MenuButton.OnButtonDown += OpenMenu;
@@ -93,8 +93,8 @@ public class MobileUI : MonoBehaviour, IMobileUI
     private void OnDisable()
     {
         JumpButton.OnButtonDown -= Jump;
-        ADSButton.OnButtonDown -= ToggleADS;
-        ADSButton.OnButtonUp -= ToggleADS;
+        AimButton.OnButtonDown -= ToggleAim;
+        AimButton.OnButtonUp -= ToggleAim;
         FireButton.OnButtonDown -= StartFiring;
         FireButton.OnButtonUp -= StopFiring;
         MenuButton.OnButtonDown -= OpenMenu;
@@ -106,7 +106,7 @@ public class MobileUI : MonoBehaviour, IMobileUI
         JumpPressed = true;
     }
 
-    private void ToggleADS()
+    private void ToggleAim()
     {
         IsAiming = !IsAiming;
     }
