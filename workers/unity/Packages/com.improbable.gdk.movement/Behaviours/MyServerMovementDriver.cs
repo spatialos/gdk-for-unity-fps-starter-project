@@ -4,7 +4,6 @@ using Improbable;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.Movement;
-using Improbable.Gdk.StandardTypes;
 using UnityEngine;
 
 public class MyServerMovementDriver : MonoBehaviour
@@ -16,8 +15,6 @@ public class MyServerMovementDriver : MonoBehaviour
     // private CharacterController controller;
     private SpatialOSComponent spatial;
     private CommandFrameSystem commandFrame;
-
-    private Vector3 origin;
 
     private int lastFrame = -1;
     private int firstFrame = -1;
@@ -41,7 +38,6 @@ public class MyServerMovementDriver : MonoBehaviour
     private readonly List<ClientRequest> clientInputs = new List<ClientRequest>();
     private readonly Dictionary<int, MovementState> movementState = new Dictionary<int, MovementState>();
 
-    private MyMovementUtils.IMovementStateRestorer stateRestorer;
     private IMovementProcessor customProcessor;
 
     public int workerIndex = -1;
@@ -73,18 +69,11 @@ public class MyServerMovementDriver : MonoBehaviour
         rtt = server.Data.Rtt;
 
         firstFrame = -1;
-
-        origin = spatial.Worker.Origin;
     }
 
     public void SetCustomProcessor(IMovementProcessor processor)
     {
         customProcessor = processor;
-    }
-
-    public void SetStateRestorer(MyMovementUtils.IMovementStateRestorer restorer)
-    {
-        stateRestorer = restorer;
     }
 
     private void ClientInputOnBufferUpdated(List<ClientRequest> buffer)
@@ -133,7 +122,7 @@ public class MyServerMovementDriver : MonoBehaviour
 
     private void Update()
     {
-        if (stateRestorer == null || customProcessor == null)
+        if (customProcessor == null)
         {
             return;
         }
@@ -170,7 +159,7 @@ public class MyServerMovementDriver : MonoBehaviour
                 movementState.TryGetValue(lastFrame - 1, out var previousState);
 
                 // shouldn't need to call restore here.
-                stateRestorer?.Restore(previousState);
+                customProcessor.RestoreToState(previousState.RawState);
                 var state = MyMovementUtils.ApplyCustomInput(lastInput, previousState, customProcessor);
                 movementState[lastFrame] = state;
                 SendMovement(state);
@@ -205,7 +194,7 @@ public class MyServerMovementDriver : MonoBehaviour
         positionTick -= 1;
         if (positionTick <= 0)
         {
-            var pos = state.Position.ToVector3();
+            var pos = customProcessor.GetPosition(state.RawState);
             positionTick = PositionRate;
             spatialPosition.Send(new Position.Update()
             {

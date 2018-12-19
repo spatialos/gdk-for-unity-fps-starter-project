@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class JumpMovement : MyMovementUtils.IMovementProcessorOLD
 {
-    public bool Process(CustomInput input, MovementState previousState,
-        ref MovementState newState, float deltaTime)
+    public bool Process(CustomInput input, CustomState previousState,
+        ref CustomState newState, float deltaTime)
     {
         if (newState.DidTeleport)
         {
@@ -39,10 +39,5 @@ public class JumpMovement : MyMovementUtils.IMovementProcessorOLD
         }
 
         return true;
-    }
-
-    public bool DidJump(MovementState state)
-    {
-        return state.DidJump;
     }
 }

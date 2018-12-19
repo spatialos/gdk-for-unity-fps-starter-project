@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class StandardMovement : MyMovementUtils.IMovementProcessorOLD
 {
-    public bool Process(CustomInput input, MovementState previousState,
-        ref MovementState newState, float deltaTime)
+    public bool Process(CustomInput input, CustomState previousState,
+        ref CustomState newState, float deltaTime)
     {
         if (newState.DidTeleport)
         {

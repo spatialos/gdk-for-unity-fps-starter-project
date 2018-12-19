@@ -13,7 +13,6 @@ namespace Fps
     {
         [Require] private HealthComponent.Requirable.CommandRequestHandler respawnRequests;
         [Require] private HealthComponent.Requirable.Writer health;
-        [Require] private ServerMovement.Requirable.Writer serverMovement;
         [Require] private Position.Requirable.Writer spatialPosition;
 
         private FpsServerDriver movementDriver;
