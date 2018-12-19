@@ -1,14 +1,15 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.Mobile;
-using Improbable.Gdk.Mobile.Android;
 using Improbable.Gdk.PlayerLifecycle;
 using Improbable.Worker.CInterop;
 using UnityEngine;
+#if UNITY_ANDROID
+using Improbable.Gdk.Mobile.Android;
+#endif
 
 namespace Fps
 {
@@ -50,10 +51,13 @@ namespace Fps
         protected virtual async void Start()
         {
             Application.targetFrameRate = TargetFrameRate;
+#if UNITY_ANDROID && !UNITY_EDITOR
             UseIpAddressFromArguments();
+    #endif
             await AttemptConnect();
         }
 
+#if UNITY_ANDROID && !UNITY_EDITOR
         public void UseIpAddressFromArguments()
         {
             IpAddress = GetReceptionistHostFromArguments();
@@ -63,7 +67,6 @@ namespace Fps
                 IpAddress = "127.0.0.1";
             }
         }
-
         private string GetReceptionistHostFromArguments()
         {
             var arguments = LaunchArguments.GetArguments();
@@ -71,6 +74,7 @@ namespace Fps
                 CommandLineUtility.GetCommandLineValue(arguments, RuntimeConfigNames.ReceptionistHost, string.Empty);
             return hostIp;
         }
+#endif
 
         protected override string GetHostIp()
         {
