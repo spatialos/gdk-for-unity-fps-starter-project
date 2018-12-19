@@ -77,7 +77,6 @@ namespace Fps
 
         private void SpawnPlayer()
         {
-            Debug.LogError("CreatePlayerRequest");
             var request = new CreatePlayerRequestType(new Vector3f { X = 0, Y = 0, Z = 0 });
             commandSender.SendCreatePlayerRequest(new EntityId(1), request);
         }
