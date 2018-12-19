@@ -2831,9 +2831,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MovementScalar: 0.01
-  LookScalar: 0.14
+  YawMultiplier: 0.15
+  PitchMultiplier: 0.12
+  FiringLookMultiplier: 0.75
   SprintMaxAngle: 30
-  SprintDistanceThreshold: 100
 --- !u!114 &114711516255448412
 MonoBehaviour:
   m_ObjectHideFlags: 1
