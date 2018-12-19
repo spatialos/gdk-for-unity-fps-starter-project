@@ -7,7 +7,6 @@ using Improbable.Gdk.Movement;
 using Improbable.Gdk.StandardTypes;
 using UnityEngine;
 
-[RequireComponent(typeof(CharacterController))]
 public class MyServerMovementDriver : MonoBehaviour
 {
     [Require] private ClientMovement.Requirable.Reader clientInput;
@@ -43,7 +42,7 @@ public class MyServerMovementDriver : MonoBehaviour
     private readonly Dictionary<int, MovementState> movementState = new Dictionary<int, MovementState>();
 
     private MyMovementUtils.IMovementStateRestorer stateRestorer;
-    private MyMovementUtils.ICustomMovementProcessor customProcessor;
+    private IMovementProcessor customProcessor;
 
     public int workerIndex = -1;
 
@@ -78,7 +77,7 @@ public class MyServerMovementDriver : MonoBehaviour
         origin = spatial.Worker.Origin;
     }
 
-    public void SetCustomProcessor(MyMovementUtils.ICustomMovementProcessor processor)
+    public void SetCustomProcessor(IMovementProcessor processor)
     {
         customProcessor = processor;
     }

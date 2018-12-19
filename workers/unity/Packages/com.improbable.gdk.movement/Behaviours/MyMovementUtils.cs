@@ -1,19 +1,15 @@
 ﻿using Improbable.Fps.Custommovement;
 using Improbable.Gdk.Movement;
 using Improbable.Gdk.StandardTypes;
+using Improbable.Worker.CInterop;
 using UnityEngine;
 
 public class MyMovementUtils
 {
-    public interface IMovementProcessor
+    public interface IMovementProcessorOLD
     {
-        bool Process(ClientRequest input, MovementState previousState,
+        bool Process(CustomInput input, MovementState previousState,
             ref MovementState newState, float deltaTime);
-    }
-
-    public interface ICustomMovementProcessor
-    {
-        MovementState Process(CustomInput input, MovementState previousState, float deltaTime);
     }
 
     public interface IMovementStateRestorer
@@ -42,9 +38,9 @@ public class MyMovementUtils
 
     public const int ConstantInputBufferExtra = 2;
 
-    public class TerminalVelocity : IMovementProcessor
+    public class TerminalVelocity : IMovementProcessorOLD
     {
-        public bool Process(ClientRequest input, MovementState previousState,
+        public bool Process(CustomInput input, MovementState previousState,
             ref MovementState newState, float deltaTime)
         {
             newState.Velocity = Vector3.ClampMagnitude(newState.Velocity.ToVector3(), movementSettings.TerminalVelocity)
@@ -53,9 +49,9 @@ public class MyMovementUtils
         }
     }
 
-    public class Gravity : IMovementProcessor
+    public class Gravity : IMovementProcessorOLD
     {
-        public bool Process(ClientRequest input, MovementState previousState,
+        public bool Process(CustomInput input, MovementState previousState,
             ref MovementState newState, float deltaTime)
         {
             if (newState.DidTeleport)
@@ -73,9 +69,9 @@ public class MyMovementUtils
         }
     }
 
-    public class SprintCooldown : IMovementProcessor
+    public class SprintCooldown : IMovementProcessorOLD
     {
-        public bool Process(ClientRequest input, MovementState previousState,
+        public bool Process(CustomInput input, MovementState previousState,
             ref MovementState newState, float deltaTime)
         {
             if (newState.DidTeleport)
@@ -84,7 +80,7 @@ public class MyMovementUtils
                 return true;
             }
 
-            if (input.Input.SprintPressed)
+            if (input.SprintPressed)
             {
                 newState.SprintCooldown = movementSettings.SprintCooldown;
             }
@@ -102,7 +98,7 @@ public class MyMovementUtils
         }
     }
 
-    public class CharacterControllerMovement : IMovementProcessor
+    public class CharacterControllerMovement : IMovementProcessorOLD
     {
         private readonly CharacterController controller;
 
@@ -111,7 +107,7 @@ public class MyMovementUtils
             this.controller = controller;
         }
 
-        public bool Process(ClientRequest input, MovementState previousState,
+        public bool Process(CustomInput input, MovementState previousState,
             ref MovementState newState, float deltaTime)
         {
             if (newState.DidTeleport)
@@ -133,11 +129,11 @@ public class MyMovementUtils
         }
     }
 
-    public class RemoveWorkerOrigin : IMovementProcessor
+    public class RemoveWorkerOrigin : IMovementProcessorOLD
     {
         public Vector3 Origin;
 
-        public bool Process(ClientRequest input, MovementState previousState,
+        public bool Process(CustomInput input, MovementState previousState,
             ref MovementState newState, float deltaTime)
         {
             newState.Position = (newState.Position.ToVector3() - Origin).ToIntAbsolute();
@@ -145,9 +141,9 @@ public class MyMovementUtils
         }
     }
 
-    public class AdjustVelocity : IMovementProcessor
+    public class AdjustVelocity : IMovementProcessorOLD
     {
-        public bool Process(ClientRequest input, MovementState previousState,
+        public bool Process(CustomInput input, MovementState previousState,
             ref MovementState newState, float deltaTime)
         {
             // Don't adjust velocity if we teleported, since that would not produce a valid velocity.
@@ -164,7 +160,7 @@ public class MyMovementUtils
         }
     }
 
-    public class TeleportProcessor : IMovementProcessor
+    public class TeleportProcessorOld : IMovementProcessorOLD
     {
         public Vector3 Origin { get; set; }
 
@@ -178,7 +174,7 @@ public class MyMovementUtils
             teleportPosition = position + Origin;
         }
 
-        public bool Process(ClientRequest input, MovementState previousState,
+        public bool Process(CustomInput input, MovementState previousState,
             ref MovementState newState, float deltaTime)
         {
             if (hasTeleport)
@@ -199,37 +195,16 @@ public class MyMovementUtils
 
     public const float FrameLength = CommandFrameSystem.FrameLength;
 
-    public static MovementState ApplyInput(ClientRequest input, MovementState previousState,
-        IMovementProcessor[] processors)
-    {
-        return ApplyPartialInput(input, previousState, processors, CommandFrameSystem.FrameLength);
-    }
-
-    public static MovementState ApplyPartialInput(ClientRequest input,
-        MovementState previousState, IMovementProcessor[] processors, float deltaTime)
-    {
-        var newState = new MovementState();
-        for (var i = 0; i < processors.Length; i++)
-        {
-            if (!processors[i].Process(input, previousState, ref newState, deltaTime))
-            {
-                break;
-            }
-        }
-
-        return newState;
-    }
-
     public static MovementState ApplyCustomInput(
-        ClientRequest input, MovementState previousState, ICustomMovementProcessor customProcessor)
+        ClientRequest input, MovementState previousState, IMovementProcessor customProcessor)
     {
         return ApplyPartialCustomInput(input, previousState, customProcessor, CommandFrameSystem.FrameLength);
     }
 
     public static MovementState ApplyPartialCustomInput(
-        ClientRequest input, MovementState previousState, ICustomMovementProcessor customProcessor, float deltaTime)
+        ClientRequest input, MovementState previousState, IMovementProcessor customProcessor, float deltaTime)
     {
-        return customProcessor.Process(input.Input, previousState, deltaTime);
+        return customProcessor.Process(input.InputRaw, previousState, deltaTime);
     }
 
     public static int CalculateInputBufferSize(float rtt)

@@ -6,7 +6,7 @@ import "custom_movement.schema";
 type ClientRequest {
 	int32 timestamp = 1;
 	float last_received_server_time = 2;
-	improbable.fps.custommovement.CustomInput input = 3;
+	bytes input_raw = 3;
 }
 
 type MovementState {
@@ -27,7 +27,7 @@ type ServerResponse {
 	int32 timestamp = 2;
 	int32 server_time = 3;
 	int32 next_frame_adjustment = 4;
-  improbable.fps.custommovement.CustomState state = 5;
+    improbable.fps.custommovement.CustomState state = 5;
 }
 
 component ClientMovement {

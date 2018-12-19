@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Improbable.Fps.Custommovement;
 using UnityEngine;
 using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.Movement;
@@ -25,16 +23,6 @@ public class MyClientMovementDriver : MonoBehaviour
     private MovementState lastMovementState;
     private int confirmedFrame = -1;
 
-    private bool forwardThisFrame;
-    private bool backThisFrame;
-    private bool leftThisFrame;
-    private bool rightThisFrame;
-    private bool jumpThisFrame;
-    private bool sprintThisFrame;
-    private bool aimThisFrame;
-    private float yawThisFrame;
-    private float pitchThisFrame;
-
     private const float NetPauseOnBufferSizeMultiplier = 10f;
     private const float NetResumeOnBufferSizeMultiplier = 1.5f;
     private int frameBuffer = 1000;
@@ -44,13 +32,11 @@ public class MyClientMovementDriver : MonoBehaviour
 
     private Queue<ServerResponse> serverResponses = new Queue<ServerResponse>();
 
-    private MyMovementUtils.IMovementProcessor[] movementProcessors = { };
+    private MyMovementUtils.IMovementProcessorOLD[] movementProcessorsOld = { };
 
     private MyMovementUtils.IMovementStateRestorer stateRestorer;
 
-    private MyMovementUtils.ICustomMovementProcessor customProcessor;
-    private Type customInputType;
-    private Type customStateType;
+    private IMovementProcessor customProcessor;
 
     private int debugRow;
 
@@ -82,9 +68,9 @@ public class MyClientMovementDriver : MonoBehaviour
         UpdateFrameBuffer();
     }
 
-    public void SetMovementProcessors(MyMovementUtils.IMovementProcessor[] processors)
+    public void SetMovementProcessors(MyMovementUtils.IMovementProcessorOLD[] processorsOld)
     {
-        movementProcessors = processors;
+        movementProcessorsOld = processorsOld;
     }
 
     public void SetStateRestorer(MyMovementUtils.IMovementStateRestorer restorer)
@@ -92,7 +78,7 @@ public class MyClientMovementDriver : MonoBehaviour
         stateRestorer = restorer;
     }
 
-    public void SetCustomProcessor(MyMovementUtils.ICustomMovementProcessor processor)
+    public void SetCustomProcessor(IMovementProcessor processor)
     {
         customProcessor = processor;
     }
@@ -131,28 +117,26 @@ public class MyClientMovementDriver : MonoBehaviour
 
         if (commandFrame.NewFrame)
         {
+            byte[] rawInput = null;
+            if (lastFrame < commandFrame.CurrentFrame)
+            {
+                rawInput = customProcessor.ConsumeInput();
+            }
+
             while (lastFrame < commandFrame.CurrentFrame)
             {
                 lastFrame += 1;
 
-                var input = SendInput();
+                var input = SendInput(rawInput);
                 movementState.TryGetValue(lastFrame - 1, out var previousState);
                 stateRestorer?.Restore(previousState);
 
                 lastMovementState = MyMovementUtils.ApplyCustomInput(input, previousState, customProcessor);
-                // lastMovementState = MyMovementUtils.ApplyInput(input, previousState, movementProcessors);
 
                 movementState[lastFrame] = lastMovementState;
                 inputState.Add(lastFrame, input);
             }
 
-            forwardThisFrame = false;
-            backThisFrame = false;
-            leftThisFrame = false;
-            rightThisFrame = false;
-            jumpThisFrame = false;
-            sprintThisFrame = false;
-            aimThisFrame = false;
             commandFrame.ServerAdjustment = nextDilation;
 
             if (inputState.Count > frameBuffer * NetPauseOnBufferSizeMultiplier)
@@ -204,26 +188,6 @@ public class MyClientMovementDriver : MonoBehaviour
         }
     }
 
-    public void AddInput(bool forward = false, bool back = false, bool left = false, bool right = false, bool jump = false, bool sprint = false, bool aim = false, float yaw = -1, float pitch = -1)
-    {
-        forwardThisFrame |= forward;
-        backThisFrame |= back;
-        leftThisFrame |= left;
-        rightThisFrame |= right;
-        jumpThisFrame |= jump;
-        sprintThisFrame |= sprint;
-        aimThisFrame |= aim;
-        if (yaw >= 0)
-        {
-            yawThisFrame = yaw;
-        }
-
-        if (pitchThisFrame >= 0)
-        {
-            pitchThisFrame = pitch;
-        }
-    }
-
     private void ProcessServerResponses()
     {
         while (serverResponses.Count > 0)
@@ -261,7 +225,6 @@ public class MyClientMovementDriver : MonoBehaviour
                     var i = response.Timestamp + 1;
                     while (i <= lastFrame)
                     {
-                        Debug.LogFormat("Input {0}", InputToString(inputState[i]));
                         Debug.LogFormat("Previous Position {0}", movementState[i].Position.ToVector3());
                         Debug.LogFormat("Previous Velocity {0}", movementState[i].Velocity.ToVector3());
 
@@ -311,22 +274,11 @@ public class MyClientMovementDriver : MonoBehaviour
         }
     }
 
-    private ClientRequest SendInput()
+    private ClientRequest SendInput(byte[] rawInput)
     {
         var clientRequest = new ClientRequest
         {
-            Input = new CustomInput()
-            {
-                ForwardPressed = forwardThisFrame,
-                BackPressed = backThisFrame,
-                LeftPressed = leftThisFrame,
-                RightPressed = rightThisFrame,
-                JumpPressed = jumpThisFrame,
-                SprintPressed = sprintThisFrame,
-                AimPressed = aimThisFrame,
-                Yaw = (int) (yawThisFrame * 100000f),
-                Pitch = (int) (pitchThisFrame * 100000f)
-            },
+            InputRaw = rawInput,
             Timestamp = lastFrame,
             LastReceivedServerTime = lastServerTimestamp + (Time.time - lastServerTimestampReceived) * 100000f
         };
@@ -384,14 +336,5 @@ public class MyClientMovementDriver : MonoBehaviour
             Gizmos.DrawWireSphere(movementState[i].Position.ToVector3(), 0.5f);
             c += 1;
         }
-    }
-
-    private string InputToString(ClientRequest request)
-    {
-        return string.Format("[F:{0} B:{1} R:{2} L:{3}, J:{4}, S:{5}, Yaw:{6}, Pitch:{7}]",
-            request.Input.ForwardPressed, request.Input.BackPressed,
-            request.Input.RightPressed, request.Input.LeftPressed,
-            request.Input.JumpPressed, request.Input.SprintPressed,
-            request.Input.Yaw, request.Input.Pitch);
     }
 }

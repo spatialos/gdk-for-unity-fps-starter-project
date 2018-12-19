@@ -1,10 +1,11 @@
-﻿using Improbable.Gdk.Movement;
+﻿using Improbable.Fps.Custommovement;
+using Improbable.Gdk.Movement;
 using Improbable.Gdk.StandardTypes;
 using UnityEngine;
 
-public class JumpMovement : MyMovementUtils.IMovementProcessor
+public class JumpMovement : MyMovementUtils.IMovementProcessorOLD
 {
-    public bool Process(ClientRequest input, MovementState previousState,
+    public bool Process(CustomInput input, MovementState previousState,
         ref MovementState newState, float deltaTime)
     {
         if (newState.DidTeleport)
@@ -14,7 +15,7 @@ public class JumpMovement : MyMovementUtils.IMovementProcessor
 
         var grounded = previousState.IsGrounded;
         var canJump = previousState.CanJump;
-        var jumpPressed = input.Input.JumpPressed;
+        var jumpPressed = input.JumpPressed;
 
         if (grounded && canJump && jumpPressed)
         {
