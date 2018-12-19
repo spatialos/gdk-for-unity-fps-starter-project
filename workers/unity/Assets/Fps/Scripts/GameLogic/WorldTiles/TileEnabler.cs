@@ -9,22 +9,25 @@ namespace Fps
 
         private bool renderersEnabled = true;
 
-        private const int LevelCheckoutDistance = 300;
-        private const int LevelCheckoutDistanceSquared = LevelCheckoutDistance * LevelCheckoutDistance;
-
-        private Renderer[] childRenderers;
-
-        private void Awake()
+        public float CheckoutDistance
         {
-            childRenderers = GetComponentsInChildren<Renderer>();
+            set => CheckoutDistanceSquared = Mathf.Pow(value, 2);
         }
+
+        private float CheckoutDistanceSquared = TileSettings.DefaultCheckoutDistanceSquared;
+
+        private MeshRenderer meshRenderer;
 
         private void Start()
         {
+            meshRenderer = GetComponent<MeshRenderer>();
             if (!IsClient)
             {
                 Destroy(this);
+                return;
             }
+
+            CheckoutDistanceSquared = Mathf.Pow(TileSettings.CheckoutDistance, 2);
         }
 
         private void Update()
@@ -33,11 +36,11 @@ namespace Fps
             {
                 var distanceSquared = Vector3.SqrMagnitude(PlayerTransform.position - transform.position);
 
-                if (renderersEnabled && distanceSquared > LevelCheckoutDistanceSquared)
+                if (renderersEnabled && distanceSquared > CheckoutDistanceSquared)
                 {
                     ToggleRenderers();
                 }
-                else if (!renderersEnabled && distanceSquared <= LevelCheckoutDistanceSquared)
+                else if (!renderersEnabled && distanceSquared <= CheckoutDistanceSquared)
                 {
                     ToggleRenderers();
                 }
@@ -46,11 +49,13 @@ namespace Fps
 
         private void ToggleRenderers()
         {
-            renderersEnabled = !renderersEnabled;
-            foreach (var childRenderer in childRenderers)
+            if (meshRenderer == null)
             {
-                childRenderer.enabled = renderersEnabled;
+                return;
             }
+
+            renderersEnabled = !renderersEnabled;
+            meshRenderer.enabled = renderersEnabled;
         }
     }
 }
