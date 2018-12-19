@@ -13,7 +13,7 @@ using UnityEngine;
 
 namespace Fps
 {
-    public class FpsDriver : MonoBehaviour, MyMovementUtils.IMovementStateRestorer
+    public class FpsDriver : MonoBehaviour
     {
         [System.Serializable]
         private struct CameraSettings
@@ -53,18 +53,10 @@ namespace Fps
         private bool isRequestingRespawn;
         private Coroutine requestingRespawnCoroutine;
 
-        private Vector3 from;
-        private Vector3 to;
-        private Vector3 next;
-        private float t;
-
         private void Awake()
         {
             movement = GetComponent<MyClientMovementDriver>();
             controller = ControllerProxy.GetComponent<CharacterController>();
-            movement.SetStateRestorer(this);
-            fpsMovement = new FpsMovement(gameObject, controller);
-            movement.SetCustomProcessor(fpsMovement);
             shooting = GetComponent<ClientShooting>();
             shotRayProvider = GetComponent<ShotRayProvider>();
             fpsAnimator = GetComponent<FpsAnimator>();
@@ -81,6 +73,9 @@ namespace Fps
         private void OnEnable()
         {
             spatialComponent = GetComponent<SpatialOSComponent>();
+
+            fpsMovement = new FpsMovement(controller, spatialComponent.Worker.Origin, "Client");
+            movement.SetCustomProcessor(fpsMovement);
 
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
@@ -101,7 +96,7 @@ namespace Fps
             // Don't allow controls if in the menu.
             if (ScreenUIController.InEscapeMenu)
             {
-                Animations(new MovementState());
+                Animations(new CustomState());
                 return;
             }
 
@@ -188,7 +183,7 @@ namespace Fps
             //     isJumpPressed, isSprinting, isAiming,
             //     rotation.y, newPitch);
 
-            var state = movement.GetLatestState();
+            var state = MyMovementUtils.GetLatestState(movement, fpsMovement);
 
             //Check for sprint cooldown
             if (isAiming || (fpsMovement.SprintCooldown.GetCooldown(state) <= 0 && !isSprinting))
@@ -251,7 +246,7 @@ namespace Fps
             }
         }
 
-        private void Animations(MovementState state)
+        private void Animations(CustomState state)
         {
             fpsAnimator.SetAiming(gunState.Data.IsAiming);
             fpsAnimator.SetGrounded(state.IsGrounded);
@@ -262,11 +257,6 @@ namespace Fps
             {
                 fpsAnimator.Jump();
             }
-        }
-
-        public void Restore(MovementState state)
-        {
-            controller.transform.position = state.Position.ToVector3() + spatialComponent.Worker.Origin;
         }
     }
 }

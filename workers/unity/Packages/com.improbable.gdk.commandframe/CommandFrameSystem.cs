@@ -1,5 +1,4 @@
-﻿using System.Security.Cryptography;
-using Unity.Entities;
+﻿using Unity.Entities;
 using UnityEngine;
 using UnityEngine.Experimental.PlayerLoop;
 

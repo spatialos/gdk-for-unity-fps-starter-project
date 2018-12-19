@@ -53,7 +53,8 @@ public class AdvancedEntityPipeline : IEntityGameObjectCreator
                 }
 
                 var serverPosition = entity.GetComponent<ServerMovement.Component>();
-                var position = serverPosition.Latest.MovementState.Position.ToVector3() + worker.Origin;
+                var state = FpsMovement.DeserializeStateStatic(serverPosition.Latest.MovementState.RawState);
+                var position = state.Position.ToVector3() + worker.Origin;
 
                 var prefab = authority ? cachedAuthPlayer : cachedNonAuthPlayer;
                 var gameObject = Object.Instantiate(prefab, position, Quaternion.identity);

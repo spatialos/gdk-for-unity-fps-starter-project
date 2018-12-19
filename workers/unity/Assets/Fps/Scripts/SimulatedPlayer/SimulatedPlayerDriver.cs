@@ -1,18 +1,15 @@
 ﻿using System.Collections;
 using Improbable.Common;
-using Improbable.Fps.Custommovement;
 using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.Guns;
 using Improbable.Gdk.Health;
 using Improbable.Gdk.Movement;
-using Improbable.Gdk.StandardTypes;
-using Improbable.Worker.CInterop;
 using Unity.Entities;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class SimulatedPlayerDriver : MonoBehaviour, MyMovementUtils.IMovementStateRestorer
+public class SimulatedPlayerDriver : MonoBehaviour
 {
     public enum PlayerState
     {
@@ -36,10 +33,6 @@ public class SimulatedPlayerDriver : MonoBehaviour, MyMovementUtils.IMovementSta
     private CommandFrameSystem commandFrame;
     private CharacterController controller;
 
-    private readonly JumpMovement jumpMovement = new JumpMovement();
-    private readonly MyMovementUtils.SprintCooldown sprintCooldown = new MyMovementUtils.SprintCooldown();
-    private readonly MyMovementUtils.RemoveWorkerOrigin removeOrigin = new MyMovementUtils.RemoveWorkerOrigin();
-
     private Vector3 anchorPoint;
     private const float MovementRadius = 50f;
     private const float NavMeshSnapDistance = 5f;
@@ -56,32 +49,15 @@ public class SimulatedPlayerDriver : MonoBehaviour, MyMovementUtils.IMovementSta
     private bool strafeRight;
 
     private Bounds worldBounds;
-    private MyMovementUtils.IMovementProcessorOLD[] movementProcessorsOld;
 
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
     }
 
-    private void Start()
+    private void OnEnable()
     {
         controller = GetComponent<CharacterController>();
-        movementDriver = GetComponent<MyClientMovementDriver>();
-        fpsMovement = new FpsMovement(gameObject, controller);
-        movementDriver.SetCustomProcessor(fpsMovement);
-        movementDriver.SetStateRestorer(this);
-        movementProcessorsOld = new MyMovementUtils.IMovementProcessorOLD[]
-        {
-            new StandardMovement(),
-            sprintCooldown,
-            jumpMovement,
-            new MyMovementUtils.Gravity(),
-            new MyMovementUtils.TerminalVelocity(),
-            new MyMovementUtils.CharacterControllerMovement(controller),
-            removeOrigin,
-            new IsGroundedMovement(),
-            new MyMovementUtils.AdjustVelocity(),
-        };
         shooting = GetComponent<ClientShooting>();
         coordinator = FindObjectOfType<SimulatedPlayerCoordinatorWorkerConnector>();
         agent.updatePosition = false;
@@ -90,16 +66,14 @@ public class SimulatedPlayerDriver : MonoBehaviour, MyMovementUtils.IMovementSta
         agent.Warp(transform.position);
         anchorPoint = transform.position;
         worldBounds = coordinator.GetWorldBounds();
-    }
-
-    private void OnEnable()
-    {
         HealthReader.OnHealthModified += OnHealthModified;
         HealthReader.OnRespawn += OnRespawn;
         spatial = GetComponent<SpatialOSComponent>();
+        movementDriver = GetComponent<MyClientMovementDriver>();
         commandFrame = spatial.World.GetExistingManager<CommandFrameSystem>();
 
-        removeOrigin.Origin = spatial.Worker.Origin;
+        fpsMovement = new FpsMovement(controller, spatial.Worker.Origin);
+        movementDriver.SetCustomProcessor(fpsMovement);
 
         SetPlayerState(PlayerState.LookingForTarget);
     }
@@ -385,11 +359,6 @@ public class SimulatedPlayerDriver : MonoBehaviour, MyMovementUtils.IMovementSta
                 similarPositionsCount = 0;
             }
         }
-    }
-
-    public void Restore(MovementState movementState)
-    {
-        controller.transform.position = movementState.Position.ToVector3() + spatial.Worker.Origin;
     }
 
 #if UNITY_EDITOR

@@ -1,7 +1,6 @@
 package improbable.gdk.movement;
 
 import "from_gdk_packages/com.improbable.gdk.standardtypes/standardtypes.schema";
-import "custom_movement.schema";
 
 type ClientRequest {
 	int32 timestamp = 1;
@@ -10,16 +9,7 @@ type ClientRequest {
 }
 
 type MovementState {
-    improbable.gdk.standardtypes.IntAbsolute position = 1;
-    improbable.gdk.standardtypes.IntAbsolute velocity = 2;
-    float sprint_cooldown = 3;
-    bool can_jump = 4;
-    bool did_jump = 5;
-    bool did_teleport = 6;
-    bool is_grounded = 7;
-    int32 pitch = 8;
-    int32 yaw = 9;
-    bool is_aiming = 10;
+    bytes raw_state = 1;
 }
 
 type ServerResponse {
@@ -27,7 +17,6 @@ type ServerResponse {
 	int32 timestamp = 2;
 	int32 server_time = 3;
 	int32 next_frame_adjustment = 4;
-    improbable.fps.custommovement.CustomState state = 5;
 }
 
 component ClientMovement {

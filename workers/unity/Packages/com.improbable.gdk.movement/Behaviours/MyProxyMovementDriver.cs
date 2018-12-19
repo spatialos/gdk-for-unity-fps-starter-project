@@ -9,17 +9,12 @@ public class MyProxyMovementDriver : MonoBehaviour
 {
     [Require] private ServerMovement.Requirable.Reader server;
 
-    private SpatialOSComponent spatial;
-    private CommandFrameSystem commandFrame;
-    public CharacterController Controller;
-
     private readonly List<ServerResponse> movementBuffer = new List<ServerResponse>();
 
     private MyMovementUtils.PidController pidController =
         new MyMovementUtils.PidController(0.1f, 0.01f, 0f, 1f, 100f);
 
     private const int BufferSize = 3;
-    private const int MaxBufferSize = 6;
 
     private float pitch;
     private Vector3 velocity;
@@ -30,62 +25,58 @@ public class MyProxyMovementDriver : MonoBehaviour
 
     private void OnEnable()
     {
-        spatial = GetComponent<SpatialOSComponent>();
-        commandFrame = spatial.World.GetExistingManager<CommandFrameSystem>();
         server.LatestUpdated += ServerOnLatestUpdated;
     }
 
     private void ServerOnLatestUpdated(ServerResponse response)
     {
-        // replace entire buffer with this update.
-        if (response.MovementState.DidTeleport)
+        movementBuffer.Add(response);
+
+        // // replace entire buffer with this update.
+        // if (response.MovementState.DidTeleport)
+        // {
+        //     var count = movementBuffer.Count;
+        //     movementBuffer.Clear();
+        //     for (var i = 0; i < count; i++)
+        //     {
+        //         movementBuffer.Add(response);
+        //     }
+        // }
+        // else
+        // {
+        //
+        // }
+    }
+
+    public bool GetInterpState(out float t, out byte[] from, out byte[] to)
+    {
+        t = remainder / CommandFrameSystem.FrameLength;
+        if (movementBuffer.Count >= 2)
         {
-            var count = movementBuffer.Count;
-            movementBuffer.Clear();
-            for (var i = 0; i < count; i++)
-            {
-                movementBuffer.Add(response);
-            }
+            from = movementBuffer[0].MovementState.RawState;
+            to = movementBuffer[1].MovementState.RawState;
+        }
+        else if (movementBuffer.Count == 1)
+        {
+            from = movementBuffer[0].MovementState.RawState;
+            to = movementBuffer[0].MovementState.RawState;
         }
         else
         {
-            movementBuffer.Add(response);
+            from = null;
+            to = null;
+            return false;
         }
+
+        return true;
     }
 
     private void Update()
     {
-        if (Controller == null)
-        {
-            return;
-        }
-
         if (movementBuffer.Count < BufferSize)
         {
             return;
         }
-
-        var from = movementBuffer[0];
-        var to = movementBuffer[1];
-
-        var fromPosition = from.MovementState.Position.ToVector3() + spatial.Worker.Origin;
-        var toPosition = to.MovementState.Position.ToVector3() + spatial.Worker.Origin;
-        var rot = Controller.transform.rotation.eulerAngles;
-        var fromRot = Quaternion.Euler(from.MovementState.Pitch / 100000f, from.MovementState.Yaw / 100000f, rot.z);
-        var toRot = Quaternion.Euler(to.MovementState.Pitch / 100000f, to.MovementState.Yaw / 100000f, rot.z);
-
-        velocity = (toPosition - fromPosition) / CommandFrameSystem.FrameLength;
-        aiming = from.MovementState.IsAiming;
-
-        var t = remainder / CommandFrameSystem.FrameLength;
-
-        var newRot = Quaternion.Slerp(fromRot, toRot, t);
-        var newRotEuler = newRot.eulerAngles;
-
-        Controller.transform.position = Vector3.Lerp(fromPosition, toPosition, t);
-
-        Controller.transform.rotation = Quaternion.Euler(rot.x, newRotEuler.y, rot.z);
-        pitch = newRotEuler.x;
 
         remainder += Time.deltaTime * frameLength;
 
@@ -119,21 +110,6 @@ public class MyProxyMovementDriver : MonoBehaviour
         frameLength = Mathf.Clamp(pidController.Update(error, Time.deltaTime), 1 / 1000f, 2f);
     }
 
-    public Vector3 GetVelocity()
-    {
-        return velocity;
-    }
-
-    public float GetPitch()
-    {
-        return pitch;
-    }
-
-    public bool GetAiming()
-    {
-        return aiming;
-    }
-
     private void OnGUI()
     {
         if (!MyMovementUtils.ShowDebug)
@@ -145,15 +121,5 @@ public class MyProxyMovementDriver : MonoBehaviour
 
         GUI.Label(new Rect(10, 500, 700, 30), string.Format("Buffer Size: {0}, average: {1:00.00}, length: {2}",
             movementBuffer.Count, bufferAverage, frameLength));
-    }
-
-    public bool IsGrounded()
-    {
-        if (movementBuffer.Count > 0)
-        {
-            return movementBuffer[0].MovementState.IsGrounded;
-        }
-
-        return true;
     }
 }
