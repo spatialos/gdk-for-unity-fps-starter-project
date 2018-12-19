@@ -6,14 +6,20 @@ public class MobileControls : MonoBehaviour, IControlProvider
     private IMobileUI mobileUI;
 
     public float MovementScalar = 0.01f;
-    public float LookScalar = 0.33f;
+    public float YawMultiplier = 0.15f;
+    public float PitchMultiplier = 0.12f;
+    public float FiringLookMultiplier = .8f;
     public float SprintMaxAngle = 30f;
     public float SprintDistanceThreshold => mobileUI.MaxStickDistance;
 
     // TODO Currently YawDelta/PitchDelta is untested on different devices. Probably needs some more love to resolve
     // DPI/physical screen size differences.
-    public float YawDelta => mobileUI.LookDelta.x * LookScalar;
-    public float PitchDelta => mobileUI.LookDelta.y * LookScalar;
+    public float YawDelta =>
+        mobileUI.LookDelta.x * YawMultiplier * (mobileUI.ShootHeld ? FiringLookMultiplier : 1f);
+
+    public float PitchDelta =>
+        mobileUI.LookDelta.y * PitchMultiplier * (mobileUI.ShootHeld ? FiringLookMultiplier : 1f);
+
     public bool IsAiming => mobileUI.IsAiming;
 
     public bool JumpPressed => mobileUI.JumpPressed;
