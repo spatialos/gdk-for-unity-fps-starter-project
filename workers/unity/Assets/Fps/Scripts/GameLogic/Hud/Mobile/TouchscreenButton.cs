@@ -18,7 +18,7 @@ public class TouchscreenButton : MonoBehaviour, IPointerDownHandler, IPointerUpH
 
     public bool IsPressed { get; private set; }
 
-    public delegate void ButtonEvent(PointerEventData eventData);
+    public delegate void ButtonEvent();
 
     public ButtonEvent OnButtonDown;
     public ButtonEvent OnButtonUp;
@@ -67,22 +67,7 @@ public class TouchscreenButton : MonoBehaviour, IPointerDownHandler, IPointerUpH
     // Presently it is assumed the player is dead if the UI is disabled, so reset everything
     private void OnDisable()
     {
-        SetPressedTo(false);
-    }
-
-
-    public void SetPressedTo(bool pressed)
-    {
-        // Not terribly nice passing in null PointerEventData refs here,
-        // but unsure of a better solution for now
-        if (pressed)
-        {
-            Press(null);
-        }
-        else
-        {
-            Release(null);
-        }
+        Release();
     }
 
     private void Start()
@@ -104,11 +89,11 @@ public class TouchscreenButton : MonoBehaviour, IPointerDownHandler, IPointerUpH
 
         if (Togglable)
         {
-            Toggle(data);
+            Toggle();
         }
         else
         {
-            Press(data);
+            Press();
         }
     }
 
@@ -119,22 +104,22 @@ public class TouchscreenButton : MonoBehaviour, IPointerDownHandler, IPointerUpH
             return;
         }
 
-        Release(eventData);
+        Release();
     }
 
-    private void Toggle(PointerEventData eventData)
+    private void Toggle()
     {
         if (IsPressed)
         {
-            Release(eventData);
+            Release();
         }
         else
         {
-            Press(eventData);
+            Press();
         }
     }
 
-    private void Press(PointerEventData eventData)
+    private void Press()
     {
         if (IsPressed)
         {
@@ -149,10 +134,10 @@ public class TouchscreenButton : MonoBehaviour, IPointerDownHandler, IPointerUpH
         }
 
         lastPressedTime = Time.time;
-        OnButtonDown?.Invoke(eventData);
+        OnButtonDown?.Invoke();
     }
 
-    private void Release(PointerEventData eventData)
+    private void Release()
     {
         if (!IsPressed)
         {
@@ -166,7 +151,7 @@ public class TouchscreenButton : MonoBehaviour, IPointerDownHandler, IPointerUpH
             anim.QueueAnimation(TouchscreenButtonAnimator.AnimType.Idle);
         }
 
-        OnButtonUp?.Invoke(eventData);
+        OnButtonUp?.Invoke();
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -181,12 +166,12 @@ public class TouchscreenButton : MonoBehaviour, IPointerDownHandler, IPointerUpH
             var relativeCursorPoint = Hitbox.rectTransform.InverseTransformPoint(eventData.position);
             if (!Hitbox.rectTransform.rect.Contains(relativeCursorPoint))
             {
-                Release(eventData);
+                Release();
             }
 
             return;
         }
 
-        OnButtonDrag?.Invoke(eventData);
+        OnButtonDrag?.Invoke();
     }
 }

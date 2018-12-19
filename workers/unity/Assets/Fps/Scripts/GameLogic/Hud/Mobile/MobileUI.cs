@@ -101,27 +101,27 @@ public class MobileUI : MonoBehaviour, IMobileUI
     }
 
 
-    private void Jump(PointerEventData data)
+    private void Jump()
     {
         JumpPressed = true;
     }
 
-    private void ToggleADS(PointerEventData data)
+    private void ToggleADS()
     {
         IsAiming = !IsAiming;
     }
 
-    private void StartFiring(PointerEventData data)
+    private void StartFiring()
     {
         ShootHeld = true;
     }
 
-    private void StopFiring(PointerEventData data)
+    private void StopFiring()
     {
         ShootHeld = false;
     }
 
-    private void OpenMenu(PointerEventData data)
+    private void OpenMenu()
     {
         MenuPressed = true;
     }
