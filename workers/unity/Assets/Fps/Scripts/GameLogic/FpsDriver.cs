@@ -178,11 +178,6 @@ namespace Fps
                 rotation.y,
                 newPitch);
 
-            // movement.AddInput(
-            //     forward, backward, left, right,
-            //     isJumpPressed, isSprinting, isAiming,
-            //     rotation.y, newPitch);
-
             var state = MyMovementUtils.GetLatestState(movement, fpsMovement);
 
             //Check for sprint cooldown
