@@ -9,7 +9,6 @@ public class FpsMovement : AbstractMovementProcessor<CustomInput, CustomState>
     private readonly Vector3 origin;
 
     private readonly MyMovementUtils.IMovementProcessorOLD[] processors;
-    private readonly JumpMovement jumpMovement = new JumpMovement();
     private readonly MyMovementUtils.RemoveWorkerOrigin removeOrigin = new MyMovementUtils.RemoveWorkerOrigin();
     public readonly MyMovementUtils.TeleportMovement TeleportProcessor = new MyMovementUtils.TeleportMovement();
 
@@ -23,7 +22,6 @@ public class FpsMovement : AbstractMovementProcessor<CustomInput, CustomState>
 
         processors = new MyMovementUtils.IMovementProcessorOLD[]
         {
-            jumpMovement,
             new MyMovementUtils.Gravity(),
             new MyMovementUtils.TerminalVelocity(),
             new MyMovementUtils.CharacterControllerMovement(controller),
@@ -75,6 +73,12 @@ public class FpsMovement : AbstractMovementProcessor<CustomInput, CustomState>
             MyMovementUtils.SprintCooldown.Update(
                 input.SprintPressed, previousState.SprintCooldown,
                 out newState.SprintCooldown, deltaTime);
+
+            JumpMovement.Process(input.JumpPressed, previousState.IsGrounded, previousState.CanJump,
+                ref newState.StandardMovement, out var didJump, out var canJump);
+
+            newState.DidJump = didJump;
+            newState.CanJump = canJump;
         }
         else
         {
