@@ -12,8 +12,8 @@ public class IsGroundedMovement : MyMovementUtils.IMovementProcessorOLD
     public bool Process(CustomInput input, CustomState previousState,
         ref CustomState newState, float deltaTime)
     {
-        var desiredMovement = (newState.Velocity.ToVector3() * deltaTime).y;
-        var actualMovement = (newState.Position.ToVector3() - previousState.Position.ToVector3()).y;
+        var desiredMovement = (newState.StandardMovement.Velocity.ToVector3() * deltaTime).y;
+        var actualMovement = (newState.StandardMovement.Position.ToVector3() - previousState.StandardMovement.Position.ToVector3()).y;
         var delta = actualMovement - desiredMovement;
 
         newState.IsGrounded = (Mathf.Abs(delta / actualMovement) > DeltaThreshold && delta > 0);

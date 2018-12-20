@@ -27,7 +27,7 @@ public class FpsMovement : AbstractMovementProcessor<CustomInput, CustomState>
         processors = new MyMovementUtils.IMovementProcessorOLD[]
         {
             TeleportProcessor,
-            new StandardMovement(),
+            new WasdMovement(),
             SprintCooldown,
             jumpMovement,
             new MyMovementUtils.Gravity(),
@@ -120,19 +120,19 @@ public class FpsMovement : AbstractMovementProcessor<CustomInput, CustomState>
 
     public override bool ShouldReplay(CustomState predicted, CustomState actual)
     {
-        var predictionPosition = predicted.Position.ToVector3();
-        var actualPosition = actual.Position.ToVector3();
+        var predictionPosition = predicted.StandardMovement.Position.ToVector3();
+        var actualPosition = actual.StandardMovement.Position.ToVector3();
         var distance = Vector3.Distance(predictionPosition, actualPosition);
         return (distance > 0.1f);
     }
 
     public override Vector3 GetPosition(CustomState state)
     {
-        return state.Position.ToVector3();
+        return state.StandardMovement.Position.ToVector3();
     }
 
     public override void RestoreToState(CustomState state)
     {
-        controller.transform.position = state.Position.ToVector3() + origin;
+        controller.transform.position = state.StandardMovement.Position.ToVector3() + origin;
     }
 }

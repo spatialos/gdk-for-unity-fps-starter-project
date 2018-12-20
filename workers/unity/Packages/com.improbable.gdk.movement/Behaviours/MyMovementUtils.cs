@@ -38,7 +38,7 @@ public class MyMovementUtils
         public bool Process(CustomInput input, CustomState previousState,
             ref CustomState newState, float deltaTime)
         {
-            newState.Velocity = Vector3.ClampMagnitude(newState.Velocity.ToVector3(), movementSettings.TerminalVelocity)
+            newState.StandardMovement.Velocity = Vector3.ClampMagnitude(newState.StandardMovement.Velocity.ToVector3(), movementSettings.TerminalVelocity)
                 .ToIntAbsolute();
             return true;
         }
@@ -54,11 +54,11 @@ public class MyMovementUtils
                 return true;
             }
 
-            var velocity = newState.Velocity.ToVector3();
+            var velocity = newState.StandardMovement.Velocity.ToVector3();
 
             velocity += Vector3.down * movementSettings.Gravity * deltaTime;
 
-            newState.Velocity = velocity.ToIntAbsolute();
+            newState.StandardMovement.Velocity = velocity.ToIntAbsolute();
 
             return true;
         }
@@ -107,18 +107,18 @@ public class MyMovementUtils
         {
             if (newState.DidTeleport)
             {
-                Debug.LogFormat("Found Teleport Request, teleporting to: {0}", newState.Position.ToVector3());
-                controller.transform.position = newState.Position.ToVector3();
+                Debug.LogFormat("Found Teleport Request, teleporting to: {0}", newState.StandardMovement.Position.ToVector3());
+                controller.transform.position = newState.StandardMovement.Position.ToVector3();
 
                 return true;
             }
 
             if (controller.enabled)
             {
-                controller.Move(newState.Velocity.ToVector3() * deltaTime);
+                controller.Move(newState.StandardMovement.Velocity.ToVector3() * deltaTime);
             }
 
-            newState.Position = controller.transform.position.ToIntAbsolute();
+            newState.StandardMovement.Position = controller.transform.position.ToIntAbsolute();
 
             return true;
         }
@@ -131,7 +131,7 @@ public class MyMovementUtils
         public bool Process(CustomInput input, CustomState previousState,
             ref CustomState newState, float deltaTime)
         {
-            newState.Position = (newState.Position.ToVector3() - Origin).ToIntAbsolute();
+            newState.StandardMovement.Position = (newState.StandardMovement.Position.ToVector3() - Origin).ToIntAbsolute();
             return true;
         }
     }
@@ -147,9 +147,9 @@ public class MyMovementUtils
                 return true;
             }
 
-            var oldPosition = previousState.Position.ToVector3();
-            var newPosition = newState.Position.ToVector3();
-            newState.Velocity = ((newPosition - oldPosition) / deltaTime).ToIntAbsolute();
+            var oldPosition = previousState.StandardMovement.Position.ToVector3();
+            var newPosition = newState.StandardMovement.Position.ToVector3();
+            newState.StandardMovement.Velocity = ((newPosition - oldPosition) / deltaTime).ToIntAbsolute();
 
             return true;
         }
@@ -175,10 +175,10 @@ public class MyMovementUtils
             if (hasTeleport)
             {
                 Debug.LogFormat("Procssing, hasTeleport: {0}", teleportPosition);
-                newState.Position = teleportPosition.ToIntAbsolute();
+                newState.StandardMovement.Position = teleportPosition.ToIntAbsolute();
                 newState.DidTeleport = true;
 
-                Debug.LogFormat("NewState.DidTeleport: {0}, NewState.Position: {1}", newState.DidTeleport, newState.Position.ToVector3());
+                Debug.LogFormat("NewState.DidTeleport: {0}, NewState.Position: {1}", newState.DidTeleport, newState.StandardMovement.Position.ToVector3());
 
                 hasTeleport = false;
                 teleportPosition = Vector3.zero;

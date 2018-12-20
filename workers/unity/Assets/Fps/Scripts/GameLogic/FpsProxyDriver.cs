@@ -47,8 +47,8 @@ public class FpsProxyDriver : MonoBehaviour
     {
         if (MyMovementUtils.GetProxyState(out var t, out var from, out var to, movement, fpsMovement))
         {
-            var fromPosition = from.Position.ToVector3() + origin;
-            var toPosition = to.Position.ToVector3() + origin;
+            var fromPosition = from.StandardMovement.Position.ToVector3() + origin;
+            var toPosition = to.StandardMovement.Position.ToVector3() + origin;
             var rot = controller.transform.rotation.eulerAngles;
             var fromRot = Quaternion.Euler(from.Pitch / 100000f, from.Yaw / 100000f, rot.z);
             var toRot = Quaternion.Euler(to.Pitch / 100000f, to.Yaw / 100000f, rot.z);
@@ -61,7 +61,7 @@ public class FpsProxyDriver : MonoBehaviour
 
             animator.SetAiming(from.IsAiming);
             animator.SetGrounded(from.IsGrounded);
-            var vel = Vector3.Lerp(from.Velocity.ToVector3(), to.Velocity.ToVector3(), t);
+            var vel = Vector3.Lerp(from.StandardMovement.Velocity.ToVector3(), to.StandardMovement.Velocity.ToVector3(), t);
             vel.y = 0;
             animator.SetMovement(vel);
             animator.SetPitch(newRot.eulerAngles.x);
