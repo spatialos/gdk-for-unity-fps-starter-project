@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4555427980518638}
   - component: {fileID: 114871985853100216}
+  - component: {fileID: 114299334778753102}
   m_Layer: 0
   m_Name: iOSClientWorker
   m_TagString: Untagged
@@ -40,6 +41,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114299334778753102
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1765859764722708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3f6fc6158bac8a4aac46762f5dbd51d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114871985853100216
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -52,7 +64,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MaxConnectionAttempts: 3
-  forcedIpAddress: 
+  forcedIpAddress: 172.16.117.61
   TargetFrameRate: 60
   SmallLevelPrefab: {fileID: 1613497914398450, guid: e4a3eb8590344604db1e998db676a211,
     type: 2}
