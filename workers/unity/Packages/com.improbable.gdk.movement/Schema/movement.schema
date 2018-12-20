@@ -3,31 +3,13 @@ package improbable.gdk.movement;
 import "from_gdk_packages/com.improbable.gdk.standardtypes/standardtypes.schema";
 
 type ClientRequest {
-	improbable.gdk.standardtypes.IntDelta movement = 1;
-	int32 timestamp = 2;
-	float last_received_server_time = 3;
-	bool jump_pressed = 4;
-	bool forward_pressed = 5;
-	bool back_pressed = 6;
-	bool left_pressed = 7;
-	bool right_pressed = 8;
-	bool sprint_pressed = 9;
-	bool aim_pressed = 10;
-	int32 pitch = 11;
-	int32 yaw = 12;
+	int32 timestamp = 1;
+	float last_received_server_time = 2;
+	bytes input_raw = 3;
 }
 
 type MovementState {
-    improbable.gdk.standardtypes.IntAbsolute position = 1;
-    improbable.gdk.standardtypes.IntAbsolute velocity = 2;
-    float sprint_cooldown = 3;
-    bool can_jump = 4;
-    bool did_jump = 5;
-    bool did_teleport = 6;
-    bool is_grounded = 7;
-    int32 pitch = 8;
-    int32 yaw = 9;
-    bool is_aiming = 10;
+    bytes raw_state = 1;
 }
 
 type ServerResponse {

@@ -4,21 +4,16 @@ using Improbable;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.Movement;
-using Improbable.Gdk.StandardTypes;
 using UnityEngine;
 
-[RequireComponent(typeof(CharacterController))]
-public class MyServerMovementDriver : MonoBehaviour, MyMovementUtils.IMovementStateRestorer
+public class MyServerMovementDriver : MonoBehaviour
 {
     [Require] private ClientMovement.Requirable.Reader clientInput;
     [Require] private ServerMovement.Requirable.Writer server;
     [Require] private Position.Requirable.Writer spatialPosition;
 
-    private CharacterController controller;
     private SpatialOSComponent spatial;
     private CommandFrameSystem commandFrame;
-
-    private Vector3 origin;
 
     private int lastFrame = -1;
     private int firstFrame = -1;
@@ -42,12 +37,7 @@ public class MyServerMovementDriver : MonoBehaviour, MyMovementUtils.IMovementSt
     private readonly List<ClientRequest> clientInputs = new List<ClientRequest>();
     private readonly Dictionary<int, MovementState> movementState = new Dictionary<int, MovementState>();
 
-    private readonly MyMovementUtils.RemoveWorkerOrigin removeWorkerOrigin = new MyMovementUtils.RemoveWorkerOrigin();
-    private readonly MyMovementUtils.TeleportProcessor teleportProcessor = new MyMovementUtils.TeleportProcessor();
-
-    private MyMovementUtils.IMovementProcessor[] movementProcessors;
-
-    private MyMovementUtils.IMovementStateRestorer stateRestorer;
+    private IMovementProcessor customProcessor;
 
     public int workerIndex = -1;
 
@@ -58,34 +48,14 @@ public class MyServerMovementDriver : MonoBehaviour, MyMovementUtils.IMovementSt
         workerIndex = nextWorkerIndex;
         nextWorkerIndex++;
 
-        controller = GetComponent<CharacterController>();
         renderLine = nextRenderLine;
         nextRenderLine += 1;
-
-        movementProcessors = new MyMovementUtils.IMovementProcessor[]
-        {
-            teleportProcessor,
-            new StandardMovement(),
-            new MyMovementUtils.SprintCooldown(),
-            new JumpMovement(),
-            new MyMovementUtils.Gravity(),
-            new MyMovementUtils.TerminalVelocity(),
-            new MyMovementUtils.CharacterControllerMovement(controller),
-            removeWorkerOrigin,
-            new IsGroundedMovement(),
-            new MyMovementUtils.AdjustVelocity(),
-        };
-
-        stateRestorer = this;
     }
 
     private void OnEnable()
     {
         spatial = GetComponent<SpatialOSComponent>();
         commandFrame = spatial.World.GetExistingManager<CommandFrameSystem>();
-
-        teleportProcessor.Origin = spatial.Worker.Origin;
-        removeWorkerOrigin.Origin = spatial.Worker.Origin;
 
         clientInput.BufferUpdated += ClientInputOnBufferUpdated;
 
@@ -98,8 +68,11 @@ public class MyServerMovementDriver : MonoBehaviour, MyMovementUtils.IMovementSt
         rtt = server.Data.Rtt;
 
         firstFrame = -1;
+    }
 
-        origin = spatial.Worker.Origin;
+    public void SetCustomProcessor(IMovementProcessor processor)
+    {
+        customProcessor = processor;
     }
 
     private void ClientInputOnBufferUpdated(List<ClientRequest> buffer)
@@ -148,6 +121,11 @@ public class MyServerMovementDriver : MonoBehaviour, MyMovementUtils.IMovementSt
 
     private void Update()
     {
+        if (customProcessor == null)
+        {
+            return;
+        }
+
         if (commandFrame.NewFrame)
         {
             if (firstFrame < 0)
@@ -178,9 +156,10 @@ public class MyServerMovementDriver : MonoBehaviour, MyMovementUtils.IMovementSt
                 }
 
                 movementState.TryGetValue(lastFrame - 1, out var previousState);
+
                 // shouldn't need to call restore here.
-                stateRestorer.Restore(previousState);
-                var state = MyMovementUtils.ApplyInput(lastInput, previousState, movementProcessors);
+                customProcessor.RestoreToState(previousState.RawState);
+                var state = MyMovementUtils.ApplyCustomInput(lastInput, previousState, customProcessor);
                 movementState[lastFrame] = state;
                 SendMovement(state);
 
@@ -214,7 +193,7 @@ public class MyServerMovementDriver : MonoBehaviour, MyMovementUtils.IMovementSt
         positionTick -= 1;
         if (positionTick <= 0)
         {
-            var pos = state.Position.ToVector3();
+            var pos = customProcessor.GetPosition(state.RawState);
             positionTick = PositionRate;
             spatialPosition.Send(new Position.Update()
             {
@@ -259,12 +238,6 @@ public class MyServerMovementDriver : MonoBehaviour, MyMovementUtils.IMovementSt
         }
     }
 
-    public void Teleport(Vector3 spawnPosition)
-    {
-        //Debug.LogFormat("Mark Teleport Processor with position: {0}", spawnPosition);
-        teleportProcessor.Teleport(spawnPosition);
-    }
-
     private static int nextRenderLine = 0;
     private int renderLine = 0;
 
@@ -284,10 +257,5 @@ public class MyServerMovementDriver : MonoBehaviour, MyMovementUtils.IMovementSt
         GUI.Label(new Rect(10, 300, 700, 20),
             string.Format("Frame: {0}, Length: {1:00.0}, Remainder: {2:00.0}",
                 commandFrame.CurrentFrame, CommandFrameSystem.FrameLength * 1000f, commandFrame.GetRemainder() * 1000f));
-    }
-
-    public void Restore(MovementState state)
-    {
-        controller.transform.position = state.Position.ToVector3() + spatial.Worker.Origin;
     }
 }

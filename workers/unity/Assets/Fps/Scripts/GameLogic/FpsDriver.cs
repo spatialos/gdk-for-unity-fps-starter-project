@@ -1,17 +1,19 @@
 ﻿using System.Collections;
 using System.Security.Authentication;
 using Improbable.Common;
+using Improbable.Fps.Custommovement;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.Guns;
 using Improbable.Gdk.Health;
 using Improbable.Gdk.Movement;
 using Improbable.Gdk.StandardTypes;
+using Improbable.Worker.CInterop;
 using UnityEngine;
 
 namespace Fps
 {
-    public class FpsDriver : MonoBehaviour, MyMovementUtils.IMovementStateRestorer
+    public class FpsDriver : MonoBehaviour
     {
         [System.Serializable]
         private struct CameraSettings
@@ -29,6 +31,7 @@ namespace Fps
         [SerializeField] public GameObject ControllerProxy;
 
         private MyClientMovementDriver movement;
+        private FpsMovement fpsMovement;
         private CharacterController controller;
         private ClientShooting shooting;
         private ShotRayProvider shotRayProvider;
@@ -49,32 +52,11 @@ namespace Fps
 
         private bool isRequestingRespawn;
         private Coroutine requestingRespawnCoroutine;
-        private readonly JumpMovement jumpMovement = new JumpMovement();
-        private readonly MyMovementUtils.SprintCooldown sprintCooldown = new MyMovementUtils.SprintCooldown();
-        private readonly MyMovementUtils.RemoveWorkerOrigin removeOrigin = new MyMovementUtils.RemoveWorkerOrigin();
-
-        private Vector3 from;
-        private Vector3 to;
-        private Vector3 next;
-        private float t;
 
         private void Awake()
         {
             movement = GetComponent<MyClientMovementDriver>();
             controller = ControllerProxy.GetComponent<CharacterController>();
-            movement.SetMovementProcessors(new MyMovementUtils.IMovementProcessor[]
-            {
-                new StandardMovement(),
-                sprintCooldown,
-                jumpMovement,
-                new MyMovementUtils.Gravity(),
-                new MyMovementUtils.TerminalVelocity(),
-                new MyMovementUtils.CharacterControllerMovement(controller),
-                removeOrigin,
-                new IsGroundedMovement(),
-                new MyMovementUtils.AdjustVelocity(),
-            });
-            movement.SetStateRestorer(this);
             shooting = GetComponent<ClientShooting>();
             shotRayProvider = GetComponent<ShotRayProvider>();
             fpsAnimator = GetComponent<FpsAnimator>();
@@ -92,7 +74,8 @@ namespace Fps
         {
             spatialComponent = GetComponent<SpatialOSComponent>();
 
-            removeOrigin.Origin = spatialComponent.Worker.Origin;
+            fpsMovement = new FpsMovement(controller, spatialComponent.Worker.Origin, "Client");
+            movement.SetCustomProcessor(fpsMovement);
 
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
@@ -113,7 +96,7 @@ namespace Fps
             // Don't allow controls if in the menu.
             if (ScreenUIController.InEscapeMenu)
             {
-                Animations(new MovementState());
+                Animations(new CustomState());
                 return;
             }
 
@@ -184,15 +167,26 @@ namespace Fps
             rotation.y += yawChange;
             transform.rotation = Quaternion.Euler(rotation);
 
-            movement.AddInput(
-                forward, backward, left, right,
-                isJumpPressed, isSprinting, isAiming,
-                rotation.y, newPitch);
+            fpsMovement.AddInput(
+                forward,
+                backward,
+                left,
+                right,
+                isJumpPressed,
+                isSprinting,
+                isAiming,
+                rotation.y,
+                newPitch);
 
-            var state = movement.GetLatestState();
+            // movement.AddInput(
+            //     forward, backward, left, right,
+            //     isJumpPressed, isSprinting, isAiming,
+            //     rotation.y, newPitch);
+
+            var state = MyMovementUtils.GetLatestState(movement, fpsMovement);
 
             //Check for sprint cooldown
-            if (isAiming || (sprintCooldown.GetCooldown(state) <= 0 && !isSprinting))
+            if (isAiming || (fpsMovement.SprintCooldown.GetCooldown(state) <= 0 && !isSprinting))
             {
                 HandleShooting(shootPressed, shootHeld);
             }
@@ -201,44 +195,8 @@ namespace Fps
 
             Animations(state);
 
-            // t += Time.deltaTime / CommandFrameSystem.FrameLength;
-            // if (t > 1.0f)
-            // {
-            //     if (nextAvailable)
-            //     {
-            //         t -= 1.0f;
-            //         if (didTeleport)
-            //         {
-            //             from = next;
-            //             to = next;
-            //             didTeleport = false;
-            //         }
-            //         else
-            //         {
-            //             from = to;
-            //             to = next;
-            //         }
-            //
-            //         nextAvailable = false;
-            //     }
-            //     else
-            //     {
-            //         // go back by a frame?
-            //         // Debug.LogFormat("Next not ready, go back a frame.");
-            //         t -= Time.deltaTime / CommandFrameSystem.FrameLength;
-            //     }
-            // }
-            //
-            var oldPosition = transform.position;
-            oldPosition.y = 0;
-            // transform.position = Vector3.Lerp(from, to, t);
             transform.position = ControllerProxy.transform.position;
-            var newPosition = transform.position;
-            newPosition.y = 0;
-            fpsVelocity = (newPosition - oldPosition).magnitude / Time.deltaTime;
         }
-
-        private float fpsVelocity = -1;
 
         private IEnumerator RequestRespawn()
         {
@@ -288,32 +246,17 @@ namespace Fps
             }
         }
 
-        private void Animations(MovementState state)
+        private void Animations(CustomState state)
         {
             fpsAnimator.SetAiming(gunState.Data.IsAiming);
             fpsAnimator.SetGrounded(state.IsGrounded);
-            fpsAnimator.SetMovement(state.Velocity.ToVector3());
+            fpsAnimator.SetMovement(state.StandardMovement.Velocity.ToVector3());
             fpsAnimator.SetPitch(pitchTransform.transform.localEulerAngles.x);
 
             if (state.DidJump)
             {
                 fpsAnimator.Jump();
             }
-        }
-
-        private void OnGUI()
-        {
-            if (!MyMovementUtils.ShowDebug)
-            {
-                return;
-            }
-
-            GUI.Label(new Rect(10, 400, 700, 20), string.Format("fps vel: {0:00.00}", fpsVelocity));
-        }
-
-        public void Restore(MovementState state)
-        {
-            controller.transform.position = state.Position.ToVector3() + spatialComponent.Worker.Origin;
         }
     }
 }

@@ -7,7 +7,6 @@ using UnityEngine;
 
 public class MyServerProxyDriver : MonoBehaviour
 {
-    [Require] private ClientMovement.Requirable.Reader clientInput;
     [Require] private ServerMovement.Requirable.Reader server;
 
     private Dictionary<int, ClientRequest> inputs = new Dictionary<int, ClientRequest>();

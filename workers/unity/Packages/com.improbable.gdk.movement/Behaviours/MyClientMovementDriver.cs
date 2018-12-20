@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Improbable.Gdk.GameObjectRepresentation;
@@ -24,16 +23,6 @@ public class MyClientMovementDriver : MonoBehaviour
     private MovementState lastMovementState;
     private int confirmedFrame = -1;
 
-    private bool forwardThisFrame;
-    private bool backThisFrame;
-    private bool leftThisFrame;
-    private bool rightThisFrame;
-    private bool jumpThisFrame;
-    private bool sprintThisFrame;
-    private bool aimThisFrame;
-    private float yawThisFrame;
-    private float pitchThisFrame;
-
     private const float NetPauseOnBufferSizeMultiplier = 10f;
     private const float NetResumeOnBufferSizeMultiplier = 1.5f;
     private int frameBuffer = 1000;
@@ -43,9 +32,7 @@ public class MyClientMovementDriver : MonoBehaviour
 
     private Queue<ServerResponse> serverResponses = new Queue<ServerResponse>();
 
-    private MyMovementUtils.IMovementProcessor[] movementProcessors = { };
-
-    private MyMovementUtils.IMovementStateRestorer stateRestorer;
+    private IMovementProcessor customProcessor;
 
     private int debugRow;
 
@@ -77,14 +64,9 @@ public class MyClientMovementDriver : MonoBehaviour
         UpdateFrameBuffer();
     }
 
-    public void SetMovementProcessors(MyMovementUtils.IMovementProcessor[] processors)
+    public void SetCustomProcessor(IMovementProcessor processor)
     {
-        movementProcessors = processors;
-    }
-
-    public void SetStateRestorer(MyMovementUtils.IMovementStateRestorer restorer)
-    {
-        stateRestorer = restorer;
+        customProcessor = processor;
     }
 
     private void UpdateFrameBuffer()
@@ -96,6 +78,11 @@ public class MyClientMovementDriver : MonoBehaviour
 
     private void Update()
     {
+        if (customProcessor == null)
+        {
+            return;
+        }
+
         if (commandFrame.IsPaused())
         {
             if (inputState.Count < frameBuffer * NetResumeOnBufferSizeMultiplier)
@@ -116,25 +103,26 @@ public class MyClientMovementDriver : MonoBehaviour
 
         if (commandFrame.NewFrame)
         {
+            byte[] rawInput = null;
+            if (lastFrame < commandFrame.CurrentFrame)
+            {
+                rawInput = customProcessor.ConsumeInput();
+            }
+
             while (lastFrame < commandFrame.CurrentFrame)
             {
                 lastFrame += 1;
 
-                var input = SendInput();
+                var input = SendInput(rawInput);
                 movementState.TryGetValue(lastFrame - 1, out var previousState);
-                stateRestorer?.Restore(previousState);
-                lastMovementState = MyMovementUtils.ApplyInput(input, previousState, movementProcessors);
+                customProcessor.RestoreToState(previousState.RawState);
+
+                lastMovementState = MyMovementUtils.ApplyCustomInput(input, previousState, customProcessor);
+
                 movementState[lastFrame] = lastMovementState;
                 inputState.Add(lastFrame, input);
             }
 
-            forwardThisFrame = false;
-            backThisFrame = false;
-            leftThisFrame = false;
-            rightThisFrame = false;
-            jumpThisFrame = false;
-            sprintThisFrame = false;
-            aimThisFrame = false;
             commandFrame.ServerAdjustment = nextDilation;
 
             if (inputState.Count > frameBuffer * NetPauseOnBufferSizeMultiplier)
@@ -162,9 +150,9 @@ public class MyClientMovementDriver : MonoBehaviour
                 return;
             }
 
-            stateRestorer?.Restore(movementState[lastFrame - 1]);
-            MyMovementUtils.ApplyPartialInput(inputState[lastFrame], movementState[lastFrame - 1],
-                movementProcessors, remainder);
+            customProcessor.RestoreToState(movementState[lastFrame - 1].RawState);
+            MyMovementUtils.ApplyPartialCustomInput(inputState[lastFrame], movementState[lastFrame - 1],
+                customProcessor, remainder);
         }
         else if (remainder < 0)
         {
@@ -180,29 +168,9 @@ public class MyClientMovementDriver : MonoBehaviour
                 return;
             }
 
-            stateRestorer?.Restore(movementState[lastFrame - 2]);
-            MyMovementUtils.ApplyPartialInput(inputState[lastFrame - 1], movementState[lastFrame - 2],
-                movementProcessors, CommandFrameSystem.FrameLength + remainder);
-        }
-    }
-
-    public void AddInput(bool forward = false, bool back = false, bool left = false, bool right = false, bool jump = false, bool sprint = false, bool aim = false, float yaw = -1, float pitch = -1)
-    {
-        forwardThisFrame |= forward;
-        backThisFrame |= back;
-        leftThisFrame |= left;
-        rightThisFrame |= right;
-        jumpThisFrame |= jump;
-        sprintThisFrame |= sprint;
-        aimThisFrame |= aim;
-        if (yaw >= 0)
-        {
-            yawThisFrame = yaw;
-        }
-
-        if (pitchThisFrame >= 0)
-        {
-            pitchThisFrame = pitch;
+            customProcessor.RestoreToState(movementState[lastFrame - 2].RawState);
+            MyMovementUtils.ApplyPartialCustomInput(inputState[lastFrame - 1], movementState[lastFrame - 2],
+                customProcessor, CommandFrameSystem.FrameLength + remainder);
         }
     }
 
@@ -223,31 +191,23 @@ public class MyClientMovementDriver : MonoBehaviour
             if (movementState.ContainsKey(response.Timestamp))
             {
                 // Check if server agrees, which it always should.
-                var predictionPosition = movementState[response.Timestamp].Position.ToVector3();
-                var actualPosition = response.MovementState.Position.ToVector3();
-                var distance = Vector3.Distance(predictionPosition, actualPosition);
-                if (distance > 0.1f)
+                if (customProcessor.ShouldReplay(
+                    movementState[response.Timestamp].RawState, response.MovementState.RawState))
                 {
                     Debug.LogFormat("Mispredicted cf {0}", response.Timestamp);
-                    Debug.LogFormat("Predicted: {0}", predictionPosition);
-                    Debug.LogFormat("Actual: {0}", actualPosition);
-                    Debug.LogFormat("Diff: {0}", distance);
                     Debug.LogFormat("Replaying input from {0} to {1}", response.Timestamp + 1, lastFrame);
 
                     // SaveMovementState(response.Timestamp);
                     var previousState = response.MovementState;
                     movementState[response.Timestamp] = previousState;
-                    stateRestorer?.Restore(previousState);
+                    customProcessor.RestoreToState(previousState.RawState);
 
                     // Replay inputs until lastFrame, storing movementstates.
                     var i = response.Timestamp + 1;
                     while (i <= lastFrame)
                     {
-                        Debug.LogFormat("Input {0}", InputToString(inputState[i]));
-                        Debug.LogFormat("Previous Position {0}", movementState[i].Position.ToVector3());
-                        Debug.LogFormat("Previous Velocity {0}", movementState[i].Velocity.ToVector3());
-
-                        movementState[i] = MyMovementUtils.ApplyInput(inputState[i], movementState[i - 1], movementProcessors);
+                        movementState[i] =
+                            MyMovementUtils.ApplyCustomInput(inputState[i], movementState[i - 1], customProcessor);
 
                         //Debug.LogFormat("Adjusted Position: {0}", movementState[i].Position.ToVector3());
                         Debug.DrawLine(
@@ -292,19 +252,11 @@ public class MyClientMovementDriver : MonoBehaviour
         }
     }
 
-    private ClientRequest SendInput()
+    private ClientRequest SendInput(byte[] rawInput)
     {
         var clientRequest = new ClientRequest
         {
-            ForwardPressed = forwardThisFrame,
-            BackPressed = backThisFrame,
-            LeftPressed = leftThisFrame,
-            RightPressed = rightThisFrame,
-            JumpPressed = jumpThisFrame,
-            SprintPressed = sprintThisFrame,
-            AimPressed = aimThisFrame,
-            Yaw = (int) (yawThisFrame * 100000f),
-            Pitch = (int) (pitchThisFrame * 100000f),
+            InputRaw = rawInput,
             Timestamp = lastFrame,
             LastReceivedServerTime = lastServerTimestamp + (Time.time - lastServerTimestampReceived) * 100000f
         };
@@ -349,27 +301,5 @@ public class MyClientMovementDriver : MonoBehaviour
             $"SB: {movement.Data.Buffer.Count}," +
             $"B: {minKey} - {maxKey}," +
             $"{(commandFrame.IsPaused() ? "NET PAUSED" : "")}");
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.DrawSphere(Controller.transform.position, 0.1f);
-
-        float c = 0;
-        for (var i = lastFrame; movementState.ContainsKey(i); i--)
-        {
-            Gizmos.color = Color.Lerp(Color.red, Color.white, c / movementState.Count);
-            Gizmos.DrawWireSphere(movementState[i].Position.ToVector3(), 0.5f);
-            c += 1;
-        }
-    }
-
-    private string InputToString(ClientRequest request)
-    {
-        return string.Format("[F:{0} B:{1} R:{2} L:{3}, J:{4}, S:{5}, Yaw:{6}, Pitch:{7}]",
-            request.ForwardPressed, request.BackPressed,
-            request.RightPressed, request.LeftPressed,
-            request.JumpPressed, request.SprintPressed,
-            request.Yaw, request.Pitch);
     }
 }

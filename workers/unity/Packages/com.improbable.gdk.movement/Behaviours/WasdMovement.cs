@@ -1,18 +1,18 @@
-﻿using Improbable.Gdk.Movement;
+﻿using Improbable.Fps.Custommovement;
 using Improbable.Gdk.StandardTypes;
 using UnityEngine;
 
-public class StandardMovement : MyMovementUtils.IMovementProcessor
+public class WasdMovement : MyMovementUtils.IMovementProcessorOLD
 {
-    public bool Process(ClientRequest input, MovementState previousState,
-        ref MovementState newState, float deltaTime)
+    public bool Process(CustomInput input, CustomState previousState,
+        ref CustomState newState, float deltaTime)
     {
         if (newState.DidTeleport)
         {
             return true;
         }
 
-        var newVelocity = previousState.Velocity.ToVector3();
+        var newVelocity = previousState.StandardMovement.Velocity.ToVector3();
         var speed = MyMovementUtils.movementSettings.MovementSpeed.RunSpeed;
         if (input.AimPressed)
         {
@@ -58,7 +58,7 @@ public class StandardMovement : MyMovementUtils.IMovementProcessor
             newVelocity.z = controlledMovement.y;
         }
 
-        newState.Velocity = newVelocity.ToIntAbsolute();
+        newState.StandardMovement.Velocity = newVelocity.ToIntAbsolute();
 
         // TODO: Put this somewhere better, in a seperate processor probably.
         newState.IsAiming = input.AimPressed;

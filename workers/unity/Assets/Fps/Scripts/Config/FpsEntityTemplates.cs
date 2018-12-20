@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Improbable;
+using Improbable.Fps.Custommovement;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.Guns;
 using Improbable.Gdk.Health;
@@ -49,8 +50,14 @@ namespace Fps
             {
                 MovementState = new MovementState()
                 {
-                    Position = spawnPosition.ToIntAbsolute(),
-                    DidTeleport = true
+                    RawState = FpsMovement.SerializeStateStatic(new CustomState()
+                    {
+                        StandardMovement = new StandardMovementState()
+                        {
+                            Position = spawnPosition.ToIntAbsolute(),
+                        },
+                        DidTeleport = true
+                    })
                 }
             };
 

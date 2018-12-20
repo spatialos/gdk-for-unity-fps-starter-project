@@ -4,13 +4,12 @@ using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.Guns;
 using Improbable.Gdk.Health;
 using Improbable.Gdk.Movement;
-using Improbable.Gdk.StandardTypes;
 using Unity.Entities;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class SimulatedPlayerDriver : MonoBehaviour, MyMovementUtils.IMovementStateRestorer
+public class SimulatedPlayerDriver : MonoBehaviour
 {
     public enum PlayerState
     {
@@ -26,16 +25,13 @@ public class SimulatedPlayerDriver : MonoBehaviour, MyMovementUtils.IMovementSta
     [Require] private HealthComponent.Requirable.CommandRequestSender HealthCommands;
 
     private MyClientMovementDriver movementDriver;
+    private FpsMovement fpsMovement;
     private ClientShooting shooting;
     private SpatialOSComponent spatial;
     private NavMeshAgent agent;
     private SimulatedPlayerCoordinatorWorkerConnector coordinator;
     private CommandFrameSystem commandFrame;
     private CharacterController controller;
-
-    private readonly JumpMovement jumpMovement = new JumpMovement();
-    private readonly MyMovementUtils.SprintCooldown sprintCooldown = new MyMovementUtils.SprintCooldown();
-    private readonly MyMovementUtils.RemoveWorkerOrigin removeOrigin = new MyMovementUtils.RemoveWorkerOrigin();
 
     private Vector3 anchorPoint;
     private const float MovementRadius = 50f;
@@ -59,23 +55,9 @@ public class SimulatedPlayerDriver : MonoBehaviour, MyMovementUtils.IMovementSta
         agent = GetComponent<NavMeshAgent>();
     }
 
-    private void Start()
+    private void OnEnable()
     {
         controller = GetComponent<CharacterController>();
-        movementDriver = GetComponent<MyClientMovementDriver>();
-        movementDriver.SetMovementProcessors(new MyMovementUtils.IMovementProcessor[]
-        {
-            new StandardMovement(),
-            sprintCooldown,
-            jumpMovement,
-            new MyMovementUtils.Gravity(),
-            new MyMovementUtils.TerminalVelocity(),
-            new MyMovementUtils.CharacterControllerMovement(controller),
-            removeOrigin,
-            new IsGroundedMovement(),
-            new MyMovementUtils.AdjustVelocity(),
-        });
-        movementDriver.SetStateRestorer(this);
         shooting = GetComponent<ClientShooting>();
         coordinator = FindObjectOfType<SimulatedPlayerCoordinatorWorkerConnector>();
         agent.updatePosition = false;
@@ -84,16 +66,14 @@ public class SimulatedPlayerDriver : MonoBehaviour, MyMovementUtils.IMovementSta
         agent.Warp(transform.position);
         anchorPoint = transform.position;
         worldBounds = coordinator.GetWorldBounds();
-    }
-
-    private void OnEnable()
-    {
         HealthReader.OnHealthModified += OnHealthModified;
         HealthReader.OnRespawn += OnRespawn;
         spatial = GetComponent<SpatialOSComponent>();
+        movementDriver = GetComponent<MyClientMovementDriver>();
         commandFrame = spatial.World.GetExistingManager<CommandFrameSystem>();
 
-        removeOrigin.Origin = spatial.Worker.Origin;
+        fpsMovement = new FpsMovement(controller, spatial.Worker.Origin);
+        movementDriver.SetCustomProcessor(fpsMovement);
 
         SetPlayerState(PlayerState.LookingForTarget);
     }
@@ -172,7 +152,6 @@ public class SimulatedPlayerDriver : MonoBehaviour, MyMovementUtils.IMovementSta
 
         if (agent.remainingDistance < MinRemainingDistance || agent.pathStatus == NavMeshPathStatus.PathInvalid || !agent.hasPath)
         {
-            Debug.Log($"{name} Setting Random Destination");
             SetRandomDestination();
         }
         else if (agent.pathStatus == NavMeshPathStatus.PathComplete)
@@ -199,11 +178,7 @@ public class SimulatedPlayerDriver : MonoBehaviour, MyMovementUtils.IMovementSta
 
                 var diff = Mathf.Abs(rot.eulerAngles.y - desiredRotation.eulerAngles.y);
 
-                // prob navmesh in front to try and stay on it.
-                var potentialNewPosition = transform.position + transform.forward
-                    * MyMovementUtils.GetMovmentSpeedVelocity(MovementSpeed.Sprint) * Time.deltaTime;
-
-                movementDriver.AddInput(
+                fpsMovement.AddInput(
                     forward: (diff < 30),
                     jump: jumpNext,
                     sprint: sprintNext,
@@ -230,7 +205,8 @@ public class SimulatedPlayerDriver : MonoBehaviour, MyMovementUtils.IMovementSta
                 MyMovementUtils.GetMovmentSpeedVelocity(MovementSpeed.Run) * Time.deltaTime;
             var canStrafe = NavMesh.SamplePosition(destination, out var hit, 0.25f, NavMesh.AllAreas);
 
-            movementDriver.AddInput(yaw: transform.rotation.eulerAngles.y, pitch: transform.rotation.eulerAngles.x,
+
+            fpsMovement.AddInput(yaw: transform.rotation.eulerAngles.y, pitch: transform.rotation.eulerAngles.x,
                 right: (canStrafe && strafeRight), left: (canStrafe && !strafeRight));
 
             if (shooting.IsShooting(true) && Mathf.Abs(Quaternion.Angle(targetRotation, transform.rotation)) < 5)
@@ -383,11 +359,6 @@ public class SimulatedPlayerDriver : MonoBehaviour, MyMovementUtils.IMovementSta
                 similarPositionsCount = 0;
             }
         }
-    }
-
-    public void Restore(MovementState movementState)
-    {
-        controller.transform.position = movementState.Position.ToVector3() + spatial.Worker.Origin;
     }
 
 #if UNITY_EDITOR

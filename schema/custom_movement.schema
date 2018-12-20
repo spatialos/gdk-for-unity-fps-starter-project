@@ -1,0 +1,28 @@
+package improbable.fps.custommovement;
+
+import "from_gdk_packages/com.improbable.gdk.standardtypes/standardtypes.schema";
+import "from_gdk_packages/com.improbable.gdk.movement/standard_movement.schema";
+
+type CustomInput {
+	bool jump_pressed = 1;
+	bool forward_pressed = 2;
+	bool back_pressed = 3;
+	bool left_pressed = 4;
+	bool right_pressed = 5;
+	bool sprint_pressed = 6;
+	bool aim_pressed = 7;
+	int32 pitch = 8;
+	int32 yaw = 9;
+}
+
+type CustomState {
+    improbable.gdk.movement.StandardMovementState standard_movement = 1;
+    float sprint_cooldown = 2;
+    bool can_jump = 3;
+    bool did_jump = 4;
+    bool did_teleport = 5;
+    bool is_grounded = 6;
+    int32 pitch = 7;
+    int32 yaw = 8;
+    bool is_aiming = 9;
+}
