@@ -823,6 +823,7 @@ GameObject:
   - component: {fileID: 114898509530246980}
   - component: {fileID: 114781168066614706}
   - component: {fileID: 114088738930675206}
+  - component: {fileID: 114640218588664666}
   m_Layer: 11
   m_Name: Player
   m_TagString: Player
@@ -2637,9 +2638,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MovementScalar: 0.01
-  LookScalar: 0.15
+  YawMultiplier: 0.15
+  PitchMultiplier: 0.12
+  FiringLookMultiplier: 0.8
   SprintMaxAngle: 30
-  SprintDistanceThreshold: 100
 --- !u!114 &114095212150324808
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2920,7 +2922,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a8ca0457c25f7e4dba291b1221aa0ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  socketOffset: {fileID: 0}
+  socketOffset: {fileID: 4429577863450270}
 --- !u!114 &114890930238186000
 MonoBehaviour:
   m_ObjectHideFlags: 1
