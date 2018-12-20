@@ -784,12 +784,13 @@ GameObject:
   - component: {fileID: 114471432205030634}
   - component: {fileID: 114508665271179492}
   - component: {fileID: 114980933896096268}
-  - component: {fileID: 114185481303753360}
+  - component: {fileID: 114625584425184350}
   - component: {fileID: 114748765334934590}
   - component: {fileID: 114522738583802250}
   - component: {fileID: 114775314640606656}
   - component: {fileID: 114898509530246980}
   - component: {fileID: 114781168066614706}
+  - component: {fileID: 114405504181949642}
   m_Layer: 11
   m_Name: Player
   m_TagString: Player
@@ -2624,17 +2625,6 @@ MonoBehaviour:
   applyRecoil: 0
   userFirstPersonGrip: 1
   gunSocket: {fileID: 114801285074366292}
---- !u!114 &114185481303753360
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1627949407420470}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: daecd895d43f0c049ae28ee967ef71be, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114198340130317920
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2722,6 +2712,17 @@ MonoBehaviour:
       enableFptlForForwardOpaque: 1
       enableBigTilePrepass: 1
       isFptlEnabled: 1
+--- !u!114 &114405504181949642
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1627949407420470}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f715679efa021e4e8a54666d796bf05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114471432205030634
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2830,6 +2831,18 @@ MonoBehaviour:
   cameraHeightAboveRagdoll: 2
   lookAtRagdollMoveSpeed: 5
   lookAtRagdollRotateSpeed: 50
+--- !u!114 &114625584425184350
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1627949407420470}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7c144e7b944f4a42b2b98c23845e39b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gunPickupRange: 1
 --- !u!114 &114711516255448412
 MonoBehaviour:
   m_ObjectHideFlags: 1

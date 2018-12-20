@@ -16,7 +16,6 @@ type InteractResponse {
 
 component InteractableComponent {
   id = 2090;
-  InteractionType interaction_type = 1;
 
   command InteractResponse interact(InteractRequest);
 }

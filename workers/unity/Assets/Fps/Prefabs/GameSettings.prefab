@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4599106417802648}
   - component: {fileID: 114798883881147238}
   - component: {fileID: 114687957939981664}
+  - component: {fileID: 114998641046308466}
   m_Layer: 0
   m_Name: GameSettings
   m_TagString: Untagged
@@ -65,3 +66,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64ab551b61661e0409faeba3012920a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114998641046308466
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1989496521981992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fdbbbf5b0181944c88583f839a7ec7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pickupSettings: {fileID: 11400000, guid: a242cabcebea4c64395cb156a89ab530, type: 2}

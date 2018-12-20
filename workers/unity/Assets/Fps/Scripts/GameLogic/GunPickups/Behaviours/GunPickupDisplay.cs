@@ -1,17 +1,26 @@
-﻿using Improbable.Gdk.Guns;
+﻿using Fps.Schema.Shooting;
+using Improbable.Gdk.Core;
+using Improbable.Gdk.GameObjectRepresentation;
+using Improbable.Gdk.Guns;
 using UnityEngine;
 
 namespace Fps.GunPickups
 {
     public class GunPickupDisplay : MonoBehaviour
     {
+        [Require] private GunPickupComponent.Requirable.Reader pickupComponent;
+
         [SerializeField] private Transform gunSocket;
         private GameObject gun;
         private Collider pickupCollider;
 
-        private void Awake()
+        private void OnEnable()
         {
             pickupCollider = GetComponent<Collider>();
+            pickupComponent.GunIdUpdated += SetGunId;
+            pickupComponent.IsEnabledUpdated += SetEnabled;
+            SetGunId(pickupComponent.Data.GunId);
+            SetEnabled(pickupComponent.Data.IsEnabled);
         }
 
         public void SetGunId(int id)
@@ -27,7 +36,7 @@ namespace Fps.GunPickups
             }
         }
 
-        public void SetEnabled(bool enabled)
+        public void SetEnabled(BlittableBool enabled)
         {
             gun.SetActive(enabled);
             pickupCollider.enabled = enabled;

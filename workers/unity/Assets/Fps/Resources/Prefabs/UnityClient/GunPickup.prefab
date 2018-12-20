@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 114180049643786050}
   - component: {fileID: 114852802673588914}
   - component: {fileID: 135619167174033304}
+  - component: {fileID: 114260902065726780}
   m_Layer: 2
   m_Name: GunPickup
   m_TagString: Weapon
@@ -82,14 +83,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 126a1c507c629204e812240d9f33b81b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 180
+  speed: 180
+--- !u!114 &114260902065726780
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1429787019349496}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ed3d0c332010b341839458d04cb6878, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  InteractionType: 2
 --- !u!114 &114852802673588914
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1429787019349496}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 846a659116bcda042ac72bc27e8fee16, type: 3}
   m_Name: 

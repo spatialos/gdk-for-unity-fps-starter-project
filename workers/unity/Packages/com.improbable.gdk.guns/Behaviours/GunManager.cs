@@ -12,11 +12,17 @@ namespace Improbable.Gdk.Guns
 
         private void OnEnable()
         {
-            gun.CurrentSlotUpdated += OnGunChanged;
-            OnGunChanged(gun.Data.CurrentSlot);
+            gun.ComponentUpdated += GunSlotsUpdated;
+            UpdateCurrentGun();
         }
 
-        private void OnGunChanged(int gunId)
+        private void GunSlotsUpdated(GunComponent.Update update)
+        {
+            // Update the current gun whenever the slots update (either the index, or the slots themselves)
+            UpdateCurrentGun();
+        }
+
+        private void UpdateCurrentGun()
         {
             CurrentGunSettings = GunDictionary.GetCurrentGun(gun.Data);
             SetGunSettings();

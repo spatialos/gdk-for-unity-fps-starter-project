@@ -98,7 +98,7 @@ namespace Fps
             const string gameLogic = WorkerUtils.UnityGameLogic;
 
             var pickupComponent = GunPickupComponent.Component.CreateSchemaComponentData(gun.GunId, true);
-            var interactComponent = InteractableComponent.Component.CreateSchemaComponentData(InteractionType.Proximity);
+            var interactComponent = InteractableComponent.Component.CreateSchemaComponentData();
 
             var gunTemplate = EntityBuilder.Begin()
                 .AddPosition(gun.SpawnPosition.x, gun.SpawnPosition.y, gun.SpawnPosition.z, gameLogic)

@@ -50,7 +50,7 @@ namespace Fps
                 var gunPickupComponent = newPickups.GunPickupComponent[i];
                 if (!gunPickupComponent.IsEnabled)
                 {
-                    // Add a recharge time.
+                    // Add a recharge time.II
                     PostUpdateCommands.AddComponent(newPickups.Entities[i], new PickupRespawnDelay
                     {
                         RechargeTime = GunPickupSettings.PickupRespawnTime

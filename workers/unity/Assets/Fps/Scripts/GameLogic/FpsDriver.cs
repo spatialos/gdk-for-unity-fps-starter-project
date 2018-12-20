@@ -39,8 +39,7 @@ namespace Fps
         [SerializeField] private Transform pitchTransform;
         [SerializeField] private new Camera camera;
 
-        [SerializeField]
-        private CameraSettings cameraSettings = new CameraSettings
+        [SerializeField] private CameraSettings cameraSettings = new CameraSettings
         {
             PitchSpeed = 1.0f,
             YawSpeed = 1.0f,
@@ -134,6 +133,11 @@ namespace Fps
             if (isSlot2Pressed)
             {
                 changingGun.AttemptChangeSlot(1);
+            }
+
+            if (isInteractPressed)
+            {
+                changingGun.AttemptPickUpGun();
             }
 
             // Update the pitch speed with that of the gun if aiming.
@@ -242,7 +246,8 @@ namespace Fps
 
         private void OnForcedRotation(RotationUpdate forcedRotation)
         {
-            var newPitch = Mathf.Clamp(forcedRotation.Pitch.ToFloat1k(), -cameraSettings.MaxPitch, -cameraSettings.MinPitch);
+            var newPitch = Mathf.Clamp(forcedRotation.Pitch.ToFloat1k(), -cameraSettings.MaxPitch,
+                -cameraSettings.MinPitch);
             pitchTransform.localRotation = Quaternion.Euler(newPitch, 0, 0);
         }
 

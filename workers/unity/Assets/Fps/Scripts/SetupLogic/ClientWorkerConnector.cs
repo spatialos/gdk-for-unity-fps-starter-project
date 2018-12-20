@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.GameObjectRepresentation;
+using Improbable.Gdk.Interaction;
 using Improbable.Gdk.PlayerLifecycle;
 
 namespace Fps

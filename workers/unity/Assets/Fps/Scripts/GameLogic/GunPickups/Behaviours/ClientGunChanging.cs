@@ -1,4 +1,5 @@
 ﻿using Improbable.Gdk.GameObjectRepresentation;
+using Improbable.Gdk.Interaction;
 using UnityEngine;
 
 namespace Improbable.Gdk.Guns
@@ -8,10 +9,15 @@ namespace Improbable.Gdk.Guns
         [Require] private GunComponent.Requirable.CommandRequestSender gunRequestSender;
         [Require] private GunComponent.Requirable.Reader gunComponent;
         private SpatialOSComponent spatialOSComponent;
+        private InteractionHandler interactionHandler;
+
+        [SerializeField] [Tooltip("The maximum distance away that gun pickups can be picked up from")]
+        private float gunPickupRange = 1f;
 
         private void OnEnable()
         {
             spatialOSComponent = GetComponent<SpatialOSComponent>();
+            interactionHandler = GetComponent<InteractionHandler>();
         }
 
         public void AttemptChangeSlot(int slot)
@@ -32,9 +38,11 @@ namespace Improbable.Gdk.Guns
                 new ChangeCurrentSlotRequest(slot));
         }
 
-        public void AttemptPickUpGun(int gunId)
+        // Uses the interaction system, assuming proximity.
+        public void AttemptPickUpGun()
         {
-            gunRequestSender.SendPickUpGunRequest(spatialOSComponent.SpatialEntityId, new PickUpGunRequest(gunId));
+            Debug.DrawLine(transform.position, transform.position + transform.forward * gunPickupRange, Color.red, 1);
+            interactionHandler.InteractProximity(transform.position, gunPickupRange);
         }
     }
 }
