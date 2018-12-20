@@ -6,42 +6,25 @@ public class MyMovementUtils
 {
     public static bool ShowDebug;
 
-    public static readonly MovementSettings movementSettings = new MovementSettings
-    {
-        MovementSpeed = new MovementSpeedSettings
-        {
-            WalkSpeed = 2f,
-            RunSpeed = 3.5f,
-            SprintSpeed = 6f
-        },
-        SprintCooldown = 0.2f,
-        Gravity = 25f,
-        StartingJumpSpeed = 8f,
-        TerminalVelocity = 40f,
-        GroundedFallSpeed = 3.5f,
-        AirControlModifier = 0.5f,
-        InAirDamping = 0.05f
-    };
-
     public const int ConstantInputBufferExtra = 2;
 
     public static class TerminalVelocity
     {
-        public static void Apply(ref StandardMovementState standardMovementState)
+        public static void Apply(ref StandardMovementState standardMovementState, float terminalVelocity)
         {
             standardMovementState.Velocity = Vector3
-                .ClampMagnitude(standardMovementState.Velocity.ToVector3(), movementSettings.TerminalVelocity)
+                .ClampMagnitude(standardMovementState.Velocity.ToVector3(), terminalVelocity)
                 .ToIntAbsolute();
         }
     }
 
     public static class Gravity
     {
-        public static void Apply(ref StandardMovementState standardMovementState, float deltaTime)
+        public static void Apply(ref StandardMovementState standardMovementState, float deltaTime, float gravity)
         {
             var velocity = standardMovementState.Velocity.ToVector3();
 
-            velocity += Vector3.down * movementSettings.Gravity * deltaTime;
+            velocity += Vector3.down * gravity * deltaTime;
 
             standardMovementState.Velocity = velocity.ToIntAbsolute();
         }
@@ -54,16 +37,9 @@ public class MyMovementUtils
             newCooldown = 0;
         }
 
-        public static void Update(bool sprintPressed, float previousCooldown, out float newCooldown, float deltaTime)
+        public static void Update(bool sprintPressed, float previousCooldown, out float newCooldown, float deltaTime, float sprintCooldown)
         {
-            if (sprintPressed)
-            {
-                newCooldown = movementSettings.SprintCooldown;
-            }
-            else
-            {
-                newCooldown = Mathf.Max(previousCooldown - deltaTime, 0);
-            }
+            newCooldown = sprintPressed ? sprintCooldown : Mathf.Max(previousCooldown - deltaTime, 0);
         }
     }
 
@@ -180,21 +156,6 @@ public class MyMovementUtils
         return Mathf.CeilToInt(rtt / (2 * CommandFrameSystem.FrameLength)) + ConstantInputBufferExtra;
     }
 
-    public static float GetMovmentSpeedVelocity(MovementSpeed speed)
-    {
-        switch (speed)
-        {
-            case MovementSpeed.Walk:
-                return movementSettings.MovementSpeed.WalkSpeed;
-            case MovementSpeed.Run:
-                return movementSettings.MovementSpeed.RunSpeed;
-            case MovementSpeed.Sprint:
-                return movementSettings.MovementSpeed.SprintSpeed;
-            default:
-                return -1;
-        }
-    }
-
     public class PidController
     {
         public float Kp;
@@ -204,13 +165,6 @@ public class MyMovementUtils
         public float lastError;
         public float integral;
         public float value;
-
-        public PidController(float kp, float ki, float kd)
-        {
-            Kp = kp;
-            Ki = ki;
-            Kd = kd;
-        }
 
         public PidController(float kp, float ki, float kd, float initialValue, float initialIntegral)
         {
@@ -223,7 +177,7 @@ public class MyMovementUtils
 
         public float Update(float error, float dt)
         {
-            float derivative = (error - lastError) / dt;
+            var derivative = (error - lastError) / dt;
             integral += error * dt;
             lastError = error;
 

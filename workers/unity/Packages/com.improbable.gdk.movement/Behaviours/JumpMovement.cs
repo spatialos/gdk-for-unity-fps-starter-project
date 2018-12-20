@@ -5,12 +5,12 @@ using UnityEngine;
 public class JumpMovement
 {
     public static void Process(bool jumpPressed, bool grounded, bool canJump,
-        ref StandardMovementState standardMovementState, out bool didJump, out bool newCanJump)
+        ref StandardMovementState standardMovementState, out bool didJump, out bool newCanJump, float startingJumpSpeed)
     {
         if (grounded && canJump && jumpPressed)
         {
             standardMovementState.Velocity =
-                (standardMovementState.Velocity.ToVector3() + Vector3.up * MyMovementUtils.movementSettings.StartingJumpSpeed)
+                (standardMovementState.Velocity.ToVector3() + Vector3.up * startingJumpSpeed)
                 .ToIntAbsolute();
             didJump = true;
         }
