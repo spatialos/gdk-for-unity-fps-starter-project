@@ -27,7 +27,6 @@ public class FpsMovement : AbstractMovementProcessor<CustomInput, CustomState>
         processors = new MyMovementUtils.IMovementProcessorOLD[]
         {
             TeleportProcessor,
-            new WasdMovement(),
             SprintCooldown,
             jumpMovement,
             new MyMovementUtils.Gravity(),
@@ -59,6 +58,75 @@ public class FpsMovement : AbstractMovementProcessor<CustomInput, CustomState>
             Input.Pitch = (int) pitch * 100000;
         }
     }
+
+    public override CustomState Process(CustomInput input, CustomState previousState, float deltaTime)
+    {
+        var newState = new CustomState { IsAiming = input.AimPressed, Pitch = input.Pitch, Yaw = input.Yaw };
+
+        // Teleport Processor
+        processors[0].Process(input, previousState, ref newState, deltaTime);
+
+        if (!newState.DidTeleport)
+        {
+            var speed = GetSpeed(input.AimPressed, input.SprintPressed);
+
+            var direction = StandardCharacterMovement.GetDesiredDirectionFromWasd(input.ForwardPressed, input.BackPressed,
+                input.LeftPressed, input.RightPressed);
+
+            direction = StandardCharacterMovement.RotateToFaceYaw(direction, input.Yaw / 100000f);
+
+            StandardCharacterMovement.ApplyMovement(speed, direction,
+                previousState.StandardMovement,
+                previousState.IsGrounded,
+                ref newState.StandardMovement);
+        }
+
+        for (var i = 1; i < processors.Length; i++)
+        {
+            if (!processors[i].Process(input, previousState, ref newState, deltaTime))
+            {
+                break;
+            }
+        }
+
+        return newState;
+    }
+
+    public override bool ShouldReplay(CustomState predicted, CustomState actual)
+    {
+        var predictionPosition = predicted.StandardMovement.Position.ToVector3();
+        var actualPosition = actual.StandardMovement.Position.ToVector3();
+        var distance = Vector3.Distance(predictionPosition, actualPosition);
+        return (distance > 0.1f);
+    }
+
+    public override Vector3 GetPosition(CustomState state)
+    {
+        return state.StandardMovement.Position.ToVector3();
+    }
+
+    public override void RestoreToState(CustomState state)
+    {
+        controller.transform.position = state.StandardMovement.Position.ToVector3() + origin;
+    }
+
+    private static float GetSpeed(bool isAiming, bool isSprinting)
+    {
+        var speed = MyMovementUtils.movementSettings.MovementSpeed.RunSpeed;
+
+        if (isAiming)
+        {
+            speed = MyMovementUtils.movementSettings.MovementSpeed.WalkSpeed;
+        }
+        else if (isSprinting)
+        {
+            speed = MyMovementUtils.movementSettings.MovementSpeed.SprintSpeed;
+        }
+
+        return speed;
+    }
+
+    #region Serialization
 
     public override byte[] SerializeInput(CustomInput input)
     {
@@ -103,36 +171,5 @@ public class FpsMovement : AbstractMovementProcessor<CustomInput, CustomState>
         return DeserializeStateStatic(raw);
     }
 
-    public override CustomState Process(CustomInput input, CustomState previousState, float deltaTime)
-    {
-        var newState = new CustomState();
-
-        for (var i = 0; i < processors.Length; i++)
-        {
-            if (!processors[i].Process(input, previousState, ref newState, deltaTime))
-            {
-                break;
-            }
-        }
-
-        return newState;
-    }
-
-    public override bool ShouldReplay(CustomState predicted, CustomState actual)
-    {
-        var predictionPosition = predicted.StandardMovement.Position.ToVector3();
-        var actualPosition = actual.StandardMovement.Position.ToVector3();
-        var distance = Vector3.Distance(predictionPosition, actualPosition);
-        return (distance > 0.1f);
-    }
-
-    public override Vector3 GetPosition(CustomState state)
-    {
-        return state.StandardMovement.Position.ToVector3();
-    }
-
-    public override void RestoreToState(CustomState state)
-    {
-        controller.transform.position = state.StandardMovement.Position.ToVector3() + origin;
-    }
+    #endregion
 }
