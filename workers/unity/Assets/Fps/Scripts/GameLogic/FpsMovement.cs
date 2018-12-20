@@ -7,26 +7,23 @@ public class FpsMovement : AbstractMovementProcessor<CustomInput, CustomState>
 {
     private readonly CharacterController controller;
     private readonly Vector3 origin;
-    private readonly string owner;
 
     private readonly MyMovementUtils.IMovementProcessorOLD[] processors;
     private readonly JumpMovement jumpMovement = new JumpMovement();
     public readonly MyMovementUtils.SprintCooldown SprintCooldown = new MyMovementUtils.SprintCooldown();
     private readonly MyMovementUtils.RemoveWorkerOrigin removeOrigin = new MyMovementUtils.RemoveWorkerOrigin();
-    public readonly MyMovementUtils.TeleportProcessorOld TeleportProcessor = new MyMovementUtils.TeleportProcessorOld();
+    public readonly MyMovementUtils.TeleportMovement TeleportProcessor = new MyMovementUtils.TeleportMovement();
 
-    public FpsMovement(CharacterController controller, Vector3 origin, string owner = "")
+    public FpsMovement(CharacterController controller, Vector3 origin)
     {
         this.controller = controller;
         this.origin = origin;
-        this.owner = owner;
 
         TeleportProcessor.Origin = origin;
         removeOrigin.Origin = origin;
 
         processors = new MyMovementUtils.IMovementProcessorOLD[]
         {
-            TeleportProcessor,
             SprintCooldown,
             jumpMovement,
             new MyMovementUtils.Gravity(),
@@ -63,10 +60,7 @@ public class FpsMovement : AbstractMovementProcessor<CustomInput, CustomState>
     {
         var newState = new CustomState { IsAiming = input.AimPressed, Pitch = input.Pitch, Yaw = input.Yaw };
 
-        // Teleport Processor
-        processors[0].Process(input, previousState, ref newState, deltaTime);
-
-        if (!newState.DidTeleport)
+        if (!TeleportProcessor.ApplyTeleport(ref newState.StandardMovement))
         {
             var speed = GetSpeed(input.AimPressed, input.SprintPressed);
 

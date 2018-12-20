@@ -1,4 +1,5 @@
 ﻿using System.Net.NetworkInformation;
+using Improbable;
 using Improbable.Fps.Custommovement;
 using Improbable.Gdk.Movement;
 using Improbable.Gdk.StandardTypes;
@@ -155,7 +156,7 @@ public class MyMovementUtils
         }
     }
 
-    public class TeleportProcessorOld : IMovementProcessorOLD
+    public class TeleportMovement
     {
         public Vector3 Origin { get; set; }
 
@@ -164,24 +165,20 @@ public class MyMovementUtils
 
         public void Teleport(Vector3 position)
         {
-            Debug.LogFormat("TeleportProcessor: hasTeleport, position: {0}", position + Origin);
             hasTeleport = true;
             teleportPosition = position + Origin;
         }
 
-        public bool Process(CustomInput input, CustomState previousState,
-            ref CustomState newState, float deltaTime)
+        public bool ApplyTeleport(ref StandardMovementState standardMovement)
         {
             if (hasTeleport)
             {
-                Debug.LogFormat("Procssing, hasTeleport: {0}", teleportPosition);
-                newState.StandardMovement.Position = teleportPosition.ToIntAbsolute();
-                newState.DidTeleport = true;
-
-                Debug.LogFormat("NewState.DidTeleport: {0}, NewState.Position: {1}", newState.DidTeleport, newState.StandardMovement.Position.ToVector3());
+                standardMovement.Position = teleportPosition.ToIntAbsolute();
 
                 hasTeleport = false;
                 teleportPosition = Vector3.zero;
+
+                return true;
             }
 
             return true;

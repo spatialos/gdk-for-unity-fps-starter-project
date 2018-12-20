@@ -74,7 +74,7 @@ namespace Fps
         {
             spatialComponent = GetComponent<SpatialOSComponent>();
 
-            fpsMovement = new FpsMovement(controller, spatialComponent.Worker.Origin, "Client");
+            fpsMovement = new FpsMovement(controller, spatialComponent.Worker.Origin);
             movement.SetCustomProcessor(fpsMovement);
 
             Cursor.lockState = CursorLockMode.Locked;
