@@ -56,7 +56,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4287935734642948}
   - component: {fileID: 114253357202205812}
-  - component: {fileID: 114692378848593620}
   m_Layer: 0
   m_Name: Tile_Bare_3
   m_TagString: Untagged
@@ -181,14 +180,14 @@ MeshFilter:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1321480339110422}
-  m_Mesh: {fileID: 4300000, guid: 7bc8580ae66c94944a9de232f98d1fe7, type: 3}
+  m_Mesh: {fileID: 4300002, guid: 7bc8580ae66c94944a9de232f98d1fe7, type: 3}
 --- !u!33 &33302064872010542
 MeshFilter:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1589226913354564}
-  m_Mesh: {fileID: 4300000, guid: 7bc8580ae66c94944a9de232f98d1fe7, type: 3}
+  m_Mesh: {fileID: 4300002, guid: 7bc8580ae66c94944a9de232f98d1fe7, type: 3}
 --- !u!65 &65516621125730280
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -226,16 +225,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerTransform: {fileID: 0}
   IsClient: 0
---- !u!114 &114692378848593620
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1851953567429334}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86c7664287f770c47a9c53bffc90963b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ignoreLods: 0
-  MaxBakedScaleSize: 36

@@ -20,7 +20,7 @@ RenderSettings:
   m_FogDensity: 0.0005
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.50624996, g: 0.55312496, b: 0.6, a: 1}
+  m_AmbientSkyColor: {r: 0.55, g: 0.55, b: 0.55, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
@@ -595,8 +595,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1352389044}
   - component: {fileID: 1352389043}
-  - component: {fileID: 1352389046}
-  - component: {fileID: 1352389045}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -619,7 +617,7 @@ Light:
   m_SpotAngle: 30
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 1
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -654,28 +652,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 35, y: -60, z: 0}
---- !u!114 &1352389045
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1352389042}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c6c2871f720b2af4e9210febdac74517, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1352389046
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1352389042}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a68c43fe1f2a47cfa234b5eeaa98012, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1360920340
 Prefab:
   m_ObjectHideFlags: 0
@@ -865,7 +841,7 @@ GameObject:
   - component: {fileID: 1541234928}
   - component: {fileID: 1541234927}
   m_Layer: 0
-  m_Name: clouds_mesh
+  m_Name: Clouds
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -943,7 +919,7 @@ MeshFilter:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1541234925}
-  m_Mesh: {fileID: 4300000, guid: c6af15f8d59b4264ebc70ff998901408, type: 3}
+  m_Mesh: {fileID: 4300002, guid: c6af15f8d59b4264ebc70ff998901408, type: 3}
 --- !u!1001 &1878345233
 Prefab:
   m_ObjectHideFlags: 0
