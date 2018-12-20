@@ -14,7 +14,7 @@ public class FpsServerDriver : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         driver = GetComponent<MyServerMovementDriver>();
-        fpsMovement = new FpsMovement(controller, GetComponent<SpatialOSComponent>().Worker.Origin, "Server");
+        fpsMovement = new FpsMovement(controller, GetComponent<SpatialOSComponent>().Worker.Origin);
         driver.SetCustomProcessor(fpsMovement);
     }
 
