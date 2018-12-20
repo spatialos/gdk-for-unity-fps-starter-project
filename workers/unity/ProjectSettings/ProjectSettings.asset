@@ -156,6 +156,7 @@ PlayerSettings:
   applicationIdentifier:
     Android: io.improbable.gdk
     Standalone: com.improbable.gdk.starterproject
+    iOS: com.improbable.gdk.jon
   buildNumber: {}
   AndroidBundleVersionCode: 1
   AndroidMinSdkVersion: 18
@@ -361,6 +362,9 @@ PlayerSettings:
   m_BuildTargetGraphicsAPIs:
   - m_BuildTarget: AndroidPlayer
     m_APIs: 0b000000
+    m_Automatic: 0
+  - m_BuildTarget: iOSSupport
+    m_APIs: 10000000
     m_Automatic: 0
   m_BuildTargetVRSettings:
   - m_BuildTarget: Standalone
