@@ -11,7 +11,6 @@ public class TileCollapser : MonoBehaviour
     {
         for (var i = 0; i < transform.childCount; i++)
         {
-            Debug.Log(transform.childCount);
             var child = transform.GetChild(i);
 
             if (!collapsedInstances.ContainsKey(child.name))
@@ -41,7 +40,6 @@ public class TileCollapser : MonoBehaviour
 
     private void ApplyCollapsed(Transform obj)
     {
-        Debug.Log("Collapsing tiles on obj " + obj.gameObject);
         var mf = obj.gameObject.AddComponent<MeshFilter>();
         var mr = obj.gameObject.AddComponent<MeshRenderer>();
 
