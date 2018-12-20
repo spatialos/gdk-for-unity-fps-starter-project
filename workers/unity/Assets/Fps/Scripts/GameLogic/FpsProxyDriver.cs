@@ -63,7 +63,7 @@ public class FpsProxyDriver : MonoBehaviour
             animator.SetGrounded(from.IsGrounded);
             var vel = Vector3.Lerp(from.StandardMovement.Velocity.ToVector3(), to.StandardMovement.Velocity.ToVector3(), t);
             vel.y = 0;
-            animator.SetMovement(vel);
+            animator.SetVelocity(vel);
             animator.SetPitch(newRot.eulerAngles.x);
 
             transform.position = ControllerProxy.transform.position;

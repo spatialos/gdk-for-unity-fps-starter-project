@@ -73,7 +73,8 @@ public class StandardCharacterMovement
         float speed,
         Vector3 unitDirection,
         StandardMovementState previousMovementState, bool isGrounded,
-        ref StandardMovementState newMovementState)
+        ref StandardMovementState newMovementState,
+        float airControlModifier, float inAirDamping)
     {
         var newVelocity = previousMovementState.Velocity.ToVector3();
 
@@ -88,8 +89,8 @@ public class StandardCharacterMovement
         {
             // Apply movement with air control damping.
             ApplyAirControl(unitDirection, ref newVelocity,
-                MyMovementUtils.movementSettings.AirControlModifier,
-                MyMovementUtils.movementSettings.InAirDamping, speed);
+                airControlModifier,
+                inAirDamping, speed);
         }
 
         newMovementState.Velocity = newVelocity.ToIntAbsolute();

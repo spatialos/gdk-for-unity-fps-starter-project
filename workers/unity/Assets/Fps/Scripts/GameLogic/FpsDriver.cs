@@ -96,7 +96,7 @@ namespace Fps
             // Don't allow controls if in the menu.
             if (ScreenUIController.InEscapeMenu)
             {
-                Animations(new CustomState());
+                Animations(new CustomState(), false);
                 return;
             }
 
@@ -188,7 +188,7 @@ namespace Fps
 
             Aiming(isAiming);
 
-            Animations(state);
+            Animations(state, isSprinting);
 
             transform.position = ControllerProxy.transform.position;
         }
@@ -241,11 +241,12 @@ namespace Fps
             }
         }
 
-        private void Animations(CustomState state)
+        private void Animations(CustomState state, bool sprintPressed)
         {
             fpsAnimator.SetAiming(gunState.Data.IsAiming);
             fpsAnimator.SetGrounded(state.IsGrounded);
-            fpsAnimator.SetMovement(state.StandardMovement.Velocity.ToVector3());
+            fpsAnimator.SetVelocity(state.StandardMovement.Velocity.ToVector3());
+            fpsAnimator.SetSprinting(sprintPressed && state.IsGrounded);
             fpsAnimator.SetPitch(pitchTransform.transform.localEulerAngles.x);
 
             if (state.DidJump)

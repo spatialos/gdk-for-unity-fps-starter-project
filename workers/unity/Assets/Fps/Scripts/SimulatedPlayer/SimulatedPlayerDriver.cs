@@ -202,7 +202,7 @@ public class SimulatedPlayerDriver : MonoBehaviour
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 360 * Time.deltaTime);
 
             var destination = transform.position + (strafeRight ? transform.right : -transform.right) *
-                MyMovementUtils.GetMovmentSpeedVelocity(MovementSpeed.Run) * Time.deltaTime;
+                FpsMovement.GetSpeed(false, false) * Time.deltaTime;
             var canStrafe = NavMesh.SamplePosition(destination, out var hit, 0.25f, NavMesh.AllAreas);
 
 

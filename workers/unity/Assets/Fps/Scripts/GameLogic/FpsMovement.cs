@@ -1,10 +1,28 @@
 ﻿using Improbable.Fps.Custommovement;
+using Improbable.Gdk.Movement;
 using Improbable.Gdk.StandardTypes;
 using Improbable.Worker.CInterop;
 using UnityEngine;
 
 public class FpsMovement : AbstractMovementProcessor<CustomInput, CustomState>
 {
+    private static readonly MovementSettings MovementSettings = new MovementSettings
+    {
+        MovementSpeed = new MovementSpeedSettings
+        {
+            WalkSpeed = 2f,
+            RunSpeed = 3.5f,
+            SprintSpeed = 6f
+        },
+        SprintCooldown = 0.2f,
+        Gravity = 25f,
+        StartingJumpSpeed = 8f,
+        TerminalVelocity = 40f,
+        GroundedFallSpeed = 3.5f,
+        AirControlModifier = 0.5f,
+        InAirDamping = 0.05f
+    };
+
     private readonly CharacterController controller;
     private readonly Vector3 origin;
 
@@ -55,21 +73,22 @@ public class FpsMovement : AbstractMovementProcessor<CustomInput, CustomState>
             StandardCharacterMovement.ApplyMovement(speed, direction,
                 previousState.StandardMovement,
                 previousState.IsGrounded,
-                ref newState.StandardMovement);
+                ref newState.StandardMovement,
+                MovementSettings.AirControlModifier, MovementSettings.InAirDamping);
 
             MyMovementUtils.SprintCooldown.Update(
                 input.SprintPressed, previousState.SprintCooldown,
-                out newState.SprintCooldown, deltaTime);
+                out newState.SprintCooldown, deltaTime, MovementSettings.SprintCooldown);
 
             JumpMovement.Process(input.JumpPressed, previousState.IsGrounded, previousState.CanJump,
-                ref newState.StandardMovement, out var didJump, out var canJump);
+                ref newState.StandardMovement, out var didJump, out var canJump, MovementSettings.StartingJumpSpeed);
 
             newState.DidJump = didJump;
             newState.CanJump = canJump;
 
-            MyMovementUtils.Gravity.Apply(ref newState.StandardMovement, deltaTime);
+            MyMovementUtils.Gravity.Apply(ref newState.StandardMovement, deltaTime, MovementSettings.Gravity);
 
-            MyMovementUtils.TerminalVelocity.Apply(ref newState.StandardMovement);
+            MyMovementUtils.TerminalVelocity.Apply(ref newState.StandardMovement, MovementSettings.TerminalVelocity);
 
             MyMovementUtils.CharacterControllerMovement.Move(controller, ref newState.StandardMovement, deltaTime);
         }
@@ -110,17 +129,17 @@ public class FpsMovement : AbstractMovementProcessor<CustomInput, CustomState>
         controller.transform.position = state.StandardMovement.Position.ToVector3() + origin;
     }
 
-    private static float GetSpeed(bool isAiming, bool isSprinting)
+    public static float GetSpeed(bool isAiming, bool isSprinting)
     {
-        var speed = MyMovementUtils.movementSettings.MovementSpeed.RunSpeed;
+        var speed = MovementSettings.MovementSpeed.RunSpeed;
 
         if (isAiming)
         {
-            speed = MyMovementUtils.movementSettings.MovementSpeed.WalkSpeed;
+            speed = MovementSettings.MovementSpeed.WalkSpeed;
         }
         else if (isSprinting)
         {
-            speed = MyMovementUtils.movementSettings.MovementSpeed.SprintSpeed;
+            speed = MovementSettings.MovementSpeed.SprintSpeed;
         }
 
         return speed;
