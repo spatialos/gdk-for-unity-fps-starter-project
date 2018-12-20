@@ -1,6 +1,4 @@
-﻿using System.Net.NetworkInformation;
-using Improbable;
-using Improbable.Fps.Custommovement;
+﻿using Improbable.Fps.Custommovement;
 using Improbable.Gdk.Movement;
 using Improbable.Gdk.StandardTypes;
 using UnityEngine;
@@ -65,30 +63,26 @@ public class MyMovementUtils
         }
     }
 
-    public class SprintCooldown : IMovementProcessorOLD
+    public static class SprintCooldown
     {
-        public bool Process(CustomInput input, CustomState previousState,
-            ref CustomState newState, float deltaTime)
+        public static void Reset(out float newCooldown)
         {
-            if (newState.DidTeleport)
-            {
-                newState.SprintCooldown = 0;
-                return true;
-            }
+            newCooldown = 0;
+        }
 
-            if (input.SprintPressed)
+        public static void Update(bool sprintPressed, float previousCooldown, out float newCooldown, float deltaTime)
+        {
+            if (sprintPressed)
             {
-                newState.SprintCooldown = movementSettings.SprintCooldown;
+                newCooldown = movementSettings.SprintCooldown;
             }
             else
             {
-                newState.SprintCooldown = Mathf.Max(previousState.SprintCooldown - deltaTime, 0);
+                newCooldown = Mathf.Max(previousCooldown - deltaTime, 0);
             }
-
-            return true;
         }
 
-        public float GetCooldown(CustomState state)
+        public static float Get(CustomState state)
         {
             return state.SprintCooldown;
         }
@@ -181,7 +175,7 @@ public class MyMovementUtils
                 return true;
             }
 
-            return true;
+            return false;
         }
     }
 

@@ -10,7 +10,6 @@ public class FpsMovement : AbstractMovementProcessor<CustomInput, CustomState>
 
     private readonly MyMovementUtils.IMovementProcessorOLD[] processors;
     private readonly JumpMovement jumpMovement = new JumpMovement();
-    public readonly MyMovementUtils.SprintCooldown SprintCooldown = new MyMovementUtils.SprintCooldown();
     private readonly MyMovementUtils.RemoveWorkerOrigin removeOrigin = new MyMovementUtils.RemoveWorkerOrigin();
     public readonly MyMovementUtils.TeleportMovement TeleportProcessor = new MyMovementUtils.TeleportMovement();
 
@@ -24,7 +23,6 @@ public class FpsMovement : AbstractMovementProcessor<CustomInput, CustomState>
 
         processors = new MyMovementUtils.IMovementProcessorOLD[]
         {
-            SprintCooldown,
             jumpMovement,
             new MyMovementUtils.Gravity(),
             new MyMovementUtils.TerminalVelocity(),
@@ -73,9 +71,19 @@ public class FpsMovement : AbstractMovementProcessor<CustomInput, CustomState>
                 previousState.StandardMovement,
                 previousState.IsGrounded,
                 ref newState.StandardMovement);
+
+            MyMovementUtils.SprintCooldown.Update(
+                input.SprintPressed, previousState.SprintCooldown,
+                out newState.SprintCooldown, deltaTime);
+        }
+        else
+        {
+            newState.DidTeleport = true;
+
+            MyMovementUtils.SprintCooldown.Reset(out newState.SprintCooldown);
         }
 
-        for (var i = 1; i < processors.Length; i++)
+        for (var i = 0; i < processors.Length; i++)
         {
             if (!processors[i].Process(input, previousState, ref newState, deltaTime))
             {

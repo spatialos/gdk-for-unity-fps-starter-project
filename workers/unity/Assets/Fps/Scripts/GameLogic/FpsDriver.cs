@@ -186,7 +186,7 @@ namespace Fps
             var state = MyMovementUtils.GetLatestState(movement, fpsMovement);
 
             //Check for sprint cooldown
-            if (isAiming || (fpsMovement.SprintCooldown.GetCooldown(state) <= 0 && !isSprinting))
+            if (isAiming || (MyMovementUtils.SprintCooldown.Get(state) <= 0 && !isSprinting))
             {
                 HandleShooting(shootPressed, shootHeld);
             }
