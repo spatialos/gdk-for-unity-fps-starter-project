@@ -19,8 +19,8 @@ public class JumpMovement : MyMovementUtils.IMovementProcessorOLD
 
         if (grounded && canJump && jumpPressed)
         {
-            newState.Velocity =
-                (newState.Velocity.ToVector3() + Vector3.up * MyMovementUtils.movementSettings.StartingJumpSpeed)
+            newState.StandardMovement.Velocity =
+                (newState.StandardMovement.Velocity.ToVector3() + Vector3.up * MyMovementUtils.movementSettings.StartingJumpSpeed)
                 .ToIntAbsolute();
             newState.DidJump = true;
         }

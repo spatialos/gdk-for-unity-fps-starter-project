@@ -250,7 +250,7 @@ namespace Fps
         {
             fpsAnimator.SetAiming(gunState.Data.IsAiming);
             fpsAnimator.SetGrounded(state.IsGrounded);
-            fpsAnimator.SetMovement(state.Velocity.ToVector3());
+            fpsAnimator.SetMovement(state.StandardMovement.Velocity.ToVector3());
             fpsAnimator.SetPitch(pitchTransform.transform.localEulerAngles.x);
 
             if (state.DidJump)

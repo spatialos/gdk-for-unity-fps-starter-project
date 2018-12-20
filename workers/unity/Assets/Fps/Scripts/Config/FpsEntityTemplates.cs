@@ -52,7 +52,10 @@ namespace Fps
                 {
                     RawState = FpsMovement.SerializeStateStatic(new CustomState()
                     {
-                        Position = spawnPosition.ToIntAbsolute(),
+                        StandardMovement = new StandardMovementState()
+                        {
+                            Position = spawnPosition.ToIntAbsolute(),
+                        },
                         DidTeleport = true
                     })
                 }

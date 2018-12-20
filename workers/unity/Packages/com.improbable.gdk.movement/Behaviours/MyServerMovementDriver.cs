@@ -12,7 +12,6 @@ public class MyServerMovementDriver : MonoBehaviour
     [Require] private ServerMovement.Requirable.Writer server;
     [Require] private Position.Requirable.Writer spatialPosition;
 
-    // private CharacterController controller;
     private SpatialOSComponent spatial;
     private CommandFrameSystem commandFrame;
 

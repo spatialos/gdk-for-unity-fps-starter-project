@@ -1690,7 +1690,7 @@ Prefab:
     - target: {fileID: 114219126016241412, guid: 75d29a39b8a626e42bdfc2e1d7af6746,
         type: 2}
       propertyPath: DisableRenderers
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114219126016241412, guid: 75d29a39b8a626e42bdfc2e1d7af6746,
         type: 2}
@@ -1700,6 +1700,10 @@ Prefab:
     - target: {fileID: 1455626031769568, guid: 75d29a39b8a626e42bdfc2e1d7af6746, type: 2}
       propertyPath: m_Name
       value: GameLogicWorker (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1455626031769568, guid: 75d29a39b8a626e42bdfc2e1d7af6746, type: 2}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 75d29a39b8a626e42bdfc2e1d7af6746, type: 2}
@@ -1755,7 +1759,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1971737696589158, guid: a18c738cbcda9914591d9af24a618907, type: 2}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a18c738cbcda9914591d9af24a618907, type: 2}
@@ -1802,7 +1806,7 @@ Prefab:
     - target: {fileID: 114219126016241412, guid: 75d29a39b8a626e42bdfc2e1d7af6746,
         type: 2}
       propertyPath: DisableRenderers
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114219126016241412, guid: 75d29a39b8a626e42bdfc2e1d7af6746,
         type: 2}
