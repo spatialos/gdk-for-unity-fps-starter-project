@@ -8,8 +8,6 @@ public class FpsMovement : AbstractMovementProcessor<CustomInput, CustomState>
     private readonly CharacterController controller;
     private readonly Vector3 origin;
 
-    private readonly MyMovementUtils.IMovementProcessorOLD[] processors;
-    private readonly MyMovementUtils.RemoveWorkerOrigin removeOrigin = new MyMovementUtils.RemoveWorkerOrigin();
     public readonly MyMovementUtils.TeleportMovement TeleportProcessor = new MyMovementUtils.TeleportMovement();
 
     public FpsMovement(CharacterController controller, Vector3 origin)
@@ -18,17 +16,6 @@ public class FpsMovement : AbstractMovementProcessor<CustomInput, CustomState>
         this.origin = origin;
 
         TeleportProcessor.Origin = origin;
-        removeOrigin.Origin = origin;
-
-        processors = new MyMovementUtils.IMovementProcessorOLD[]
-        {
-            new MyMovementUtils.Gravity(),
-            new MyMovementUtils.TerminalVelocity(),
-            new MyMovementUtils.CharacterControllerMovement(controller),
-            removeOrigin,
-            new IsGroundedMovement(),
-            new MyMovementUtils.AdjustVelocity()
-        };
     }
 
     public void AddInput(bool forward = false, bool back = false, bool left = false, bool right = false,
@@ -79,21 +66,28 @@ public class FpsMovement : AbstractMovementProcessor<CustomInput, CustomState>
 
             newState.DidJump = didJump;
             newState.CanJump = canJump;
+
+            MyMovementUtils.Gravity.Apply(ref newState.StandardMovement, deltaTime);
+
+            MyMovementUtils.TerminalVelocity.Apply(ref newState.StandardMovement);
+
+            MyMovementUtils.CharacterControllerMovement.Move(controller, ref newState.StandardMovement, deltaTime);
         }
         else
         {
             newState.DidTeleport = true;
 
             MyMovementUtils.SprintCooldown.Reset(out newState.SprintCooldown);
+
+            MyMovementUtils.CharacterControllerMovement.Teleport(controller, ref newState.StandardMovement);
         }
 
-        for (var i = 0; i < processors.Length; i++)
-        {
-            if (!processors[i].Process(input, previousState, ref newState, deltaTime))
-            {
-                break;
-            }
-        }
+        MyMovementUtils.RemoveWorkerOrigin.Remove(ref newState.StandardMovement, origin);
+
+        newState.IsGrounded =
+            IsGroundedMovement.Get(newState.StandardMovement, previousState.StandardMovement, deltaTime);
+
+        MyMovementUtils.AdjustVelocity.Apply(previousState.StandardMovement, ref newState.StandardMovement, deltaTime);
 
         return newState;
     }

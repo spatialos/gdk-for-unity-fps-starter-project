@@ -1,16 +1,9 @@
-﻿using Improbable.Fps.Custommovement;
-using Improbable.Gdk.Movement;
+﻿using Improbable.Gdk.Movement;
 using Improbable.Gdk.StandardTypes;
 using UnityEngine;
 
 public class MyMovementUtils
 {
-    public interface IMovementProcessorOLD
-    {
-        bool Process(CustomInput input, CustomState previousState,
-            ref CustomState newState, float deltaTime);
-    }
-
     public static bool ShowDebug;
 
     public static readonly MovementSettings movementSettings = new MovementSettings
@@ -32,34 +25,25 @@ public class MyMovementUtils
 
     public const int ConstantInputBufferExtra = 2;
 
-    public class TerminalVelocity : IMovementProcessorOLD
+    public static class TerminalVelocity
     {
-        public bool Process(CustomInput input, CustomState previousState,
-            ref CustomState newState, float deltaTime)
+        public static void Apply(ref StandardMovementState standardMovementState)
         {
-            newState.StandardMovement.Velocity = Vector3.ClampMagnitude(newState.StandardMovement.Velocity.ToVector3(), movementSettings.TerminalVelocity)
+            standardMovementState.Velocity = Vector3
+                .ClampMagnitude(standardMovementState.Velocity.ToVector3(), movementSettings.TerminalVelocity)
                 .ToIntAbsolute();
-            return true;
         }
     }
 
-    public class Gravity : IMovementProcessorOLD
+    public static class Gravity
     {
-        public bool Process(CustomInput input, CustomState previousState,
-            ref CustomState newState, float deltaTime)
+        public static void Apply(ref StandardMovementState standardMovementState, float deltaTime)
         {
-            if (newState.DidTeleport)
-            {
-                return true;
-            }
-
-            var velocity = newState.StandardMovement.Velocity.ToVector3();
+            var velocity = standardMovementState.Velocity.ToVector3();
 
             velocity += Vector3.down * movementSettings.Gravity * deltaTime;
 
-            newState.StandardMovement.Velocity = velocity.ToIntAbsolute();
-
-            return true;
+            standardMovementState.Velocity = velocity.ToIntAbsolute();
         }
     }
 
@@ -81,72 +65,43 @@ public class MyMovementUtils
                 newCooldown = Mathf.Max(previousCooldown - deltaTime, 0);
             }
         }
-
-        public static float Get(CustomState state)
-        {
-            return state.SprintCooldown;
-        }
     }
 
-    public class CharacterControllerMovement : IMovementProcessorOLD
+    public static class CharacterControllerMovement
     {
-        private readonly CharacterController controller;
-
-        public CharacterControllerMovement(CharacterController controller)
+        public static void Move(CharacterController controller, ref StandardMovementState standardMovementState,
+            float deltaTime)
         {
-            this.controller = controller;
-        }
-
-        public bool Process(CustomInput input, CustomState previousState,
-            ref CustomState newState, float deltaTime)
-        {
-            if (newState.DidTeleport)
-            {
-                Debug.LogFormat("Found Teleport Request, teleporting to: {0}", newState.StandardMovement.Position.ToVector3());
-                controller.transform.position = newState.StandardMovement.Position.ToVector3();
-
-                return true;
-            }
-
             if (controller.enabled)
             {
-                controller.Move(newState.StandardMovement.Velocity.ToVector3() * deltaTime);
+                controller.Move(standardMovementState.Velocity.ToVector3() * deltaTime);
             }
 
-            newState.StandardMovement.Position = controller.transform.position.ToIntAbsolute();
+            standardMovementState.Position = controller.transform.position.ToIntAbsolute();
+        }
 
-            return true;
+        public static void Teleport(CharacterController controller, ref StandardMovementState standardMovementState)
+        {
+            controller.transform.position = standardMovementState.Position.ToVector3();
         }
     }
 
-    public class RemoveWorkerOrigin : IMovementProcessorOLD
+    public static class RemoveWorkerOrigin
     {
-        public Vector3 Origin;
-
-        public bool Process(CustomInput input, CustomState previousState,
-            ref CustomState newState, float deltaTime)
+        public static void Remove(ref StandardMovementState standardMovementState, Vector3 origin)
         {
-            newState.StandardMovement.Position = (newState.StandardMovement.Position.ToVector3() - Origin).ToIntAbsolute();
-            return true;
+            standardMovementState.Position = (standardMovementState.Position.ToVector3() - origin).ToIntAbsolute();
         }
     }
 
-    public class AdjustVelocity : IMovementProcessorOLD
+    public static class AdjustVelocity
     {
-        public bool Process(CustomInput input, CustomState previousState,
-            ref CustomState newState, float deltaTime)
+        public static void Apply(StandardMovementState previousState,
+            ref StandardMovementState newState, float deltaTime)
         {
-            // Don't adjust velocity if we teleported, since that would not produce a valid velocity.
-            if (newState.DidTeleport)
-            {
-                return true;
-            }
-
-            var oldPosition = previousState.StandardMovement.Position.ToVector3();
-            var newPosition = newState.StandardMovement.Position.ToVector3();
-            newState.StandardMovement.Velocity = ((newPosition - oldPosition) / deltaTime).ToIntAbsolute();
-
-            return true;
+            var oldPosition = previousState.Position.ToVector3();
+            var newPosition = newState.Position.ToVector3();
+            newState.Velocity = ((newPosition - oldPosition) / deltaTime).ToIntAbsolute();
         }
     }
 
