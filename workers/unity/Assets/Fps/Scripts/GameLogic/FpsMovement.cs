@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class FpsMovement : AbstractMovementProcessor<CustomInput, CustomState>
 {
-    private static readonly MovementSettings MovementSettings = new MovementSettings
+    public static readonly MovementSettings MovementSettings = new MovementSettings
     {
         MovementSpeed = new MovementSpeedSettings
         {
