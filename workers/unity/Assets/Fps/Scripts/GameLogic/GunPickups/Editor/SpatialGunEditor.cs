@@ -1,4 +1,5 @@
-﻿using Improbable.Gdk.Guns;
+﻿#if UNITY_EDITOR
+using Improbable.Gdk.Guns;
 using UnityEditor;
 using UnityEngine;
 
@@ -103,3 +104,4 @@ namespace Fps
         }
     }
 }
+#endif
