@@ -1,6 +1,6 @@
 using System.IO;
 using Improbable.Gdk.Core;
-using Improbable.Gdk.SimLauncher;
+using Improbable.Gdk.DeploymentManager;
 using UnityEditor;
 using UnityEngine;
 

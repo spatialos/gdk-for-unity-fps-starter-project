@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using Fps;
 using UnityEngine;
@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Improbable.Gdk.Core;
 using Improbable.Worker.CInterop;
 using Random = UnityEngine.Random;
+using Improbable.Worker.CInterop.Alpha;
 
 public class SimulatedPlayerCoordinatorWorkerConnector : WorkerConnectorBase
 {
