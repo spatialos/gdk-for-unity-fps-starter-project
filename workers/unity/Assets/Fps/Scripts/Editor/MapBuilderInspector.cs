@@ -25,8 +25,7 @@ public class MapBuilderInspector : Editor
 
         if (GUILayout.Button("Generate Map"))
         {
-            myTarget.Clean();
-            myTarget.Build();
+            myTarget.CleanAndBuild();
         }
 
         if (GUILayout.Button("Clean Map"))
