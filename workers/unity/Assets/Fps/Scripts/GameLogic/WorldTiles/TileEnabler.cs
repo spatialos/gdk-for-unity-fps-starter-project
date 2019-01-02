@@ -32,18 +32,20 @@ namespace Fps
 
         private void Update()
         {
-            if (PlayerTransform != null)
+            if (PlayerTransform == null)
             {
-                var distanceSquared = Vector3.SqrMagnitude(PlayerTransform.position - transform.position);
+                return;
+            }
 
-                if (renderersEnabled && distanceSquared > CheckoutDistanceSquared)
-                {
-                    ToggleRenderers();
-                }
-                else if (!renderersEnabled && distanceSquared <= CheckoutDistanceSquared)
-                {
-                    ToggleRenderers();
-                }
+            var distanceSquared = Vector3.SqrMagnitude(PlayerTransform.position - transform.position);
+
+            if (renderersEnabled && distanceSquared > CheckoutDistanceSquared)
+            {
+                ToggleRenderers();
+            }
+            else if (!renderersEnabled && distanceSquared <= CheckoutDistanceSquared)
+            {
+                ToggleRenderers();
             }
         }
 
