@@ -5,33 +5,38 @@ using UnityEngine;
 
 public class TileSettings : MonoBehaviour
 {
-    [Tooltip("Only functional in editor")] public bool ForceIsClient;
+    [Tooltip("ForceIsClient only functions in editor")]
+    public bool ForceIsClient;
 
-    private static TileSettings Instance;
     public const float DefaultCheckoutDistance = 300f;
     public const float DefaultCheckoutDistanceSquared = 300f * 300f;
     public static float CheckoutDistance => Instance.CheckoutDistanceInternal;
-
     public List<TileQualityData> Settings = new List<TileQualityData>();
 
+    private static TileSettings Instance;
+    private float checkoutDistanceCache = -1;
 
-#if UNITY_EDITOR
     public void OnValidate()
     {
-        ReapplySettings();
+        ApplyCheckoutDistance();
     }
 
-    private void ReapplySettings()
+    private void Awake()
+    {
+        Instance = this;
+        ApplyCheckoutDistance();
+
+        Editor_ApplyForceIsClient();
+    }
+
+    private void ApplyCheckoutDistance()
     {
         checkoutDistanceCache = -1;
 
         Shader.SetGlobalFloat("_GlobalClipDistance", CheckoutDistanceInternal);
-        foreach (var tile in FindObjectsOfType<TileEnabler>())
-        {
-            tile.CheckoutDistance = CheckoutDistanceInternal;
-        }
+
+        Editor_ApplyCheckoutDistanceToTiles();
     }
-#endif
 
     private float CheckoutDistanceInternal
     {
@@ -51,7 +56,6 @@ public class TileSettings : MonoBehaviour
                 }
 
                 checkoutDistanceCache = Settings[i].CheckoutDistance;
-                Shader.SetGlobalFloat("_GlobalClipDistance", checkoutDistanceCache);
                 return checkoutDistanceCache;
             }
 
@@ -62,22 +66,35 @@ public class TileSettings : MonoBehaviour
         }
     }
 
-    private float checkoutDistanceCache = -1;
+    #region Editor functions
 
-    private void Awake()
+    private void Editor_ApplyForceIsClient()
     {
-#if UNITY_EDITOR
-        if (ForceIsClient)
+        if (!ForceIsClient)
         {
-            foreach (var tile in FindObjectsOfType<TileEnabler>())
-            {
-                tile.IsClient = true;
-            }
+            return;
+        }
+
+#if UNITY_EDITOR
+        foreach (var tile in FindObjectsOfType<TileEnabler>())
+        {
+            tile.IsClient = true;
         }
 #endif
-
-        Instance = this;
     }
+
+    private void Editor_ApplyCheckoutDistanceToTiles()
+    {
+#if UNITY_EDITOR
+        foreach (var tile in FindObjectsOfType<TileEnabler>())
+        {
+            tile.CheckoutDistance = CheckoutDistanceInternal;
+        }
+#endif
+    }
+
+    #endregion
+
 }
 
 [Serializable]
