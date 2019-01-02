@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -102,8 +103,14 @@ public class TileQualitySettingsInspector : Editor
 
     private void OnEnable()
     {
-        activeQualityStyle = new GUIStyle(EditorStyles.numberField) { fontStyle = FontStyle.Bold };
-        tileQualitySettings = serializedObject.FindProperty("TileQualitySettings");
+        try
+        {
+            activeQualityStyle = new GUIStyle(EditorStyles.numberField) { fontStyle = FontStyle.Bold };
+        }
+        catch (NullReferenceException)
+        {
+            activeQualityStyle = GUIStyle.none;
+        }
     }
 
 
