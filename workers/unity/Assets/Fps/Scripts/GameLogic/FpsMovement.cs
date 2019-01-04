@@ -89,11 +89,12 @@ public class FpsMovement : AbstractMovementProcessor<CustomInput, CustomState>
             // Maintain jetpack charge.
             newState.JetpackCharge = previousState.JetpackCharge;
 
-            // If we're in the air and pressing jump, accelerate us 1.2* gravity upwards.
+            // If we're in the air and pressing jump, accelerate us 1.5 * gravity upwards, up to StartingJumpSpeed.
             if (!previousState.IsGrounded && input.JumpPressed && previousState.JetpackCharge > 0)
             {
                 var velocity = newState.StandardMovement.Velocity.ToVector3();
-                velocity += Vector3.up * MovementSettings.Gravity * 1.2f * deltaTime;
+                velocity += Vector3.up * MovementSettings.Gravity * 1.5f * deltaTime;
+                velocity.y = Mathf.Min(velocity.y, MovementSettings.StartingJumpSpeed);
                 newState.StandardMovement.Velocity = velocity.ToIntAbsolute();
 
                 // 100 charge gives 2 seconds of jetpack.
@@ -104,8 +105,8 @@ public class FpsMovement : AbstractMovementProcessor<CustomInput, CustomState>
             }
             else if (!didJump && previousState.IsGrounded && previousState.JetpackCharge < 10000)
             {
-                // Takes 3 seconds to recharge jetpack.
-                const int rechargePerSecond = 10000 / 3;
+                // Takes 1 seconds to recharge jetpack.
+                const int rechargePerSecond = 10000 / 1;
 
                 var newCharge = Mathf.Floor(previousState.JetpackCharge + rechargePerSecond * deltaTime);
                 newState.JetpackCharge = (uint) Mathf.Clamp(newCharge, 0, 10000);
