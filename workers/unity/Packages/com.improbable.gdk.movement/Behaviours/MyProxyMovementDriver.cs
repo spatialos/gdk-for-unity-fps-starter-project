@@ -2,7 +2,6 @@
 using System.Linq;
 using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.Movement;
-using Improbable.Gdk.StandardTypes;
 using UnityEngine;
 
 public class MyProxyMovementDriver : MonoBehaviour
@@ -11,7 +10,7 @@ public class MyProxyMovementDriver : MonoBehaviour
 
     private readonly List<ServerResponse> movementBuffer = new List<ServerResponse>();
 
-    private MyMovementUtils.PidController pidController =
+    private readonly MyMovementUtils.PidController pidController =
         new MyMovementUtils.PidController(0.1f, 0.01f, 0f, 1f, 100f);
 
     private const int BufferSize = 3;
@@ -31,21 +30,6 @@ public class MyProxyMovementDriver : MonoBehaviour
     private void ServerOnLatestUpdated(ServerResponse response)
     {
         movementBuffer.Add(response);
-
-        // // replace entire buffer with this update.
-        // if (response.MovementState.DidTeleport)
-        // {
-        //     var count = movementBuffer.Count;
-        //     movementBuffer.Clear();
-        //     for (var i = 0; i < count; i++)
-        //     {
-        //         movementBuffer.Add(response);
-        //     }
-        // }
-        // else
-        // {
-        //
-        // }
     }
 
     public bool GetInterpState(out float t, out byte[] from, out byte[] to)
@@ -89,7 +73,7 @@ public class MyProxyMovementDriver : MonoBehaviour
         UpdatePid();
     }
 
-    private Queue<float> bufferSizeQueue = new Queue<float>(20);
+    private readonly Queue<float> bufferSizeQueue = new Queue<float>(20);
 
     private void UpdatePid()
     {
@@ -119,7 +103,7 @@ public class MyProxyMovementDriver : MonoBehaviour
 
         var bufferAverage = (bufferSizeQueue.Count > 0) ? bufferSizeQueue.Average() : 0;
 
-        GUI.Label(new Rect(10, 500, 700, 30), string.Format("Buffer Size: {0}, average: {1:00.00}, length: {2}",
-            movementBuffer.Count, bufferAverage, frameLength));
+        GUI.Label(new Rect(10, 500, 700, 30),
+            $"Buffer Size: {movementBuffer.Count}, average: {bufferAverage:00.00}, length: {frameLength}");
     }
 }
