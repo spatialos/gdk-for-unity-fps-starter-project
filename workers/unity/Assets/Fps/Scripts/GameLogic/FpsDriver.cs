@@ -151,7 +151,7 @@ namespace Fps
                 pitchSpeed = currentGun.CurrentGunSettings.AimPitchSpeed;
             }
 
-            //Mediator
+            // Mediator
             var yawChange = yawDelta * yawSpeed;
             var pitchChange = pitchDelta * -pitchSpeed;
             var currentPitch = pitchTransform.transform.localEulerAngles.x;
@@ -180,7 +180,7 @@ namespace Fps
 
             var state = MyMovementUtils.GetLatestState(movement, fpsMovement);
 
-            //Check for sprint cooldown
+            // Check for sprint cooldown
             if (isAiming || (state.SprintCooldown <= 0 && !isSprinting))
             {
                 HandleShooting(shootPressed, shootHeld);

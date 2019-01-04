@@ -84,14 +84,10 @@ public class MyServerMovementDriver : MonoBehaviour
 
         if (firstFrame < 0)
         {
-            // Debug.Log($"[Server-{workerIndex}] First Frame Setup.");
             firstFrame = lastFrame + frameBuffer;
             movementState[firstFrame - 1] = server.Data.Latest.MovementState;
-
-            //Debug.Log($"[{lastFrame}] First Input received, applied on {firstFrame}, offset: {clientFrameOffset}");
         }
 
-        // Debug.Log($"[Server {lastFrame}] Clearing {clientInputs.Count} inputs.");
         clientInputs.Clear();
         foreach (var request in buffer)
         {
@@ -100,7 +96,6 @@ public class MyServerMovementDriver : MonoBehaviour
                 clientInputs.Add(request);
             }
         }
-        // Debug.Log($"[Server {lastFrame}] Added {clientInputs.Count} inputs.");
 
         if (firstFrame < lastFrame && clientInputs.Count > 0)
         {
@@ -115,7 +110,6 @@ public class MyServerMovementDriver : MonoBehaviour
             var sample = Time.time - (request.LastReceivedServerTime / 100000f);
             rtt = RttAlpha * rtt + (1 - RttAlpha) * sample;
             frameBuffer = MyMovementUtils.CalculateInputBufferSize(rtt);
-            // Debug.Log($"[Server {lastFrame}] Update Frame Buffer to {frameBuffer}");
         }
     }
 
@@ -140,7 +134,6 @@ public class MyServerMovementDriver : MonoBehaviour
 
                 if (lastFrame < firstFrame)
                 {
-                    //Debug.LogFormat($"[{lastFrame}] Skipping frame until first frame: {firstFrame}");
                     continue;
                 }
 
@@ -148,7 +141,6 @@ public class MyServerMovementDriver : MonoBehaviour
                 {
                     lastInput = clientInputs[0];
                     clientInputs.RemoveAt(0);
-                    // Debug.Log($"[Server {lastFrame}] Dequeue Client input {lastFrame} ({clientInputs.Count})");
                 }
                 else
                 {
@@ -157,7 +149,6 @@ public class MyServerMovementDriver : MonoBehaviour
 
                 movementState.TryGetValue(lastFrame - 1, out var previousState);
 
-                // shouldn't need to call restore here.
                 customProcessor.RestoreToState(previousState.RawState);
                 var state = MyMovementUtils.ApplyCustomInput(lastInput, previousState, customProcessor);
                 movementState[lastFrame] = state;
@@ -173,8 +164,6 @@ public class MyServerMovementDriver : MonoBehaviour
 
     private void SendMovement(MovementState state)
     {
-        // Debug.Log($"[Server:{lastFrame}] Send Response: {clientFrame}");
-
         var response = new ServerResponse
         {
             MovementState = state,
@@ -247,8 +236,6 @@ public class MyServerMovementDriver : MonoBehaviour
         {
             return;
         }
-
-        var delta = clientInputs.Count - frameBuffer;
 
         GUI.Label(new Rect(10, 100 + renderLine * 20, 700, 20),
             string.Format("Input Buffer Sample: {0:00}, Avg: {1:00.00}, cd: {2:00.00}, RTT: {3:00.0}, B: {4}, Empty: {5}",

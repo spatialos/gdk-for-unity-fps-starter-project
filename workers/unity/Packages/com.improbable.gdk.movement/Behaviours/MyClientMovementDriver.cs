@@ -58,7 +58,6 @@ public class MyClientMovementDriver : MonoBehaviour
 
     private void ServerMovementOnLatestUpdated(ServerResponse response)
     {
-        // Debug.Log($"[Client {lastFrame}] Received state: {response.Timestamp} CF: {confirmedFrame}");
         serverResponses.Enqueue(response);
 
         UpdateFrameBuffer();
@@ -179,12 +178,8 @@ public class MyClientMovementDriver : MonoBehaviour
         while (serverResponses.Count > 0)
         {
             var response = serverResponses.Dequeue();
-
-            //Debug.LogFormat($"[{lastFrame}] Server response: {response.Timestamp}");
-
             if (response.Timestamp < confirmedFrame)
             {
-                //Debug.LogWarning($"[Client {lastFrame}] Server resent already confirmed frame: {response.Timestamp}");
                 continue;
             }
 
@@ -197,7 +192,6 @@ public class MyClientMovementDriver : MonoBehaviour
                     Debug.LogFormat("Mispredicted cf {0}", response.Timestamp);
                     Debug.LogFormat("Replaying input from {0} to {1}", response.Timestamp + 1, lastFrame);
 
-                    // SaveMovementState(response.Timestamp);
                     var previousState = response.MovementState;
                     movementState[response.Timestamp] = previousState;
                     customProcessor.RestoreToState(previousState.RawState);
@@ -209,19 +203,13 @@ public class MyClientMovementDriver : MonoBehaviour
                         movementState[i] =
                             MyMovementUtils.ApplyCustomInput(inputState[i], movementState[i - 1], customProcessor);
 
-                        //Debug.LogFormat("Adjusted Position: {0}", movementState[i].Position.ToVector3());
                         Debug.DrawLine(
                             Controller.transform.position,
                             Controller.transform.position + Vector3.up * 500);
                         i++;
                     }
                 }
-                else
-                {
-                    //Debug.LogFormat("[Client] {0} confirmed", response.Timestamp);
-                }
 
-                // Debug.Log($"[Client {lastFrame}] Remove confirmed input for {response.Timestamp}");
                 confirmedFrame = response.Timestamp;
                 inputState.Remove(response.Timestamp);
 
@@ -234,9 +222,6 @@ public class MyClientMovementDriver : MonoBehaviour
                 Debug.LogWarning($"[Client {lastFrame}] Don't have movement state for cf {response.Timestamp}");
             }
 
-            // update dilation
-            // commandFrame.ServerAdjustment = response.TimeDelta;
-            // commandFrame.ServerAdjustment = response.NextDilation / 100000f;
             nextDilation = response.NextFrameAdjustment / 100000f;
             lastServerTimestamp = response.ServerTime;
             lastServerTimestampReceived = Time.time;
@@ -263,14 +248,11 @@ public class MyClientMovementDriver : MonoBehaviour
 
         var unackedInput = new List<ClientRequest>(inputState.Values) { clientRequest };
 
-        // Debug.Log($"[Client:{lastFrame}] Send Input");
-        // movement.SendClientInput(clientRequest);
         movement.Send(new ClientMovement.Update
         {
             Buffer = unackedInput
         });
 
-        // //Debug.LogFormat("[Client] Sent {0}", clientRequest.Timestamp);
         return clientRequest;
     }
 
