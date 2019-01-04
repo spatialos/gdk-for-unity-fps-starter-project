@@ -53,6 +53,8 @@ namespace Fps
         private bool isRequestingRespawn;
         private Coroutine requestingRespawnCoroutine;
 
+        private CustomState state;
+
         private void Awake()
         {
             movement = GetComponent<MyClientMovementDriver>();
@@ -136,7 +138,7 @@ namespace Fps
             // Modifiers
             var isAiming = Input.GetMouseButton(1);
             var isSprinting = Input.GetKey(KeyCode.LeftShift) && onlyForward;
-            var isJumpPressed = Input.GetKeyDown(KeyCode.Space);
+            var isJumpPressed = Input.GetKey(KeyCode.Space);
 
             // Events
             var shootPressed = Input.GetMouseButtonDown(0);
@@ -178,7 +180,7 @@ namespace Fps
                 rotation.y,
                 newPitch);
 
-            var state = MyMovementUtils.GetLatestState(movement, fpsMovement);
+            state = MyMovementUtils.GetLatestState(movement, fpsMovement);
 
             // Check for sprint cooldown
             if (isAiming || (state.SprintCooldown <= 0 && !isSprinting))
