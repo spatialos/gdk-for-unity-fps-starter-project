@@ -255,5 +255,11 @@ namespace Fps
                 fpsAnimator.Jump();
             }
         }
+
+        private void OnGUI()
+        {
+            var jetpackCharge = state.JetpackCharge / 100f;
+            GUI.Label(new Rect(Screen.width - 50, 10, 50, 30), $"{jetpackCharge:##0}");
+        }
     }
 }

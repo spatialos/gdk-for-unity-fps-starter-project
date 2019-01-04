@@ -56,7 +56,8 @@ namespace Fps
                         {
                             Position = spawnPosition.ToIntAbsolute(),
                         },
-                        DidTeleport = true
+                        DidTeleport = true,
+                        JetpackCharge = 10000,
                     })
                 }
             };

@@ -86,6 +86,31 @@ public class FpsMovement : AbstractMovementProcessor<CustomInput, CustomState>
             newState.DidJump = didJump;
             newState.CanJump = canJump;
 
+            // Maintain jetpack charge.
+            newState.JetpackCharge = previousState.JetpackCharge;
+
+            // If we're in the air and pressing jump, accelerate us 1.2* gravity upwards.
+            if (!previousState.IsGrounded && input.JumpPressed && previousState.JetpackCharge > 0)
+            {
+                var velocity = newState.StandardMovement.Velocity.ToVector3();
+                velocity += Vector3.up * MovementSettings.Gravity * 1.2f * deltaTime;
+                newState.StandardMovement.Velocity = velocity.ToIntAbsolute();
+
+                // 100 charge gives 2 seconds of jetpack.
+                const int chargePerSecond = 10000 / 2;
+
+                var newCharge = Mathf.Floor(previousState.JetpackCharge - chargePerSecond * deltaTime);
+                newState.JetpackCharge = (uint) Mathf.Clamp(newCharge, 0, 10000);
+            }
+            else if (!didJump && previousState.IsGrounded && previousState.JetpackCharge < 10000)
+            {
+                // Takes 3 seconds to recharge jetpack.
+                const int rechargePerSecond = 10000 / 3;
+
+                var newCharge = Mathf.Floor(previousState.JetpackCharge + rechargePerSecond * deltaTime);
+                newState.JetpackCharge = (uint) Mathf.Clamp(newCharge, 0, 10000);
+            }
+
             MyMovementUtils.Gravity.Apply(ref newState.StandardMovement, deltaTime, MovementSettings.Gravity);
 
             MyMovementUtils.TerminalVelocity.Apply(ref newState.StandardMovement, MovementSettings.TerminalVelocity);

@@ -25,4 +25,5 @@ type CustomState {
     int32 pitch = 7;
     int32 yaw = 8;
     bool is_aiming = 9;
+    uint32 jetpack_charge = 10;
 }
