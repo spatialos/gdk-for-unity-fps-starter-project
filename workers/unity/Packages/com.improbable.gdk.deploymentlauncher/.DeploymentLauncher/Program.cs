@@ -84,98 +84,116 @@ namespace Improbable
             var snapshotServiceClient = SnapshotServiceClient.Create();
             var deploymentServiceClient = DeploymentServiceClient.Create();
 
-            // Upload snapshots.
-            var mainSnapshotId = UploadSnapshot(snapshotServiceClient, mainDeploymentSnapshotFilePath, projectName,
-                mainDeploymentName);
-            if (mainSnapshotId.Length == 0)
+            try
             {
-                return 1;
-            }
-            var simSnapshotId = "";
-            if (launchSimPlayerDeployment) {
-                simSnapshotId = UploadSnapshot(snapshotServiceClient, simDeploymentSnapshotFilePath, projectName,
-                simDeploymentName);
-                if (simSnapshotId.Length == 0) {
+                // Upload snapshots.
+                var mainSnapshotId = UploadSnapshot(snapshotServiceClient, mainDeploymentSnapshotFilePath, projectName,
+                    mainDeploymentName);
+                if (mainSnapshotId.Length == 0)
+                {
                     return 1;
                 }
-            }
-
-            // Create main deployment.
-            var mainDeploymentConfig = new Deployment
-            {
-                AssemblyId = assemblyName,
-                LaunchConfig = new LaunchConfig
+                var simSnapshotId = "";
+                if (launchSimPlayerDeployment)
                 {
-                    ConfigJson = File.ReadAllText(mainDeploymentJson)
-                },
-                Name = mainDeploymentName,
-                ProjectName = projectName,
-                StartingSnapshotId = mainSnapshotId
-            };
-            if (launchSimPlayerDeployment) {
-                // This tag needs to be added to allow simulated clients to connect using login
-                // tokens generated with anonymous auth.
-                mainDeploymentConfig.Tag.Add("dev_login");
-            }
-            Console.WriteLine(
-                $"Creating the main deployment {mainDeploymentName} in project {projectName} with snapshot ID {mainSnapshotId}.");
-            var mainDeploymentCreateOp = deploymentServiceClient.CreateDeployment(new CreateDeploymentRequest
-            {
-                Deployment = mainDeploymentConfig
-            }).PollUntilCompleted();
-            Console.WriteLine("Successfully created the main deployment.");
-
-            if (launchSimPlayerDeployment) {
-                // Create development authentication token used by the simulated players.
-                var dat = playerAuthServiceClient.CreateDevelopmentAuthenticationToken(
-                    new CreateDevelopmentAuthenticationTokenRequest
+                    simSnapshotId = UploadSnapshot(snapshotServiceClient, simDeploymentSnapshotFilePath, projectName,
+                    simDeploymentName);
+                    if (simSnapshotId.Length == 0)
                     {
-                        Description = "DAT for sim worker deployment.",
-                        Lifetime = Duration.FromTimeSpan(new TimeSpan(7, 0, 0, 0)),
-                        ProjectName = projectName
-                    });
-
-                // Add worker flags to sim deployment JSON.
-                var devAuthTokenIdFlag = new JObject();
-                devAuthTokenIdFlag.Add("name", "fps_simulated_players_dev_auth_token_id");
-                devAuthTokenIdFlag.Add("value", dat.DevelopmentAuthenticationToken.Id);
-                var targetDeploymentFlag = new JObject();
-                targetDeploymentFlag.Add("name", "fps_simulated_players_target_deployment");
-                targetDeploymentFlag.Add("value", mainDeploymentName);
-                var simWorkerConfigJson = File.ReadAllText(simDeploymentJson);
-                dynamic simWorkerConfig = JObject.Parse(simWorkerConfigJson);
-                for (var i = 0; i < simWorkerConfig.workers.Count; ++i)
-                {
-                    if (simWorkerConfig.workers[i].worker_type == "SimulatedPlayerCoordinator")
-                    {
-                        simWorkerConfig.workers[i].flags.Add(devAuthTokenIdFlag);
-                        simWorkerConfig.workers[i].flags.Add(targetDeploymentFlag);
+                        return 1;
                     }
                 }
 
-                simWorkerConfigJson = simWorkerConfig.ToString();
-
-                // Create simulated player deployment.
-                var simDeploymentConfig = new Deployment
+                // Create main deployment.
+                var mainDeploymentConfig = new Deployment
                 {
                     AssemblyId = assemblyName,
                     LaunchConfig = new LaunchConfig
                     {
-                        ConfigJson = simWorkerConfigJson
+                        ConfigJson = File.ReadAllText(mainDeploymentJson)
                     },
-                    Name = simDeploymentName,
+                    Name = mainDeploymentName,
                     ProjectName = projectName,
-                    StartingSnapshotId = simSnapshotId
+                    StartingSnapshotId = mainSnapshotId
                 };
-                simDeploymentConfig.Tag.Add("simulated_clients");
-
-                Console.WriteLine(
-                    $"Creating the simulated player deployment {simDeploymentName} in project {projectName} with snapshot ID {simSnapshotId}.");
-                var simDeploymentCreateOp = deploymentServiceClient.CreateDeployment(new CreateDeploymentRequest
+                if (launchSimPlayerDeployment)
                 {
-                    Deployment = simDeploymentConfig
+                    // This tag needs to be added to allow simulated clients to connect using login
+                    // tokens generated with anonymous auth.
+                    mainDeploymentConfig.Tag.Add("dev_login");
+                }
+                Console.WriteLine(
+                    $"Creating the main deployment {mainDeploymentName} in project {projectName} with snapshot ID {mainSnapshotId}.");
+                var mainDeploymentCreateOp = deploymentServiceClient.CreateDeployment(new CreateDeploymentRequest
+                {
+                    Deployment = mainDeploymentConfig
                 }).PollUntilCompleted();
-                Console.WriteLine("Successfully created the simulated player deployment.");
+                Console.WriteLine("Successfully created the main deployment.");
+
+                if (launchSimPlayerDeployment)
+                {
+                    // Create development authentication token used by the simulated players.
+                    var dat = playerAuthServiceClient.CreateDevelopmentAuthenticationToken(
+                        new CreateDevelopmentAuthenticationTokenRequest
+                        {
+                            Description = "DAT for sim worker deployment.",
+                            Lifetime = Duration.FromTimeSpan(new TimeSpan(7, 0, 0, 0)),
+                            ProjectName = projectName
+                        });
+
+                    // Add worker flags to sim deployment JSON.
+                    var devAuthTokenIdFlag = new JObject();
+                    devAuthTokenIdFlag.Add("name", "fps_simulated_players_dev_auth_token_id");
+                    devAuthTokenIdFlag.Add("value", dat.DevelopmentAuthenticationToken.Id);
+                    var targetDeploymentFlag = new JObject();
+                    targetDeploymentFlag.Add("name", "fps_simulated_players_target_deployment");
+                    targetDeploymentFlag.Add("value", mainDeploymentName);
+                    var simWorkerConfigJson = File.ReadAllText(simDeploymentJson);
+                    dynamic simWorkerConfig = JObject.Parse(simWorkerConfigJson);
+                    for (var i = 0; i < simWorkerConfig.workers.Count; ++i)
+                    {
+                        if (simWorkerConfig.workers[i].worker_type == "SimulatedPlayerCoordinator")
+                        {
+                            simWorkerConfig.workers[i].flags.Add(devAuthTokenIdFlag);
+                            simWorkerConfig.workers[i].flags.Add(targetDeploymentFlag);
+                        }
+                    }
+
+                    simWorkerConfigJson = simWorkerConfig.ToString();
+
+                    // Create simulated player deployment.
+                    var simDeploymentConfig = new Deployment
+                    {
+                        AssemblyId = assemblyName,
+                        LaunchConfig = new LaunchConfig
+                        {
+                            ConfigJson = simWorkerConfigJson
+                        },
+                        Name = simDeploymentName,
+                        ProjectName = projectName,
+                        StartingSnapshotId = simSnapshotId
+                    };
+                    simDeploymentConfig.Tag.Add("simulated_clients");
+
+                    Console.WriteLine(
+                        $"Creating the simulated player deployment {simDeploymentName} in project {projectName} with snapshot ID {simSnapshotId}.");
+                    var simDeploymentCreateOp = deploymentServiceClient.CreateDeployment(new CreateDeploymentRequest
+                    {
+                        Deployment = simDeploymentConfig
+                    }).PollUntilCompleted();
+                    Console.WriteLine("Successfully created the simulated player deployment.");
+                }
+            }
+            catch (Grpc.Core.RpcException e)
+            {
+                if (e.Status.StatusCode == Grpc.Core.StatusCode.NotFound)
+                {
+                    Console.WriteLine($"Unable to launch the deployment(s). This is likely because the project '{projectName}' or assembly '{assemblyName}' doesn't exist.");
+                }
+                else
+                {
+                    throw;
+                }
             }
 
             return 0;
@@ -187,11 +205,25 @@ namespace Improbable
             var deploymentId = args[2];
 
             var deploymentServiceClient = DeploymentServiceClient.Create();
-            deploymentServiceClient.StopDeployment(new StopDeploymentRequest
+            try
             {
-                Id = deploymentId,
-                ProjectName = projectName
-            });
+                deploymentServiceClient.StopDeployment(new StopDeploymentRequest
+                {
+                    Id = deploymentId,
+                    ProjectName = projectName
+                });
+            }
+            catch (Grpc.Core.RpcException e)
+            {
+                if (e.Status.StatusCode == Grpc.Core.StatusCode.NotFound)
+                {
+                    Console.WriteLine("<error:unknown-deployment>");
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
             return 0;
         }
@@ -221,16 +253,15 @@ namespace Improbable
         {
             Console.WriteLine("Usage:");
             Console.WriteLine("DeploymentManager.exe create <project-name> <assembly-name> <main-deployment-name> <main-deployment-json> <main-deployment-snapshot> [<sim-deployment-name> <sim-deployment-json> <sim-deployment-snapshot>]");
-            Console.WriteLine("DeploymentManager.exe stop <project-name> <main-deployment-name> <sim-deployment-name>");
+            Console.WriteLine("DeploymentManager.exe stop <project-name> <deployment-id>");
             Console.WriteLine("DeploymentManager.exe list <project-name>");
         }
 
         private static int Main(string[] args)
         {
-            args = new string[] { "list", "unity_gdk" };
             if (args.Length == 0 ||
-                args[0] == "create" && (args.Length != 9 || args.Length != 6) ||
-                args[0] == "stop" && args.Length != 4 ||
+                args[0] == "create" && (args.Length != 9 && args.Length != 6) ||
+                args[0] == "stop" && args.Length != 3 ||
                 args[0] == "list" && args.Length != 2)
             {
                 ShowUsage();
@@ -254,6 +285,17 @@ namespace Improbable
                     return ListDeployments(args);
                 }
             }
+            catch (Grpc.Core.RpcException e)
+            {
+                if (e.Status.StatusCode == Grpc.Core.StatusCode.Unauthenticated)
+                {
+                    Console.WriteLine("<error:unauthenticated>");
+                }
+                else
+                {
+                    Console.Error.WriteLine($"Encountered an unknown gRPC error. Exception = {e.ToString()}");
+                }
+            }
             catch (ArgumentNullException e)
             {
                 // This is here to work around WF-464, present as of Platform SDK version 13.5.0.
@@ -266,20 +308,7 @@ namespace Improbable
                     throw;
                 }
             }
-            catch (Grpc.Core.RpcException e)
-            {
-                if (e.Status.StatusCode == Grpc.Core.StatusCode.Unauthenticated)
-                {
-                    Console.WriteLine("<error:authentication>");
-                }
-                else
-                {
-                    Console.WriteLine("<error:unknown>");
-                    Console.Error.WriteLine($"Encountered an unknown gRPC error. Exception = {e.ToString()}");
-                }
-            }
-
-            ShowUsage();
+            
             return 1;
         }
     }
