@@ -210,7 +210,7 @@ namespace Improbable
             {
                 if (deployment.Status == Deployment.Types.Status.Running)
                 {
-                    Console.WriteLine(deployment.Id + " " + deployment.Name);
+                    Console.WriteLine("<deployment> " + deployment.Id + " " + deployment.Name);
                 }
             }
 
@@ -227,6 +227,7 @@ namespace Improbable
 
         private static int Main(string[] args)
         {
+            args = new string[] { "list", "unity_gdk" };
             if (args.Length == 0 ||
                 args[0] == "create" && (args.Length != 9 || args.Length != 6) ||
                 args[0] == "stop" && args.Length != 4 ||
@@ -236,19 +237,46 @@ namespace Improbable
                 return 1;
             }
 
-            if (args[0] == "create")
+            try
             {
-                return CreateDeployment(args);
-            }
+                if (args[0] == "create")
+                {
+                    return CreateDeployment(args);
+                }
 
-            if (args[0] == "stop")
-            {
-                return StopDeployment(args);
-            }
+                if (args[0] == "stop")
+                {
+                    return StopDeployment(args);
+                }
 
-            if (args[0] == "list")
+                if (args[0] == "list")
+                {
+                    return ListDeployments(args);
+                }
+            }
+            catch (ArgumentNullException e)
             {
-                return ListDeployments(args);
+                // This is here to work around WF-464, present as of Platform SDK version 13.5.0.
+                if (e.ParamName == "path")
+                {
+                    Console.WriteLine("<error:authentication>");
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            catch (Grpc.Core.RpcException e)
+            {
+                if (e.Status.StatusCode == Grpc.Core.StatusCode.Unauthenticated)
+                {
+                    Console.WriteLine("<error:authentication>");
+                }
+                else
+                {
+                    Console.WriteLine("<error:unknown>");
+                    Console.Error.WriteLine($"Encountered an unknown gRPC error. Exception = {e.ToString()}");
+                }
             }
 
             ShowUsage();
