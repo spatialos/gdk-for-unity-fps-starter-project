@@ -14,7 +14,7 @@ namespace Fps
             set => CheckoutDistanceSquared = Mathf.Pow(value, 2);
         }
 
-        private float CheckoutDistanceSquared = TileSettings.DefaultCheckoutDistanceSquared;
+        private float CheckoutDistanceSquared = MapQualitySettings.DefaultCheckoutDistanceSquared;
 
         private MeshRenderer meshRenderer;
 
@@ -27,7 +27,7 @@ namespace Fps
                 return;
             }
 
-            CheckoutDistanceSquared = Mathf.Pow(TileSettings.CheckoutDistance, 2);
+            CheckoutDistanceSquared = Mathf.Pow(MapQualitySettings.CheckoutDistance, 2);
         }
 
         private void Update()

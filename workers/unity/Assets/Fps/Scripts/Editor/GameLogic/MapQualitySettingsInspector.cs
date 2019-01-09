@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(TileSettings))]
+[CustomEditor(typeof(MapQualitySettings))]
 [CanEditMultipleObjects]
-public class TileQualitySettingsInspector : Editor
+public class MapQualitySettingsInspector : Editor
 {
     private GUIStyle activeQualityStyle;
 
@@ -15,17 +15,26 @@ public class TileQualitySettingsInspector : Editor
     {
         activeQualityLevel = QualitySettings.GetQualityLevel();
 
+        var previewProp = serializedObject.FindProperty("Preview");
+
         RefreshQualityProperties();
 
-        DrawPropertiesExcluding(serializedObject, serializedObject.FindProperty("Settings").name);
+        DrawPropertiesExcluding(serializedObject,
+            serializedObject.FindProperty("Settings").name,
+            previewProp.name);
         GUILayout.Space(10);
 
-        GUILayout.Label("Quality properties", EditorStyles.boldLabel);
+        GUILayout.Label("Tile draw distances", EditorStyles.boldLabel);
         DrawTileQualityProperties();
 
-        GUILayout.Label("Preview quality setting", EditorStyles.boldLabel);
-        DrawQualityPreviewButtons();
+        GUILayout.Space(10);
 
+        EditorGUILayout.PropertyField(previewProp);
+
+        if (previewProp.boolValue)
+        {
+            DrawQualityPreviewButtons();
+        }
 
         serializedObject.ApplyModifiedProperties();
     }
@@ -34,18 +43,18 @@ public class TileQualitySettingsInspector : Editor
     {
         foreach (var t in targets)
         {
-            var tileSettings = t as TileSettings;
+            var tileSettings = t as MapQualitySettings;
             if (QualitiesPropertyMatchesProject(tileSettings))
             {
                 continue;
             }
 
-            var newQualities = new List<TileQualityData>();
+            var newQualities = new List<MapQualityLevelData>();
             foreach (var qualityName in QualitySettings.names)
             {
-                var newTileQualitySetting = new TileQualityData();
+                var newTileQualitySetting = new MapQualityLevelData();
                 newTileQualitySetting.QualityName = qualityName;
-                newTileQualitySetting.CheckoutDistance = TileSettings.DefaultCheckoutDistance;
+                newTileQualitySetting.CheckoutDistance = MapQualitySettings.DefaultCheckoutDistance;
                 foreach (var setting in tileSettings.Settings)
                 {
                     if (setting.QualityName != qualityName)
@@ -66,6 +75,7 @@ public class TileQualitySettingsInspector : Editor
 
     private void DrawTileQualityProperties()
     {
+        var settings = target as MapQualitySettings;
         var qualitySettingsList = serializedObject.FindProperty("Settings");
         for (var i = 0; i < qualitySettingsList.arraySize; i++)
         {
@@ -73,8 +83,13 @@ public class TileQualitySettingsInspector : Editor
             var qualitySettingsName = qualitySettings.FindPropertyRelative("QualityName").stringValue;
             var qualitySettingsCheckoutDistance = qualitySettings.FindPropertyRelative("CheckoutDistance");
 
-            var style = i == QualitySettings.GetQualityLevel() ? activeQualityStyle : EditorStyles.numberField;
-            GUI.backgroundColor = i == activeQualityLevel ? new Color(0, 1f, 0) : Color.white;
+            var style = settings.ShouldApplyDrawDistance && i == QualitySettings.GetQualityLevel()
+                ? activeQualityStyle
+                : EditorStyles.numberField;
+
+            GUI.backgroundColor = settings.ShouldApplyDrawDistance && i == activeQualityLevel
+                ? new Color(0, 1f, 0)
+                : Color.white;
 
 
             qualitySettingsCheckoutDistance.floatValue =
@@ -86,22 +101,29 @@ public class TileQualitySettingsInspector : Editor
 
     private void DrawQualityPreviewButtons()
     {
-        GUILayout.BeginHorizontal();
+        GUILayout.BeginVertical();
+
+        var settings = target as MapQualitySettings;
+
         for (var i = 0; i < QualitySettings.names.Length; i++)
         {
-            GUI.backgroundColor = i == activeQualityLevel ? Color.green : Color.white;
+            GUI.backgroundColor = i == activeQualityLevel
+                ? Color.green
+                : Color.white;
             if (!GUILayout.Button(QualitySettings.names[i]))
             {
                 continue;
             }
 
-            QualitySettings.SetQualityLevel(i);
             activeQualityLevel = i;
-            (target as TileSettings).OnValidate();
+
+            QualitySettings.SetQualityLevel(i);
+            settings.OnValidate();
         }
 
         GUI.backgroundColor = Color.white;
-        GUILayout.EndHorizontal();
+        GUI.enabled = true;
+        GUILayout.EndVertical();
     }
 
     private void OnEnable()
@@ -126,16 +148,16 @@ public class TileQualitySettingsInspector : Editor
         }
     }
 
-    private bool QualitiesPropertyMatchesProject(TileSettings tileSettings)
+    private bool QualitiesPropertyMatchesProject(MapQualitySettings mapQualitySettings)
     {
-        if (tileSettings.Settings.Count != QualitySettings.names.Length)
+        if (mapQualitySettings.Settings.Count != QualitySettings.names.Length)
         {
             return false;
         }
 
         for (var i = 0; i < QualitySettings.names.Length; i++)
         {
-            var name1 = tileSettings.Settings[i].QualityName;
+            var name1 = mapQualitySettings.Settings[i].QualityName;
             var name2 = QualitySettings.names[i];
             if (name1 != name2)
             {
