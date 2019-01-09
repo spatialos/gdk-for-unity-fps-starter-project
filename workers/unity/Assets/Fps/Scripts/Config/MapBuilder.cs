@@ -132,7 +132,11 @@ public class MapBuilder : MonoBehaviour
 
         if (centreTiles.Any(t => t == null))
         {
-            Debug.LogError("Failed to load CentreTile# resources");
+            Debug.LogError("Failed to load CentreTile resource (Expecting all the following paths to exist: " +
+                $"\t{CentreTile0}" +
+                $"\t{CentreTile1}" +
+                $"\t{CentreTile2}" +
+                $"\t{CentreTile3}");
             return false;
         }
 
