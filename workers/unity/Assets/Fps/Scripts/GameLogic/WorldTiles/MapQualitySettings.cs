@@ -21,11 +21,6 @@ public class MapQualitySettings : MonoBehaviour
         ApplyCheckoutDistance();
     }
 
-    private void OnEnable()
-    {
-        Instance = this;
-    }
-
     private void Awake()
     {
         Instance = this;
@@ -42,7 +37,10 @@ public class MapQualitySettings : MonoBehaviour
 
         Shader.SetGlobalFloat("_GlobalClipDistance", value);
 
-        Editor_ApplyCheckoutDistanceToTiles();
+        if (Application.isEditor)
+        {
+            ApplyCheckoutDistanceToTiles();
+        }
     }
 
     private float CheckoutDistanceInternal
@@ -75,9 +73,8 @@ public class MapQualitySettings : MonoBehaviour
 
     #region Editor functions
 
-    private void Editor_ApplyCheckoutDistanceToTiles()
+    private void ApplyCheckoutDistanceToTiles()
     {
-#if UNITY_EDITOR
         var value = ShouldApplyDrawDistance
             ? CheckoutDistanceInternal
             : -1;
@@ -86,7 +83,6 @@ public class MapQualitySettings : MonoBehaviour
         {
             tile.CheckoutDistance = value;
         }
-#endif
     }
 
     #endregion
