@@ -133,10 +133,10 @@ public class MapBuilder : MonoBehaviour
         if (centreTiles.Any(t => t == null))
         {
             Debug.LogError("Failed to load CentreTile resource (Expecting all the following paths to exist: " +
-                $"\t{CentreTile0}" +
-                $"\t{CentreTile1}" +
-                $"\t{CentreTile2}" +
-                $"\t{CentreTile3}");
+                $"\n\tResources/{CentreTile0}... (Click to expand)" +
+                $"\n\tResources/{CentreTile1}" +
+                $"\n\tResources/{CentreTile2}" +
+                $"\n\tResources/{CentreTile3}");
             return false;
         }
 
@@ -144,7 +144,7 @@ public class MapBuilder : MonoBehaviour
 
         if (levelTiles.Length <= 0)
         {
-            Debug.LogError($"Failed to load resource at {LevelTilePath}");
+            Debug.LogError($"Failed to load resource at Resources/{LevelTilePath}");
             return false;
         }
 
@@ -159,7 +159,7 @@ public class MapBuilder : MonoBehaviour
             return true;
         }
 
-        Debug.LogError($"Failed to load resource at {resourcePath}");
+        Debug.LogError($"Failed to load resource at Resources/{resourcePath}");
         return false;
     }
 
@@ -184,9 +184,16 @@ public class MapBuilder : MonoBehaviour
             MakeEdge(offset, 270);
         }
 
+        var cornerOffset =
+            new Vector3
+            {
+                x = groundLayers * TileSeparation * -4,
+                z = groundLayers * TileSeparation * 4
+            };
+
         for (var i = 0; i < 360; i += 90)
         {
-            MakeCorner(i);
+            MakeCorner(i, cornerOffset);
         }
     }
 
@@ -234,11 +241,11 @@ public class MapBuilder : MonoBehaviour
         }
     }
 
-    private void MakeCorner(int angle)
+    private void MakeCorner(int angle, Vector3 cornerOffset)
     {
         var rotation = Quaternion.Euler(0, angle, 0);
         Instantiate(cornerPiece,
-            rotation * new Vector3(-groundLayers * TileSeparation * 4, 0, groundLayers * TileSeparation * 4),
+            rotation * cornerOffset,
             rotation,
             surroundParentTransform);
     }
@@ -317,7 +324,6 @@ public class MapBuilder : MonoBehaviour
             tileParentTransform.transform);
     }
 
-
     private void PlaceGround()
     {
         for (var x = -groundLayers; x < groundLayers; x++)
@@ -341,7 +347,6 @@ public class MapBuilder : MonoBehaviour
             Quaternion.identity,
             groundParentTransform.transform);
     }
-
 
     private void MakeLevelObjectStatic()
     {
