@@ -122,7 +122,6 @@ public class MapQualitySettingsInspector : Editor
         }
 
         GUI.backgroundColor = Color.white;
-        GUI.enabled = true;
         GUILayout.EndVertical();
     }
 
