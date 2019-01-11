@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionBounces: 1
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
-  m_Sun: {fileID: 1352389043}
+  m_Sun: {fileID: 0}
   m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
@@ -553,7 +553,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1275767664}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.020271301, y: -0.0051555634, z: 100}
+  m_LocalPosition: {x: -36.02027, y: -0.0051555634, z: 100}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1290,6 +1290,10 @@ Prefab:
         type: 2}
       propertyPath: DefaultSimulatedPlayerCount
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1971737696589158, guid: a18c738cbcda9914591d9af24a618907, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a18c738cbcda9914591d9af24a618907, type: 2}

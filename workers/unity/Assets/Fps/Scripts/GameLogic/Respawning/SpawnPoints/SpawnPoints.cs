@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Fps
@@ -30,6 +31,33 @@ namespace Fps
             }
 
             return spawnPointList[Random.Range(0, spawnPointList.Length)];
+        }
+
+        public static SpawnPoint GetSpawnPointNearby(Vector3 position, float distance)
+        {
+            if (spawnPointList == null || spawnPointList.Length == 0)
+            {
+                Debug.LogWarning("No spawn points found - using origin.");
+                return new SpawnPoint();
+            }
+
+            var nearbySpawns = new List<SpawnPoint>();
+            var distSquared = distance * distance;
+
+            foreach (var spawn in spawnPointList)
+            {
+                if ((spawn.SpawnPosition - position).sqrMagnitude <= distSquared)
+                {
+                    nearbySpawns.Add(spawn);
+                }
+            }
+
+            if (nearbySpawns.Count == 0)
+            {
+                return GetRandomSpawnPoint();
+            }
+
+            return nearbySpawns[Random.Range(0, nearbySpawns.Count)];
         }
 
         private void Awake()
