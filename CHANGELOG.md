@@ -13,6 +13,7 @@
 
 - Improved the method of calculating load and FPS.
 - Upgraded to GDK for Unity version `0.1.3`
+- `MapBuilder.cs` performance and visual improvements, now generates worlds around the GameObject's position rather than at origin.
 
 ## `0.1.2` - 2018-11-02
 
