@@ -49,9 +49,9 @@ namespace Fps
 
             if (DisableRenderers)
             {
-                foreach (var renderer in levelInstance.GetComponentsInChildren<Renderer>())
+                foreach (var childRenderer in levelInstance.GetComponentsInChildren<Renderer>())
                 {
-                    renderer.enabled = false;
+                    childRenderer.enabled = false;
                 }
             }
         }

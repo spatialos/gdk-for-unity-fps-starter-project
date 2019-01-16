@@ -117,6 +117,11 @@ namespace Fps
             return deployments.Deployments[0].DeploymentName;
         }
 
+        protected override ConnectionService GetConnectionService()
+        {
+            throw new System.NotImplementedException();
+        }
+
         protected override void HandleWorkerConnectionEstablished()
         {
             var world = Worker.World;
