@@ -32,11 +32,10 @@ namespace Fps
 
         public static EntityTemplate SimulatedPlayerCoordinatorTrigger()
         {
-            var position = new Position.Snapshot { Coords = new Vector3().ToSpatialCoordinates() };
             var metadata = new Metadata.Snapshot { EntityType = "SimulatedPlayerCoordinatorTrigger" };
 
             var template = new EntityTemplate();
-            template.AddComponent(position, WorkerUtils.SimulatedPlayerCoorindator);
+            template.AddComponent(new Position.Snapshot(), WorkerUtils.SimulatedPlayerCoorindator);
             template.AddComponent(metadata, WorkerUtils.SimulatedPlayerCoorindator);
             template.AddComponent(new Persistence.Snapshot(), WorkerUtils.SimulatedPlayerCoorindator);
 
