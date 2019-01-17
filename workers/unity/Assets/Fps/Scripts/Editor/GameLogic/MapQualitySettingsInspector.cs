@@ -15,7 +15,7 @@ public class MapQualitySettingsInspector : Editor
     {
         activeQualityLevel = QualitySettings.GetQualityLevel();
 
-        var previewProp = serializedObject.FindProperty("Preview");
+        var previewProp = serializedObject.FindProperty("ShowPreview");
 
         RefreshQualityProperties();
 
@@ -43,7 +43,7 @@ public class MapQualitySettingsInspector : Editor
     {
         foreach (var t in targets)
         {
-            var tileSettings = t as MapQualitySettings;
+            var tileSettings = (MapQualitySettings) t;
             if (QualitiesPropertyMatchesProject(tileSettings))
             {
                 continue;
@@ -75,7 +75,7 @@ public class MapQualitySettingsInspector : Editor
 
     private void DrawTileQualityProperties()
     {
-        var settings = target as MapQualitySettings;
+        var settings = (MapQualitySettings) target;
         var qualitySettingsList = serializedObject.FindProperty("Settings");
         for (var i = 0; i < qualitySettingsList.arraySize; i++)
         {
@@ -103,7 +103,7 @@ public class MapQualitySettingsInspector : Editor
     {
         GUILayout.BeginVertical();
 
-        var settings = target as MapQualitySettings;
+        var settings = (MapQualitySettings) target;
 
         for (var i = 0; i < QualitySettings.names.Length; i++)
         {

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class MapQualitySettings : MonoBehaviour
 {
-    public bool Preview;
+    public bool ShowPreview;
 
     public const float DefaultCheckoutDistance = 300f;
     public const float DefaultCheckoutDistanceSquared = 300f * 300f;
@@ -14,7 +14,7 @@ public class MapQualitySettings : MonoBehaviour
 
     private static MapQualitySettings Instance;
     private float checkoutDistanceCache = -1;
-    public bool ShouldApplyDrawDistance => Preview || Application.isPlaying;
+    public bool ShouldApplyDrawDistance => ShowPreview || Application.isPlaying;
 
     public void OnValidate()
     {
