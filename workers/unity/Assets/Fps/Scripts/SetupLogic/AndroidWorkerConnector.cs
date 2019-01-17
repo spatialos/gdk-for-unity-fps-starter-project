@@ -119,7 +119,8 @@ namespace Fps
 
         protected override ConnectionService GetConnectionService()
         {
-            throw new System.NotImplementedException();
+            // TODO add cloud deployment option
+            return ConnectionService.Receptionist;
         }
 
         protected override void HandleWorkerConnectionEstablished()
