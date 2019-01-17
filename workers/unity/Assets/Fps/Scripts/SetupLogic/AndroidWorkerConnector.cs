@@ -119,7 +119,7 @@ namespace Fps
 
         protected override ConnectionService GetConnectionService()
         {
-            // TODO add cloud deployment option
+            // TODO UTY-1590: add cloud deployment option
             return ConnectionService.Receptionist;
         }
 
