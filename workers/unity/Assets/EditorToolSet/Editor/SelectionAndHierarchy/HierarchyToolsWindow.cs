@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
@@ -194,7 +195,7 @@ public class HierarchyToolsWindow : EditorWindow
         }
 
         var newGroup = new GameObject(_textFieldGroup);
-        newGroup.transform.parent = Selection.activeTransform;
+        newGroup.transform.parent = Selection.activeTransform.parent;
         newGroup.transform.localPosition = Vector3.zero;
         newGroup.transform.localRotation = Quaternion.identity;
 
