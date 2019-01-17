@@ -5,7 +5,7 @@ using Fps;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-[ExecuteInEditMode]
+[ExecuteInEditMode, RequireComponent(typeof(TileSettings))]
 public class MapBuilder : MonoBehaviour
 {
     public int Layers = 3;
@@ -98,22 +98,17 @@ public class MapBuilder : MonoBehaviour
 
     private void InitializeGroupsAndComponents()
     {
-        if (!gameObject.GetComponent<TileSettings>())
+        if (GetComponentInChildren<SpawnPoints>() == null)
         {
-            gameObject.AddComponent<TileSettings>();
-        }
-
-        if (!GetComponentInChildren<SpawnPoints>())
-        {
-            spawnPointSystemTransform = MakeGroup(SpawnPointSystemName);
+            spawnPointSystemTransform = MakeChildGroup(SpawnPointSystemName);
             spawnPointSystemTransform.gameObject.AddComponent<SpawnPoints>();
         }
 
-        groundParentTransform = MakeGroup(GroundParentName);
+        groundParentTransform = MakeChildGroup(GroundParentName);
 
-        surroundParentTransform = MakeGroup(SurroundParentName);
+        surroundParentTransform = MakeChildGroup(SurroundParentName);
 
-        tileParentTransform = MakeGroup(TileParentName);
+        tileParentTransform = MakeChildGroup(TileParentName);
         tileParentTransform.gameObject.AddComponent<TileCollapser>();
     }
 
@@ -180,7 +175,7 @@ public class MapBuilder : MonoBehaviour
         return false;
     }
 
-    private Transform MakeGroup(string groupName)
+    private Transform MakeChildGroup(string groupName)
     {
         var group = new GameObject(groupName).transform;
         group.parent = transform;
@@ -298,6 +293,8 @@ public class MapBuilder : MonoBehaviour
 
         var tileCount = Math.Pow(2 * Layers, 2);
 
+        // Tiles are built in a spiral manner from the centre outward to ensure increasing the # of tile layers doesn't
+        // alter the existing tile types.
         for (var i = 0; i < tileCount; i++)
         {
             // -layers < x <= layers AND -layers < y <= layers
