@@ -264,7 +264,7 @@ namespace Improbable.Gdk.DeploymentManager
                     return false;
                 }
 
-                var arguments = new List<string>
+                var arguments = new string[]
                 {
                     "cloud",
                     "upload",
@@ -273,17 +273,15 @@ namespace Improbable.Gdk.DeploymentManager
                     projectName
                 };
                 var processResult = await RedirectedProcess.RunInAsync(ProjectRootPath, Tools.Common.SpatialBinary,
-                    arguments.ToArray(), true, true);
+                    arguments, true, true);
                 if (processResult.ExitCode == 0)
                 {
                     Debug.Log($"Uploaded assembly {uploadAssemblyName} to project {projectName} successfully.");
                     return true;
                 }
-                else
-                {
-                    Debug.LogError($"Failed to upload assembly {uploadAssemblyName} to project {projectName}.");
-                    return false;
-                }
+
+                Debug.LogError($"Failed to upload assembly {uploadAssemblyName} to project {projectName}.");
+                return false;
             }
 
             private async Task<bool> TriggerLaunchDeploymentAsync()
@@ -342,11 +340,9 @@ namespace Improbable.Gdk.DeploymentManager
 
                     return false;
                 }
-                else
-                {
-                    Debug.Log($"Deployment {deployment.Name} stopped.");
-                    return true;
-                }
+
+                Debug.Log($"Deployment {deployment.Name} stopped.");
+                return true;
             }
 
             private async Task<List<DeploymentInfo>> TriggerListDeploymentsAsync()
@@ -397,27 +393,30 @@ namespace Improbable.Gdk.DeploymentManager
             {
                 var processResult = await RedirectedProcess.RunInAsync(DotNetWorkingDirectory,
                     Tools.Common.DotNetBinary, ConstructArguments(args), redirectStdout, true);
-                if (processResult.ExitCode != 0)
+
+                if (processResult.ExitCode == 0)
                 {
-                    // Examine the failure reason.
-                    var failureReason = processResult.Stdout.Count > 0 ? processResult.Stdout[0] : "";
-                    if (failureReason == "<error:unauthenticated>")
+                    return processResult;
+                }
+
+                // Examine the failure reason.
+                var failureReason = processResult.Stdout.Count > 0 ? processResult.Stdout[0] : "";
+                if (failureReason == "<error:unauthenticated>")
+                {
+                    // The reason this task failed is because we are authenticated. Try authenticating.
+                    Debug.Log(
+                        "Failed to connect to the SpatialOS platform due to being unauthenticated. Running `spatial auth login` then retrying the last operation...");
+                    var spatialAuthLoginResult = await RedirectedProcess.RunInAsync(DotNetWorkingDirectory,
+                        Tools.Common.SpatialBinary, new string[] { "auth", "login" }, false, true);
+                    if (spatialAuthLoginResult.ExitCode == 0)
                     {
-                        // The reason this task failed is because we are authenticated. Try authenticating.
-                        Debug.Log(
-                            "Failed to connect to the SpatialOS platform due to being unauthenticated. Running `spatial auth login` then retrying the last operation...");
-                        var spatialAuthLoginResult = await RedirectedProcess.RunInAsync(DotNetWorkingDirectory,
-                            Tools.Common.SpatialBinary, new string[] { "auth", "login" }, false, true);
-                        if (spatialAuthLoginResult.ExitCode == 0)
-                        {
-                            // Re-run the task.
-                            processResult = await RedirectedProcess.RunInAsync(DotNetWorkingDirectory,
-                                Tools.Common.DotNetBinary, ConstructArguments(args), false, true);
-                        }
-                        else
-                        {
-                            Debug.Log("Failed to run `spatial auth login`.");
-                        }
+                        // Re-run the task.
+                        processResult = await RedirectedProcess.RunInAsync(DotNetWorkingDirectory,
+                            Tools.Common.DotNetBinary, ConstructArguments(args), false, true);
+                    }
+                    else
+                    {
+                        Debug.Log("Failed to run `spatial auth login`.");
                     }
                 }
 
