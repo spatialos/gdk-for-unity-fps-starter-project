@@ -112,7 +112,7 @@ public class SimulatedPlayerWorkerConnector : DefaultWorkerConnector
         return config;
     }
 
-    protected override AlphaLocatorConfig GetAlphaLocatorConfig()
+    protected override AlphaLocatorConfig GetAlphaLocatorConfig(string workerType)
     {
         return new AlphaLocatorConfig
         {
