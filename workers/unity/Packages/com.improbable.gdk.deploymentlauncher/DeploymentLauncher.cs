@@ -1,14 +1,14 @@
-using Fps;
-using Improbable.Gdk.Core;
-using Improbable.Gdk.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Fps;
+using Improbable.Gdk.Core;
+using Improbable.Gdk.Tools;
 using UnityEditor;
 using UnityEngine;
-using System.Text.RegularExpressions;
 
 namespace Improbable.Gdk.DeploymentManager
 {
@@ -18,8 +18,12 @@ namespace Improbable.Gdk.DeploymentManager
         private const int DeploymentLauncherPriority = 51;
 
         private static readonly string DotNetProjectPath =
-            Path.GetFullPath(Path.Combine(Tools.Common.GetPackagePath("com.improbable.gdk.deploymentlauncher"), ".DeploymentLauncher/DeploymentLauncher.csproj"));
-        private static readonly string DotNetWorkingDirectory = Path.GetFullPath(Path.Combine(Application.dataPath, ".."));
+            Path.GetFullPath(Path.Combine(Tools.Common.GetPackagePath("com.improbable.gdk.deploymentlauncher"),
+                ".DeploymentLauncher/DeploymentLauncher.csproj"));
+
+        private static readonly string DotNetWorkingDirectory =
+            Path.GetFullPath(Path.Combine(Application.dataPath, ".."));
+
         private static readonly string ProjectRootPath =
             Path.Combine(Application.dataPath, "../../../");
 
@@ -53,28 +57,29 @@ namespace Improbable.Gdk.DeploymentManager
             private bool simPlayerDeploymentEnabled;
             private bool simPlayerCustomDeploymentNameEnabled;
 
-            List<DeploymentInfo> deploymentList;
-            int selectedDeployment;
+            private List<DeploymentInfo> deploymentList;
+            private int selectedDeployment;
 
             private Task<bool> runningUploadAssemblyTask;
             private Task<bool> runningLaunchTask;
             private Task<bool> runningStopTask;
             private Task<List<DeploymentInfo>> runningListTask;
 
-            void OnEnable()
+            private void OnEnable()
             {
                 deploymentList = new List<DeploymentInfo>();
             }
 
-            void OnGUI()
+            private void OnGUI()
             {
                 var newProjectName = EditorGUILayout.TextField("Project Name", projectName);
                 if (!string.Equals(newProjectName, projectName))
                 {
                     deploymentList.Clear();
                 }
+
                 projectName = newProjectName;
-                bool validProjectName = true;
+                var validProjectName = true;
                 if (!ValidateProjectName(projectName))
                 {
                     EditorGUILayout.HelpBox("Please specify a valid project name.", MessageType.Error);
@@ -85,13 +90,15 @@ namespace Improbable.Gdk.DeploymentManager
                 EditorGUILayout.Space();
                 EditorGUILayout.LabelField("Assembly", EditorStyles.boldLabel);
                 uploadAssemblyName = EditorGUILayout.TextField("Assembly Name", uploadAssemblyName).Trim();
-                bool validUploadAssembly = true;
+                var validUploadAssembly = true;
                 if (!ValidateAssemblyName(uploadAssemblyName))
                 {
                     EditorGUILayout.HelpBox("Please specify a valid assembly name.", MessageType.Error);
                     validUploadAssembly = false;
                 }
-                using (new EditorGUI.DisabledGroupScope(runningUploadAssemblyTask != null || !validUploadAssembly || !validProjectName))
+
+                using (new EditorGUI.DisabledGroupScope(runningUploadAssemblyTask != null || !validUploadAssembly ||
+                    !validProjectName))
                 {
                     if (GUILayout.Button("Upload Assembly"))
                     {
@@ -106,18 +113,24 @@ namespace Improbable.Gdk.DeploymentManager
                 deploymentName = EditorGUILayout.TextField("Deployment Name", deploymentName).Trim();
                 snapshotPath = EditorGUILayout.TextField("Snapshot Path", snapshotPath);
                 mainLaunchJson = EditorGUILayout.TextField("Config", mainLaunchJson);
-                using (var simPlayerDeploymentScope = new EditorGUILayout.ToggleGroupScope("Enable simulated players", simPlayerDeploymentEnabled))
+                using (var simPlayerDeploymentScope =
+                    new EditorGUILayout.ToggleGroupScope("Enable simulated players", simPlayerDeploymentEnabled))
                 {
                     simPlayerDeploymentEnabled = simPlayerDeploymentScope.enabled;
-                    using (var overrideNameScope = new EditorGUILayout.ToggleGroupScope("Override name", simPlayerCustomDeploymentNameEnabled))
+                    using (var overrideNameScope =
+                        new EditorGUILayout.ToggleGroupScope("Override name", simPlayerCustomDeploymentNameEnabled))
                     {
                         simPlayerCustomDeploymentNameEnabled = overrideNameScope.enabled;
-                        simPlayerDeploymentName = EditorGUILayout.TextField("Deployment Name", simPlayerCustomDeploymentNameEnabled ? simPlayerDeploymentName : deploymentName + "_sim_players");
+                        simPlayerDeploymentName = EditorGUILayout.TextField("Deployment Name",
+                            simPlayerCustomDeploymentNameEnabled
+                                ? simPlayerDeploymentName
+                                : deploymentName + "_sim_players");
                     }
+
                     simPlayerLaunchJson = EditorGUILayout.TextField("Config", simPlayerLaunchJson);
                 }
 
-                bool validLaunchParameters = true;
+                var validLaunchParameters = true;
                 if (!ValidateAssemblyName(assemblyName))
                 {
                     EditorGUILayout.HelpBox("Please specify a valid assembly name.", MessageType.Error);
@@ -130,10 +143,13 @@ namespace Improbable.Gdk.DeploymentManager
                 }
                 else if (simPlayerDeploymentEnabled && !ValidateDeploymentName(simPlayerDeploymentName))
                 {
-                    EditorGUILayout.HelpBox("Please specify a valid simulated players deployment name.", MessageType.Error);
+                    EditorGUILayout.HelpBox("Please specify a valid simulated players deployment name.",
+                        MessageType.Error);
                     validLaunchParameters = false;
                 }
-                using (new EditorGUI.DisabledGroupScope(runningLaunchTask != null || !validLaunchParameters || !validProjectName))
+
+                using (new EditorGUI.DisabledGroupScope(runningLaunchTask != null || !validLaunchParameters ||
+                    !validProjectName))
                 {
                     if (GUILayout.Button(simPlayerDeploymentEnabled ? "Launch deployments" : "Launch deployment"))
                     {
@@ -157,11 +173,12 @@ namespace Improbable.Gdk.DeploymentManager
                     }
                     else if (deploymentList != null && deploymentList.Count > 0)
                     {
-                        string[] deploymentNames = new string[deploymentList.Count];
+                        var deploymentNames = new string[deploymentList.Count];
                         for (var i = 0; i < deploymentList.Count; ++i)
                         {
                             deploymentNames[i] = deploymentList[i].Name;
                         }
+
                         selectedDeployment = EditorGUILayout.Popup(selectedDeployment, deploymentNames);
                     }
                     else
@@ -169,16 +186,20 @@ namespace Improbable.Gdk.DeploymentManager
                         EditorGUILayout.LabelField("no deployments");
                     }
                 }
+
                 using (new EditorGUILayout.HorizontalScope())
                 {
-                    using (new EditorGUI.DisabledGroupScope(runningListTask != null || runningStopTask != null || !validProjectName))
+                    using (new EditorGUI.DisabledGroupScope(runningListTask != null || runningStopTask != null ||
+                        !validProjectName))
                     {
                         if (GUILayout.Button("Refresh"))
                         {
                             runningListTask = TriggerListDeploymentsAsync();
                         }
                     }
-                    using (new EditorGUI.DisabledGroupScope(runningListTask != null || runningStopTask != null || deploymentList.Count == 0 || !validProjectName))
+
+                    using (new EditorGUI.DisabledGroupScope(runningListTask != null || runningStopTask != null ||
+                        deploymentList.Count == 0 || !validProjectName))
                     {
                         if (GUILayout.Button("Stop Deployment"))
                         {
@@ -188,7 +209,7 @@ namespace Improbable.Gdk.DeploymentManager
                 }
             }
 
-            void Update()
+            private void Update()
             {
                 if (runningUploadAssemblyTask != null && runningUploadAssemblyTask.IsCompleted)
                 {
@@ -211,8 +232,10 @@ namespace Improbable.Gdk.DeploymentManager
                     }
                     else
                     {
-                        Debug.LogError($"Failed to stop deployment {deploymentList[selectedDeployment].Name} with ID {deploymentList[selectedDeployment].Id}.");
+                        Debug.LogError(
+                            $"Failed to stop deployment {deploymentList[selectedDeployment].Name} with ID {deploymentList[selectedDeployment].Id}.");
                     }
+
                     runningStopTask = null;
                     Repaint();
                 }
@@ -228,6 +251,7 @@ namespace Improbable.Gdk.DeploymentManager
                     {
                         Debug.LogError("Failed to refresh deployments list.");
                     }
+
                     runningListTask = null;
                     Repaint();
                 }
@@ -240,14 +264,16 @@ namespace Improbable.Gdk.DeploymentManager
                     return false;
                 }
 
-                var arguments = new List<string>{
+                var arguments = new List<string>
+                {
                     "cloud",
                     "upload",
                     uploadAssemblyName,
                     "--project_name",
                     projectName
                 };
-                var processResult = await RedirectedProcess.RunInAsync(ProjectRootPath, Tools.Common.SpatialBinary, arguments.ToArray(), true, true);
+                var processResult = await RedirectedProcess.RunInAsync(ProjectRootPath, Tools.Common.SpatialBinary,
+                    arguments.ToArray(), true, true);
                 if (processResult.ExitCode == 0)
                 {
                     Debug.Log($"Uploaded assembly {uploadAssemblyName} to project {projectName} successfully.");
@@ -268,7 +294,8 @@ namespace Improbable.Gdk.DeploymentManager
                 }
 
                 var simSnapshotPath = GenerateTempSnapshot();
-                var arguments = new List<string>{
+                var arguments = new List<string>
+                {
                     "create",
                     projectName,
                     assemblyName,
@@ -286,7 +313,8 @@ namespace Improbable.Gdk.DeploymentManager
                     });
                 }
 
-                var processResult = await RedirectedProcess.RunInAsync(DotNetWorkingDirectory, Tools.Common.DotNetBinary, ConstructArguments(arguments), true, true);
+                var processResult = await RedirectedProcess.RunInAsync(DotNetWorkingDirectory,
+                    Tools.Common.DotNetBinary, ConstructArguments(arguments), true, true);
                 return processResult.ExitCode != 0;
             }
 
@@ -297,7 +325,8 @@ namespace Improbable.Gdk.DeploymentManager
                     return false;
                 }
 
-                var arguments = new List<string>{
+                var arguments = new List<string>
+                {
                     "stop",
                     projectName,
                     deployment.Id
@@ -307,8 +336,10 @@ namespace Improbable.Gdk.DeploymentManager
                 {
                     if (processResult.Stdout.Count > 0 && processResult.Stdout[0] == "<error:unknown-deployment>")
                     {
-                        Debug.LogError($"Unable to stop deployment {deployment.Name}. Has the deployment been stopped already?");
+                        Debug.LogError(
+                            $"Unable to stop deployment {deployment.Name}. Has the deployment been stopped already?");
                     }
+
                     return false;
                 }
                 else
@@ -325,7 +356,8 @@ namespace Improbable.Gdk.DeploymentManager
                     return null;
                 }
 
-                var arguments = new List<string> {
+                var arguments = new List<string>
+                {
                     "list",
                     projectName
                 };
@@ -344,22 +376,27 @@ namespace Improbable.Gdk.DeploymentManager
                     {
                         continue;
                     }
+
                     if (tokens[0] != "<deployment>")
                     {
                         continue;
                     }
+
                     deploymentList.Add(new DeploymentInfo
                     {
                         Id = tokens[1],
                         Name = tokens[2]
                     });
                 }
+
                 return deploymentList.OrderBy(o => o.Name).ToList();
             }
 
-            private async Task<RedirectedProcessResult> RunDeploymentLauncherHelperAsync(List<string> args, bool redirectStdout = false)
+            private async Task<RedirectedProcessResult> RunDeploymentLauncherHelperAsync(List<string> args,
+                bool redirectStdout = false)
             {
-                var processResult = await RedirectedProcess.RunInAsync(DotNetWorkingDirectory, Tools.Common.DotNetBinary, ConstructArguments(args), redirectStdout, true);
+                var processResult = await RedirectedProcess.RunInAsync(DotNetWorkingDirectory,
+                    Tools.Common.DotNetBinary, ConstructArguments(args), redirectStdout, true);
                 if (processResult.ExitCode != 0)
                 {
                     // Examine the failure reason.
@@ -367,12 +404,15 @@ namespace Improbable.Gdk.DeploymentManager
                     if (failureReason == "<error:unauthenticated>")
                     {
                         // The reason this task failed is because we are authenticated. Try authenticating.
-                        Debug.Log("Failed to connect to the SpatialOS platform due to being unauthenticated. Running `spatial auth login` then retrying the last operation...");
-                        var spatialAuthLoginResult = await RedirectedProcess.RunInAsync(DotNetWorkingDirectory, Tools.Common.SpatialBinary, new string[] { "auth", "login" }, false, true);
+                        Debug.Log(
+                            "Failed to connect to the SpatialOS platform due to being unauthenticated. Running `spatial auth login` then retrying the last operation...");
+                        var spatialAuthLoginResult = await RedirectedProcess.RunInAsync(DotNetWorkingDirectory,
+                            Tools.Common.SpatialBinary, new string[] { "auth", "login" }, false, true);
                         if (spatialAuthLoginResult.ExitCode == 0)
                         {
                             // Re-run the task.
-                            processResult = await RedirectedProcess.RunInAsync(DotNetWorkingDirectory, Tools.Common.DotNetBinary, ConstructArguments(args), false, true);
+                            processResult = await RedirectedProcess.RunInAsync(DotNetWorkingDirectory,
+                                Tools.Common.DotNetBinary, ConstructArguments(args), false, true);
                         }
                         else
                         {
@@ -380,6 +420,7 @@ namespace Improbable.Gdk.DeploymentManager
                         }
                     }
                 }
+
                 return processResult;
             }
 
@@ -389,6 +430,7 @@ namespace Improbable.Gdk.DeploymentManager
                 {
                     return false;
                 }
+
                 return Regex.Match(projectName, "^[a-z0-9_]{3,32}$").Success;
             }
 
@@ -398,6 +440,7 @@ namespace Improbable.Gdk.DeploymentManager
                 {
                     return false;
                 }
+
                 return Regex.Match(assemblyName, "^[a-zA-Z0-9_.-]{5,64}$").Success;
             }
 
@@ -407,14 +450,15 @@ namespace Improbable.Gdk.DeploymentManager
                 {
                     return false;
                 }
+
                 return Regex.Match(deploymentName, "^[a-z0-9_]{2,32}$").Success;
             }
 
             private static string GenerateTempSnapshot()
             {
-                string snapshotPath = FileUtil.GetUniqueTempPathInProject();
+                var snapshotPath = FileUtil.GetUniqueTempPathInProject();
 
-                Snapshot snapshot = new Snapshot();
+                var snapshot = new Snapshot();
                 var simulatedPlayerCoordinatorTrigger = FpsEntityTemplates.SimulatedPlayerCoordinatorTrigger();
                 snapshot.AddEntity(simulatedPlayerCoordinatorTrigger);
                 snapshot.WriteToFile(snapshotPath);
@@ -425,12 +469,12 @@ namespace Improbable.Gdk.DeploymentManager
             private static string[] ConstructArguments(List<string> args)
             {
                 var baseArgs = new List<string>
-                    {
-                        "run",
-                        "-p",
-                        $"\"{DotNetProjectPath}\"",
-                        "--",
-                    };
+                {
+                    "run",
+                    "-p",
+                    $"\"{DotNetProjectPath}\"",
+                    "--",
+                };
                 baseArgs.AddRange(args.Select(arg => $"\"{arg}\""));
                 return baseArgs.ToArray();
             }
