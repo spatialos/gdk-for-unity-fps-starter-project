@@ -65,6 +65,7 @@ namespace Fps
 
             if (EditorGUI.EndChangeCheck())
             {
+                EditorUtility.SetDirty(target);
                 settings.Apply();
             }
         }
