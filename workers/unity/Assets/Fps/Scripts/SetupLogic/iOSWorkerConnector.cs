@@ -8,9 +8,9 @@ using Improbable.Gdk.Mobile;
 using Improbable.Gdk.PlayerLifecycle;
 using Improbable.Worker.CInterop;
 using UnityEngine;
+
 #if UNITY_IOS
 using Improbable.Gdk.Mobile.iOS;
-
 #endif
 
 namespace Fps
@@ -73,22 +73,11 @@ namespace Fps
                 return IpAddress;
             }
 
-            if (Application.isMobilePlatform && iOSDeviceInfo.ActiveDeviceType == MobileDeviceType.Virtual)
-            {
-                // TODO What should this return? No "EmulatorDefaultCallbackIp" in iOSDeviceInfo
-                return "127.0.0.1";
-            }
-
             return RuntimeConfigDefaults.ReceptionistHost;
 #else
             throw new System.PlatformNotSupportedException(
                 $"{nameof(iOSWorkerConnector)} can only be used for the iOS platform. Please check your build settings.");
 #endif
-        }
-
-        protected virtual string GetWorkerType()
-        {
-            return WorkerUtils.iOSClient;
         }
 
         public async void Reconnect()
@@ -98,7 +87,7 @@ namespace Fps
 
         protected async Task AttemptConnect()
         {
-            await Connect(GetWorkerType(), new ForwardingDispatcher()).ConfigureAwait(false);
+            await Connect(WorkerUtils.iOSClient, new ForwardingDispatcher()).ConfigureAwait(false);
         }
 
         protected override string SelectDeploymentName(DeploymentList deployments)
@@ -151,7 +140,7 @@ namespace Fps
             {
                 workerSystem.LogDispatcher.HandleLog(LogType.Error,
                     new LogEvent(
-                            "Invalid world_size worker flag. Make sure that it is either small, medium, or large,")
+                            "Invalid world_size worker flag. Make sure that it is either 'small' or 'large'.")
                         .WithField("world_size", worldSize));
                 return;
             }
@@ -160,7 +149,8 @@ namespace Fps
 
             if (levelToLoad == null)
             {
-                Debug.LogError("The level to be instantiated is null.");
+                workerSystem.LogDispatcher.HandleLog(LogType.Error,
+                    new LogEvent("The level to be instantiated is null."));
                 return;
             }
 
