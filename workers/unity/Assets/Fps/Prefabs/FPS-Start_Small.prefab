@@ -16969,7 +16969,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4593588597980260}
   - component: {fileID: 114510325225411918}
-  - component: {fileID: 114318739149958698}
   m_Layer: 0
   m_Name: FPS-Start_Small
   m_TagString: Untagged
@@ -125283,25 +125282,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbd12cde1ebf5034ebd7051385e8bac5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114318739149958698
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1613497914398450}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d869842b8568ab6458c57740ee127490, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Preview: 0
-  Settings:
-  - QualityName: Low
-    CheckoutDistance: 150
-  - QualityName: Medium
-    CheckoutDistance: 225
-  - QualityName: High
-    CheckoutDistance: 300
 --- !u!114 &114322696950680568
 MonoBehaviour:
   m_ObjectHideFlags: 1
