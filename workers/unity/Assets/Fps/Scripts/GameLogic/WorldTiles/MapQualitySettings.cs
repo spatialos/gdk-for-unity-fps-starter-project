@@ -1,96 +1,136 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
-using Fps;
 using UnityEngine;
 
-public class MapQualitySettings : MonoBehaviour
+namespace Fps
 {
-    public bool ShowPreview;
-
-    public const float DefaultCheckoutDistance = 300f;
-    public const float DefaultCheckoutDistanceSquared = 300f * 300f;
-    public static float CheckoutDistance => Instance.CheckoutDistanceInternal;
-    public List<MapQualityLevelData> Settings = new List<MapQualityLevelData>();
-
-    private static MapQualitySettings Instance;
-    private float checkoutDistanceCache = -1;
-    public bool ShouldApplyDrawDistance => ShowPreview || Application.isPlaying;
-
-    public void OnValidate()
+    [CreateAssetMenu(fileName = "MapQualitySettings", menuName = "Improbable/Map Quality Settings")]
+    public class MapQualitySettings : ScriptableObject
     {
-        ApplyCheckoutDistance();
-    }
+        public const float DefaultCheckoutDistance = 60f;
 
-    private void Awake()
-    {
-        Instance = this;
-        ApplyCheckoutDistance();
-    }
+        public static bool ShowPreview;
+        public List<MapQualityLevelData> Settings = new List<MapQualityLevelData>();
 
-    public void ApplyCheckoutDistance()
-    {
-        checkoutDistanceCache = -1;
+        private static MapQualitySettings instance;
+        private float checkoutDistanceCache = -1;
 
-        var value = ShouldApplyDrawDistance
-            ? CheckoutDistanceInternal
-            : -1;
+        public static float CheckoutDistance => Instance.CheckoutDistanceInternal;
 
-        Shader.SetGlobalFloat("_GlobalClipDistance", value);
-
-        if (Application.isEditor)
+        public static MapQualitySettings Instance
         {
-            ApplyCheckoutDistanceToTiles();
-        }
-    }
-
-    private float CheckoutDistanceInternal
-    {
-        get
-        {
-            if (checkoutDistanceCache > 0)
+            get
             {
-                return checkoutDistanceCache;
-            }
-
-            var activeQualityLevelName = QualitySettings.names[QualitySettings.GetQualityLevel()];
-            foreach (var setting in Settings)
-            {
-                if (setting.QualityName != activeQualityLevelName)
+                if (instance == null)
                 {
-                    continue;
+                    CreateDefaultInstance();
                 }
 
-                checkoutDistanceCache = setting.CheckoutDistance;
-                return checkoutDistanceCache;
+                return instance;
             }
 
-            Debug.LogWarning(
-                $"No checkout distance found in settings! Using default value of {DefaultCheckoutDistance}");
-            checkoutDistanceCache = DefaultCheckoutDistance;
-            return DefaultCheckoutDistance;
+            set
+            {
+                if (value == null)
+                {
+                    CreateDefaultInstance();
+                }
+                else
+                {
+                    instance = value;
+                    instance.Apply();
+                }
+            }
         }
-    }
 
-    #region Editor functions
-
-    private void ApplyCheckoutDistanceToTiles()
-    {
-        var value = ShouldApplyDrawDistance
-            ? CheckoutDistanceInternal
-            : -1;
-
-        foreach (var tile in FindObjectsOfType<TileEnabler>())
+        private static void CreateDefaultInstance()
         {
-            tile.CheckoutDistance = value;
+            Debug.LogWarning("MapQualitySettings: No settings specified. To fix this, use a " +
+                "MapQualitySettingsPublisher and ensure it has a MapQualitySettings reference.\n");
+
+            instance = CreateInstance<MapQualitySettings>();
+            instance.Apply();
         }
+
+        private float CheckoutDistanceInternal
+        {
+            get
+            {
+                if (!Application.isPlaying && !ShowPreview)
+                {
+                    return -1;
+                }
+
+                if (checkoutDistanceCache > 0)
+                {
+                    return checkoutDistanceCache;
+                }
+
+                var activeQualityLevelName = QualitySettings.names[QualitySettings.GetQualityLevel()];
+                foreach (var setting in Settings)
+                {
+                    if (setting.QualityName != activeQualityLevelName)
+                    {
+                        continue;
+                    }
+
+                    checkoutDistanceCache = setting.CheckoutDistance;
+                    return checkoutDistanceCache;
+                }
+
+                Debug.LogWarning($"Using default draw distance of {DefaultCheckoutDistance} for ALL quality levels.\n");
+                checkoutDistanceCache = DefaultCheckoutDistance;
+                return checkoutDistanceCache;
+            }
+        }
+
+
+        public void Apply()
+        {
+            checkoutDistanceCache = -1; // Force a checkout distance calculation based on project Quality level
+            Shader.SetGlobalFloat("_GlobalClipDistance", CheckoutDistanceInternal);
+            var tiles = FindObjectsOfType<TileEnabler>();
+            foreach (var tile in tiles)
+            {
+                tile.CheckoutDistance = CheckoutDistanceInternal;
+            }
+        }
+
+#if UNITY_EDITOR
+        // These functions ensure the shader clipping gets reset when the game returns to editor
+        private void OnEnable()
+        {
+            UnityEditor.EditorApplication.playModeStateChanged += PlayModeStateChanged;
+        }
+
+        private void OnDisable()
+        {
+            UnityEditor.EditorApplication.playModeStateChanged -= PlayModeStateChanged;
+            RestoreClipDistance();
+        }
+
+        private void PlayModeStateChanged(UnityEditor.PlayModeStateChange stateChange)
+        {
+            if (stateChange != UnityEditor.PlayModeStateChange.EnteredEditMode)
+            {
+                return;
+            }
+
+            RestoreClipDistance();
+        }
+
+        private void RestoreClipDistance()
+        {
+            Shader.SetGlobalFloat("_GlobalClipDistance", -1);
+            ShowPreview = false;
+        }
+#endif
     }
 
-    #endregion
-}
-
-[Serializable]
-public class MapQualityLevelData
-{
-    public string QualityName;
-    public float CheckoutDistance;
+    [Serializable]
+    public class MapQualityLevelData
+    {
+        public string QualityName;
+        public float CheckoutDistance;
+    }
 }
