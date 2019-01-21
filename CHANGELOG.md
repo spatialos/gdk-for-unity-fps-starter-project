@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Changed
+
+- `MapBuilder.cs` performance and visual improvements, now generates worlds around the GameObject's position rather than at origin.
+
 ## `0.1.3` - 2018-11-26
 
 ### Added
