@@ -5,6 +5,7 @@
 ### Changed
 
 - Updated all the launch configs to better match the world sizes and to use the new Runtime.
+- `MapBuilder.cs` performance and visual improvements, now generates worlds around the GameObject's position rather than at origin.
 
 ### Fixed
 
