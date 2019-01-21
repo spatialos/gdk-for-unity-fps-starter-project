@@ -1,11 +1,12 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Fps;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.PlayerLifecycle;
-using Improbable.Worker.CInterop;
 using Improbable.Worker.CInterop.Alpha;
 using UnityEngine;
 
@@ -16,66 +17,28 @@ public class SimulatedPlayerWorkerConnector : DefaultWorkerConnector
 
     private ILogDispatcher simulatedCoordinatorLogDispatcher;
     private bool connectToRemoteDeployment;
-    private string loginToken;
-    private string playerIdentityToken;
 
-    public async Task ConnectSimulatedPlayer(ILogDispatcher logDispatcher, string SimulatedPlayerDevAuthTokenId, string SimulatedPlayerTargetDeployment)
+    private string simulatedPlayerDevAuthTokenId;
+    private string simulatedPlayerTargetDeployment;
+
+    public async Task ConnectSimulatedPlayer(ILogDispatcher logDispatcher, string simulatedPlayerDevAuthTokenId,
+        string simulatedPlayerTargetDeployment)
     {
         simulatedCoordinatorLogDispatcher = logDispatcher;
 
         // If we're connecting simulated players to another deployment, we need to fetch locator tokens.
-        if (!string.IsNullOrEmpty(SimulatedPlayerTargetDeployment))
+        if (!string.IsNullOrEmpty(simulatedPlayerTargetDeployment))
         {
-            if (string.IsNullOrEmpty(SimulatedPlayerDevAuthTokenId))
+            if (string.IsNullOrEmpty(simulatedPlayerDevAuthTokenId))
             {
-                logDispatcher.HandleLog(LogType.Error, new LogEvent("Failed to launch simulated player. No development authentication token specified."));
+                logDispatcher.HandleLog(LogType.Error,
+                    new LogEvent("Failed to launch simulated player. No development authentication token specified."));
                 return;
             }
 
-            // Obtain player identity token for simulated player.
-            var playerIdentityTokenResponse = DevelopmentAuthentication.CreateDevelopmentPlayerIdentityTokenAsync("locator.improbable.io", 444,
-                new PlayerIdentityTokenRequest
-                {
-                    DevelopmentAuthenticationTokenId = SimulatedPlayerDevAuthTokenId,
-                    DisplayName = "",
-                    PlayerId = "SimulatedPlayer"
-                }).Get();
-            if (playerIdentityTokenResponse.Value.Status != ConnectionStatusCode.Success)
-            {
-                logDispatcher.HandleLog(LogType.Error, new LogEvent("Failed to launch simulated player. Failed to obtain player identity token. Reason: " + playerIdentityTokenResponse?.Error));
-                return;
-            }
-            playerIdentityToken = playerIdentityTokenResponse?.PlayerIdentityToken;
+            this.simulatedPlayerDevAuthTokenId = simulatedPlayerDevAuthTokenId;
+            this.simulatedPlayerTargetDeployment = simulatedPlayerTargetDeployment;
 
-            // Obtain login token for simulated player.
-            var loginTokenResponse = DevelopmentAuthentication.CreateDevelopmentLoginTokensAsync("locator.improbable.io", 444,
-                new LoginTokensRequest
-                {
-                    PlayerIdentityToken = playerIdentityToken,
-                    WorkerType = WorkerUtils.UnityClient,
-                    DurationSeconds = 600
-                }).Get();
-            if (loginTokenResponse.Value.Status != ConnectionStatusCode.Success)
-            {
-                logDispatcher.HandleLog(LogType.Error, new LogEvent("Failed to launch simulated player. Failed to obtain login tokens. Reason: " + loginTokenResponse?.Error));
-                return;
-            }
-            if (loginTokenResponse?.LoginTokens != null)
-            {
-                foreach (var loginTokenDetails in loginTokenResponse.Value.LoginTokens)
-                {
-                    if (loginTokenDetails.DeploymentName == SimulatedPlayerTargetDeployment)
-                    {
-                        loginToken = loginTokenDetails.LoginToken;
-                    }
-                }
-            }
-
-            if (loginToken == null)
-            {
-                logDispatcher.HandleLog(LogType.Error, new LogEvent("Failed to launch simulated player. Login token for target deployment was not found in response. Does that deployment have the `dev_auth` tag?"));
-                return;
-            }
 
             connectToRemoteDeployment = true;
         }
@@ -114,17 +77,36 @@ public class SimulatedPlayerWorkerConnector : DefaultWorkerConnector
 
     protected override AlphaLocatorConfig GetAlphaLocatorConfig(string workerType)
     {
+        var pit = GetDevelopmentPlayerIdentityToken(simulatedPlayerDevAuthTokenId, "SimulatedPlayer", GetDisplayName());
+        var loginTokens = GetDevelopmentLoginTokens(workerType, pit);
+        var loginToken = SelectLoginToken(loginTokens);
+
         return new AlphaLocatorConfig
         {
-            LocatorHost = "locator.improbable.io",
-            LocatorParameters = new Improbable.Worker.CInterop.Alpha.LocatorParameters
+            LocatorHost = RuntimeConfigDefaults.LocatorHost,
+            LocatorParameters = new LocatorParameters
             {
                 PlayerIdentity = new PlayerIdentityCredentials
                 {
                     LoginToken = loginToken,
-                    PlayerIdentityToken = playerIdentityToken,
+                    PlayerIdentityToken = pit
                 }
             }
         };
+    }
+
+    protected override string SelectLoginToken(List<LoginTokenDetails> loginTokens)
+    {
+        var selectedLoginToken = loginTokens.First(token => token.DeploymentName == simulatedPlayerTargetDeployment)
+            .LoginToken;
+
+        if (selectedLoginToken == null)
+        {
+            simulatedCoordinatorLogDispatcher.HandleLog(LogType.Error,
+                new LogEvent(
+                    "Failed to launch simulated player. Login token for target deployment was not found in response. Does that deployment have the `dev_auth` tag?"));
+        }
+
+        return selectedLoginToken;
     }
 }
