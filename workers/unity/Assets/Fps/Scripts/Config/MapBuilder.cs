@@ -22,8 +22,8 @@ namespace Fps
         private const int boundaryCollisionHeight = 16;
 
         // Store the half-value as many calculations are simplified by going from -halfNumGroundLayers to halfNumGroundLayers.
-        private int HalfNumGroundLayers => (Layers - 1) / TilesPerGroundLayer + 1;
-        private int UnitsPerGroundLayer => TilesPerGroundLayer * UnitsPerTile;
+        private int halfNumGroundLayers => (Layers - 1) / TilesPerGroundLayer + 1;
+        private int unitsPerGroundLayer => TilesPerGroundLayer * UnitsPerTile;
 
         private GameObject[] centreTiles;
         private GameObject[] levelTiles;
@@ -59,7 +59,7 @@ namespace Fps
 #if UNITY_EDITOR
         public void CleanAndBuild()
         {
-            if (TryLoadResources() == false)
+            if (!TryLoadResources())
             {
                 Debug.LogError("Generation aborted (See previous message)");
                 return;
@@ -87,7 +87,7 @@ namespace Fps
             // four tiles per groundLayer,
             // number of ground tiles is 2 * groundLayers
             // This value gives total tile-space including empty tiles around edge.
-            var numTotalTilesWide = HalfNumGroundLayers * 2 * TilesPerGroundLayer;
+            var numTotalTilesWide = halfNumGroundLayers * 2 * TilesPerGroundLayer;
 
             Debug.Log("Finished building world\nClick for details..." +
                 "\n\tPlayable space" +
@@ -158,7 +158,7 @@ namespace Fps
 
             if (levelTiles.Length <= 0)
             {
-                Debug.LogError($"Failed to load resource at Resources/{LevelTilePath}");
+                Debug.LogError($"Failed to load any resources at Resources/{LevelTilePath}");
                 return false;
             }
 
@@ -189,12 +189,12 @@ namespace Fps
 
         private void FillSurround()
         {
-            for (var groundLayerIndex = -HalfNumGroundLayers;
-                groundLayerIndex < HalfNumGroundLayers;
+            for (var groundLayerIndex = -halfNumGroundLayers;
+                groundLayerIndex < halfNumGroundLayers;
                 groundLayerIndex++)
             {
-                float offset = groundLayerIndex * UnitsPerGroundLayer;
-                offset += UnitsPerGroundLayer * .5f; // centre is half-distance across the ground layer
+                float offset = groundLayerIndex * unitsPerGroundLayer;
+                offset += unitsPerGroundLayer * .5f; // centre is half-distance across the ground layer
                 MakeEdge(offset, 0);
                 MakeEdge(offset, 90);
                 MakeEdge(offset, 180);
@@ -204,8 +204,8 @@ namespace Fps
             var cornerOffset =
                 new Vector3
                 {
-                    x = HalfNumGroundLayers * -UnitsPerGroundLayer,
-                    z = HalfNumGroundLayers * UnitsPerGroundLayer
+                    x = halfNumGroundLayers * -unitsPerGroundLayer,
+                    z = halfNumGroundLayers * unitsPerGroundLayer
                 };
 
             for (var i = 0; i < 360; i += 90)
@@ -222,11 +222,11 @@ namespace Fps
                 rotation * new Vector3(
                     offset,
                     0,
-                    HalfNumGroundLayers * UnitsPerGroundLayer + UnitsPerBlock * 0.25f),
+                    halfNumGroundLayers * unitsPerGroundLayer + UnitsPerBlock * 0.25f),
                 rotation * Quaternion.Euler(90, 0, 0),
                 groundParentTransform);
             floor.transform.localScale = new Vector3(
-                UnitsPerGroundLayer,
+                unitsPerGroundLayer,
                 UnitsPerBlock * .5f,
                 1);
 
@@ -234,11 +234,11 @@ namespace Fps
                 rotation * new Vector3(
                     offset,
                     UnitsPerBlock * .5f,
-                    HalfNumGroundLayers * UnitsPerGroundLayer + UnitsPerBlock * .5f),
+                    halfNumGroundLayers * unitsPerGroundLayer + UnitsPerBlock * .5f),
                 rotation,
                 surroundParentTransform);
             wall.transform.localScale = new Vector3(
-                UnitsPerGroundLayer,
+                unitsPerGroundLayer,
                 UnitsPerBlock,
                 1);
 
@@ -246,11 +246,11 @@ namespace Fps
                 rotation * new Vector3(
                     offset,
                     UnitsPerBlock,
-                    HalfNumGroundLayers * UnitsPerGroundLayer + UnitsPerBlock),
+                    halfNumGroundLayers * unitsPerGroundLayer + UnitsPerBlock),
                 rotation * Quaternion.Euler(90, 0, 0),
                 surroundParentTransform);
             wallFloor.transform.localScale = new Vector3(
-                UnitsPerGroundLayer,
+                unitsPerGroundLayer,
                 UnitsPerBlock,
                 1);
 
@@ -259,12 +259,12 @@ namespace Fps
                 rotation * new Vector3(
                     offset,
                     UnitsPerBlock + boundaryCollisionHeight * .5f,
-                    HalfNumGroundLayers * UnitsPerGroundLayer + UnitsPerBlock * .5f),
+                    halfNumGroundLayers * unitsPerGroundLayer + UnitsPerBlock * .5f),
                 rotation,
                 surroundParentTransform);
             collision.transform.localScale =
                 new Vector3(
-                    UnitsPerGroundLayer + UnitsPerBlock, // Collisions overlap to fill corners
+                    unitsPerGroundLayer + UnitsPerBlock, // Collisions overlap to fill corners
                     boundaryCollisionHeight,
                     1);
             collision.gameObject.name = "Collision";
@@ -368,9 +368,9 @@ namespace Fps
 
         private void PlaceGround()
         {
-            for (var x = -HalfNumGroundLayers; x < HalfNumGroundLayers; x++)
+            for (var x = -halfNumGroundLayers; x < halfNumGroundLayers; x++)
             {
-                for (var z = -HalfNumGroundLayers; z < HalfNumGroundLayers; z++)
+                for (var z = -halfNumGroundLayers; z < halfNumGroundLayers; z++)
                 {
                     PlaceGroundTile(x, z);
                 }
@@ -383,8 +383,8 @@ namespace Fps
                 groundTile,
                 new Vector3
                 {
-                    x = groundX * UnitsPerGroundLayer + UnitsPerGroundLayer * .5f,
-                    z = groundZ * UnitsPerGroundLayer + UnitsPerGroundLayer * .5f
+                    x = groundX * unitsPerGroundLayer + unitsPerGroundLayer * .5f,
+                    z = groundZ * unitsPerGroundLayer + unitsPerGroundLayer * .5f
                 },
                 Quaternion.identity,
                 groundParentTransform.transform);
