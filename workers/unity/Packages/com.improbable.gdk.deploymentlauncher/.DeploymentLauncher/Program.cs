@@ -249,7 +249,7 @@ namespace Improbable
             {
                 if (deployment.Status == Deployment.Types.Status.Running)
                 {
-                    Console.WriteLine("<deployment> " + deployment.Id + " " + deployment.Name);
+                    Console.WriteLine($"<deployment> {deployment.Id} {deployment.Name}");
                 }
             }
 
@@ -260,9 +260,9 @@ namespace Improbable
         {
             Console.WriteLine("Usage:");
             Console.WriteLine(
-                "DeploymentManager.exe create <project-name> <assembly-name> <main-deployment-name> <main-deployment-json> <main-deployment-snapshot> [<sim-deployment-name> <sim-deployment-json> <sim-deployment-snapshot>]");
-            Console.WriteLine("DeploymentManager.exe stop <project-name> <deployment-id>");
-            Console.WriteLine("DeploymentManager.exe list <project-name>");
+                "DeploymentManager create <project-name> <assembly-name> <main-deployment-name> <main-deployment-json> <main-deployment-snapshot> [<sim-deployment-name> <sim-deployment-json> <sim-deployment-snapshot>]");
+            Console.WriteLine("DeploymentManager stop <project-name> <deployment-id>");
+            Console.WriteLine("DeploymentManager list <project-name>");
         }
 
         private static int Main(string[] args)
