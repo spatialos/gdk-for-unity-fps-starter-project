@@ -12,7 +12,8 @@ namespace Improbable
 {
     internal class Program
     {
-        private static string UploadSnapshot(SnapshotServiceClient client, string snapshotPath, string projectName, string deploymentName)
+        private static string UploadSnapshot(SnapshotServiceClient client, string snapshotPath, string projectName,
+            string deploymentName)
         {
             Console.WriteLine($"Uploading {snapshotPath} to project {projectName}");
 
@@ -35,7 +36,9 @@ namespace Improbable
                 snapshotToUpload.Checksum = Convert.ToBase64String(md5.ComputeHash(bytes));
                 snapshotToUpload.Size = bytes.Length;
             }
-            var uploadSnapshotResponse = client.UploadSnapshot(new UploadSnapshotRequest {Snapshot = snapshotToUpload});
+
+            var uploadSnapshotResponse =
+                client.UploadSnapshot(new UploadSnapshotRequest { Snapshot = snapshotToUpload });
             snapshotToUpload = uploadSnapshotResponse.Snapshot;
 
             // Upload content.
@@ -73,7 +76,8 @@ namespace Improbable
             var simDeploymentName = "";
             var simDeploymentJson = "";
             var simDeploymentSnapshotFilePath = "";
-            if (launchSimPlayerDeployment) {
+            if (launchSimPlayerDeployment)
+            {
                 simDeploymentName = args[6];
                 simDeploymentJson = args[7];
                 simDeploymentSnapshotFilePath = args[8];
@@ -93,11 +97,12 @@ namespace Improbable
                 {
                     return 1;
                 }
+
                 var simSnapshotId = "";
                 if (launchSimPlayerDeployment)
                 {
                     simSnapshotId = UploadSnapshot(snapshotServiceClient, simDeploymentSnapshotFilePath, projectName,
-                    simDeploymentName);
+                        simDeploymentName);
                     if (simSnapshotId.Length == 0)
                     {
                         return 1;
@@ -122,6 +127,7 @@ namespace Improbable
                     // tokens generated with anonymous auth.
                     mainDeploymentConfig.Tag.Add("dev_login");
                 }
+
                 Console.WriteLine(
                     $"Creating the main deployment {mainDeploymentName} in project {projectName} with snapshot ID {mainSnapshotId}.");
                 var mainDeploymentCreateOp = deploymentServiceClient.CreateDeployment(new CreateDeploymentRequest
@@ -188,7 +194,8 @@ namespace Improbable
             {
                 if (e.Status.StatusCode == Grpc.Core.StatusCode.NotFound)
                 {
-                    Console.WriteLine($"Unable to launch the deployment(s). This is likely because the project '{projectName}' or assembly '{assemblyName}' doesn't exist.");
+                    Console.WriteLine(
+                        $"Unable to launch the deployment(s). This is likely because the project '{projectName}' or assembly '{assemblyName}' doesn't exist.");
                 }
                 else
                 {
@@ -252,7 +259,8 @@ namespace Improbable
         private static void ShowUsage()
         {
             Console.WriteLine("Usage:");
-            Console.WriteLine("DeploymentManager.exe create <project-name> <assembly-name> <main-deployment-name> <main-deployment-json> <main-deployment-snapshot> [<sim-deployment-name> <sim-deployment-json> <sim-deployment-snapshot>]");
+            Console.WriteLine(
+                "DeploymentManager.exe create <project-name> <assembly-name> <main-deployment-name> <main-deployment-json> <main-deployment-snapshot> [<sim-deployment-name> <sim-deployment-json> <sim-deployment-snapshot>]");
             Console.WriteLine("DeploymentManager.exe stop <project-name> <deployment-id>");
             Console.WriteLine("DeploymentManager.exe list <project-name>");
         }
@@ -308,7 +316,7 @@ namespace Improbable
                     throw;
                 }
             }
-            
+
             return 1;
         }
     }
