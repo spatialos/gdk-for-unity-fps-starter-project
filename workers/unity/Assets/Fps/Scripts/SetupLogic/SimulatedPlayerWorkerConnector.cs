@@ -97,7 +97,7 @@ public class SimulatedPlayerWorkerConnector : DefaultWorkerConnector
 
     protected override string SelectLoginToken(List<LoginTokenDetails> loginTokens)
     {
-        var selectedLoginToken = loginTokens.First(token => token.DeploymentName == simulatedPlayerTargetDeployment)
+        var selectedLoginToken = loginTokens.FirstOrDefault(token => token.DeploymentName == simulatedPlayerTargetDeployment)
             .LoginToken;
 
         if (selectedLoginToken == null)
