@@ -12,6 +12,10 @@ namespace Fps
         private int StoredQualityLevel; // Used to restore project quality level when no longer previewing quality
         private readonly Color dimColor = new Color(.77f, .77f, .77f);
 
+        private bool SettingsAreCurrentlyInUse =>
+            Application.isPlaying && MapQualitySettings.Instance == settings
+            || MapQualitySettings.ShowPreview;
+
         private void OnEnable()
         {
             StoredQualityLevel = QualitySettings.GetQualityLevel();
@@ -140,12 +144,9 @@ namespace Fps
                 var qualityName = settings.Settings[i].QualityName;
                 var checkoutDistance = settings.Settings[i].CheckoutDistance;
 
-                GUI.color = (
-                        Application.isPlaying && MapQualitySettings.Instance == settings
-                        || MapQualitySettings.ShowPreview)
-                    && activeQualityLevel != i
-                        ? dimColor
-                        : Color.white;
+                GUI.color = SettingsAreCurrentlyInUse && activeQualityLevel != i
+                    ? dimColor
+                    : Color.white;
                 settings.Settings[i].CheckoutDistance = Mathf.Max(0,
                     EditorGUILayout.FloatField(qualityName, checkoutDistance));
                 GUI.color = Color.white;
