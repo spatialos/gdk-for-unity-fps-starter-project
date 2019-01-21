@@ -34,12 +34,7 @@ namespace Fps
 
             activeQualityLevel = QualitySettings.GetQualityLevel();
 
-            if (Application.isPlaying
-                && MapQualitySettings.Instance != settings)
-            {
-                EditorGUILayout.HelpBox("Modifying these values will not affect the running game " +
-                    "as it is using a different MapQualitySettings object", MessageType.Warning);
-            }
+            DrawNotEditingActiveQualitySettingWarning();
 
             EditorGUI.BeginChangeCheck();
 
@@ -68,6 +63,23 @@ namespace Fps
                 EditorUtility.SetDirty(target);
                 settings.Apply();
             }
+        }
+
+        private void DrawNotEditingActiveQualitySettingWarning()
+        {
+            if (!Application.isPlaying || MapQualitySettings.Instance == settings)
+            {
+                return;
+            }
+
+            var assetLocation = AssetDatabase.GetAssetPath(MapQualitySettings.Instance.GetInstanceID());
+            var locationString = string.IsNullOrEmpty(assetLocation)
+                ? "a script-instantiated MapQualitySettings object"
+                : $"the MapQualitySettings object at:-\n\t'{assetLocation}'";
+
+
+            EditorGUILayout.HelpBox("Modifying these values will not affect the running game " +
+                $"as it is using {locationString}", MessageType.Warning);
         }
 
         private void RefreshQualityProperties()
