@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d869842b8568ab6458c57740ee127490, type: 3}
+  m_Name: MapQualitySettingsDefault
+  m_EditorClassIdentifier: 
+  Settings:
+  - QualityName: Low
+    CheckoutDistance: 150
+  - QualityName: Medium
+    CheckoutDistance: 225
+  - QualityName: High
+    CheckoutDistance: 300

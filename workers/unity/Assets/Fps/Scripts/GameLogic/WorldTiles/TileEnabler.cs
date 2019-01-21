@@ -14,20 +14,24 @@ namespace Fps
             set => CheckoutDistanceSquared = Mathf.Pow(value, 2);
         }
 
-        private float CheckoutDistanceSquared = MapQualitySettings.DefaultCheckoutDistanceSquared;
+        private float CheckoutDistanceSquared;
 
         private MeshRenderer meshRenderer;
 
         private void Start()
         {
-            meshRenderer = GetComponent<MeshRenderer>();
             if (!IsClient)
             {
                 Destroy(this);
                 return;
             }
 
-            CheckoutDistanceSquared = Mathf.Pow(MapQualitySettings.CheckoutDistance, 2);
+            if (CheckoutDistanceSquared == 0)
+            {
+                CheckoutDistance = MapQualitySettings.CheckoutDistance;
+            }
+
+            meshRenderer = GetComponent<MeshRenderer>();
         }
 
         private void Update()
