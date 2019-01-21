@@ -16,10 +16,10 @@ namespace Fps
 
         // Measurements.
         // All sizes are 1:1 ratio in X/Z, so we just define one value to represent both axis.
-        private const int UnitsPerBlock = 4; // One textured square on the ground is a 'block'.
-        private const int UnitsPerTile = 9 * UnitsPerBlock;
-        private const int TilesPerGroundLayer = 4; // Ground layers are large quads that encompass 4x4 tiles.
-        private const int boundaryCollisionHeight = 16;
+        public const int UnitsPerBlock = 4; // One textured square on the ground is a 'block'.
+        public const int UnitsPerTile = 9 * UnitsPerBlock;
+        public const int TilesPerGroundLayer = 4; // Ground layers are large quads that encompass 4x4 tiles.
+        public const int BoundaryCollisionHeight = 16;
 
         // Store the half-value as many calculations are simplified by going from -halfNumGroundLayers to halfNumGroundLayers.
         private int halfNumGroundLayers => (Layers - 1) / TilesPerGroundLayer + 1;
@@ -258,14 +258,14 @@ namespace Fps
             var collision = Instantiate(surroundWall,
                 rotation * new Vector3(
                     offset,
-                    UnitsPerBlock + boundaryCollisionHeight * .5f,
+                    UnitsPerBlock + BoundaryCollisionHeight * .5f,
                     halfNumGroundLayers * unitsPerGroundLayer + UnitsPerBlock * .5f),
                 rotation,
                 surroundParentTransform);
             collision.transform.localScale =
                 new Vector3(
                     unitsPerGroundLayer + UnitsPerBlock, // Collisions overlap to fill corners
-                    boundaryCollisionHeight,
+                    BoundaryCollisionHeight,
                     1);
             collision.gameObject.name = "Collision";
 
