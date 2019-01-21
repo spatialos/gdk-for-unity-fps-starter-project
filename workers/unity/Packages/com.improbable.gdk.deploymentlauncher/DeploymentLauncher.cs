@@ -385,7 +385,9 @@ namespace Improbable.Gdk.DeploymentManager
                     });
                 }
 
-                return deploymentList.OrderBy(o => o.Name).ToList();
+                deploymentList.Sort((item1, item2) => string.Compare(item1.Name, item2.Name, StringComparison.Ordinal));
+
+                return deploymentList;
             }
 
             private async Task<RedirectedProcessResult> RunDeploymentLauncherHelperAsync(List<string> args,

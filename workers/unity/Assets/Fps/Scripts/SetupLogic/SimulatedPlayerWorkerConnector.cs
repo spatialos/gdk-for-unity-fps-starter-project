@@ -39,7 +39,6 @@ public class SimulatedPlayerWorkerConnector : DefaultWorkerConnector
             this.simulatedPlayerDevAuthTokenId = simulatedPlayerDevAuthTokenId;
             this.simulatedPlayerTargetDeployment = simulatedPlayerTargetDeployment;
 
-
             connectToRemoteDeployment = true;
         }
 

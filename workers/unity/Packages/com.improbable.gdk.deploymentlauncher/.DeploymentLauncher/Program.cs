@@ -22,7 +22,7 @@ namespace Improbable
             if (bytes.Length == 0)
             {
                 Console.Error.WriteLine($"Unable to load {snapshotPath}. Does the file exist?");
-                return "";
+                return string.Empty;
             }
 
             // Create HTTP endpoint to upload to.
@@ -73,9 +73,9 @@ namespace Improbable
             var mainDeploymentName = args[3];
             var mainDeploymentJson = args[4];
             var mainDeploymentSnapshotFilePath = args[5];
-            var simDeploymentName = "";
-            var simDeploymentJson = "";
-            var simDeploymentSnapshotFilePath = "";
+            var simDeploymentName = string.Empty;
+            var simDeploymentJson = string.Empty;
+            var simDeploymentSnapshotFilePath = string.Empty;
             if (launchSimPlayerDeployment)
             {
                 simDeploymentName = args[6];
@@ -98,7 +98,7 @@ namespace Improbable
                     return 1;
                 }
 
-                var simSnapshotId = "";
+                var simSnapshotId = string.Empty;
                 if (launchSimPlayerDeployment)
                 {
                     simSnapshotId = UploadSnapshot(snapshotServiceClient, simDeploymentSnapshotFilePath, projectName,
