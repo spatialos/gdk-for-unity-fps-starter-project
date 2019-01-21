@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,7 +15,7 @@ namespace Fps
         private static MapQualitySettings instance;
         private float checkoutDistanceCache = -1;
 
-        public static float CheckoutDistance => Instance.CheckoutDistanceInternal;
+        public static float CheckoutDistance => Instance.GetCheckoutDistance();
 
         public static MapQualitySettings Instance
         {
@@ -52,47 +52,45 @@ namespace Fps
             instance.Apply();
         }
 
-        private float CheckoutDistanceInternal
+        private float GetCheckoutDistance()
         {
-            get
+            if (!Application.isPlaying && !ShowPreview)
             {
-                if (!Application.isPlaying && !ShowPreview)
-                {
-                    return -1;
-                }
+                return -1;
+            }
 
-                if (checkoutDistanceCache > 0)
-                {
-                    return checkoutDistanceCache;
-                }
-
-                var activeQualityLevelName = QualitySettings.names[QualitySettings.GetQualityLevel()];
-                foreach (var setting in Settings)
-                {
-                    if (setting.QualityName != activeQualityLevelName)
-                    {
-                        continue;
-                    }
-
-                    checkoutDistanceCache = setting.CheckoutDistance;
-                    return checkoutDistanceCache;
-                }
-
-                Debug.LogWarning($"Using default draw distance of {DefaultCheckoutDistance} for ALL quality levels.\n");
-                checkoutDistanceCache = DefaultCheckoutDistance;
+            if (checkoutDistanceCache > 0)
+            {
                 return checkoutDistanceCache;
             }
+
+            var activeQualityLevelName = QualitySettings.names[QualitySettings.GetQualityLevel()];
+            foreach (var setting in Settings)
+            {
+                if (setting.QualityName != activeQualityLevelName)
+                {
+                    continue;
+                }
+
+                checkoutDistanceCache = setting.CheckoutDistance;
+                return checkoutDistanceCache;
+            }
+
+            Debug.LogWarning($"Using default draw distance of {DefaultCheckoutDistance} for ALL quality levels.\n");
+            checkoutDistanceCache = DefaultCheckoutDistance;
+            return checkoutDistanceCache;
         }
 
 
         public void Apply()
         {
             checkoutDistanceCache = -1; // Force a checkout distance calculation based on project Quality level
-            Shader.SetGlobalFloat("_GlobalClipDistance", CheckoutDistanceInternal);
+            var checkoutDistance = GetCheckoutDistance();
+            Shader.SetGlobalFloat("_GlobalClipDistance", checkoutDistance);
             var tiles = FindObjectsOfType<TileEnabler>();
             foreach (var tile in tiles)
             {
-                tile.CheckoutDistance = CheckoutDistanceInternal;
+                tile.CheckoutDistance = checkoutDistance;
             }
         }
 
