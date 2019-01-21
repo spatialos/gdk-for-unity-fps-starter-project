@@ -1,4 +1,4 @@
-This project exists in folder prefixed with a '.' so that Unity ignores it at script compile time, but it can still be
+This project exists in a folder prefixed with a '.' so that Unity ignores it at script compile time, but it can still be
 distributed as part of the Unity package.
 
 Due to the fact that the deployment launcher depends on the Platform SDK, and the Platform SDK needs

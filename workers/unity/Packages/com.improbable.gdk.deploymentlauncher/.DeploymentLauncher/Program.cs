@@ -19,6 +19,7 @@ namespace Improbable
 
             // Read snapshot.
             var bytes = File.ReadAllBytes(snapshotPath);
+
             if (bytes.Length == 0)
             {
                 Console.Error.WriteLine($"Unable to load {snapshotPath}. Does the file exist?");
@@ -31,6 +32,7 @@ namespace Improbable
                 ProjectName = projectName,
                 DeploymentName = deploymentName
             };
+
             using (var md5 = MD5.Create())
             {
                 snapshotToUpload.Checksum = Convert.ToBase64String(md5.ComputeHash(bytes));
@@ -46,6 +48,7 @@ namespace Improbable
             httpRequest.Method = "PUT";
             httpRequest.ContentLength = snapshotToUpload.Size;
             httpRequest.Headers.Set("Content-MD5", snapshotToUpload.Checksum);
+
             using (var dataStream = httpRequest.GetRequestStream())
             {
                 dataStream.Write(bytes, 0, bytes.Length);
@@ -61,6 +64,7 @@ namespace Improbable
                 Id = snapshotToUpload.Id,
                 ProjectName = snapshotToUpload.ProjectName
             });
+
             return confirmUploadResponse.Snapshot.Id;
         }
 
@@ -73,9 +77,11 @@ namespace Improbable
             var mainDeploymentName = args[3];
             var mainDeploymentJson = args[4];
             var mainDeploymentSnapshotFilePath = args[5];
+
             var simDeploymentName = string.Empty;
             var simDeploymentJson = string.Empty;
             var simDeploymentSnapshotFilePath = string.Empty;
+
             if (launchSimPlayerDeployment)
             {
                 simDeploymentName = args[6];
@@ -93,16 +99,19 @@ namespace Improbable
                 // Upload snapshots.
                 var mainSnapshotId = UploadSnapshot(snapshotServiceClient, mainDeploymentSnapshotFilePath, projectName,
                     mainDeploymentName);
+
                 if (mainSnapshotId.Length == 0)
                 {
                     return 1;
                 }
 
                 var simSnapshotId = string.Empty;
+
                 if (launchSimPlayerDeployment)
                 {
                     simSnapshotId = UploadSnapshot(snapshotServiceClient, simDeploymentSnapshotFilePath, projectName,
                         simDeploymentName);
+
                     if (simSnapshotId.Length == 0)
                     {
                         return 1;
@@ -121,6 +130,7 @@ namespace Improbable
                     ProjectName = projectName,
                     StartingSnapshotId = mainSnapshotId
                 };
+
                 if (launchSimPlayerDeployment)
                 {
                     // This tag needs to be added to allow simulated clients to connect using login
@@ -130,10 +140,12 @@ namespace Improbable
 
                 Console.WriteLine(
                     $"Creating the main deployment {mainDeploymentName} in project {projectName} with snapshot ID {mainSnapshotId}.");
+
                 var mainDeploymentCreateOp = deploymentServiceClient.CreateDeployment(new CreateDeploymentRequest
                 {
                     Deployment = mainDeploymentConfig
                 }).PollUntilCompleted();
+
                 Console.WriteLine("Successfully created the main deployment.");
 
                 if (launchSimPlayerDeployment)
@@ -151,11 +163,14 @@ namespace Improbable
                     var devAuthTokenIdFlag = new JObject();
                     devAuthTokenIdFlag.Add("name", "fps_simulated_players_dev_auth_token_id");
                     devAuthTokenIdFlag.Add("value", dat.DevelopmentAuthenticationToken.Id);
+
                     var targetDeploymentFlag = new JObject();
                     targetDeploymentFlag.Add("name", "fps_simulated_players_target_deployment");
                     targetDeploymentFlag.Add("value", mainDeploymentName);
+
                     var simWorkerConfigJson = File.ReadAllText(simDeploymentJson);
                     dynamic simWorkerConfig = JObject.Parse(simWorkerConfigJson);
+
                     for (var i = 0; i < simWorkerConfig.workers.Count; ++i)
                     {
                         if (simWorkerConfig.workers[i].worker_type == "SimulatedPlayerCoordinator")
@@ -179,14 +194,17 @@ namespace Improbable
                         ProjectName = projectName,
                         StartingSnapshotId = simSnapshotId
                     };
+
                     simDeploymentConfig.Tag.Add("simulated_clients");
 
                     Console.WriteLine(
                         $"Creating the simulated player deployment {simDeploymentName} in project {projectName} with snapshot ID {simSnapshotId}.");
+
                     var simDeploymentCreateOp = deploymentServiceClient.CreateDeployment(new CreateDeploymentRequest
                     {
                         Deployment = simDeploymentConfig
                     }).PollUntilCompleted();
+
                     Console.WriteLine("Successfully created the simulated player deployment.");
                 }
             }
@@ -212,6 +230,7 @@ namespace Improbable
             var deploymentId = args[2];
 
             var deploymentServiceClient = DeploymentServiceClient.Create();
+
             try
             {
                 deploymentServiceClient.StopDeployment(new StopDeploymentRequest
