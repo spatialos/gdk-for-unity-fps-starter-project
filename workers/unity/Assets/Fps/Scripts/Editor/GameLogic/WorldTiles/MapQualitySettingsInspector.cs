@@ -9,16 +9,16 @@ namespace Fps
     {
         private int activeQualityLevel;
         private MapQualitySettings settings;
-        private int StoredQualityLevel; // Used to restore project quality level when no longer previewing quality
+        private int storedQualityLevel; // Used to restore project quality level when no longer previewing quality
         private readonly Color dimColor = new Color(.77f, .77f, .77f);
 
-        private bool SettingsAreCurrentlyInUse =>
+        private bool settingsAreCurrentlyInUse =>
             Application.isPlaying && MapQualitySettings.Instance == settings
             || MapQualitySettings.ShowPreview;
 
         private void OnEnable()
         {
-            StoredQualityLevel = QualitySettings.GetQualityLevel();
+            storedQualityLevel = QualitySettings.GetQualityLevel();
         }
 
         private void OnDisable()
@@ -29,7 +29,7 @@ namespace Fps
             }
 
             MapQualitySettings.ShowPreview = false;
-            QualitySettings.SetQualityLevel(StoredQualityLevel);
+            QualitySettings.SetQualityLevel(storedQualityLevel);
             settings.Apply();
         }
 
@@ -54,13 +54,9 @@ namespace Fps
 
             GUILayout.Space(10);
 
-            if (!Application.isPlaying
-                || Application.isPlaying && MapQualitySettings.Instance == settings)
+            if ((!Application.isPlaying || MapQualitySettings.Instance == settings) && DrawPreviewToggle())
             {
-                if (DrawPreviewToggle())
-                {
-                    DrawQualityPreviewButtons();
-                }
+                DrawQualityPreviewButtons();
             }
 
             if (EditorGUI.EndChangeCheck())
@@ -144,7 +140,7 @@ namespace Fps
                 var qualityName = settings.Settings[i].QualityName;
                 var checkoutDistance = settings.Settings[i].CheckoutDistance;
 
-                GUI.color = SettingsAreCurrentlyInUse && activeQualityLevel != i
+                GUI.color = settingsAreCurrentlyInUse && activeQualityLevel != i
                     ? dimColor
                     : Color.white;
                 settings.Settings[i].CheckoutDistance = Mathf.Max(0,
@@ -163,7 +159,6 @@ namespace Fps
                 return true;
             }
 
-
             var togglePreview = GUILayout.Toggle(MapQualitySettings.ShowPreview, "Show Preview");
 
             if (togglePreview == MapQualitySettings.ShowPreview)
@@ -175,11 +170,11 @@ namespace Fps
 
             if (togglePreview)
             {
-                StoredQualityLevel = QualitySettings.GetQualityLevel();
+                storedQualityLevel = QualitySettings.GetQualityLevel();
             }
             else
             {
-                QualitySettings.SetQualityLevel(StoredQualityLevel);
+                QualitySettings.SetQualityLevel(storedQualityLevel);
             }
 
             return togglePreview;
