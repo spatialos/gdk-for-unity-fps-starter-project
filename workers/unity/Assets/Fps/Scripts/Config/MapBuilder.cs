@@ -34,7 +34,6 @@ namespace Fps
         private Transform tileParentTransform;
         private Transform groundParentTransform;
         private Transform surroundParentTransform;
-        private Transform cubeParentTransform;
         private Transform spawnPointSystemTransform;
 
         private const string TileParentName = "TileParent";
