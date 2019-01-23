@@ -4,7 +4,7 @@
 
 ### Changed
 
-- Updated all the launch configs to use the new Runtime.
+- Updated all the launch configs to better match the world sizes and to use the new Runtime.
 
 ### Fixed
 
