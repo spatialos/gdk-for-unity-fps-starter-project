@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Changed
+
+- Updated all the launch configs to better match the world sizes and to use the new Runtime.
+
 ### Fixed
 
 - Simulated Players can now rotate about the X axis, enabling them to shoot targets above or below the plane they are on.
