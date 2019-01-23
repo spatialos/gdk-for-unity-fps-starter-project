@@ -12,8 +12,6 @@ namespace Fps
         private const string AuthPlayer = "Prefabs/UnityClient/Authoritative/Player";
         private const string NonAuthPlayer = "Prefabs/UnityClient/NonAuthoritative/Player";
 
-        private ConnectionController connectScreen;
-
         private List<TileEnabler> levelTiles = new List<TileEnabler>();
         public List<TileEnabler> LevelTiles => levelTiles;
 

@@ -33,8 +33,6 @@ namespace Fps
 
         private GameObject levelInstance;
 
-        private ConnectionController connectScreen;
-
         private List<TileEnabler> levelTiles = new List<TileEnabler>();
         public List<TileEnabler> LevelTiles => levelTiles;
 
