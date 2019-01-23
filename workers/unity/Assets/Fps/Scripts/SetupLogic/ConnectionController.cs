@@ -63,7 +63,10 @@ namespace Fps
                 // Worker successfully connected
                 if (connectButton.GetCurrentAnimatorStateInfo(0).IsName("ConnectingState"))
                 {
-                    connectButton.SetTrigger("Ready");
+                    //connectButton.SetTrigger("Ready");
+                    connectButton.SetTrigger("Connecting");
+                    SpawnPlayer();
+                    enabled = false;
                 }
             }
         }
@@ -77,6 +80,7 @@ namespace Fps
 
         private void SpawnPlayer()
         {
+            Debug.Log("Spawning player");
             var request = new CreatePlayerRequestType(new Vector3f { X = 0, Y = 0, Z = 0 });
             commandSender.SendCreatePlayerRequest(new EntityId(1), request);
         }

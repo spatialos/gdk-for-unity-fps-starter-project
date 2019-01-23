@@ -131,6 +131,7 @@ namespace Improbable.Gdk.Movement
             base.Awake();
             // There will only be one client movement driver, but there will always be one.
             // Therefore it should be safe to set shared movement settings here.
+            Debug.LogFormat("<b>Setting movement speed sharedsettings</b> from " + gameObject.name + ". Sprint speed is " + movementSettings.MovementSpeed.SprintSpeed);
             MovementSpeedSettings.SharedSettings = movementSettings.MovementSpeed;
         }
 
