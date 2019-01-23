@@ -64,5 +64,4 @@ Shader "Spatial/Spatial_Sprite_Spark_Master" {
         }
     }
     FallBack "Diffuse"
-    CustomEditor "ShaderForgeMaterialInspector"
 }

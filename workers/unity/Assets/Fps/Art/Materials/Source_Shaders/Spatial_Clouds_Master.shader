@@ -69,5 +69,4 @@ Shader "Spatial/Spatial_Clouds_Master" {
         }
     }
     FallBack "Diffuse"
-    CustomEditor "ShaderForgeMaterialInspector"
 }

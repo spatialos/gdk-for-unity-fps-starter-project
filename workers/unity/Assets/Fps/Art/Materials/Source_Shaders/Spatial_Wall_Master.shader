@@ -395,5 +395,4 @@ Shader "Spatial/Spatial_Wall_Master" {
         }
     }
     FallBack "Diffuse"
-    CustomEditor "ShaderForgeMaterialInspector"
 }

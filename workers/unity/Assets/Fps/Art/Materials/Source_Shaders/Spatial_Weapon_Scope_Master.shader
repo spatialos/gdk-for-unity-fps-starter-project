@@ -62,5 +62,4 @@ Shader "Spatial/Spatial_Weapon_Scope_Master" {
         }
     }
     FallBack "Diffuse"
-    CustomEditor "ShaderForgeMaterialInspector"
 }

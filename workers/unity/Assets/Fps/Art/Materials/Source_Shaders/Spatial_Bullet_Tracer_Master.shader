@@ -65,5 +65,4 @@ Shader "Spatial/Spatial_Bullet_Tracer_Master" {
         }
     }
     FallBack "Diffuse"
-    CustomEditor "ShaderForgeMaterialInspector"
 }
