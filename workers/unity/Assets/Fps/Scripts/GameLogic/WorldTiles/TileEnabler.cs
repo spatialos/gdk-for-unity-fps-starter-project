@@ -14,36 +14,42 @@ namespace Fps
             set => CheckoutDistanceSquared = Mathf.Pow(value, 2);
         }
 
-        private float CheckoutDistanceSquared = TileSettings.DefaultCheckoutDistanceSquared;
+        private float CheckoutDistanceSquared;
 
         private MeshRenderer meshRenderer;
 
         private void Start()
         {
-            meshRenderer = GetComponent<MeshRenderer>();
             if (!IsClient)
             {
                 Destroy(this);
                 return;
             }
 
-            CheckoutDistanceSquared = Mathf.Pow(TileSettings.CheckoutDistance, 2);
+            if (CheckoutDistanceSquared == 0)
+            {
+                CheckoutDistance = MapQualitySettings.CheckoutDistance;
+            }
+
+            meshRenderer = GetComponent<MeshRenderer>();
         }
 
         private void Update()
         {
-            if (PlayerTransform != null)
+            if (PlayerTransform == null)
             {
-                var distanceSquared = Vector3.SqrMagnitude(PlayerTransform.position - transform.position);
+                return;
+            }
 
-                if (renderersEnabled && distanceSquared > CheckoutDistanceSquared)
-                {
-                    ToggleRenderers();
-                }
-                else if (!renderersEnabled && distanceSquared <= CheckoutDistanceSquared)
-                {
-                    ToggleRenderers();
-                }
+            var distanceSquared = Vector3.SqrMagnitude(PlayerTransform.position - transform.position);
+
+            if (renderersEnabled && distanceSquared > CheckoutDistanceSquared)
+            {
+                ToggleRenderers();
+            }
+            else if (!renderersEnabled && distanceSquared <= CheckoutDistanceSquared)
+            {
+                ToggleRenderers();
             }
         }
 
