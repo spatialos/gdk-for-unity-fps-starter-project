@@ -20,6 +20,7 @@ namespace Fps
         public const int TilesPerGroundLayer = 4; // Ground layers are large quads that encompass 4x4 tiles.
         public const int BoundaryCollisionHeight = 16;
 
+#if UNITY_EDITOR
         // Store the half-value as many calculations are simplified by going from -halfNumGroundLayers to halfNumGroundLayers.
         private int halfNumGroundLayers => (Layers - 1) / TilesPerGroundLayer + 1;
         private int unitsPerGroundLayer => TilesPerGroundLayer * UnitsPerTile;
@@ -53,8 +54,6 @@ namespace Fps
         private const string CentreTile2 = "Prefabs/Level/Tiles/Centre2";
         private const string CentreTile3 = "Prefabs/Level/Tiles/Centre3";
 
-
-#if UNITY_EDITOR
         public void CleanAndBuild()
         {
             if (!TryLoadResources())
