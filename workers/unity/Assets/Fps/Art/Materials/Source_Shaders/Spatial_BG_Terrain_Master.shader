@@ -393,5 +393,4 @@ Shader "Spatial/Spatial_BG_Terrain_Master" {
         }
     }
     FallBack "Diffuse"
-    CustomEditor "ShaderForgeMaterialInspector"
 }

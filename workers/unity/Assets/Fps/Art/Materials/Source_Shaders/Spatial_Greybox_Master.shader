@@ -611,5 +611,4 @@ Shader "Spatial/Spatial_Greybox_Master" {
         }
     }
     FallBack "Diffuse"
-    CustomEditor "ShaderForgeMaterialInspector"
 }

@@ -74,5 +74,4 @@ Shader "Spatial/Spatial_PostVignette" {
             ENDCG
         }
     }
-    CustomEditor "ShaderForgeMaterialInspector"
 }

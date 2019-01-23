@@ -307,5 +307,4 @@ Shader "Spatial/Spatial_Floor_Master" {
         }
     }
     FallBack "Diffuse"
-    CustomEditor "ShaderForgeMaterialInspector"
 }

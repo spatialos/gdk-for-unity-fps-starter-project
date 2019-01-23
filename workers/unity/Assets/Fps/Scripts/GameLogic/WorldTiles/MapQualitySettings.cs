@@ -7,7 +7,7 @@ namespace Fps
     [CreateAssetMenu(fileName = "MapQualitySettings", menuName = "Improbable/Map Quality Settings")]
     public class MapQualitySettings : ScriptableObject
     {
-        public const float DefaultCheckoutDistance = 60f;
+        public const float DefaultCheckoutDistance = 300f;
 
         public static bool ShowPreview;
         public List<MapQualityLevelData> Settings = new List<MapQualityLevelData>();

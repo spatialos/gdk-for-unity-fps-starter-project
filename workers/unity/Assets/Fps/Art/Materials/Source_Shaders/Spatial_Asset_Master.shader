@@ -535,5 +535,4 @@ Shader "Spatial/Spatial_Asset_Master" {
         }
     }
     FallBack "Diffuse"
-    CustomEditor "ShaderForgeMaterialInspector"
 }
