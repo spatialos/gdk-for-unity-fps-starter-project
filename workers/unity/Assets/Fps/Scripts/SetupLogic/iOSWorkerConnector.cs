@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectCreation;
@@ -8,20 +9,22 @@ using Improbable.Gdk.PlayerLifecycle;
 using Improbable.Worker.CInterop;
 using UnityEngine;
 
-#if UNITY_ANDROID
-using Improbable.Gdk.Mobile.Android;
+#if UNITY_IOS
+using Improbable.Gdk.Mobile.iOS;
 #endif
 
 namespace Fps
 {
     [RequireComponent(typeof(ConnectionController))]
-    public class AndroidWorkerConnector : MobileWorkerConnector, ITileProvider
+    public class iOSWorkerConnector : MobileWorkerConnector, ITileProvider
     {
         private const string AuthPlayer = "Prefabs/MobileClient/Authoritative/Player";
         private const string NonAuthPlayer = "Prefabs/MobileClient/NonAuthoritative/Player";
 
         private const string Small = "small";
         private const string Large = "large";
+
+        public string forcedIpAddress;
 
         public int TargetFrameRate = 60;
 
@@ -39,9 +42,14 @@ namespace Fps
 
         public string IpAddress { get; set; }
 
+        private void OnValidate()
+        {
+            forcedIpAddress = Regex.Replace(forcedIpAddress, "[^0-9.]", "");
+        }
+
         public async void TryConnect()
         {
-            await Connect(WorkerUtils.AndroidClient, new ForwardingDispatcher()).ConfigureAwait(false);
+            await Connect(WorkerUtils.iOSClient, new ForwardingDispatcher()).ConfigureAwait(false);
         }
 
         private void Awake()
@@ -52,54 +60,24 @@ namespace Fps
         protected virtual async void Start()
         {
             Application.targetFrameRate = TargetFrameRate;
-#if UNITY_ANDROID && !UNITY_EDITOR
-            UseIpAddressFromArguments();
-    #endif
+            IpAddress = forcedIpAddress;
+
             await AttemptConnect();
         }
 
-#if UNITY_ANDROID && !UNITY_EDITOR
-        public void UseIpAddressFromArguments()
-        {
-            IpAddress = GetReceptionistHostFromArguments();
-
-            if (string.IsNullOrEmpty(IpAddress))
-            {
-                IpAddress = "127.0.0.1";
-            }
-        }
-        private string GetReceptionistHostFromArguments()
-        {
-            var arguments = LaunchArguments.GetArguments();
-            var hostIp =
-                CommandLineUtility.GetCommandLineValue(arguments, RuntimeConfigNames.ReceptionistHost, string.Empty);
-            return hostIp;
-        }
-#endif
-
         protected override string GetHostIp()
         {
-#if UNITY_ANDROID
+#if UNITY_IOS
             if (!string.IsNullOrEmpty(IpAddress))
             {
                 return IpAddress;
             }
 
-            if (Application.isMobilePlatform && AndroidDeviceInfo.ActiveDeviceType == MobileDeviceType.Virtual)
-            {
-                return AndroidDeviceInfo.EmulatorDefaultCallbackIp;
-            }
-
             return RuntimeConfigDefaults.ReceptionistHost;
 #else
             throw new System.PlatformNotSupportedException(
-                $"{nameof(AndroidWorkerConnector)} can only be used for the Android platform. Please check your build settings.");
+                $"{nameof(iOSWorkerConnector)} can only be used for the iOS platform. Please check your build settings.");
 #endif
-        }
-
-        protected virtual string GetWorkerType()
-        {
-            return WorkerUtils.AndroidClient;
         }
 
         public async void Reconnect()
@@ -109,7 +87,7 @@ namespace Fps
 
         protected async Task AttemptConnect()
         {
-            await Connect(GetWorkerType(), new ForwardingDispatcher()).ConfigureAwait(false);
+            await Connect(WorkerUtils.iOSClient, new ForwardingDispatcher()).ConfigureAwait(false);
         }
 
         protected override string SelectDeploymentName(DeploymentList deployments)
@@ -162,7 +140,7 @@ namespace Fps
             {
                 workerSystem.LogDispatcher.HandleLog(LogType.Error,
                     new LogEvent(
-                            "Invalid world_size worker flag. Make sure that it is either small, medium, or large,")
+                            "Invalid world_size worker flag. Make sure that it is either 'small' or 'large'.")
                         .WithField("world_size", worldSize));
                 return;
             }
@@ -171,7 +149,8 @@ namespace Fps
 
             if (levelToLoad == null)
             {
-                Debug.LogError("The level to be instantiated is null.");
+                workerSystem.LogDispatcher.HandleLog(LogType.Error,
+                    new LogEvent("The level to be instantiated is null."));
                 return;
             }
 
