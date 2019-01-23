@@ -7,7 +7,6 @@ using Random = UnityEngine.Random;
 namespace Fps
 {
     [ExecuteInEditMode]
-    [RequireComponent(typeof(TileSettings))]
     public class MapBuilder : MonoBehaviour
     {
         public int Layers = 3;
