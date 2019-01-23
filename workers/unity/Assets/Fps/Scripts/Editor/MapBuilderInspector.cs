@@ -27,7 +27,7 @@ namespace Fps
             var numTiles = Mathf.RoundToInt(GetTotalTilesFromLayers(myTarget.Layers) * (1f - myTarget.EmptyTileChance));
 
             GUI.color = numTiles < WarnTilesThreshold ? Color.white : Color.yellow;
-            GUILayout.Label($"Number of tile to generate: ~{numTiles}");
+            GUILayout.Label($"Number of tiles to generate: ~{numTiles}");
             GUI.color = Color.white;
 
             myTarget.Seed = EditorGUILayout.TextField(new GUIContent(
