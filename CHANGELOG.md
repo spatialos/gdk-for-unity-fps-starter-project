@@ -2,9 +2,14 @@
 
 ## Unreleased
 
+### Added
+
+- Added mobile support for local deployments.
+
 ### Changed
 
 - Updated all the launch configs to better match the world sizes and to use the new Runtime.
+- `MapBuilder.cs` performance and visual improvements, now generates worlds around the GameObject's position rather than at origin.
 
 ### Fixed
 
@@ -14,6 +19,7 @@
 ### Removed
 
 - Removed GameObjects containing `ObjectPooler` from all scenes, `ObjectPooler` instance is now created at runtime.
+- Removed `HDRenderPipeline`.
 
 ## `0.1.3` - 2018-11-26
 

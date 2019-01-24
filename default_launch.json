@@ -59,6 +59,36 @@
       ]
     },
     {
+      "worker_type": "AndroidClient",
+      "flags": [
+        {
+          "name": "world_size",
+          "value": "small"
+        }
+      ],      
+      "permissions": [{
+          "all": {}
+      }],
+      "load_balancing": {
+        "singleton_worker": {}
+      }
+    },
+    {
+      "worker_type": "iOSClient",
+      "flags": [
+        {
+          "name": "world_size",
+          "value": "small"
+        }
+      ],      
+      "permissions": [{
+          "all": {}
+      }],
+      "load_balancing": {
+        "singleton_worker": {}
+      }
+    }, 
+    {
       "worker_type": "SimulatedPlayer",
       "flags": [
         {
