@@ -10,6 +10,10 @@
 
 - Updated all the launch configs to better match the world sizes and to use the new Runtime.
 - `MapBuilder.cs` performance and visual improvements, now generates worlds around the GameObject's position rather than at origin.
+- Upgraded the Worker SDK version to `13.5.1`. This is a stable Worker SDK release! :tada:
+- Upgraded the project to be compatible with `2018.3.2f1`.
+- Upgraded the postprocessing package to `2.1.2`.
+- Upgraded the package manager package to `2.0.3`.
 
 ### Fixed
 
