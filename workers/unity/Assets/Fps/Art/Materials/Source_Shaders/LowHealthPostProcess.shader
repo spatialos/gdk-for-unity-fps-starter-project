@@ -3,7 +3,7 @@ Shader "FPS/LowHealthVignette"
 {
 	HLSLINCLUDE
 
-        #include "PostProcessing/Shaders/StdLib.hlsl"
+        #include "Packages/com.unity.postprocessing/PostProcessing/Shaders/StdLib.hlsl"
 
         TEXTURE2D_SAMPLER2D(_MainTex, sampler_MainTex);
         TEXTURE2D_SAMPLER2D(_VignetteMaterial, sampler_VignetteMaterial);
@@ -18,7 +18,7 @@ Shader "FPS/LowHealthVignette"
             float4 maskValue = SAMPLE_TEXTURE2D(_VignetteMask, sampler_VignetteMask, i.texcoord);
             float4 vignetteValue = SAMPLE_TEXTURE2D(_VignetteMaterial, sampler_VignetteMaterial, i.texcoord);
             float4 color = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.texcoord);
-			
+
             float vignetteColour = pow((((vignetteValue.r+color.g)+color.b)*0.3),1.25);
             float health_saturation = pow(saturate(_HEALTH_VALUE),4.0);
             float angle = (fmod(_DAMAGE_YAW,360.0)/360.0);
