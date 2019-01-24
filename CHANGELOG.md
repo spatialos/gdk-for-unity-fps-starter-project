@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## `0.1.4` - 2019-01-28
+
 ### Added
 
 - Added mobile support for local deployments.
@@ -14,6 +16,7 @@
 - Upgraded the project to be compatible with `2018.3.2f1`.
 - Upgraded the postprocessing package to `2.1.2`.
 - Upgraded the package manager package to `2.0.3`.
+- Upgraded to GDK for Unity version `0.1.4`.
 
 ### Fixed
 
