@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Improbable.Gdk.Core;
-using Improbable.Gdk.Mobile;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Fps
 {

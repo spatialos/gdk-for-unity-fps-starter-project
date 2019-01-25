@@ -116,6 +116,12 @@ namespace Fps
             return deployments.Deployments[0].DeploymentName;
         }
 
+        protected override ConnectionService GetConnectionService()
+        {
+            // TODO UTY-1590: add cloud deployment option
+            return ConnectionService.Receptionist;
+        }
+
         protected override void HandleWorkerConnectionEstablished()
         {
             var world = Worker.World;
