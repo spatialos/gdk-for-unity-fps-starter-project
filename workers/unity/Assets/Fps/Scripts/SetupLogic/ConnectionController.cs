@@ -20,7 +20,6 @@ namespace Fps
         private void Start()
         {
             clientWorkerConnector = gameObject.GetComponent<WorkerConnector>();
-            connectButton = screenUIController.ConnectScreen.GetComponentInChildren<Animator>();
         }
 
         private void OnEnable()
@@ -29,21 +28,36 @@ namespace Fps
             {
                 responseHandler.OnCreatePlayerResponse += OnCreatePlayerResponse;
             }
+
+            if (screenUIController != null)
+            {
+                screenUIController.FrontEndController.ConnectScreenController.OnConnectClicked += ConnectAction;
+            }
         }
 
-        public void InformOfUI(GameObject canvasCameraObj, ScreenUIController screenUIController)
+        private void OnDisable()
         {
-            this.canvasCameraObj = canvasCameraObj;
-            this.screenUIController = screenUIController;
+            if (screenUIController == null)
+            {
+                return;
+            }
+
+            screenUIController.FrontEndController.ConnectScreenController.OnConnectClicked -= ConnectAction;
+        }
+
+        public void InformOfUI(ScreenUIController controller)
+        {
+            screenUIController = controller;
+            connectButton = screenUIController.FrontEndController.ConnectScreenController
+                .GetComponentInChildren<Animator>();
+            screenUIController.FrontEndController.ConnectScreenController.OnConnectClicked += ConnectAction;
         }
 
         private void OnCreatePlayerResponse(PlayerCreator.CreatePlayer.ReceivedResponse obj)
         {
             if (obj.StatusCode == StatusCode.Success)
             {
-                canvasCameraObj.SetActive(false);
-                screenUIController.ConnectScreen.SetActive(false);
-                screenUIController.InGameHud.SetActive(true);
+                screenUIController.ShowGameView();
             }
             else
             {
@@ -56,6 +70,11 @@ namespace Fps
             if (!connectButton.isActiveAndEnabled)
             {
                 return;
+            }
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                ConnectAction();
             }
 
             if (clientWorkerConnector != null && clientWorkerConnector.Worker != null)
@@ -79,6 +98,12 @@ namespace Fps
         {
             var request = new CreatePlayerRequestType(new Vector3f { X = 0, Y = 0, Z = 0 });
             commandSender.SendCreatePlayerRequest(new EntityId(1), request);
+        }
+
+        public void OnDisconnected()
+        {
+            screenUIController.ShowFrontEnd();
+            connectButton.SetTrigger("Disconnected");
         }
 
         public void ConnectAction()

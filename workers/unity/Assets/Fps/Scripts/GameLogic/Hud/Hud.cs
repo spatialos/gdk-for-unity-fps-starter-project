@@ -22,14 +22,14 @@ namespace Fps
         [Require] private GunStateComponent.Requirable.Reader gunStateReader;
 
         private float currentFocus;
-        private ScreenUIController screenUIController;
+        private InGameUIController inGameUIController;
         private HealthBarController healthBarController;
         private LowHealthVignette damageVolumeSettings;
 
         private void Awake()
         {
-            screenUIController = ClientWorkerHandler.ScreenUIController;
-            healthBarController = screenUIController.GetComponentInChildren<HealthBarController>(true);
+            inGameUIController = ClientWorkerHandler.ScreenUIController.InGameController;
+            healthBarController = inGameUIController.GetComponentInChildren<HealthBarController>(true);
 
             postProcessObject = GameObject.FindGameObjectWithTag("PostProcessing");
             if (postProcessObject != null)
@@ -49,8 +49,8 @@ namespace Fps
         private void OnRespawn(Empty obj)
         {
             // Hide respawn screen
-            screenUIController.RespawnScreen.SetActive(false);
-            screenUIController.InGameHud.SetActive(true);
+            inGameUIController.RespawnScreen.SetActive(false);
+            inGameUIController.Hud.SetActive(true);
             SetHealthEffect(1);
         }
 
@@ -65,9 +65,9 @@ namespace Fps
             if (healthModifiedInfo.Died)
             {
                 // Show respawn screen on death
-                screenUIController.RespawnScreen.SetActive(true);
-                screenUIController.SetEscapeScreen(false);
-                screenUIController.InGameHud.SetActive(false);
+                inGameUIController.RespawnScreen.SetActive(true);
+                inGameUIController.SetEscapeScreen(false);
+                inGameUIController.Hud.SetActive(false);
             }
 
             var currentHealth = healthReader.Data.Health / healthReader.Data.MaxHealth;
@@ -78,7 +78,7 @@ namespace Fps
         private void AimingUpdated(BlittableBool isAiming)
         {
             // Inform the ScreenUIController of the aiming update.
-            screenUIController.SetPlayerAiming(isAiming);
+            inGameUIController.SetPlayerAiming(isAiming);
         }
 
         public void ShowTookDamageEffect(Vector3 origin)

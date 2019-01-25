@@ -4,86 +4,52 @@ namespace Fps
 {
     public class ScreenUIController : MonoBehaviour
     {
-        public static bool InEscapeMenu { get; private set; }
+        public FrontEndUIController FrontEndController;
+        public InGameUIController InGameController;
 
-        public GameObject ConnectScreen;
-        public GameObject InGameHud;
-        public GameObject RespawnScreen;
-        public GameObject EscapeScreen;
-        public GameObject Reticle;
-        public GameObject UICamera;
-        private Animator connectAnimator;
-        private bool isPlayerAiming;
+        private void Awake()
+        {
+            FrontEndController.gameObject.SetActive(false);
+            InGameController.gameObject.SetActive(false);
+        }
 
-        // Use this for initialization
         private void Start()
         {
-            ShowConnectScreen();
-            connectAnimator = ConnectScreen.GetComponentInChildren<Animator>();
+            FrontEndController.gameObject.SetActive(true);
         }
 
-        // Update is called once per frame
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Space)
-                && ConnectScreen.activeInHierarchy)
+            if (Input.GetKeyDown(KeyCode.Q))
             {
-                ClientWorkerHandler.ConnectionController.ConnectAction();
+                Debug.Log("Forced disconnect TRUE");
+            }
+
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                Debug.Log("Forced disconnect FALSE");
             }
         }
 
-        public void TryOpenSettingsMenu()
+        public void ShowGameView()
         {
-            // Only allow escape screen if in-game, and not respawning.
-            if (!ConnectScreen.activeInHierarchy
-                && !RespawnScreen.activeInHierarchy)
-            {
-                SetEscapeScreen(!EscapeScreen.activeInHierarchy);
-            }
+            FrontEndController.gameObject.SetActive(false);
+            InGameController.gameObject.SetActive(true);
         }
 
-        public void ConnectClicked()
+        public void ShowFrontEnd()
         {
-            ClientWorkerHandler.ConnectionController.ConnectAction();
+            InGameController.gameObject.SetActive(false);
+            FrontEndController.gameObject.SetActive(true);
         }
 
-        public void SetPlayerAiming(bool isAiming)
+        public void Quit()
         {
-            isPlayerAiming = isAiming;
-            Reticle.SetActive(!isPlayerAiming);
-        }
-
-        public void ShowConnectScreen()
-        {
-            ConnectScreen.SetActive(true);
-            UICamera.SetActive(true);
-
-            InGameHud.SetActive(false);
-            RespawnScreen.SetActive(false);
-            EscapeScreen.SetActive(false);
-
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.Confined;
-            InEscapeMenu = false;
-        }
-
-        public void SetEscapeScreen(bool inEscapeScreen)
-        {
-            EscapeScreen.SetActive(inEscapeScreen);
-            Reticle.SetActive(!inEscapeScreen && !isPlayerAiming);
-
-            Cursor.visible = inEscapeScreen;
-            Cursor.lockState = inEscapeScreen ? CursorLockMode.Confined : CursorLockMode.Locked;
-
-            // Inform the static variable, for FpsDriver etc.
-            InEscapeMenu = inEscapeScreen;
-        }
-
-        public void OnDisconnect()
-        {
-            // Worker has been disconnected.
-            ShowConnectScreen();
-            connectAnimator.SetTrigger("Disconnected");
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
         }
     }
 }

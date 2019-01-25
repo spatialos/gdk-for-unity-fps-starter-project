@@ -74,11 +74,11 @@ namespace Fps
         {
             if (controller.MenuPressed)
             {
-                ClientWorkerHandler.ScreenUIController.TryOpenSettingsMenu();
+                ClientWorkerHandler.ScreenUIController.InGameController.TryOpenSettingsMenu();
             }
 
             // Don't allow controls if in the menu.
-            if (ScreenUIController.InEscapeMenu)
+            if (InGameUIController.InEscapeMenu)
             {
                 // Still apply physics.
                 movement.ApplyMovement(Vector3.zero, transform.rotation, MovementSpeed.Run, false);
