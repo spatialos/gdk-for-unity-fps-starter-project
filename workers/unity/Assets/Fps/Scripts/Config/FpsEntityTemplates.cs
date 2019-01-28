@@ -35,12 +35,12 @@ namespace Fps
             var metadata = new Metadata.Snapshot { EntityType = "SimulatedPlayerCoordinatorTrigger" };
 
             var template = new EntityTemplate();
-            template.AddComponent(new Position.Snapshot(), WorkerUtils.SimulatedPlayerCoorindator);
-            template.AddComponent(metadata, WorkerUtils.SimulatedPlayerCoorindator);
-            template.AddComponent(new Persistence.Snapshot(), WorkerUtils.SimulatedPlayerCoorindator);
+            template.AddComponent(new Position.Snapshot(), WorkerUtils.SimulatedPlayerCoordinator);
+            template.AddComponent(metadata, WorkerUtils.SimulatedPlayerCoordinator);
+            template.AddComponent(new Persistence.Snapshot(), WorkerUtils.SimulatedPlayerCoordinator);
 
-            template.SetReadAccess(WorkerUtils.SimulatedPlayerCoorindator);
-            template.SetComponentWriteAccess(EntityAcl.ComponentId, WorkerUtils.SimulatedPlayerCoorindator);
+            template.SetReadAccess(WorkerUtils.SimulatedPlayerCoordinator);
+            template.SetComponentWriteAccess(EntityAcl.ComponentId, WorkerUtils.SimulatedPlayerCoordinator);
 
             return template;
         }
@@ -98,7 +98,7 @@ namespace Fps
             template.AddComponent(healthRegenComponent, WorkerUtils.UnityGameLogic);
             PlayerLifecycleHelper.AddPlayerLifecycleComponents(template, workerId, client, WorkerUtils.UnityGameLogic);
 
-            template.SetReadAccess(WorkerUtils.UnityClient, WorkerUtils.UnityGameLogic, WorkerUtils.SimulatedPlayer, WorkerUtils.AndroidClient, WorkerUtils.iOSClient);
+            template.SetReadAccess(WorkerUtils.UnityClient, WorkerUtils.UnityGameLogic, WorkerUtils.AndroidClient, WorkerUtils.iOSClient);
             template.SetComponentWriteAccess(EntityAcl.ComponentId, WorkerUtils.UnityGameLogic);
 
             return template;
