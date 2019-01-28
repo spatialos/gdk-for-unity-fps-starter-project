@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+using System.Collections.Generic;
+using Improbable.Gdk.Core;
+using UnityEngine;
 
 namespace Fps
 {
@@ -8,27 +10,28 @@ namespace Fps
 
         [SerializeField] private GameObject clientWorkerPrefab;
         [SerializeField] private GameObject canvasCameraObj;
+
         [SerializeField] private ScreenUIController screenUIController;
 
         private GameObject currentClientWorker;
         private ConnectionController connectionController;
-        private ClientWorkerConnector workerConnector;
+        private WorkerConnector workerConnector;
+        private ITileProvider tileProvider;
 
-        public static ClientWorkerConnector ClientWorkerConnector => Instance.workerConnector;
+        public static List<TileEnabler> LevelTiles => Instance.tileProvider.LevelTiles;
+
+        public static WorkerConnector ClientWorkerConnector => Instance.workerConnector;
         public static ConnectionController ConnectionController => Instance.connectionController;
+        public static ScreenUIController ScreenUIController => Instance.screenUIController;
 
         public static void CreateClient()
         {
             Instance.CreateClientWorker();
         }
 
-        private void Awake()
-        {
-            Instance = this;
-        }
-
         private void Start()
         {
+            Instance = this;
             CreateClientWorker();
         }
 
@@ -46,7 +49,8 @@ namespace Fps
             }
 
             currentClientWorker = Instantiate(clientWorkerPrefab);
-            workerConnector = currentClientWorker.GetComponent<ClientWorkerConnector>();
+            workerConnector = currentClientWorker.GetComponent<WorkerConnector>();
+            tileProvider = workerConnector as ITileProvider;
             connectionController = currentClientWorker.GetComponent<ConnectionController>();
             connectionController.InformOfUI(canvasCameraObj, screenUIController);
         }
@@ -61,6 +65,7 @@ namespace Fps
                 Destroy(currentClientWorker);
             }
         }
+
 
         public void Quit()
         {

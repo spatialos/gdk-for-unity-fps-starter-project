@@ -25,18 +25,20 @@ namespace Fps
         // Update is called once per frame
         private void Update()
         {
-            // Only allow escape screen if in-game, and not respawning.
-            if (Input.GetKeyDown(KeyCode.Escape)
-                && !ConnectScreen.activeInHierarchy
-                && !RespawnScreen.activeInHierarchy)
-            {
-                SetEscapeScreen(!EscapeScreen.activeInHierarchy);
-            }
-
             if (Input.GetKeyDown(KeyCode.Space)
                 && ConnectScreen.activeInHierarchy)
             {
                 ClientWorkerHandler.ConnectionController.ConnectAction();
+            }
+        }
+
+        public void TryOpenSettingsMenu()
+        {
+            // Only allow escape screen if in-game, and not respawning.
+            if (!ConnectScreen.activeInHierarchy
+                && !RespawnScreen.activeInHierarchy)
+            {
+                SetEscapeScreen(!EscapeScreen.activeInHierarchy);
             }
         }
 
