@@ -1,14 +1,24 @@
 {
-  "template": "small",
+  "template": "small_entity_db_v2",
   "world": {
     "chunkEdgeLengthMeters": 50,
     "snapshots": {
       "snapshotWritePeriodSeconds": 0
     },
     "dimensions": {
-      "xMeters": 500,
-      "zMeters": 500
+      "xMeters": 300,
+      "zMeters": 300
     }
+  },
+  "load_balancing": {
+    "layer_configuration": [
+      {
+        "layer": "SimulatedPlayerCoordinator",
+        "hex_grid": {
+          "num_workers": 1
+        }
+      }
+    ]
   },
   "workers": [
     {
@@ -31,12 +41,7 @@
         {
           "all": {}
         }
-      ],
-      "load_balancing": {
-        "auto_hex_grid": {
-          "num_workers": 1
-        }
-      }
+      ]
     }
   ]
 }
