@@ -19,7 +19,6 @@ public class KillNotification : MonoBehaviour
     private float relegateTime;
     private int relegateLevel;
     private float targetScale;
-    private float startScale;
     private float targetYOffset;
     private bool isRelegating;
 

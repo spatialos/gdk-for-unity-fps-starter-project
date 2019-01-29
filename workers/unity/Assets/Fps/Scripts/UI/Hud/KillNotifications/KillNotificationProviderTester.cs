@@ -4,7 +4,6 @@
 public class KillNotificationProviderTester : MonoBehaviour
 {
     public bool GenerateName;
-    private KillNotificationProvider provider;
 
     private void OnValidate()
     {
@@ -12,7 +11,7 @@ public class KillNotificationProviderTester : MonoBehaviour
         {
             return;
         }
-        
+
         if (GenerateName)
         {
             GenerateName = false;
