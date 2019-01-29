@@ -7,8 +7,6 @@ namespace Fps
         public const string iOSClient = "iOSClient";
 
         public const string UnityGameLogic = "UnityGameLogic";
-
-        public const string SimulatedPlayerCoorindator = "SimulatedPlayerCoordinator";
-        public const string SimulatedPlayer = "SimulatedPlayer";
+        public const string SimulatedPlayerCoordinator = "SimulatedPlayerCoordinator";
     }
 }

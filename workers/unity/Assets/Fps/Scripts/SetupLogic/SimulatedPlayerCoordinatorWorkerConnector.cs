@@ -1,16 +1,20 @@
-﻿using System;
+using System;
 using System.Collections;
 using Fps;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Improbable.Gdk.Core;
+using Improbable.Worker.CInterop;
 using Random = UnityEngine.Random;
+using Improbable.Worker.CInterop.Alpha;
 
 public class SimulatedPlayerCoordinatorWorkerConnector : WorkerConnectorBase
 {
     private const string FlagClientCount = "fps_simulated_players_per_coordinator";
     private const string FlagCreationInterval = "fps_simulated_players_creation_interval";
+    private const string FlagDevAuthTokenId = "fps_simulated_players_dev_auth_token_id";
+    private const string FlagTargetDeployment = "fps_simulated_players_target_deployment";
 
     private static readonly Vector3 SmallWorldSize = new Vector3(148f, 100f, 148f);
     private static readonly Vector3 LargeWorldSize = new Vector3(1156f, 100f, 1156f);
@@ -18,6 +22,8 @@ public class SimulatedPlayerCoordinatorWorkerConnector : WorkerConnectorBase
     public GameObject SimulatedPlayerWorkerConnector;
     public int DefaultSimulatedPlayerCount = 1;
     public int DefaultSimulatedPlayerCreationInterval = 5;
+    public string SimulatedPlayerDevAuthTokenId;
+    public string SimulatedPlayerTargetDeployment;
 
     private readonly Dictionary<EntityId, List<GameObject>> proxies = new Dictionary<EntityId, List<GameObject>>();
     private readonly List<EntityId> localSimulatedPlayers = new List<EntityId>();
@@ -32,7 +38,7 @@ public class SimulatedPlayerCoordinatorWorkerConnector : WorkerConnectorBase
 
     protected override string GetWorkerType()
     {
-        return WorkerUtils.SimulatedPlayerCoorindator;
+        return WorkerUtils.SimulatedPlayerCoordinator;
     }
 
     protected override async void HandleWorkerConnectionEstablished()
@@ -50,6 +56,8 @@ public class SimulatedPlayerCoordinatorWorkerConnector : WorkerConnectorBase
                 await Task.Delay(TimeSpan.FromSeconds(
                     Random.Range(DefaultSimulatedPlayerCreationInterval, 1.25f * DefaultSimulatedPlayerCreationInterval)));
                 var simulatedPlayer = Instantiate(SimulatedPlayerWorkerConnector, transform.position, transform.rotation);
+                await simulatedPlayer.GetComponent<SimulatedPlayerWorkerConnector>()
+                    .ConnectSimulatedPlayer(Worker.LogDispatcher, SimulatedPlayerDevAuthTokenId, SimulatedPlayerTargetDeployment);
                 simulatedPlayerConnectors.Add(simulatedPlayer);
             }
 
@@ -59,7 +67,7 @@ public class SimulatedPlayerCoordinatorWorkerConnector : WorkerConnectorBase
 
     private IEnumerator MonitorSimulatedPlayers()
     {
-        while (Worker.Connection?.IsConnected == true)
+        while (Worker.Connection?.GetConnectionStatusCode() == ConnectionStatusCode.Success)
         {
             yield return new WaitForSeconds(5);
 
@@ -70,6 +78,9 @@ public class SimulatedPlayerCoordinatorWorkerConnector : WorkerConnectorBase
                     yield return new WaitForSeconds(
                         Random.Range(DefaultSimulatedPlayerCreationInterval, 1.25f * DefaultSimulatedPlayerCreationInterval));
                     var simulatedPlayer = Instantiate(SimulatedPlayerWorkerConnector, transform.position, transform.rotation);
+                    var task = simulatedPlayer.GetComponent<SimulatedPlayerWorkerConnector>()
+                        .ConnectSimulatedPlayer(Worker.LogDispatcher, SimulatedPlayerDevAuthTokenId, SimulatedPlayerTargetDeployment);
+                    task.Wait();
                     simulatedPlayerConnectors.Add(simulatedPlayer);
                 }
 
@@ -89,6 +100,9 @@ public class SimulatedPlayerCoordinatorWorkerConnector : WorkerConnectorBase
         {
             DefaultSimulatedPlayerCreationInterval = newInterval;
         }
+
+        SimulatedPlayerDevAuthTokenId = Worker.Connection.GetWorkerFlag(FlagDevAuthTokenId);
+        SimulatedPlayerTargetDeployment = Worker.Connection.GetWorkerFlag(FlagTargetDeployment);
 
         if (int.TryParse(Worker.Connection.GetWorkerFlag(FlagClientCount), out var newCount))
         {

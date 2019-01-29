@@ -87,34 +87,6 @@
       "load_balancing": {
         "singleton_worker": {}
       }
-    }, 
-    {
-      "worker_type": "SimulatedPlayer",
-      "flags": [
-        {
-          "name": "world_size",
-          "value": "small"
-        }
-      ],
-      "permissions": [
-        {
-          "all": {}
-        }
-      ]
-    },
-    {
-      "worker_type": "SimulatedPlayerCoordinator",
-      "flags": [
-        {
-          "name": "world_size",
-          "value": "small"
-        }
-      ],
-      "permissions": [
-        {
-          "all": {}
-        }
-      ]
     }
   ]
 }

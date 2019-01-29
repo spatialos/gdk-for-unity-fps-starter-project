@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+### Added
+
+- Added a Deployment Launcher window. This allows you to upload assemblies and launch deployments from the Unity Editor.
+- Added two launch configurations: `cloud_launch_large_sim_players.json` and `cloud_launch_small_sim_players.json` for simulated player deployments. 
+
+### Changed
+
+- A simulated player now connects as a regular `UnityClient` worker rather than a `SimulatedPlayer` worker.
+- In cloud deployments, `SimulatedPlayerCoordinator` workers are ran in a separate deployment to the `UnityGameLogic` workers.
+    - Note that simulated players started by the coordinators still connect into the deployment with the `UnityGameLogic` workers.
+
+### Removed
+
+- Removed the `SimulatedPlayer` worker type.
+
 ## `0.1.4` - 2019-01-28
 
 ### Added
