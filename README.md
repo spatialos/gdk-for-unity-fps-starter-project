@@ -6,4 +6,4 @@ This starter project is designed to help you get started quickly with the [Spati
 
 For information on installing, running and playing the FPS Starter Project, please see our [getting started guide](https://docs.improbable.io/unity/alpha/content/get-started/get-started).
 
-&copy; 2018 Improbable
+&copy; 2019 Improbable
