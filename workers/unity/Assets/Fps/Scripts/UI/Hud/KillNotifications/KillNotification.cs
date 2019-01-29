@@ -48,7 +48,6 @@ public class KillNotification : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         startHeight = GetComponent<RectTransform>().rect.height;
-        Debug.Log(startHeight);
     }
 
     public void Despawn()
