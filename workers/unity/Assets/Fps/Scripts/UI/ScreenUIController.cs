@@ -18,19 +18,6 @@ namespace Fps
             FrontEndController.gameObject.SetActive(true);
         }
 
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.Q))
-            {
-                Debug.Log("Forced disconnect TRUE");
-            }
-
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                Debug.Log("Forced disconnect FALSE");
-            }
-        }
-
         public void ShowGameView()
         {
             FrontEndController.gameObject.SetActive(false);
@@ -50,6 +37,13 @@ namespace Fps
 #else
             Application.Quit();
 #endif
+        }
+
+        private ConnectionController connectionController;
+
+        public void InformOfConnectionController(ConnectionController controller)
+        {
+
         }
     }
 }

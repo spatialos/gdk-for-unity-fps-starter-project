@@ -9,6 +9,8 @@ namespace Fps
 {
     public class ConnectionController : MonoBehaviour
     {
+        // TODO Remove references to buttons. Send events, let UI or other things subscribe and handle.
+        
         [Require] private PlayerCreator.Requirable.CommandRequestSender commandSender;
         [Require] private PlayerCreator.Requirable.CommandResponseHandler responseHandler;
 
@@ -20,6 +22,12 @@ namespace Fps
         private void Start()
         {
             clientWorkerConnector = gameObject.GetComponent<WorkerConnector>();
+            clientWorkerConnector.OnWorkerCreationFinished += OnWorkerCreated;
+        }
+
+        void OnWorkerCreated(Worker worker)
+        {
+            IsConnected = true;
         }
 
         private void OnEnable()
@@ -124,6 +132,21 @@ namespace Fps
                 connectButton.SetTrigger("Retry");
                 ClientWorkerHandler.CreateClient();
             }
+
+            return;
+
+
+
+            if (IsConnected)
+            {
+                SpawnPlayer();
+            }
+            else
+            {
+                ClientWorkerHandler.CreateClient();
+            }
         }
+
+        public bool IsConnected { get; private set; }
     }
 }
