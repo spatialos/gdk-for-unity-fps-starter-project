@@ -111,14 +111,14 @@ namespace Improbable.Gdk.DeploymentManager
                 EditorGUILayout.LabelField("Deployment Launcher", EditorStyles.boldLabel);
                 assemblyName = EditorGUILayout.TextField("Assembly Name", assemblyName).Trim();
                 deploymentName = EditorGUILayout.TextField("Deployment Name", deploymentName).Trim();
-                snapshotPath = EditorGUILayout.TextField("Snapshot Path", snapshotPath);
-                mainLaunchJson = EditorGUILayout.TextField("Config", mainLaunchJson);
+                snapshotPath = EditorGUILayout.TextField("Snapshot File", snapshotPath);
+                mainLaunchJson = EditorGUILayout.TextField("Launch Config File", mainLaunchJson);
                 using (var simPlayerDeploymentScope =
-                    new EditorGUILayout.ToggleGroupScope("Enable simulated players", simPlayerDeploymentEnabled))
+                    new EditorGUILayout.ToggleGroupScope("Enable Simulated Players", simPlayerDeploymentEnabled))
                 {
                     simPlayerDeploymentEnabled = simPlayerDeploymentScope.enabled;
                     using (var overrideNameScope =
-                        new EditorGUILayout.ToggleGroupScope("Override name", simPlayerCustomDeploymentNameEnabled))
+                        new EditorGUILayout.ToggleGroupScope("Override Name", simPlayerCustomDeploymentNameEnabled))
                     {
                         simPlayerCustomDeploymentNameEnabled = overrideNameScope.enabled;
                         simPlayerDeploymentName = EditorGUILayout.TextField("Deployment Name",
@@ -127,7 +127,7 @@ namespace Improbable.Gdk.DeploymentManager
                                 : deploymentName + "_sim_players");
                     }
 
-                    simPlayerLaunchJson = EditorGUILayout.TextField("Config", simPlayerLaunchJson);
+                    simPlayerLaunchJson = EditorGUILayout.TextField("Launch Config File", simPlayerLaunchJson);
                 }
 
                 var validLaunchParameters = true;
@@ -151,7 +151,7 @@ namespace Improbable.Gdk.DeploymentManager
                 using (new EditorGUI.DisabledGroupScope(runningLaunchTask != null || !validLaunchParameters ||
                     !validProjectName))
                 {
-                    if (GUILayout.Button(simPlayerDeploymentEnabled ? "Launch deployments" : "Launch deployment"))
+                    if (GUILayout.Button(simPlayerDeploymentEnabled ? "Launch Deployments" : "Launch Deployment"))
                     {
                         runningLaunchTask = TriggerLaunchDeploymentAsync();
                     }
