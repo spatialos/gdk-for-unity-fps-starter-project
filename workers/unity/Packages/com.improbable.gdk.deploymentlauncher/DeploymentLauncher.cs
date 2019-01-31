@@ -270,10 +270,13 @@ namespace Improbable.Gdk.DeploymentManager
                     "upload",
                     uploadAssemblyName,
                     "--project_name",
-                    projectName
+                    projectName,
+                    "--json_output"
                 };
-                var processResult = await RedirectedProcess.RunInAsync(ProjectRootPath, Tools.Common.SpatialBinary,
-                    arguments, true, true);
+                var processResult = await RedirectedProcess.Command(Tools.Common.SpatialBinary).WithArgs(arguments)
+                    .RedirectOutputOptions(OutputRedirectBehaviour.RedirectStdOut | OutputRedirectBehaviour.RedirectStdErr | OutputRedirectBehaviour.ProcessSpatialOutput)
+                    .InDirectory(ProjectRootPath)
+                    .RunAsync();
                 if (processResult.ExitCode == 0)
                 {
                     Debug.Log($"Uploaded assembly {uploadAssemblyName} to project {projectName} successfully.");
@@ -311,8 +314,11 @@ namespace Improbable.Gdk.DeploymentManager
                     });
                 }
 
-                var processResult = await RedirectedProcess.RunInAsync(DotNetWorkingDirectory,
-                    Tools.Common.DotNetBinary, ConstructArguments(arguments), true, true);
+                var processResult = await RedirectedProcess.Command(Tools.Common.DotNetBinary)
+                    .WithArgs(ConstructArguments(arguments))
+                    .RedirectOutputOptions(OutputRedirectBehaviour.RedirectStdOut | OutputRedirectBehaviour.RedirectStdErr)
+                    .InDirectory(DotNetWorkingDirectory)
+                    .RunAsync();
                 return processResult.ExitCode != 0;
             }
 
@@ -393,8 +399,17 @@ namespace Improbable.Gdk.DeploymentManager
             private async Task<RedirectedProcessResult> RunDeploymentLauncherHelperAsync(List<string> args,
                 bool redirectStdout = false)
             {
-                var processResult = await RedirectedProcess.RunInAsync(DotNetWorkingDirectory,
-                    Tools.Common.DotNetBinary, ConstructArguments(args), redirectStdout, true);
+                var outputOptions = OutputRedirectBehaviour.RedirectStdErr;
+                if (redirectStdout)
+                {
+                    outputOptions |= OutputRedirectBehaviour.RedirectStdOut;
+                }
+
+                var processResult = await RedirectedProcess.Command(Tools.Common.DotNetBinary)
+                    .WithArgs(ConstructArguments(args))
+                    .RedirectOutputOptions(outputOptions)
+                    .InDirectory(DotNetWorkingDirectory)
+                    .RunAsync();
 
                 if (processResult.ExitCode == 0)
                 {
@@ -408,13 +423,19 @@ namespace Improbable.Gdk.DeploymentManager
                     // The reason this task failed is because we are authenticated. Try authenticating.
                     Debug.Log(
                         "Failed to connect to the SpatialOS platform due to being unauthenticated. Running `spatial auth login` then retrying the last operation...");
-                    var spatialAuthLoginResult = await RedirectedProcess.RunInAsync(DotNetWorkingDirectory,
-                        Tools.Common.SpatialBinary, new string[] { "auth", "login" }, false, true);
+                    var spatialAuthLoginResult = await RedirectedProcess.Command(Tools.Common.SpatialBinary)
+                        .WithArgs(new string[] { "auth", "login", "--json_output" })
+                        .RedirectOutputOptions(OutputRedirectBehaviour.RedirectStdErr | OutputRedirectBehaviour.ProcessSpatialOutput)
+                        .InDirectory(DotNetWorkingDirectory)
+                        .RunAsync();
                     if (spatialAuthLoginResult.ExitCode == 0)
                     {
                         // Re-run the task.
-                        processResult = await RedirectedProcess.RunInAsync(DotNetWorkingDirectory,
-                            Tools.Common.DotNetBinary, ConstructArguments(args), false, true);
+                        processResult = await RedirectedProcess.Command(Tools.Common.DotNetBinary)
+                            .WithArgs(ConstructArguments(args))
+                            .RedirectOutputOptions(OutputRedirectBehaviour.RedirectStdErr)
+                            .InDirectory(DotNetWorkingDirectory)
+                            .RunAsync();
                     }
                     else
                     {
