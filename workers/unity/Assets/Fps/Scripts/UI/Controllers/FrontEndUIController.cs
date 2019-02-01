@@ -1,4 +1,6 @@
 ﻿using System;
+using UnityEditor;
+using UnityEditor.Experimental.SceneManagement;
 using UnityEngine;
 
 namespace Fps
@@ -20,14 +22,28 @@ namespace Fps
 
         private void OnValidate()
         {
+            /*DebugPrint($"Scene name: {gameObject.scene.name}\n" +
+                $"Scene is loaded: {gameObject.scene.isLoaded}\n" +
+                $"GetCurrentPrefabStage: {PrefabStageUtility.GetCurrentPrefabStage()}\n" +
+                $"PrefabStage: {PrefabStageUtility.GetPrefabStage(gameObject)}\n");*/
+            if (!gameObject.scene.isLoaded)
+            {
+                return;
+            }
+
+            if (PrefabStageUtility.GetCurrentPrefabStage() != null
+                && PrefabStageUtility.GetPrefabStage(gameObject) == null)
+            {
+                // Don't switch screens as this is not the prefab being edited in the stage
+                return;
+            }
+
             SetScreenTo(TestScreenType);
             TestScreenType = CurrentScreenType;
         }
 
         private void OnEnable()
         {
-            Debug.Log("Enabled front end controller");
-
             FrontEndCamera.SetActive(true);
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.Confined;
@@ -65,13 +81,22 @@ namespace Fps
             FrontEndCamera.SetActive(false);
         }
 
-        public GameObject SetScreenTo(ScreenType screenType)
+        public void SetScreenTo(ScreenType screenType)
         {
-            if (screenType == CurrentScreenType
-                || screenType == PreviousScreenType && PreviousScreenType == CurrentScreenType)
+            var screenUnmodified = screenType == CurrentScreenType
+                || screenType == PreviousScreenType && PreviousScreenType == CurrentScreenType;
+            if (screenUnmodified)
             {
-                return GetGOFromScreen(CurrentScreenType);
+                return;
             }
+
+            if (pendingRefresh)
+            {
+                Debug.Log("Already pending a refresh when entering SetScreenTo())");
+                return;
+            }
+
+            DebugPrint("SetScreenTo()");
 
             if (screenType == ScreenType.Previous)
             {
@@ -85,11 +110,49 @@ namespace Fps
                 CurrentScreenType = screenType;
             }
 
-            ConnectScreenController.gameObject.SetActive(ConnectScreenController.gameObject == GetGOFromScreen(CurrentScreenType));
+            pendingRefresh = true;
+            UnityEditor.EditorApplication.update += RefreshActiveScreen;
+        }
+
+        private bool pendingRefresh;
+
+
+        private void DebugPrint(string status)
+        {
+            var output = "";
+
+            output += $"{status} for object {gameObject.name}\n" +
+                $"instanceId: {gameObject.GetInstanceID()}\n" +
+                $"prefabAssetType: {PrefabUtility.GetPrefabAssetType(gameObject)}\n" +
+                $"path: {PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(gameObject)}\n" +
+                $"prefabInstanceStatus: {PrefabUtility.GetPrefabInstanceStatus(gameObject)}\n" +
+                $"prefabStage: {PrefabStageUtility.GetPrefabStage(gameObject)}";
+
+            Debug.Log(output);
+        }
+
+        private void RefreshActiveScreen()
+        {
+            UnityEditor.EditorApplication.update -= RefreshActiveScreen;
+            if (gameObject == null)
+            {
+                return;
+            }
+
+            if (!pendingRefresh)
+            {
+                Debug.Log("Won't execute RefreshActiveScreen() because there is no refresh pending");
+                return;
+            }
+
+            DebugPrint("RefreshActiveScreen()");
+
+            pendingRefresh = false;
+            ConnectScreenController.gameObject.SetActive(ConnectScreenController.gameObject ==
+                GetGOFromScreen(CurrentScreenType));
             MatchmakingScreen.SetActive(MatchmakingScreen == GetGOFromScreen(CurrentScreenType));
             BrowseScreen.SetActive(BrowseScreen == GetGOFromScreen(CurrentScreenType));
             ResultsScreen.SetActive(ResultsScreen == GetGOFromScreen(CurrentScreenType));
-            return GetGOFromScreen(CurrentScreenType);
         }
 
         public void SwitchToBrowseScreen()
@@ -111,7 +174,6 @@ namespace Fps
         {
             SetScreenTo(ScreenType.Previous);
         }
-
 
 
         private GameObject GetGOFromScreen(ScreenType screenType)
