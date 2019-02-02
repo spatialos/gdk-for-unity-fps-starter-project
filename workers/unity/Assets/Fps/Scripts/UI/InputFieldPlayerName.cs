@@ -1,82 +1,85 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(InputField))]
-public class InputFieldPlayerName : MonoBehaviour
+namespace Fps
 {
-    private InputField field;
-    public Text HintText;
-
-    public bool NameIsValid { get; private set; }
-
-    public delegate void OnNameChangeDelegate(bool isValid);
-
-    public OnNameChangeDelegate OnNameChanged;
-
-    private void Awake()
+    [RequireComponent(typeof(InputField))]
+    public class InputFieldPlayerName : MonoBehaviour
     {
-        field = GetComponent<InputField>();
-        Validate(false);
-        HintText.text = "";
+        private InputField field;
+        public Text HintText;
 
-        field.onValueChanged.AddListener(OnChanged);
-        field.onEndEdit.AddListener(OnEnd);
-    }
+        public bool NameIsValid { get; private set; }
 
-    private void OnChanged(string huh)
-    {
-        field.onValueChanged.RemoveListener(OnChanged); // Don't retrigger event as we modify the text...
+        public delegate void OnNameChangeDelegate(bool isValid);
 
-        // TODO: This didn't work correctly. Need to account for field caret? Better to use onValidateInput?
+        public OnNameChangeDelegate OnNameChanged;
 
-        Validate(true);
-        field.onValueChanged.AddListener(OnChanged);
-    }
-
-    private void OnEnd(string huh)
-    {
-        Validate(false);
-    }
-
-    private void Validate(bool areEditing)
-    {
-        NameIsValid = false;
-
-        if (!areEditing)
+        private void Awake()
         {
-            field.text = field.text.Trim();
+            field = GetComponent<InputField>();
+            Validate(false);
+            HintText.text = "";
+
+            field.onValueChanged.AddListener(OnChanged);
+            field.onEndEdit.AddListener(OnEnd);
         }
 
-        if (field.text.Length == 0)
+        private void OnChanged(string huh)
         {
-            SendOnNameChanged(NameIsValid);
-            return;
+            field.onValueChanged.RemoveListener(OnChanged); // Don't retrigger event as we modify the text...
+
+            // TODO: This didn't work correctly. Need to account for field caret? Better to use onValidateInput?
+
+            Validate(true);
+            field.onValueChanged.AddListener(OnChanged);
         }
 
-        if (field.text.Length < 3)
+        private void OnEnd(string huh)
         {
+            Validate(false);
+        }
+
+        private void Validate(bool areEditing)
+        {
+            NameIsValid = false;
+
             if (!areEditing)
             {
-                HintText.text = "Minimum 3 characters required";
+                field.text = field.text.Trim();
             }
 
-            SendOnNameChanged(NameIsValid);
-            return;
+            if (field.text.Length == 0)
+            {
+                SendOnNameChanged(NameIsValid);
+                return;
+            }
+
+            if (field.text.Length < 3)
+            {
+                if (!areEditing)
+                {
+                    HintText.text = "Minimum 3 characters required";
+                }
+
+                SendOnNameChanged(NameIsValid);
+                return;
+            }
+
+            HintText.text = "";
+
+            NameIsValid = true;
+            SendOnNameChanged(true);
         }
 
-        HintText.text = "";
-
-        NameIsValid = true;
-        SendOnNameChanged(true);
-    }
-
-    private void SendOnNameChanged(bool value)
-    {
-        if (OnNameChanged == null)
+        private void SendOnNameChanged(bool value)
         {
-            return;
-        }
+            if (OnNameChanged == null)
+            {
+                return;
+            }
 
-        OnNameChanged(value);
+            OnNameChanged(value);
+        }
     }
 }

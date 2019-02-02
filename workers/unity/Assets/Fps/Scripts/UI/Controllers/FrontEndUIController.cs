@@ -9,7 +9,7 @@ namespace Fps
     {
         public ConnectScreenController ConnectScreenController;
         public GameObject MatchmakingScreen;
-        public GameObject BrowseScreen;
+        public LobbyScreenController LobbyScreenController;
         public GameObject ResultsScreen;
         public ScreenType PreviousScreenType { get; private set; }
         public ScreenType CurrentScreenType { get; private set; }
@@ -22,10 +22,10 @@ namespace Fps
 
         private void OnValidate()
         {
-            /*DebugPrint($"Scene name: {gameObject.scene.name}\n" +
+            DebugPrint($"Scene name: {gameObject.scene.name}\n" +
                 $"Scene is loaded: {gameObject.scene.isLoaded}\n" +
                 $"GetCurrentPrefabStage: {PrefabStageUtility.GetCurrentPrefabStage()}\n" +
-                $"PrefabStage: {PrefabStageUtility.GetPrefabStage(gameObject)}\n");*/
+                $"PrefabStage: {PrefabStageUtility.GetPrefabStage(gameObject)}\n");
             if (!gameObject.scene.isLoaded)
             {
                 return;
@@ -50,7 +50,7 @@ namespace Fps
 
             ConnectScreenController.gameObject.SetActive(false);
             MatchmakingScreen.SetActive(false);
-            BrowseScreen.SetActive(false);
+            LobbyScreenController.gameObject.SetActive(false);
             ResultsScreen.SetActive(false);
 
 
@@ -93,12 +93,6 @@ namespace Fps
                 return;
             }
 
-            if (pendingRefresh)
-            {
-                Debug.Log("Already pending a refresh when entering SetScreenTo())");
-                return;
-            }
-
             if (screenType == ScreenType.Previous)
             {
                 var s = CurrentScreenType;
@@ -111,12 +105,8 @@ namespace Fps
                 CurrentScreenType = screenType;
             }
 
-            pendingRefresh = true;
-            UnityEditor.EditorApplication.update += RefreshActiveScreen;
+            Invoke(nameof(RefreshActiveScreen), 0);
         }
-
-        private bool pendingRefresh;
-
 
         private void DebugPrint(string status)
         {
@@ -128,33 +118,19 @@ namespace Fps
                 $"path: {PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(gameObject)}\n" +
                 $"prefabInstanceStatus: {PrefabUtility.GetPrefabInstanceStatus(gameObject)}\n" +
                 $"prefabStage: {PrefabStageUtility.GetPrefabStage(gameObject)}";
-
-            Debug.Log(output);
         }
 
         private void RefreshActiveScreen()
         {
-            UnityEditor.EditorApplication.update -= RefreshActiveScreen;
-            if (gameObject == null)
-            {
-                return;
-            }
-
-            if (!pendingRefresh)
-            {
-                Debug.Log("Won't execute RefreshActiveScreen() because there is no refresh pending");
-                return;
-            }
-
-            pendingRefresh = false;
             ConnectScreenController.gameObject.SetActive(ConnectScreenController.gameObject ==
                 GetGOFromScreen(CurrentScreenType));
             MatchmakingScreen.SetActive(MatchmakingScreen == GetGOFromScreen(CurrentScreenType));
-            BrowseScreen.SetActive(BrowseScreen == GetGOFromScreen(CurrentScreenType));
+            LobbyScreenController.gameObject.SetActive(LobbyScreenController.gameObject ==
+                GetGOFromScreen(CurrentScreenType));
             ResultsScreen.SetActive(ResultsScreen == GetGOFromScreen(CurrentScreenType));
         }
 
-        public void SwitchToBrowseScreen()
+        public void SwitchToLobbyScreen()
         {
             SetScreenTo(ScreenType.Lobby);
         }
@@ -184,7 +160,7 @@ namespace Fps
                 case ScreenType.Matchmaking:
                     return MatchmakingScreen;
                 case ScreenType.Lobby:
-                    return BrowseScreen;
+                    return LobbyScreenController.gameObject;
                 case ScreenType.Results:
                     return ResultsScreen;
                 case ScreenType.Previous:

@@ -48,6 +48,7 @@ public class Table : MonoBehaviour
 
     public void ClearEntries()
     {
+        Debug.Log("Clearing entries");
         // Don't destroy the first child, use it to make new children
         EntriesParentRect.GetChild(0).gameObject.SetActive(false);
 

@@ -4,13 +4,9 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-[ExecuteInEditMode]
 public class TableEntry : MonoBehaviour
 {
     [SerializeField] private RectTransform[] Columns;
-
-    public int Id;
-    public int ColumnCount => Columns.Length;
 
     public RectTransform GetColumnRect(int column)
     {
@@ -24,9 +20,10 @@ public class TableEntry : MonoBehaviour
         {
             columnRect = GetColumnRect(column);
         }
-        catch (ArgumentOutOfRangeException)
+        catch (IndexOutOfRangeException)
         {
-            throw new ArgumentOutOfRangeException($"Column with index {column} does not exist.");
+            throw new ArgumentOutOfRangeException($"Column with index {column} does not exist. Does the TableEntry " +
+                $"object '{gameObject.name}' have its Column references filled in?");
         }
 
         var textComp = columnRect.GetComponentInChildren<Text>();
