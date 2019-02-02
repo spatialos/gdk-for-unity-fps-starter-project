@@ -6,38 +6,61 @@ public class Table : MonoBehaviour
 {
     public RectTransform EntriesParentRect;
 
-    private GameObject EntryTemplate;
+    private TableEntry EntryTemplate;
 
-    public Color entryColorA;
-    public Color entryColorB;
 
-    [NonSerialized]
-    public List<TableEntry> Entries = new List<TableEntry>();
-
-    public int EntryCount => Entries.Count;
-
-    private void OnValidate()
+    public float EntryHeight
     {
-        if (!gameObject.scene.isLoaded)
+        get
         {
-            return;
-        }
+            if (entryHeightCached >= 0)
+            {
+                return entryHeightCached;
+            }
 
-        if (Application.isPlaying)
+            entryHeightCached = EntryTemplate.GetComponent<RectTransform>().rect.height;
+            return entryHeightCached;
+        }
+    }
+
+    private float entryHeightCached = -1f;
+
+    [NonSerialized] private readonly List<TableEntry> Entries = new List<TableEntry>();
+
+    private void Awake()
+    {
+        if (EntriesParentRect == null)
         {
+            Debug.LogError($"EntriesParentRect is not set on table {gameObject.name}");
             return;
         }
 
         GatherEntryTemplate();
+
+        if (EntryTemplate == null)
+        {
+            Debug.LogError($"Was unable to find an entry template for table {gameObject.name}");
+            return;
+        }
+
+        ClearEntries();
+    }
+
+    public void ClearEntries()
+    {
+        // Don't destroy the first child, use it to make new children
+        EntriesParentRect.GetChild(0).gameObject.SetActive(false);
+
+        for (var i = EntriesParentRect.childCount - 1; i > 0; i--)
+        {
+            Destroy(EntriesParentRect.GetChild(i).gameObject);
+        }
+
+        Entries.Clear();
     }
 
     private void GatherEntryTemplate()
     {
-        if (EntriesParentRect == null)
-        {
-            return;
-        }
-
         if (EntriesParentRect.childCount == 0)
         {
             Debug.LogWarning($"The EntriesParentRect on '{gameObject}' must have exactly 1 child, which defines " +
@@ -45,22 +68,40 @@ public class Table : MonoBehaviour
             return;
         }
 
-        EntryTemplate = EntriesParentRect.GetChild(0).gameObject;
+        EntryTemplate = EntriesParentRect.GetChild(0).GetComponent<TableEntry>();
 
-        if (EntryTemplate.GetComponent<TableFieldHelper>() == null)
+        if (EntryTemplate == null)
         {
-            Debug.LogWarning($"Entry template in object '{EntriesParentRect}' of '{gameObject}' must have a " +
-                $"TableFieldHelper component on it. If this is an entry, please add one.");
-            EntryTemplate = null;
+            Debug.LogWarning($"Expected a TableEntry component on template object {EntriesParentRect.GetChild(0)}");
+            return;
         }
+
+        Entries.Add(EntryTemplate);
     }
 
-    public TableFieldHelper AddEntry()
+    public TableEntry AddEntry()
     {
-        var newEntry = Instantiate(EntryTemplate, EntriesParentRect, false).GetComponent<TableFieldHelper>();
+        TableEntry newEntry;
+
+        if (Entries.Count == 0)
+        {
+            newEntry = EntryTemplate;
+            newEntry.gameObject.SetActive(true);
+        }
+        else
+        {
+            newEntry = Instantiate(EntryTemplate.gameObject, EntriesParentRect, false).GetComponent<TableEntry>();
+        }
+
+        newEntry.transform.localPosition = Vector3.down * EntryHeight * Entries.Count;
+
         Entries.Add(newEntry);
-        return newEntry.GetComponent<TableFieldHelper>();
+
+        return newEntry;
     }
 
-
+    public TableEntry GetEntry(int index)
+    {
+        return Entries[index];
+    }
 }

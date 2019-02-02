@@ -56,6 +56,6 @@ public class MatchmakingScreenController : MonoBehaviour
 
     public void BrowsePressed()
     {
-        frontEndUIController.SetScreenTo(FrontEndUIController.ScreenType.Browse);
+        frontEndUIController.SetScreenTo(FrontEndUIController.ScreenType.Lobby);
     }
 }

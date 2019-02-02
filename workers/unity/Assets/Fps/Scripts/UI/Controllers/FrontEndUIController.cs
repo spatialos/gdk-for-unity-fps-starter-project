@@ -57,6 +57,7 @@ namespace Fps
             if (resultsAvailable)
             {
                 CurrentScreenType = ScreenType.Results;
+                TestScreenType = CurrentScreenType;
                 PreviousScreenType = CurrentScreenType;
                 ResultsScreen.SetActive(true);
                 return;
@@ -65,12 +66,14 @@ namespace Fps
             if (sessionBasedGame)
             {
                 CurrentScreenType = ScreenType.Matchmaking;
+                TestScreenType = CurrentScreenType;
                 PreviousScreenType = CurrentScreenType;
                 MatchmakingScreen.SetActive(true);
             }
             else
             {
                 CurrentScreenType = ScreenType.DefaultConnect;
+                TestScreenType = CurrentScreenType;
                 PreviousScreenType = CurrentScreenType;
                 ConnectScreenController.gameObject.SetActive(true);
             }
@@ -95,8 +98,6 @@ namespace Fps
                 Debug.Log("Already pending a refresh when entering SetScreenTo())");
                 return;
             }
-
-            DebugPrint("SetScreenTo()");
 
             if (screenType == ScreenType.Previous)
             {
@@ -145,8 +146,6 @@ namespace Fps
                 return;
             }
 
-            DebugPrint("RefreshActiveScreen()");
-
             pendingRefresh = false;
             ConnectScreenController.gameObject.SetActive(ConnectScreenController.gameObject ==
                 GetGOFromScreen(CurrentScreenType));
@@ -157,7 +156,7 @@ namespace Fps
 
         public void SwitchToBrowseScreen()
         {
-            SetScreenTo(ScreenType.Browse);
+            SetScreenTo(ScreenType.Lobby);
         }
 
         public void SwitchToMatchmakingScreen()
@@ -184,7 +183,7 @@ namespace Fps
                     return ConnectScreenController.gameObject;
                 case ScreenType.Matchmaking:
                     return MatchmakingScreen;
-                case ScreenType.Browse:
+                case ScreenType.Lobby:
                     return BrowseScreen;
                 case ScreenType.Results:
                     return ResultsScreen;
@@ -204,7 +203,7 @@ namespace Fps
         {
             DefaultConnect,
             Matchmaking,
-            Browse,
+            Lobby,
             Results,
             Previous
         }

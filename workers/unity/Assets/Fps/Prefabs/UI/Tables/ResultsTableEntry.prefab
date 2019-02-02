@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4326902914864093015}
   - component: {fileID: 850818407667669737}
   m_Layer: 5
-  m_Name: Column5
+  m_Name: K/D RATIO
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -295,7 +295,7 @@ GameObject:
   - component: {fileID: 223568142224586518}
   - component: {fileID: 9167315615488818218}
   m_Layer: 5
-  m_Name: Column1
+  m_Name: RANK
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -340,7 +340,7 @@ GameObject:
   - component: {fileID: 8365085955256428427}
   - component: {fileID: 8443846011280427104}
   m_Layer: 5
-  m_Name: Column3
+  m_Name: KILLS
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -385,7 +385,7 @@ GameObject:
   - component: {fileID: 3107015718779868864}
   - component: {fileID: 5393229560795457012}
   m_Layer: 5
-  m_Name: Column2
+  m_Name: PLAYER
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -509,7 +509,7 @@ GameObject:
   - component: {fileID: 1647414798655237946}
   - component: {fileID: 5918342720160146001}
   m_Layer: 5
-  m_Name: Column4
+  m_Name: DEATHS
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -621,7 +621,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: JeremyBeremy
+  m_Text: TEMPLATE - DO NOT REMOVE
 --- !u!1 &8844942755145442319
 GameObject:
   m_ObjectHideFlags: 0
@@ -633,7 +633,7 @@ GameObject:
   - component: {fileID: 6913232046085255848}
   - component: {fileID: 2403845119429482099}
   - component: {fileID: 2274475554445963506}
-  - component: {fileID: 8557488801171216721}
+  - component: {fileID: 2719924688800519018}
   m_Layer: 5
   m_Name: ResultsTableEntry
   m_TagString: Untagged
@@ -702,7 +702,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
---- !u!114 &8557488801171216721
+--- !u!114 &2719924688800519018
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -711,7 +711,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8844942755145442319}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e844b5a1aa82efd439a09872e6c37cc8, type: 3}
+  m_Script: {fileID: 11500000, guid: 7eff7ae6abdd62249bad9400f6101132, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Columns:
@@ -721,9 +721,3 @@ MonoBehaviour:
   - {fileID: 1647414798655237946}
   - {fileID: 4326902914864093015}
   Selectable: {fileID: 0}
-  divisionList:
-    Divisions:
-    - 0.5
-    - 0.75
-    - 0.875
-    - 0.9375

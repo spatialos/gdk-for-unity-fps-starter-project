@@ -20,6 +20,11 @@ public class GameUITimer : MonoBehaviour
 
     private void OnValidate()
     {
+        if (!gameObject.scene.isLoaded)
+        {
+            return;
+        }
+
         TestSeconds = Mathf.Clamp(TestSeconds, 0, 100 * 60 - 1);
         UpdateTime(TestSeconds);
     }
