@@ -3,36 +3,47 @@ using UnityEngine.UI;
 
 namespace Fps
 {
-    [RequireComponent(typeof(InputField))]
-    public class InputFieldPlayerName : MonoBehaviour
+    public class PlayerNameInputController : MonoBehaviour
     {
-        private InputField field;
         public Text HintText;
 
-        public bool NameIsValid { get; private set; }
+        public bool AllowEdit;
 
         public delegate void OnNameChangeDelegate(bool isValid);
 
+        public bool NameIsValid { get; private set; }
         public OnNameChangeDelegate OnNameChanged;
+        private InputField inputField;
 
         private void Awake()
         {
-            field = GetComponent<InputField>();
+            inputField = GetComponentInChildren<InputField>();
             Validate(false);
             HintText.text = "";
+            inputField.onValueChanged.AddListener(OnChanged);
+            inputField.onEndEdit.AddListener(OnEnd);
+        }
 
-            field.onValueChanged.AddListener(OnChanged);
-            field.onEndEdit.AddListener(OnEnd);
+        private void OnEnable()
+        {
+            inputField.enabled = AllowEdit;
+            HintText.gameObject.SetActive(AllowEdit);
+        }
+
+        private void OnDisable()
+        {
+            inputField.enabled = false;
+            HintText.gameObject.SetActive(false);
         }
 
         private void OnChanged(string huh)
         {
-            field.onValueChanged.RemoveListener(OnChanged); // Don't retrigger event as we modify the text...
+            inputField.onValueChanged.RemoveListener(OnChanged); // Don't retrigger event as we modify the text...
 
             // TODO: This didn't work correctly. Need to account for field caret? Better to use onValidateInput?
 
             Validate(true);
-            field.onValueChanged.AddListener(OnChanged);
+            inputField.onValueChanged.AddListener(OnChanged);
         }
 
         private void OnEnd(string huh)
@@ -46,16 +57,16 @@ namespace Fps
 
             if (!areEditing)
             {
-                field.text = field.text.Trim();
+                inputField.text = inputField.text.Trim();
             }
 
-            if (field.text.Length == 0)
+            if (inputField.text.Length == 0)
             {
                 SendOnNameChanged(NameIsValid);
                 return;
             }
 
-            if (field.text.Length < 3)
+            if (inputField.text.Length < 3)
             {
                 if (!areEditing)
                 {

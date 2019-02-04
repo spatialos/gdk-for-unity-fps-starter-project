@@ -25,6 +25,11 @@ namespace Fps
             Invoke(nameof(RunTest), 0);
         }
 
+        void OnEnable()
+        {
+            Invoke(nameof(RunTest), 1);
+        }
+
         private void RunTest()
         {
             var controller = GetComponent<LobbyScreenController>();

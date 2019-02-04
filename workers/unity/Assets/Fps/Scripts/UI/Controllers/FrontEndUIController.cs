@@ -2,13 +2,14 @@
 using UnityEditor;
 using UnityEditor.Experimental.SceneManagement;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Fps
 {
     public class FrontEndUIController : MonoBehaviour
     {
         public ConnectScreenController ConnectScreenController;
-        public GameObject MatchmakingScreen;
+        public GameObject SessionScreen;
         public LobbyScreenController LobbyScreenController;
         public GameObject ResultsScreen;
         public ScreenType PreviousScreenType { get; private set; }
@@ -22,10 +23,6 @@ namespace Fps
 
         private void OnValidate()
         {
-            DebugPrint($"Scene name: {gameObject.scene.name}\n" +
-                $"Scene is loaded: {gameObject.scene.isLoaded}\n" +
-                $"GetCurrentPrefabStage: {PrefabStageUtility.GetCurrentPrefabStage()}\n" +
-                $"PrefabStage: {PrefabStageUtility.GetPrefabStage(gameObject)}\n");
             if (!gameObject.scene.isLoaded)
             {
                 return;
@@ -42,17 +39,19 @@ namespace Fps
             TestScreenType = CurrentScreenType;
         }
 
+        void Awake()
+        {
+            ConnectScreenController.gameObject.SetActive(false);
+            SessionScreen.SetActive(false);
+            LobbyScreenController.gameObject.SetActive(false);
+            ResultsScreen.SetActive(false);
+        }
+
         private void OnEnable()
         {
             FrontEndCamera.SetActive(true);
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.Confined;
-
-            ConnectScreenController.gameObject.SetActive(false);
-            MatchmakingScreen.SetActive(false);
-            LobbyScreenController.gameObject.SetActive(false);
-            ResultsScreen.SetActive(false);
-
 
             if (resultsAvailable)
             {
@@ -65,10 +64,10 @@ namespace Fps
 
             if (sessionBasedGame)
             {
-                CurrentScreenType = ScreenType.Matchmaking;
+                CurrentScreenType = ScreenType.SessionScreen;
                 TestScreenType = CurrentScreenType;
                 PreviousScreenType = CurrentScreenType;
-                MatchmakingScreen.SetActive(true);
+                SessionScreen.SetActive(true);
             }
             else
             {
@@ -108,23 +107,11 @@ namespace Fps
             Invoke(nameof(RefreshActiveScreen), 0);
         }
 
-        private void DebugPrint(string status)
-        {
-            var output = "";
-
-            output += $"{status} for object {gameObject.name}\n" +
-                $"instanceId: {gameObject.GetInstanceID()}\n" +
-                $"prefabAssetType: {PrefabUtility.GetPrefabAssetType(gameObject)}\n" +
-                $"path: {PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(gameObject)}\n" +
-                $"prefabInstanceStatus: {PrefabUtility.GetPrefabInstanceStatus(gameObject)}\n" +
-                $"prefabStage: {PrefabStageUtility.GetPrefabStage(gameObject)}";
-        }
-
         private void RefreshActiveScreen()
         {
             ConnectScreenController.gameObject.SetActive(ConnectScreenController.gameObject ==
                 GetGOFromScreen(CurrentScreenType));
-            MatchmakingScreen.SetActive(MatchmakingScreen == GetGOFromScreen(CurrentScreenType));
+            SessionScreen.SetActive(SessionScreen == GetGOFromScreen(CurrentScreenType));
             LobbyScreenController.gameObject.SetActive(LobbyScreenController.gameObject ==
                 GetGOFromScreen(CurrentScreenType));
             ResultsScreen.SetActive(ResultsScreen == GetGOFromScreen(CurrentScreenType));
@@ -135,9 +122,9 @@ namespace Fps
             SetScreenTo(ScreenType.Lobby);
         }
 
-        public void SwitchToMatchmakingScreen()
+        public void SwitchToSessionScreen()
         {
-            SetScreenTo(ScreenType.Matchmaking);
+            SetScreenTo(ScreenType.SessionScreen);
         }
 
         public void SwitchToResultsScreen()
@@ -157,8 +144,8 @@ namespace Fps
             {
                 case ScreenType.DefaultConnect:
                     return ConnectScreenController.gameObject;
-                case ScreenType.Matchmaking:
-                    return MatchmakingScreen;
+                case ScreenType.SessionScreen:
+                    return SessionScreen;
                 case ScreenType.Lobby:
                     return LobbyScreenController.gameObject;
                 case ScreenType.Results:
@@ -178,7 +165,7 @@ namespace Fps
         public enum ScreenType
         {
             DefaultConnect,
-            Matchmaking,
+            SessionScreen,
             Lobby,
             Results,
             Previous

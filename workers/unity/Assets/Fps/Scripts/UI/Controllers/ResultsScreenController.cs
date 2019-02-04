@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 namespace Fps
 {
     public class ResultsScreenController : MonoBehaviour
     {
         [SerializeField] private GameObject rankDivider;
+        public Button DoneButton;
 
         public Color BackgroundStripColor1;
         public Color BackgroundStripColor2;
@@ -16,9 +18,33 @@ namespace Fps
         private Table resultsTable;
         private Color currentBgColor;
 
+        private FrontEndUIController frontEndUiController;
+
         private void Awake()
         {
+            Debug.Assert(DoneButton != null);
+            DoneButton.onClick.AddListener(DoneButtonPressed);
+
             resultsTable = GetComponentInChildren<Table>();
+            Debug.Assert(resultsTable != null);
+
+            frontEndUiController = GetComponentInParent<FrontEndUIController>();
+            Debug.Assert(frontEndUiController != null);
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.KeypadEnter)
+                || Input.GetKeyDown(KeyCode.Return)
+                || Input.GetKeyDown(KeyCode.Escape))
+            {
+                DoneButton.onClick.Invoke();
+            }
+        }
+
+        private void DoneButtonPressed()
+        {
+            frontEndUiController.SwitchToSessionScreen();
         }
 
         public void SetResults(ResultsData[] results)
@@ -47,8 +73,10 @@ namespace Fps
             if (playerRank < 10)
             {
                 var rect = resultsTable.GetComponent<RectTransform>();
-                rect.offsetMin = new Vector2(rect.offsetMin.x, (MaxVisibleRowCount - 1) * resultsTable.EntryHeight * -.5f);
-                rect.offsetMax = new Vector2(rect.offsetMax.x, (MaxVisibleRowCount - 1) * resultsTable.EntryHeight * .5f);
+                rect.offsetMin = new Vector2(rect.offsetMin.x,
+                    (MaxVisibleRowCount - 1) * resultsTable.EntryHeight * -.5f);
+                rect.offsetMax = new Vector2(rect.offsetMax.x,
+                    (MaxVisibleRowCount - 1) * resultsTable.EntryHeight * .5f);
                 rankDivider.SetActive(false);
             }
             else

@@ -21,16 +21,31 @@ namespace Fps
         private int currentlyHighlightedEntry = -1;
         private DeploymentData[] deploymentList;
 
+        private FrontEndUIController frontEndUiController;
 
         private void Awake()
         {
+            Debug.Assert(JoinButton != null);
+            JoinButton.onClick.AddListener(JoinButtonPressed);
+
+            Debug.Assert(BackButton != null);
+            BackButton.onClick.AddListener(BackButtonPressed);
+
             lobbyTable = GetComponentInChildren<Table>();
-            JoinButton.onClick.AddListener(JoinSelectedDeployment);
+            Debug.Assert(lobbyTable != null);
+
+            frontEndUiController = GetComponentInParent<FrontEndUIController>();
+            Debug.Assert(frontEndUiController != null);
         }
 
-        private void JoinSelectedDeployment()
+        private void JoinButtonPressed()
         {
-            Debug.Log($"Joining deployment {deploymentList[currentlyHighlightedEntry]}");
+            Debug.Log($"Joining deployment {deploymentList[currentlyHighlightedEntry].Name}");
+        }
+
+        private void BackButtonPressed()
+        {
+            frontEndUiController.SwitchToSessionScreen();
         }
 
         private void Update()
@@ -72,7 +87,7 @@ namespace Fps
             {
                 if (JoinButton.enabled)
                 {
-                    ((FpsUIButton) JoinButton).onClick.Invoke();
+                    JoinButton.onClick.Invoke();
                 }
             }
 
