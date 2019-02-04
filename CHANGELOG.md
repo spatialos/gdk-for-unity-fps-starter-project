@@ -6,6 +6,7 @@
 
 - Added a Deployment Launcher window. This allows you to upload assemblies and launch deployments from the Unity Editor.
 - Added two launch configurations: `cloud_launch_large_sim_players.json` and `cloud_launch_small_sim_players.json` for simulated player deployments. 
+- Added cloud support for mobile workers.
 
 ### Changed
 
