@@ -9,7 +9,6 @@ namespace Fps
 
         private void Awake()
         {
-            Debug.Log("ScreenUIC Woke");
             FrontEndController.gameObject.SetActive(false);
             InGameController.gameObject.SetActive(false);
             ConnectionStateReporter.InformOfUIController(this);
