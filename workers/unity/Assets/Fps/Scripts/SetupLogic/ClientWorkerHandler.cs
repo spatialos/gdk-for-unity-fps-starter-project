@@ -23,15 +23,35 @@ namespace Fps
         public static ConnectionController ConnectionController => Instance.connectionController;
         public static ScreenUIController ScreenUIController => Instance.screenUIController;
 
+        [SerializeField] private bool UseSessionBasedFlow;
+
+        public static bool AreInSessionBasedGame => Instance.UseSessionBasedFlow;
+
+
         public static void CreateClient()
         {
             Instance.CreateClientWorker();
         }
 
+        private void Awake()
+        {
+            Debug.Log("CWH Awoke");
+            Instance = this;
+            screenUIController.gameObject.SetActive(false);
+        }
+
         private void Start()
         {
-            Instance = this;
-            CreateClientWorker();
+            screenUIController.gameObject.SetActive(true);
+
+            if (UseSessionBasedFlow)
+            {
+                GetComponent<SessionFlowTester>().enabled = true;
+            }
+            else
+            {
+                CreateClientWorker();
+            }
         }
 
         private void Update()
@@ -42,6 +62,7 @@ namespace Fps
 
         private void CreateClientWorker()
         {
+            ConnectionStateReporter.SetState(ConnectionStateReporter.State.Connecting);
             if (currentClientWorker != null)
             {
                 Destroy(currentClientWorker);
@@ -51,7 +72,6 @@ namespace Fps
             workerConnector = currentClientWorker.GetComponent<WorkerConnector>();
             tileProvider = workerConnector as ITileProvider;
             connectionController = currentClientWorker.GetComponent<ConnectionController>();
-            connectionController.InformOfUI(screenUIController);
         }
 
         private void DisconnectCheck()
@@ -64,8 +84,5 @@ namespace Fps
                 Destroy(currentClientWorker);
             }
         }
-
-
-
     }
 }

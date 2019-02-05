@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 namespace Fps
 {
@@ -9,17 +10,23 @@ namespace Fps
         public GameObject Reticle;
         [FormerlySerializedAs("InGameHud")] public GameObject Hud;
         public GameObject EscapeScreen;
+        public Button QuitButton;
 
         public static bool InEscapeMenu { get; private set; }
         private bool isPlayerAiming;
+
+        private void Awake()
+        {
+            QuitButton.onClick.AddListener(ScreenUIController.Quit);
+        }
 
         public void OnEnable()
         {
             Hud.SetActive(true);
             Reticle.SetActive(true);
             RespawnScreen.SetActive(false);
-            InEscapeMenu = false;
-            isPlayerAiming = false;
+            SetEscapeScreen(false);
+            SetPlayerAiming(false);
         }
 
         public void OnDisable()

@@ -135,7 +135,7 @@ namespace Fps
 
         protected override void HandleWorkerConnectionFailure(string errorMessage)
         {
-            connectionController.OnFailedToConnect();
+            connectionController.OnFailedToConnect(errorMessage);
         }
 
         public override void Dispose()

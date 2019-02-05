@@ -36,10 +36,27 @@ namespace Fps
 
             frontEndUiController = GetComponentInParent<FrontEndUIController>();
             Debug.Assert(frontEndUiController != null);
+
+            ConnectionStateReporter.OnConnectionStateChange += OnConnectionStateChanged;
         }
+
+        private void OnConnectionStateChanged(ConnectionStateReporter.State state, string information)
+        {
+            if (state == ConnectionStateReporter.State.Connecting)
+            {
+                JoinButton.enabled = false;
+            }
+            else
+            {
+                // Are there any cases we don't want to reenable the join button on a valid deployment?
+                JoinButton.enabled = HighlightedIsAvailable();
+            }
+        }
+
 
         private void JoinButtonPressed()
         {
+            ConnectionStateReporter.TryConnect();
             Debug.Log($"Joining deployment {deploymentList[currentlyHighlightedEntry].Name}");
         }
 
@@ -85,17 +102,34 @@ namespace Fps
             if ((Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return))
                 && currentlyHighlightedEntry >= 0)
             {
-                if (JoinButton.enabled)
-                {
-                    JoinButton.onClick.Invoke();
-                }
+                TryPressJoinButton();
             }
 
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                // TODO Disable if connecting?
-                BackButton.onClick.Invoke();
+                TryPressBackButton();
             }
+        }
+
+
+        private void TryPressJoinButton()
+        {
+            if (!JoinButton.enabled)
+            {
+                return;
+            }
+
+            JoinButton.onClick.Invoke();
+        }
+
+        private void TryPressBackButton()
+        {
+            if (!BackButton.enabled)
+            {
+                return;
+            }
+
+            BackButton.onClick.Invoke();
         }
 
         public void SetDeployments(DeploymentData[] deployments)
@@ -144,7 +178,19 @@ namespace Fps
 
             currentlyHighlightedEntry = index;
 
-            JoinButton.enabled = deploymentList[index].IsAvailable;
+            JoinButton.enabled = HighlightedIsAvailable();
+        }
+
+        private bool HighlightedIsAvailable()
+        {
+            if (currentlyHighlightedEntry < 0
+                || deploymentList == null
+                || currentlyHighlightedEntry >= deploymentList.Length)
+            {
+                return false;
+            }
+
+            return deploymentList[currentlyHighlightedEntry].IsAvailable;
         }
 
         private void HighlightEntry(int index)

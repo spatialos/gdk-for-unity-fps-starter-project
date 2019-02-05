@@ -35,7 +35,6 @@ namespace Fps
             browseButton.enabled = isValid;
         }
 
-        //TODO Move these to anim?
         public void FindingQuickGame()
         {
             browseButton.enabled = false;
@@ -56,8 +55,7 @@ namespace Fps
 
         public void QuickJoinPressed()
         {
-            // TODO Implement connection call
-            frontEndUIController.SwitchToResultsScreen();
+            ConnectionStateReporter.TryConnect();
         }
 
         public void BrowseButtonPressed()

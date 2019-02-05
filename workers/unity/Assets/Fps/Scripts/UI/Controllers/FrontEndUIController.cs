@@ -3,6 +3,7 @@ using UnityEditor;
 using UnityEditor.Experimental.SceneManagement;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 namespace Fps
 {
@@ -15,8 +16,8 @@ namespace Fps
         public ScreenType PreviousScreenType { get; private set; }
         public ScreenType CurrentScreenType { get; private set; }
         public GameObject FrontEndCamera;
+        public Button QuitButton;
 
-        public bool sessionBasedGame;
         public bool resultsAvailable;
 
         public ScreenType TestScreenType;
@@ -45,6 +46,7 @@ namespace Fps
             SessionScreen.SetActive(false);
             LobbyScreenController.gameObject.SetActive(false);
             ResultsScreen.SetActive(false);
+            QuitButton.onClick.AddListener(ScreenUIController.Quit);
         }
 
         private void OnEnable()
@@ -62,7 +64,7 @@ namespace Fps
                 return;
             }
 
-            if (sessionBasedGame)
+            if (ClientWorkerHandler.AreInSessionBasedGame)
             {
                 CurrentScreenType = ScreenType.SessionScreen;
                 TestScreenType = CurrentScreenType;
