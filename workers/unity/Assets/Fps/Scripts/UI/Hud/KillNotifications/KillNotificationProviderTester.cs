@@ -5,17 +5,14 @@ public class KillNotificationProviderTester : MonoBehaviour
 {
     public bool GenerateName;
 
-    private void OnValidate()
+    void Update()
     {
-        if (!Application.isPlaying)
+        if (!GenerateName)
         {
             return;
         }
 
-        if (GenerateName)
-        {
-            GenerateName = false;
-            GetComponent<KillNotificationProvider>().AddKill(RandomNameGenerator.GetName());
-        }
+        GenerateName = false;
+        GetComponent<KillNotificationProvider>().AddKill(RandomNameGenerator.GetName());
     }
 }

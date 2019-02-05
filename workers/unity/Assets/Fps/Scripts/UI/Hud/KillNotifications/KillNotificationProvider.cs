@@ -6,7 +6,7 @@ public class KillNotificationProvider : MonoBehaviour
     public GameObject KillNotificationPrefab;
 
 
-    private Queue<KillNotification> notificationQueue = new Queue<KillNotification>();
+    private readonly Queue<KillNotification> notificationQueue = new Queue<KillNotification>();
 
     public int MaxActiveNotifications = 3;
 
