@@ -35,7 +35,6 @@ namespace Fps
 
         private void Awake()
         {
-            Debug.Log("CWH Awoke");
             Instance = this;
             screenUIController.gameObject.SetActive(false);
         }

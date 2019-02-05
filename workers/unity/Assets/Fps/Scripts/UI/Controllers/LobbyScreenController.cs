@@ -57,7 +57,7 @@ namespace Fps
         private void JoinButtonPressed()
         {
             ConnectionStateReporter.TryConnect();
-            Debug.Log($"Joining deployment {deploymentList[currentlyHighlightedEntry].Name}");
+            Debug.Log($"Joining deployment {deploymentList[currentlyHighlightedEntry].Name}"); // TODO replace
         }
 
         private void BackButtonPressed()

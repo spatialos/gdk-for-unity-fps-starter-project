@@ -30,7 +30,7 @@ public static class ConnectionStateReporter
     {
         if (AreConnected)
         {
-            Debug.Log("Tried connecting when already connected");
+            Debug.LogWarning("Tried connecting when already connected");
             return;
         }
 
@@ -41,13 +41,13 @@ public static class ConnectionStateReporter
     {
         if (!AreConnected)
         {
-            Debug.Log("Tried spawning when we weren't connected");
+            Debug.LogWarning("Tried spawning when we weren't connected");
             return;
         }
 
         if (AreSpawned)
         {
-            Debug.Log("Tried spawning when we were already spawned");
+            Debug.LogWarning("Tried spawning when we were already spawned");
             return;
         }
 
@@ -86,7 +86,6 @@ public static class ConnectionStateReporter
 
     public static void InformOfConnectionController(ConnectionController controller)
     {
-        Debug.Log("Informed of connectionController");
         connectionController = controller;
     }
 
