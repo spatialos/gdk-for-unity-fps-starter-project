@@ -161,11 +161,9 @@ namespace Improbable.Gdk.DeploymentManager
 
                 if (runningLaunchTask != null)
                 {
-                    EditorGUILayout.HelpBox("Launching deployment(s), Assembly reloading locked.", MessageType.Info);
-                    var fract = Mathf.Repeat(Time.realtimeSinceStartup, 1.0f);
-                    var rect = EditorGUILayout.GetControlRect();
-                    rect.height = 20;
-                    DrawSpinner(fract, rect);
+                    EditorGUILayout.HelpBox("Launching deployment(s). Assembly reloading locked.", MessageType.Info);
+                    var rect = EditorGUILayout.GetControlRect(false, 20);
+                    DrawSpinner(Time.realtimeSinceStartup * 10, rect);
                     Repaint();
                 }
 
@@ -524,7 +522,8 @@ namespace Improbable.Gdk.DeploymentManager
 
             private void DrawSpinner(float value, Rect rect)
             {
-                var imageId = Mathf.RoundToInt(11 * value);
+                // There are 11 frames in the spinner animation, 0 till 11.
+                var imageId = Mathf.RoundToInt(value) % 12;
                 var icon = EditorGUIUtility.IconContent($"d_WaitSpin{imageId:D2}");
                 EditorGUI.DrawPreviewTexture(rect, icon.image, spinnerMaterial, ScaleMode.ScaleToFit, 1);
             }
