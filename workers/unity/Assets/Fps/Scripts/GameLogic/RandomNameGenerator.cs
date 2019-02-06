@@ -5,12 +5,10 @@ public static class RandomNameGenerator
     public static string GetName()
     {
         var prefix = Prefixes[Random.Range(0, Prefixes.Length)];
-
         var postfix = Postfixes[Random.Range(0, Postfixes.Length)];
 
-        var preLength = prefix.Length;
         var timeOut = 200;
-        while (postfix.Length + preLength > 15 && timeOut > 0)
+        while (postfix.Length + prefix.Length > 15 && timeOut > 0)
         {
             postfix = Postfixes[Random.Range(0, Postfixes.Length)];
             timeOut--;
