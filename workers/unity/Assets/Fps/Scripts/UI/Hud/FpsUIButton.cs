@@ -173,8 +173,15 @@ namespace Fps
 
         private void HoverState()
         {
-            TargetFill.color = hoverFill;
-            TargetText.color = lightText;
+            if (TargetFill != null)
+            {
+                TargetFill.color = hoverFill;
+            }
+
+            if (TargetText != null)
+            {
+                TargetText.color = lightText;
+            }
         }
 
         // Used by animation events to change the visible text element on button.
