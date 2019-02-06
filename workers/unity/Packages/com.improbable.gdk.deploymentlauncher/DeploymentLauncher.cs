@@ -27,6 +27,8 @@ namespace Improbable.Gdk.DeploymentManager
         private static readonly string ProjectRootPath =
             Path.Combine(Application.dataPath, "../../../");
 
+        private static readonly Material spinnerMaterial = new Material(Shader.Find("UI/Default"));
+
         [MenuItem(DeploymentLauncherMenuItem, false, DeploymentLauncherPriority)]
         private static void LaunchDeploymentMenu()
         {
@@ -155,6 +157,14 @@ namespace Improbable.Gdk.DeploymentManager
                     {
                         runningLaunchTask = TriggerLaunchDeploymentAsync();
                     }
+                }
+
+                if (runningLaunchTask != null)
+                {
+                    EditorGUILayout.HelpBox("Launching deployment(s). Assembly reloading locked.", MessageType.Info);
+                    var rect = EditorGUILayout.GetControlRect(false, 20);
+                    DrawSpinner(Time.realtimeSinceStartup * 10, rect);
+                    Repaint();
                 }
 
                 // Deployment manager.
@@ -289,37 +299,46 @@ namespace Improbable.Gdk.DeploymentManager
 
             private async Task<bool> TriggerLaunchDeploymentAsync()
             {
-                if (!Tools.Common.CheckDependencies())
+                try
                 {
-                    return false;
-                }
-
-                var simSnapshotPath = GenerateTempSnapshot();
-                var arguments = new List<string>
-                {
-                    "create",
-                    projectName,
-                    assemblyName,
-                    deploymentName,
-                    Path.Combine(ProjectRootPath, mainLaunchJson),
-                    Path.Combine(ProjectRootPath, snapshotPath)
-                };
-                if (simPlayerDeploymentEnabled)
-                {
-                    arguments.AddRange(new List<string>
+                    EditorApplication.LockReloadAssemblies();
+                    if (!Tools.Common.CheckDependencies())
                     {
-                        deploymentName + "_sim_workers",
-                        Path.Combine(ProjectRootPath, simPlayerLaunchJson),
-                        simSnapshotPath
-                    });
-                }
+                        return false;
+                    }
 
-                var processResult = await RedirectedProcess.Command(Tools.Common.DotNetBinary)
-                    .WithArgs(ConstructArguments(arguments))
-                    .RedirectOutputOptions(OutputRedirectBehaviour.RedirectStdOut | OutputRedirectBehaviour.RedirectStdErr)
-                    .InDirectory(DotNetWorkingDirectory)
-                    .RunAsync();
-                return processResult.ExitCode != 0;
+                    var simSnapshotPath = GenerateTempSnapshot();
+                    var arguments = new List<string>
+                    {
+                        "create",
+                        projectName,
+                        assemblyName,
+                        deploymentName,
+                        Path.Combine(ProjectRootPath, mainLaunchJson),
+                        Path.Combine(ProjectRootPath, snapshotPath)
+                    };
+                    if (simPlayerDeploymentEnabled)
+                    {
+                        arguments.AddRange(new List<string>
+                        {
+                            deploymentName + "_sim_workers",
+                            Path.Combine(ProjectRootPath, simPlayerLaunchJson),
+                            simSnapshotPath
+                        });
+                    }
+
+                    var processResult = await RedirectedProcess.Command(Tools.Common.DotNetBinary)
+                        .WithArgs(ConstructArguments(arguments))
+                        .RedirectOutputOptions(OutputRedirectBehaviour.RedirectStdOut |
+                            OutputRedirectBehaviour.RedirectStdErr)
+                        .InDirectory(DotNetWorkingDirectory)
+                        .RunAsync();
+                    return processResult.ExitCode != 0;
+                }
+                finally
+                {
+                    EditorApplication.UnlockReloadAssemblies();
+                }
             }
 
             private async Task<bool> TriggerStopDeploymentAsync(DeploymentInfo deployment)
@@ -499,6 +518,14 @@ namespace Improbable.Gdk.DeploymentManager
                 };
                 baseArgs.AddRange(args.Select(arg => $"\"{arg}\""));
                 return baseArgs.ToArray();
+            }
+
+            private void DrawSpinner(float value, Rect rect)
+            {
+                // There are 11 frames in the spinner animation, 0 till 11.
+                var imageId = Mathf.RoundToInt(value) % 12;
+                var icon = EditorGUIUtility.IconContent($"d_WaitSpin{imageId:D2}");
+                EditorGUI.DrawPreviewTexture(rect, icon.image, spinnerMaterial, ScaleMode.ScaleToFit, 1);
             }
         }
     }
