@@ -73,7 +73,7 @@ public static class ConnectionStateReporter
             && CurrentState != State.FailedToGetDeploymentList;
         AreSpawned = CurrentState == State.Spawned;
 
-        OnConnectionStateChange(state, information);
+        OnConnectionStateChange?.Invoke(state, information);
     }
 
     public delegate void ConnectionStateChange(State state, string information);
