@@ -1,16 +1,17 @@
 ﻿using System;
-using UnityEditor;
-using UnityEditor.Experimental.SceneManagement;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
+#if UNITY_EDITOR
+using UnityEditor.Experimental.SceneManagement;
+
+#endif
 
 namespace Fps
 {
     public class FrontEndUIController : MonoBehaviour
     {
         public ConnectScreenController ConnectScreenController;
-        public GameObject SessionScreen;
+        public SessionScreenController SessionScreenController;
         public LobbyScreenController LobbyScreenController;
         public GameObject ResultsScreen;
         public ScreenType PreviousScreenType { get; private set; }
@@ -24,6 +25,8 @@ namespace Fps
 
         private void OnValidate()
         {
+#if UNITY_EDITOR
+
             if (!gameObject.scene.isLoaded)
             {
                 return;
@@ -38,12 +41,13 @@ namespace Fps
 
             SetScreenTo(TestScreenType);
             TestScreenType = CurrentScreenType;
+#endif
         }
 
-        void Awake()
+        private void Awake()
         {
             ConnectScreenController.gameObject.SetActive(false);
-            SessionScreen.SetActive(false);
+            SessionScreenController.gameObject.SetActive(false);
             LobbyScreenController.gameObject.SetActive(false);
             ResultsScreen.SetActive(false);
             QuitButton.onClick.AddListener(ScreenUIController.Quit);
@@ -69,7 +73,7 @@ namespace Fps
                 CurrentScreenType = ScreenType.SessionScreen;
                 TestScreenType = CurrentScreenType;
                 PreviousScreenType = CurrentScreenType;
-                SessionScreen.SetActive(true);
+                SessionScreenController.gameObject.SetActive(true);
             }
             else
             {
@@ -113,7 +117,7 @@ namespace Fps
         {
             ConnectScreenController.gameObject.SetActive(ConnectScreenController.gameObject ==
                 GetGOFromScreen(CurrentScreenType));
-            SessionScreen.SetActive(SessionScreen == GetGOFromScreen(CurrentScreenType));
+            SessionScreenController.gameObject.SetActive(SessionScreenController.gameObject == GetGOFromScreen(CurrentScreenType));
             LobbyScreenController.gameObject.SetActive(LobbyScreenController.gameObject ==
                 GetGOFromScreen(CurrentScreenType));
             ResultsScreen.SetActive(ResultsScreen == GetGOFromScreen(CurrentScreenType));
@@ -147,7 +151,7 @@ namespace Fps
                 case ScreenType.DefaultConnect:
                     return ConnectScreenController.gameObject;
                 case ScreenType.SessionScreen:
-                    return SessionScreen;
+                    return SessionScreenController.gameObject;
                 case ScreenType.Lobby:
                     return LobbyScreenController.gameObject;
                 case ScreenType.Results:
