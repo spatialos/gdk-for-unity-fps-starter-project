@@ -30,6 +30,11 @@ public class ConnectionStatusUIController : MonoBehaviour
 
     public void OnConnectionStateChange(ConnectionStateReporter.State state, string information)
     {
+        if (!gameObject.activeInHierarchy)
+        {
+            return;
+        }
+
         switch (state)
         {
             case ConnectionStateReporter.State.None:
