@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Improbable.Gdk.Core;
+using Improbable.Worker.CInterop;
 using UnityEngine;
 
 namespace Fps
@@ -77,7 +78,7 @@ namespace Fps
         {
             if (workerConnector != null
                 && workerConnector.Worker != null
-                && !workerConnector.Worker.Connection.IsConnected)
+                && workerConnector.Worker.Connection.GetConnectionStatusCode() != ConnectionStatusCode.Success)
             {
                 connectionController.OnDisconnected();
                 Destroy(currentClientWorker);
