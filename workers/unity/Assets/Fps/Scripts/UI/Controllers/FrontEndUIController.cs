@@ -1,55 +1,37 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
-#if UNITY_EDITOR
-using UnityEditor.Experimental.SceneManagement;
-
-#endif
 
 namespace Fps
 {
     public class FrontEndUIController : MonoBehaviour
     {
-        public ConnectScreenController ConnectScreenController;
+        [Header("General")] public Button QuitButton;
+        public GameObject FrontEndCamera;
+
+        [Header("Screens")] public ConnectScreenController ConnectScreenController;
         public SessionScreenController SessionScreenController;
         public LobbyScreenController LobbyScreenController;
-        public GameObject ResultsScreen;
-        public ScreenType PreviousScreenType { get; private set; }
-        public ScreenType CurrentScreenType { get; private set; }
-        public GameObject FrontEndCamera;
-        public Button QuitButton;
+        public ResultsScreenController ResultsScreenController;
 
-        public bool resultsAvailable;
 
-        public ScreenType TestScreenType;
+        [Header("Editor / Testing")] public bool testResultsAvailable;
+        [SerializeField] private ScreenType EditorCurrentScreen;
+
+        public ScreenType CurrentScreen { get; private set; }
 
         private void OnValidate()
         {
-#if UNITY_EDITOR
-
-            if (!gameObject.scene.isLoaded)
-            {
-                return;
-            }
-
-            if (PrefabStageUtility.GetCurrentPrefabStage() != null
-                && PrefabStageUtility.GetPrefabStage(gameObject) == null)
-            {
-                // Don't switch screens as this is not the prefab being edited in the stage
-                return;
-            }
-
-            SetScreenTo(TestScreenType);
-            TestScreenType = CurrentScreenType;
-#endif
+            EditorSwitchScreens();
         }
 
         private void Awake()
         {
+            CurrentScreen = ScreenType.None;
             ConnectScreenController.gameObject.SetActive(false);
             SessionScreenController.gameObject.SetActive(false);
             LobbyScreenController.gameObject.SetActive(false);
-            ResultsScreen.SetActive(false);
+            ResultsScreenController.gameObject.SetActive(false);
             QuitButton.onClick.AddListener(ScreenUIController.Quit);
         }
 
@@ -59,29 +41,16 @@ namespace Fps
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.Confined;
 
-            if (resultsAvailable)
+            if (testResultsAvailable)
             {
-                CurrentScreenType = ScreenType.Results;
-                TestScreenType = CurrentScreenType;
-                PreviousScreenType = CurrentScreenType;
-                ResultsScreen.SetActive(true);
+                // TODO Replace this test logic
+                SetScreenTo(ScreenType.Results);
                 return;
             }
 
-            if (ClientWorkerHandler.AreInSessionBasedGame)
-            {
-                CurrentScreenType = ScreenType.SessionScreen;
-                TestScreenType = CurrentScreenType;
-                PreviousScreenType = CurrentScreenType;
-                SessionScreenController.gameObject.SetActive(true);
-            }
-            else
-            {
-                CurrentScreenType = ScreenType.DefaultConnect;
-                TestScreenType = CurrentScreenType;
-                PreviousScreenType = CurrentScreenType;
-                ConnectScreenController.gameObject.SetActive(true);
-            }
+            SetScreenTo(ClientWorkerHandler.AreInSessionBasedGame
+                ? ScreenType.SessionScreen
+                : ScreenType.DefaultConnect);
         }
 
         private void OnDisable()
@@ -91,36 +60,17 @@ namespace Fps
 
         public void SetScreenTo(ScreenType screenType)
         {
-            var screenUnmodified = screenType == CurrentScreenType
-                || screenType == PreviousScreenType && PreviousScreenType == CurrentScreenType;
-            if (screenUnmodified)
-            {
-                return;
-            }
-
-            if (screenType == ScreenType.Previous)
-            {
-                var s = CurrentScreenType;
-                CurrentScreenType = PreviousScreenType;
-                PreviousScreenType = s;
-            }
-            else
-            {
-                PreviousScreenType = CurrentScreenType;
-                CurrentScreenType = screenType;
-            }
-
-            Invoke(nameof(RefreshActiveScreen), 0);
+            CurrentScreen = screenType;
+            RefreshActiveScreen();
         }
 
         private void RefreshActiveScreen()
         {
-            ConnectScreenController.gameObject.SetActive(ConnectScreenController.gameObject ==
-                GetGOFromScreen(CurrentScreenType));
-            SessionScreenController.gameObject.SetActive(SessionScreenController.gameObject == GetGOFromScreen(CurrentScreenType));
-            LobbyScreenController.gameObject.SetActive(LobbyScreenController.gameObject ==
-                GetGOFromScreen(CurrentScreenType));
-            ResultsScreen.SetActive(ResultsScreen == GetGOFromScreen(CurrentScreenType));
+            var currentScreenGO = GetGOFromScreen(CurrentScreen);
+            ConnectScreenController.gameObject.SetActive(ConnectScreenController.gameObject == currentScreenGO);
+            SessionScreenController.gameObject.SetActive(SessionScreenController.gameObject == currentScreenGO);
+            LobbyScreenController.gameObject.SetActive(LobbyScreenController.gameObject == currentScreenGO);
+            ResultsScreenController.gameObject.SetActive(ResultsScreenController == currentScreenGO);
         }
 
         public void SwitchToLobbyScreen()
@@ -138,16 +88,12 @@ namespace Fps
             SetScreenTo(ScreenType.Results);
         }
 
-        public void BackButton()
-        {
-            SetScreenTo(ScreenType.Previous);
-        }
-
-
         private GameObject GetGOFromScreen(ScreenType screenType)
         {
             switch (screenType)
             {
+                case ScreenType.None:
+                    return null;
                 case ScreenType.DefaultConnect:
                     return ConnectScreenController.gameObject;
                 case ScreenType.SessionScreen:
@@ -155,14 +101,7 @@ namespace Fps
                 case ScreenType.Lobby:
                     return LobbyScreenController.gameObject;
                 case ScreenType.Results:
-                    return ResultsScreen;
-                case ScreenType.Previous:
-                    if (PreviousScreenType == ScreenType.Previous)
-                    {
-                        throw new ArgumentException();
-                    }
-
-                    return GetGOFromScreen(PreviousScreenType);
+                    return ResultsScreenController.gameObject;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(screenType), screenType, null);
             }
@@ -170,11 +109,38 @@ namespace Fps
 
         public enum ScreenType
         {
+            None,
             DefaultConnect,
             SessionScreen,
             Lobby,
-            Results,
-            Previous
+            Results
+        }
+
+        /// <summary>
+        ///     Utility for controlling visible screen in editor using TestScreenType dropdown.
+        /// </summary>
+        private void EditorSwitchScreens()
+        {
+#if UNITY_EDITOR
+            if (!gameObject.scene.isLoaded)
+            {
+                return;
+            }
+
+            if (UnityEditor.Experimental.SceneManagement.PrefabStageUtility.GetCurrentPrefabStage() != null
+                && UnityEditor.Experimental.SceneManagement.PrefabStageUtility.GetPrefabStage(gameObject) == null)
+            {
+                // Don't switch screens as this is not the prefab being edited in the stage
+                return;
+            }
+
+            if (EditorCurrentScreen == CurrentScreen)
+            {
+                return;
+            }
+
+            SetScreenTo(EditorCurrentScreen);
+#endif
         }
     }
 }

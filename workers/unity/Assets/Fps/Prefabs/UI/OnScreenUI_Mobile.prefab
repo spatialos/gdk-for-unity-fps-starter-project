@@ -5927,14 +5927,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e7687c6d3bd1c348b9975a596f60c61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  QuitButton: {fileID: 4688799787672040641}
+  FrontEndCamera: {fileID: 4648286127619651879}
   ConnectScreenController: {fileID: 4689077752758408411}
   SessionScreenController: {fileID: 4691667897783103137}
   LobbyScreenController: {fileID: 5238200821785583470}
-  ResultsScreen: {fileID: 2030595107262849433}
-  FrontEndCamera: {fileID: 4648286127619651879}
-  QuitButton: {fileID: 4688799787672040641}
-  resultsAvailable: 0
-  TestScreenType: 3
+  ResultsScreenController: {fileID: 725924505858706367}
+  testResultsAvailable: 0
+  EditorCurrentScreen: 0
 --- !u!1 &4648741441122516389
 GameObject:
   m_ObjectHideFlags: 0
