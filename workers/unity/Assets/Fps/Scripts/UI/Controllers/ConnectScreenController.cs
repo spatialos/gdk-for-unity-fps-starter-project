@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace Fps
@@ -22,6 +21,14 @@ namespace Fps
             else
             {
                 ConnectionStateReporter.TryConnect();
+            }
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Space) && ConnectButton.enabled)
+            {
+                ConnectButton.onClick.Invoke();
             }
         }
     }
