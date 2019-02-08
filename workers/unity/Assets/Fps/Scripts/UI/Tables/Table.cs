@@ -2,106 +2,109 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Table : MonoBehaviour
+namespace Fps
 {
-    public RectTransform EntriesParentRect;
-
-    private TableEntry EntryTemplate;
-
-
-    public float EntryHeight
+    public class Table : MonoBehaviour
     {
-        get
+        public RectTransform EntriesParentRect;
+
+        private TableEntry EntryTemplate;
+
+
+        public float EntryHeight
         {
-            if (entryHeightCached >= 0)
+            get
             {
+                if (entryHeightCached >= 0)
+                {
+                    return entryHeightCached;
+                }
+
+                entryHeightCached = EntryTemplate.GetComponent<RectTransform>().rect.height;
                 return entryHeightCached;
             }
-
-            entryHeightCached = EntryTemplate.GetComponent<RectTransform>().rect.height;
-            return entryHeightCached;
         }
-    }
 
-    private float entryHeightCached = -1f;
+        private float entryHeightCached = -1f;
 
-    [NonSerialized] private readonly List<TableEntry> Entries = new List<TableEntry>();
+        [NonSerialized] private readonly List<TableEntry> Entries = new List<TableEntry>();
 
-    private void Awake()
-    {
-        if (EntriesParentRect == null)
+        private void Awake()
         {
-            Debug.LogError($"EntriesParentRect is not set on table {gameObject.name}");
-            return;
+            if (EntriesParentRect == null)
+            {
+                Debug.LogError($"EntriesParentRect is not set on table {gameObject.name}");
+                return;
+            }
+
+            GatherEntryTemplate();
+
+            if (EntryTemplate == null)
+            {
+                Debug.LogError($"Was unable to find an entry template for table {gameObject.name}");
+                return;
+            }
+
+            ClearEntries();
         }
 
-        GatherEntryTemplate();
-
-        if (EntryTemplate == null)
+        public void ClearEntries()
         {
-            Debug.LogError($"Was unable to find an entry template for table {gameObject.name}");
-            return;
+            // Don't destroy the first child, use it to make new children
+            EntriesParentRect.GetChild(0).gameObject.SetActive(false);
+
+            for (var i = EntriesParentRect.childCount - 1; i > 0; i--)
+            {
+                Destroy(EntriesParentRect.GetChild(i).gameObject);
+            }
+
+            Entries.Clear();
         }
 
-        ClearEntries();
-    }
-
-    public void ClearEntries()
-    {
-        // Don't destroy the first child, use it to make new children
-        EntriesParentRect.GetChild(0).gameObject.SetActive(false);
-
-        for (var i = EntriesParentRect.childCount - 1; i > 0; i--)
+        private void GatherEntryTemplate()
         {
-            Destroy(EntriesParentRect.GetChild(i).gameObject);
+            if (EntriesParentRect.childCount == 0)
+            {
+                Debug.LogWarning($"The EntriesParentRect on '{gameObject}' must have exactly 1 child, which defines " +
+                    $"the template used to create entries.");
+                return;
+            }
+
+            EntryTemplate = EntriesParentRect.GetChild(0).GetComponent<TableEntry>();
+
+            if (EntryTemplate == null)
+            {
+                Debug.LogWarning($"Expected a TableEntry component on template object {EntriesParentRect.GetChild(0)}");
+                return;
+            }
+
+            Entries.Add(EntryTemplate);
         }
 
-        Entries.Clear();
-    }
-
-    private void GatherEntryTemplate()
-    {
-        if (EntriesParentRect.childCount == 0)
+        public TableEntry AddEntry()
         {
-            Debug.LogWarning($"The EntriesParentRect on '{gameObject}' must have exactly 1 child, which defines " +
-                $"the template used to create entries.");
-            return;
+            TableEntry newEntry;
+
+            if (Entries.Count == 0)
+            {
+                newEntry = EntryTemplate;
+                newEntry.gameObject.SetActive(true);
+            }
+            else
+            {
+                newEntry = Instantiate(EntryTemplate.gameObject, EntriesParentRect, false).GetComponent<TableEntry>();
+            }
+
+            newEntry.transform.localPosition = Vector3.down * EntryHeight * Entries.Count;
+
+            Entries.Add(newEntry);
+
+            return newEntry;
         }
 
-        EntryTemplate = EntriesParentRect.GetChild(0).GetComponent<TableEntry>();
-
-        if (EntryTemplate == null)
+        public TableEntry GetEntry(int index)
         {
-            Debug.LogWarning($"Expected a TableEntry component on template object {EntriesParentRect.GetChild(0)}");
-            return;
+            return Entries[index];
         }
-
-        Entries.Add(EntryTemplate);
-    }
-
-    public TableEntry AddEntry()
-    {
-        TableEntry newEntry;
-
-        if (Entries.Count == 0)
-        {
-            newEntry = EntryTemplate;
-            newEntry.gameObject.SetActive(true);
-        }
-        else
-        {
-            newEntry = Instantiate(EntryTemplate.gameObject, EntriesParentRect, false).GetComponent<TableEntry>();
-        }
-
-        newEntry.transform.localPosition = Vector3.down * EntryHeight * Entries.Count;
-
-        Entries.Add(newEntry);
-
-        return newEntry;
-    }
-
-    public TableEntry GetEntry(int index)
-    {
-        return Entries[index];
     }
 }

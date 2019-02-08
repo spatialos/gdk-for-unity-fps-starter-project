@@ -1,18 +1,21 @@
 ﻿using UnityEngine;
 
-[RequireComponent(typeof(KillNotificationProvider))]
-public class KillNotificationProviderTester : MonoBehaviour
+namespace Fps
 {
-    public bool GenerateName;
-
-    void Update()
+    [RequireComponent(typeof(KillNotificationProvider))]
+    public class KillNotificationProviderTester : MonoBehaviour
     {
-        if (!GenerateName)
-        {
-            return;
-        }
+        public bool GenerateName;
 
-        GenerateName = false;
-        GetComponent<KillNotificationProvider>().AddKill(RandomNameGenerator.GetName());
+        private void Update()
+        {
+            if (!GenerateName)
+            {
+                return;
+            }
+
+            GenerateName = false;
+            GetComponent<KillNotificationProvider>().AddKill(RandomNameGenerator.GetName());
+        }
     }
 }

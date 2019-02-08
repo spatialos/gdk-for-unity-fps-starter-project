@@ -2,49 +2,53 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TableEntry : MonoBehaviour
+namespace Fps
 {
-    [SerializeField] private RectTransform[] Columns;
-
-    public RectTransform GetColumnRect(int column)
+    public class TableEntry : MonoBehaviour
     {
-        return Columns[column];
-    }
+        [SerializeField] private RectTransform[] Columns;
 
-    public void SetTextOnColumn(int column, string text)
-    {
-        RectTransform columnRect;
-        try
+        public RectTransform GetColumnRect(int column)
         {
-            columnRect = GetColumnRect(column);
-        }
-        catch (IndexOutOfRangeException)
-        {
-            throw new ArgumentOutOfRangeException($"Column with index {column} does not exist. Does the TableEntry " +
-                $"object '{gameObject.name}' have its Column references filled in?");
+            return Columns[column];
         }
 
-        var textComp = columnRect.GetComponentInChildren<Text>();
-
-        if (textComp == null)
+        public void SetTextOnColumn(int column, string text)
         {
-            throw new NullReferenceException("Tried to set text on column with no text component.");
+            RectTransform columnRect;
+            try
+            {
+                columnRect = GetColumnRect(column);
+            }
+            catch (IndexOutOfRangeException)
+            {
+                throw new ArgumentOutOfRangeException(
+                    $"Column with index {column} does not exist. Does the TableEntry " +
+                    $"object '{gameObject.name}' have its Column references filled in?");
+            }
+
+            var textComp = columnRect.GetComponentInChildren<Text>();
+
+            if (textComp == null)
+            {
+                throw new NullReferenceException("Tried to set text on column with no text component.");
+            }
+
+            textComp.text = text;
         }
 
-        textComp.text = text;
-    }
-
-    public void SetAllTextVisuals(Color color, bool bold)
-    {
-        foreach (var text in GetComponentsInChildren<Text>())
+        public void SetAllTextVisuals(Color color, bool bold)
         {
-            text.color = color;
-            text.fontStyle = bold ? FontStyle.Bold : FontStyle.Normal;
+            foreach (var text in GetComponentsInChildren<Text>())
+            {
+                text.color = color;
+                text.fontStyle = bold ? FontStyle.Bold : FontStyle.Normal;
+            }
         }
-    }
 
-    public void SetBackgroundColor(Color col)
-    {
-        GetComponent<Image>().color = col;
+        public void SetBackgroundColor(Color col)
+        {
+            GetComponent<Image>().color = col;
+        }
     }
 }
