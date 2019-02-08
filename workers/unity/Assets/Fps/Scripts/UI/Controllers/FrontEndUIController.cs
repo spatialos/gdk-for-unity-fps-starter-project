@@ -70,7 +70,7 @@ namespace Fps
             ConnectScreenController.gameObject.SetActive(ConnectScreenController.gameObject == currentScreenGO);
             SessionScreenController.gameObject.SetActive(SessionScreenController.gameObject == currentScreenGO);
             LobbyScreenController.gameObject.SetActive(LobbyScreenController.gameObject == currentScreenGO);
-            ResultsScreenController.gameObject.SetActive(ResultsScreenController == currentScreenGO);
+            ResultsScreenController.gameObject.SetActive(ResultsScreenController.gameObject == currentScreenGO);
         }
 
         public void SwitchToLobbyScreen()
