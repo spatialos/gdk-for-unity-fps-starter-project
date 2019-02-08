@@ -1,67 +1,70 @@
 ﻿using UnityEngine;
 
-public static class RandomNameGenerator
+namespace Fps
 {
-    public static string GetName()
+    public static class RandomNameGenerator
     {
-        var prefix = Prefixes[Random.Range(0, Prefixes.Length)];
-        var postfix = Postfixes[Random.Range(0, Postfixes.Length)];
-
-        var timeOut = 200;
-        while (postfix.Length + prefix.Length > 15 && timeOut > 0)
+        public static string GetName()
         {
-            postfix = Postfixes[Random.Range(0, Postfixes.Length)];
-            timeOut--;
+            var prefix = Prefixes[Random.Range(0, Prefixes.Length)];
+            var postfix = Postfixes[Random.Range(0, Postfixes.Length)];
+
+            var timeOut = 200;
+            while (postfix.Length + prefix.Length > 15 && timeOut > 0)
+            {
+                postfix = Postfixes[Random.Range(0, Postfixes.Length)];
+                timeOut--;
+            }
+
+            var name = prefix + postfix;
+
+            if (timeOut == 0)
+            {
+                return name.Substring(0, 15);
+            }
+
+            if (name.Length < 13)
+            {
+                name += Random.Range(10, 99).ToString();
+            }
+
+            return name;
         }
 
-        var name = prefix + postfix;
 
-        if (timeOut == 0)
+        private static readonly string[] Prefixes =
         {
-            return name.Substring(0, 15);
-        }
+            "Angry",
+            "Splendid",
+            "Mega",
+            "Ugly",
+            "Noob",
+            "Dead",
+            "Dr",
+            "Cold",
+            "Fast",
+            "Good",
+            "Spark",
+            "Low",
+            "High",
+            "Twisted"
+        };
 
-        if (name.Length < 13)
+        private static readonly string[] Postfixes =
         {
-            name += Random.Range(10, 99).ToString();
-        }
-
-        return name;
+            "Fox",
+            "Bear",
+            "Noob",
+            "Ghost",
+            "Kid",
+            "Fragger",
+            "Man",
+            "Woman",
+            "Zombie",
+            "Lion",
+            "Jack",
+            "Karen",
+            "Undead"
+        };
     }
-
-
-    private static readonly string[] Prefixes =
-    {
-        "Angry",
-        "Splendid",
-        "Mega",
-        "Ugly",
-        "Noob",
-        "Dead",
-        "Dr",
-        "Cold",
-        "Fast",
-        "Good",
-        "Spark",
-        "Low",
-        "High",
-        "Twisted"
-    };
-
-    private static readonly string[] Postfixes =
-    {
-        "Fox",
-        "Bear",
-        "Noob",
-        "Ghost",
-        "Kid",
-        "Fragger",
-        "Man",
-        "Woman",
-        "Zombie",
-        "Lion",
-        "Jack",
-        "Karen",
-        "Undead"
-    };
 }

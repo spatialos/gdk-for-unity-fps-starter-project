@@ -1,37 +1,40 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class KillNotificationProvider : MonoBehaviour
+namespace Fps
 {
-    public GameObject KillNotificationPrefab;
-
-
-    private readonly Queue<KillNotification> notificationQueue = new Queue<KillNotification>();
-
-    public int MaxActiveNotifications = 3;
-
-    public void AddKill(string name)
+    public class KillNotificationProvider : MonoBehaviour
     {
-        if (notificationQueue.Count == MaxActiveNotifications)
+        public GameObject KillNotificationPrefab;
+
+
+        private readonly Queue<KillNotification> notificationQueue = new Queue<KillNotification>();
+
+        public int MaxActiveNotifications = 3;
+
+        public void AddKill(string name)
         {
-            notificationQueue.Dequeue().Despawn();
+            if (notificationQueue.Count == MaxActiveNotifications)
+            {
+                notificationQueue.Dequeue().Despawn();
+            }
+
+            foreach (var notification in notificationQueue)
+            {
+                notification.Relegate();
+            }
+
+            // Would be better pooled but this is probably OK
+            var killFeedToken = Instantiate(KillNotificationPrefab).GetComponent<KillNotification>();
+            killFeedToken.SetName(name);
+            killFeedToken.transform.SetParent(transform, false);
+            killFeedToken.OnDespawn += OnNotificationDespawned;
+            notificationQueue.Enqueue(killFeedToken);
         }
 
-        foreach (var notification in notificationQueue)
+        private void OnNotificationDespawned()
         {
-            notification.Relegate();
+            notificationQueue.Dequeue();
         }
-
-        // Would be better pooled but this is probably OK
-        var killFeedToken = Instantiate(KillNotificationPrefab).GetComponent<KillNotification>();
-        killFeedToken.SetName(name);
-        killFeedToken.transform.SetParent(transform, false);
-        killFeedToken.OnDespawn += OnNotificationDespawned;
-        notificationQueue.Enqueue(killFeedToken);
-    }
-
-    private void OnNotificationDespawned()
-    {
-        notificationQueue.Dequeue();
     }
 }
