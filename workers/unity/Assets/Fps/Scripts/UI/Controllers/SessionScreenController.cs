@@ -10,10 +10,6 @@ namespace Fps
 
         private FrontEndUIController frontEndUIController;
 
-        private const int QuickJoinDefaultIndex = 0;
-        private const int QuickJoinCancelIndex = 1;
-        private const int QuickJoinJoiningIndex = 2;
-
         private void Awake()
         {
             Debug.Assert(quickJoinButton != null);
@@ -25,33 +21,35 @@ namespace Fps
             frontEndUIController = GetComponentInParent<FrontEndUIController>();
             Debug.Assert(frontEndUIController != null);
 
-            playerNameInputController.OnNameChanged += SetButtonsEnabled;
+            playerNameInputController.OnNameChanged += OnNameUpdated;
             Debug.Assert(playerNameInputController != null);
+
+            ConnectionStateReporter.OnConnectionStateChange += ConnectionStateChanged;
         }
 
-        private void SetButtonsEnabled(bool isValid)
+        private void ConnectionStateChanged(ConnectionStateReporter.State state, string information)
         {
-            quickJoinButton.enabled = isValid;
-            browseButton.enabled = isValid;
+            playerNameInputController.AllowEdit = ConnectionStateReporter.HaveDeployments;
+            RefreshButtons();
         }
 
-        public void FindingQuickGame()
+
+        private bool nameIsValid;
+
+        private void OnNameUpdated(bool isValid)
         {
-            browseButton.enabled = false;
-            quickJoinButton.SetText(QuickJoinCancelIndex);
+            nameIsValid = isValid;
+            RefreshButtons();
         }
 
-        public void FoundQuickGame()
+        private void RefreshButtons()
         {
-            quickJoinButton.enabled = false;
-            quickJoinButton.SetText(QuickJoinJoiningIndex);
+            var enableButtons = nameIsValid && ConnectionStateReporter.HaveDeployments;
+
+            quickJoinButton.enabled = enableButtons;
+            browseButton.enabled = enableButtons;
         }
 
-        public void CancelQuickJoin()
-        {
-            quickJoinButton.SetText(QuickJoinDefaultIndex);
-            SetButtonsEnabled(true);
-        }
 
         public void QuickJoinPressed()
         {

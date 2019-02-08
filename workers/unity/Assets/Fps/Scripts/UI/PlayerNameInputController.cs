@@ -11,8 +11,10 @@ namespace Fps
 
         public delegate void OnNameChangeDelegate(bool isValid);
 
-        public bool NameIsValid { get; private set; }
         public OnNameChangeDelegate OnNameChanged;
+
+        public bool NameIsValid { get; private set; }
+
         private InputField inputField;
 
         private void Awake()
@@ -20,7 +22,6 @@ namespace Fps
             inputField = GetComponentInChildren<InputField>();
             Validate(false);
             HintText.text = "";
-            inputField.onValueChanged.AddListener(OnChanged);
             inputField.onEndEdit.AddListener(OnEnd);
         }
 
@@ -36,24 +37,15 @@ namespace Fps
             HintText.gameObject.SetActive(false);
         }
 
-        private void OnChanged(string huh)
-        {
-            inputField.onValueChanged.RemoveListener(OnChanged); // Don't retrigger event as we modify the text...
-
-            // TODO: This didn't work correctly. Need to account for field caret? Better to use onValidateInput?
-
-            Validate(true);
-            inputField.onValueChanged.AddListener(OnChanged);
-        }
-
-        private void OnEnd(string huh)
+        private void OnEnd(string theString)
         {
             Validate(false);
         }
 
         private void Validate(bool areEditing)
         {
-            NameIsValid = false;
+            NameIsValid = true;
+            HintText.text = "";
 
             if (!areEditing)
             {
@@ -62,8 +54,7 @@ namespace Fps
 
             if (inputField.text.Length == 0)
             {
-                SendOnNameChanged(NameIsValid);
-                return;
+                NameIsValid = false;
             }
 
             if (inputField.text.Length < 3)
@@ -73,24 +64,15 @@ namespace Fps
                     HintText.text = "Minimum 3 characters required";
                 }
 
-                SendOnNameChanged(NameIsValid);
-                return;
+                NameIsValid = false;
             }
 
-            HintText.text = "";
-
-            NameIsValid = true;
-            SendOnNameChanged(true);
+            SendOnNameChanged(NameIsValid);
         }
 
         private void SendOnNameChanged(bool value)
         {
-            if (OnNameChanged == null)
-            {
-                return;
-            }
-
-            OnNameChanged(value);
+            OnNameChanged?.Invoke(value);
         }
     }
 }
