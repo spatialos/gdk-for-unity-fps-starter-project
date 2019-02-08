@@ -16,6 +16,9 @@
 ### Fixed
 
 - The Editor now imports NavMeshes correctly when you first open the FPS project.
+- Added two launch configurations: `cloud_launch_large_sim_players.json` and `cloud_launch_small_sim_players.json` for simulated player deployments. 
+- Lobby screen, Results screen, new connect screen for session based games. (TODO: implement actual logic!)
+- HUD: Kill notifications and game timer (TODO: implement actual logic!)
 
 ### Changed
 
@@ -31,6 +34,7 @@
 - Increased the level size from 868x868 to 1732x1732.
 - Changed how level generation and `MapBuilder.cs` works.
 	- `LoadWorld()` now generates the level GameObject through `MapBuilder`, instead of instantiating it from a prefab.
+- Connection state now tracked by static ConnectionStatusReporter class, and scripts can subscribe to connection state changes on this class.
 
 ### Removed
 
