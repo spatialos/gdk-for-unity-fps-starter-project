@@ -29,6 +29,11 @@ namespace Fps
         {
             inputField.enabled = AllowEdit;
             HintText.gameObject.SetActive(AllowEdit);
+
+            if (!AllowEdit && inputField.text == "")
+            {
+                inputField.text = "<player name>  ";
+            }
         }
 
         private void OnDisable()
