@@ -7,7 +7,6 @@ using Improbable.Gdk.Mobile;
 using Improbable.Gdk.PlayerLifecycle;
 using Improbable.Worker.CInterop;
 using UnityEngine;
-
 #if UNITY_ANDROID
 using Improbable.Gdk.Mobile.Android;
 #endif
@@ -23,6 +22,7 @@ namespace Fps
         private const string Small = "small";
         private const string Large = "large";
 
+        public bool ShouldConnectLocally;
         public int TargetFrameRate = 60;
 
         public GameObject SmallLevelPrefab;
@@ -37,14 +37,22 @@ namespace Fps
 
         public string IpAddress { get; set; }
 
-        public async void TryConnect()
-        {
-            await Connect(WorkerUtils.AndroidClient, new ForwardingDispatcher()).ConfigureAwait(false);
-        }
-
         private void Awake()
         {
             connectionController = GetComponent<ConnectionController>();
+
+            if (!ShouldConnectLocally)
+            {
+                var textAsset = Resources.Load<TextAsset>("DevAuthToken");
+                if (textAsset != null)
+                {
+                    DevelopmentAuthToken = textAsset.text.Trim();
+                }
+                else
+                {
+                    Debug.LogWarning("Unable to find DevAuthToken.txt in the Resources folder.");
+                }
+            }
         }
 
         protected virtual async void Start()
@@ -52,7 +60,7 @@ namespace Fps
             Application.targetFrameRate = TargetFrameRate;
 #if UNITY_ANDROID && !UNITY_EDITOR
             UseIpAddressFromArguments();
-    #endif
+#endif
             await AttemptConnect();
         }
 
@@ -66,6 +74,7 @@ namespace Fps
                 IpAddress = "127.0.0.1";
             }
         }
+
         private string GetReceptionistHostFromArguments()
         {
             var arguments = LaunchArguments.GetArguments();
@@ -95,19 +104,9 @@ namespace Fps
 #endif
         }
 
-        protected virtual string GetWorkerType()
+        private async Task AttemptConnect()
         {
-            return WorkerUtils.AndroidClient;
-        }
-
-        public async void Reconnect()
-        {
-            await AttemptConnect();
-        }
-
-        protected async Task AttemptConnect()
-        {
-            await Connect(GetWorkerType(), new ForwardingDispatcher()).ConfigureAwait(false);
+            await Connect(WorkerUtils.AndroidClient, new ForwardingDispatcher()).ConfigureAwait(false);
         }
 
         protected override string SelectDeploymentName(DeploymentList deployments)
@@ -118,8 +117,12 @@ namespace Fps
 
         protected override ConnectionService GetConnectionService()
         {
-            // TODO UTY-1590: add cloud deployment option
-            return ConnectionService.Receptionist;
+            if (ShouldConnectLocally)
+            {
+                return ConnectionService.Receptionist;
+            }
+
+            return ConnectionService.AlphaLocator;
         }
 
         protected override void HandleWorkerConnectionEstablished()

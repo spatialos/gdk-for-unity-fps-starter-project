@@ -55,6 +55,34 @@
           "all": {}
         }
       ]
+    },
+    {
+      "worker_type": "AndroidClient",
+      "flags": [
+        {
+          "name": "world_size",
+          "value": "large"
+        }
+      ],
+      "permissions": [
+        {
+          "all": {}
+        }
+      ],
+    },
+    {
+      "worker_type": "iOSClient",
+      "flags": [
+        {
+          "name": "world_size",
+          "value": "large"
+        }
+      ],
+      "permissions": [
+        {
+          "all": {}
+        }
+      ],
     }
   ]
 }
