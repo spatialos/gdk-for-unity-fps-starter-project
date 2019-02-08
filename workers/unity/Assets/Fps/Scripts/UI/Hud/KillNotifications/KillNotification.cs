@@ -29,12 +29,6 @@ namespace Fps
 
         public Text KillTextObject;
 
-        private void OnValidate()
-        {
-            LabelColorHex = ColorUtility.ToHtmlStringRGB(LabelColor);
-            NameColorHex = ColorUtility.ToHtmlStringRGB(NameColor);
-        }
-
         public Action OnDespawn;
 
         private string Label => $"<color=#{LabelColorHex}>You killed</color>";
@@ -48,8 +42,15 @@ namespace Fps
 
         private void Awake()
         {
+            SetHexColorValues();
             animator = GetComponent<Animator>();
             startHeight = GetComponent<RectTransform>().rect.height;
+        }
+
+        private void SetHexColorValues()
+        {
+            LabelColorHex = ColorUtility.ToHtmlStringRGB(LabelColor);
+            NameColorHex = ColorUtility.ToHtmlStringRGB(NameColor);
         }
 
         public void Despawn()

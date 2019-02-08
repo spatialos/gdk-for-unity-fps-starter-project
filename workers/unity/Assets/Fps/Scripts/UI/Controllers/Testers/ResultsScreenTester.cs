@@ -8,23 +8,20 @@ namespace Fps
         public bool Test;
         public int NumResultsToGenerate;
 
-        private void OnValidate()
+        private void Update()
         {
-            if (Test)
+            if (!Test)
             {
-                Test = false;
-                if (!Application.isPlaying)
-                {
-                    Debug.LogWarning("Please use this in play mode");
-                    return;
-                }
-
-                Invoke(nameof(RunTest), 0);
+                return;
             }
+
+            Test = false;
+            RunTest();
         }
 
         private void OnEnable()
         {
+            Test = false;
             Invoke(nameof(RunTest), 1);
         }
 
