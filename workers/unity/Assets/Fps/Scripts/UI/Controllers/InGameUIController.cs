@@ -8,7 +8,7 @@ namespace Fps
     {
         public GameObject RespawnScreen;
         public GameObject Reticle;
-        [FormerlySerializedAs("InGameHud")] public GameObject Hud;
+        public GameObject Hud;
         public GameObject EscapeScreen;
         public Button QuitButton;
 
