@@ -105,6 +105,10 @@ public class KillNotification : MonoBehaviour
             targetYOffset += startHeight * Mathf.Pow(RelegateScale, i) * (i == 0 || i == relegateLevel ? .5f : 1f);
         }
 
+        // When relegating, bump lifetime back up again so player can revel in their multikill glory. Stagger their
+        // lifetimes based on relegation level so they don't all disappear at once.
+        lifeRemaining = Lifetime - Lifetime * 0.1f * relegateLevel;
+
         if (isRelegating)
         {
             return;
