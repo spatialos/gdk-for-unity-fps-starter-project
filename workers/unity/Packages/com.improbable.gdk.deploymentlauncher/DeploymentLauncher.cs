@@ -500,8 +500,6 @@ namespace Improbable.Gdk.DeploymentManager
                 var snapshotPath = FileUtil.GetUniqueTempPathInProject();
 
                 var snapshot = new Snapshot();
-                var simulatedPlayerCoordinatorTrigger = FpsEntityTemplates.SimulatedPlayerCoordinatorTrigger();
-                snapshot.AddEntity(simulatedPlayerCoordinatorTrigger);
                 snapshot.WriteToFile(snapshotPath);
 
                 return snapshotPath;

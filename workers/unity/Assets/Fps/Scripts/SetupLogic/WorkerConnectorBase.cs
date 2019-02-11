@@ -12,9 +12,6 @@ namespace Fps
 
         public int TargetFrameRate = 60;
 
-        public GameObject SmallLevelPrefab;
-        public GameObject LargeLevelPrefab;
-
         protected GameObject levelInstance;
 
         protected abstract string GetWorkerType();
@@ -51,31 +48,48 @@ namespace Fps
             base.Dispose();
         }
 
-        // Get the world size from the config, and use it to load the appropriate level.
-        protected virtual void LoadWorld()
+        protected bool GetWorldLayerCount(out int worldLayerCount)
         {
             var workerSystem = Worker.World.GetExistingManager<WorkerSystem>();
-            var worldSize = workerSystem.Connection.GetWorkerFlag("world_size");
+            var worldSize = Worker.Connection.GetWorkerFlag("world_size");
 
-            if (worldSize != Small && worldSize != Large)
+            switch (worldSize)
             {
-                workerSystem.LogDispatcher.HandleLog(LogType.Error,
-                    new LogEvent(
-                            "Invalid world_size worker flag. Make sure that it is either small, medium, or large,")
-                        .WithField("world_size", worldSize));
-                return;
+                case Small:
+                    worldLayerCount = 4;
+                    break;
+                case Large:
+                    worldLayerCount = 24;
+                    break;
+                default:
+                    if (!int.TryParse(worldSize, out worldLayerCount))
+                    {
+                        workerSystem.LogDispatcher.HandleLog(LogType.Error,
+                            new LogEvent(
+                                    "Invalid world_size worker flag. Make sure that it is either small or large,")
+                                .WithField("world_size", worldSize));
+                        return false;
+                    }
+
+                    break;
             }
 
-            var levelToLoad = worldSize == Large ? LargeLevelPrefab : SmallLevelPrefab;
+            return true;
+        }
 
-            if (levelToLoad == null)
+        // Get the world size from the config, and use it to generate the correct-sized level
+        protected virtual void LoadWorld()
+        {
+            if (GetWorldLayerCount(out var worldLayerCount))
             {
-                Debug.LogError("The level to be instantiated is null.");
-                return;
+                levelInstance = new GameObject();
+                levelInstance.transform.position = transform.position;
+                levelInstance.transform.rotation = transform.rotation;
+                levelInstance.name = $"FPS-Level_{worldLayerCount}({Worker.WorkerType})";
+                var mapBuilder = levelInstance.AddComponent<MapBuilder>();
+                mapBuilder.CleanAndBuild(worldLayerCount);
+                DestroyImmediate(mapBuilder);
             }
-
-            levelInstance = Instantiate(levelToLoad, transform.position, transform.rotation);
-            levelInstance.name = $"{levelToLoad.name}({Worker.WorkerType})";
         }
     }
 }

@@ -41,7 +41,7 @@ namespace Fps
                 if (numTiles < WarnTilesThreshold
                     || GetGenerationUserConfirmation(numTiles))
                 {
-                    myTarget.CleanAndBuild();
+                    myTarget.CleanAndBuild(myTarget.Layers, myTarget.Seed, myTarget.EmptyTileChance);
                 }
             }
 

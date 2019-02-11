@@ -6,10 +6,9 @@ using Random = UnityEngine.Random;
 
 namespace Fps
 {
-    [ExecuteInEditMode]
     public class MapBuilder : MonoBehaviour
     {
-        public int Layers = 3;
+        public int Layers = 4;
         public string Seed = "SpatialOS GDK for Unity";
         public float EmptyTileChance = 0.2f;
 
@@ -54,8 +53,15 @@ namespace Fps
         private const string CentreTile2 = "Prefabs/Level/Tiles/Centre2";
         private const string CentreTile3 = "Prefabs/Level/Tiles/Centre3";
 
-        public void CleanAndBuild()
+        public void CleanAndBuild(
+            int worldLayers,
+            string seed = "SpatialOS GDK for Unity",
+            float emptyTileChance = 0.2f)
         {
+            Layers = worldLayers;
+            Seed = seed;
+            EmptyTileChance = emptyTileChance;
+
             if (!TryLoadResources())
             {
                 Debug.LogError("Generation aborted (See previous message)");
