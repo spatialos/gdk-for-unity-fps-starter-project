@@ -23,6 +23,7 @@ namespace Fps
 
         public string forcedIpAddress;
 
+        public bool ShouldConnectLocally;
         public int TargetFrameRate = 60;
 
         [SerializeField] private MapBuilderSettings MapBuilderSettings;
@@ -49,6 +50,19 @@ namespace Fps
         private void Awake()
         {
             connectionController = GetComponent<ConnectionController>();
+
+            if (!ShouldConnectLocally)
+            {
+                var textAsset = Resources.Load<TextAsset>("DevAuthToken");
+                if (textAsset != null)
+                {
+                    DevelopmentAuthToken = textAsset.text.Trim();
+                }
+                else
+                {
+                    Debug.LogWarning("Unable to find DevAuthToken.txt in the Resources folder.");
+                }
+            }
         }
 
         protected virtual async void Start()
@@ -92,8 +106,12 @@ namespace Fps
 
         protected override ConnectionService GetConnectionService()
         {
-            // TODO UTY-1590: add cloud deployment option
-            return ConnectionService.Receptionist;
+            if (ShouldConnectLocally)
+            {
+                return ConnectionService.Receptionist;
+            }
+
+            return ConnectionService.AlphaLocator;
         }
 
         protected override void HandleWorkerConnectionEstablished()
