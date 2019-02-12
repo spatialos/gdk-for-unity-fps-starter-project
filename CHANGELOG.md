@@ -17,10 +17,10 @@
 - Updated all launch configurations.
 	- Replace transition runtime v2 templates from all launch configurations.
 	- Update `default_launch.json` to support `SimulatedPlayerCoordinator`.
-	- Reduce checkout radius of `UnityClient` and `UnityGameLogic` workers.
+	- Reduce checkout radius of `UnityClient` and `UnityGameLogic` workers from 210 to 150.
 - Increase the level size from 868x868 to 1732x1732.
-- Changed how `MapBuilder` and setting up the level work.
-	- `LoadWorld` now generates the level GameObject instead of instantiating it from a prefab.
+- Changed how level generation and `MapBuilder.cs` works.
+	- `LoadWorld()` now generates the level GameObject through `MapBuilder`, instead of instantiating it from a prefab.
 
 ### Removed
 
