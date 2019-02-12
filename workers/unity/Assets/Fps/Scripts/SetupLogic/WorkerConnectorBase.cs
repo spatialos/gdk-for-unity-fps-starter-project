@@ -9,6 +9,8 @@ namespace Fps
     {
         public int TargetFrameRate = 60;
 
+        public MapBuilderSettings MapBuilderSettings;
+
         protected GameObject levelInstance;
 
         protected abstract string GetWorkerType();
@@ -49,7 +51,8 @@ namespace Fps
         // Get the world size from the config, and use it to generate the correct-sized level
         protected virtual void LoadWorld()
         {
-            levelInstance = MapBuilderUtils.GenerateMap(
+            levelInstance = MapBuilder.GenerateMap(
+                MapBuilderSettings,
                 transform,
                 Worker.Connection,
                 Worker.WorkerType,

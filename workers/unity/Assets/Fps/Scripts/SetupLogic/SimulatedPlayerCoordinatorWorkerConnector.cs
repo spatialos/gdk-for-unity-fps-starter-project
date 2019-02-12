@@ -188,12 +188,12 @@ public class SimulatedPlayerCoordinatorWorkerConnector : WorkerConnectorBase
 
     public Bounds GetWorldBounds()
     {
-        var worldSize = MapBuilderUtils.GetWorldSize(Worker.Connection);
-        if (!MapBuilderUtils.GetWorldLayerCount(worldSize, out var worldLayerCount))
+        var worldSize = MapBuilder.GetWorldSizeFlag(Worker.Connection);
+        if (!MapBuilder.GetWorldLayerCount(MapBuilderSettings, worldSize, out var worldLayerCount))
         {
-            worldLayerCount = MapBuilderUtils.SmallWorldLayerCount;
+            worldLayerCount = MapBuilderSettings.SmallWorldLayerCount;
         }
 
-        return new Bounds(Worker.Origin, MapBuilderUtils.GetWorldDimensions(worldLayerCount));
+        return new Bounds(Worker.Origin, MapBuilder.GetWorldDimensions(MapBuilderSettings, worldLayerCount));
     }
 }

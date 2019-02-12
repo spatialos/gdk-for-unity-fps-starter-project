@@ -1,6 +1,7 @@
 using System;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Fps.Editor
 {
@@ -13,6 +14,7 @@ namespace Fps.Editor
         private float emptyTileChance = 0.2f;
 
         private MapBuilder mapBuilder;
+        private MapBuilderSettings mapBuilderSettings;
 
         private const string MapBuilderMenuItem = "SpatialOS/Map Builder";
         private const int MapBuilderMenuPriority = 52;
@@ -30,7 +32,7 @@ namespace Fps.Editor
 
         private void SetupMapBuilder()
         {
-            mapBuilder = new MapBuilder(new GameObject("FPS-Level_Visualisation"));
+            mapBuilder = new MapBuilder(mapBuilderSettings, new GameObject("FPS-Level_Visualisation"));
         }
 
         public void OnGUI()
@@ -60,6 +62,11 @@ namespace Fps.Editor
                     "Different seeds produce different maps."),
                 seed);
 
+            mapBuilderSettings = (MapBuilderSettings) EditorGUILayout.ObjectField(new GUIContent(
+                    "Map Builder Settings",
+                    "Different seeds produce different maps."),
+                mapBuilderSettings,
+                typeof(MapBuilderSettings));
 
             if (GUILayout.Button("Generate Map"))
             {

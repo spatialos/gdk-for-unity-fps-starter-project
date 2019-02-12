@@ -25,8 +25,7 @@ namespace Fps
         public bool ShouldConnectLocally;
         public int TargetFrameRate = 60;
 
-        public GameObject SmallLevelPrefab;
-        public GameObject LargeLevelPrefab;
+        public MapBuilderSettings MapBuilderSettings;
 
         private GameObject levelInstance;
 
@@ -162,7 +161,8 @@ namespace Fps
         // Get the world size from the config, and use it to load the appropriate level.
         protected virtual void LoadWorld()
         {
-            levelInstance = MapBuilderUtils.GenerateMap(
+            levelInstance = MapBuilder.GenerateMap(
+                MapBuilderSettings,
                 transform,
                 Worker.Connection,
                 Worker.WorkerType,

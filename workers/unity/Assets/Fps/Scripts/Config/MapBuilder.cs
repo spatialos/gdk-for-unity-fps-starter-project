@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Improbable.Gdk.Core;
+using Improbable.Worker.CInterop;
 using UnityEngine;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
@@ -13,8 +15,13 @@ namespace Fps
         private string Seed;
         private float EmptyTileChance;
 
+        private const string SmallLevelFlag = "small";
+        private const string LargeLevelFlag = "large";
+
+        private MapBuilderSettings mapBuilderSettings;
+
         // Store the half-value as many calculations are simplified by going from -halfNumGroundLayers to halfNumGroundLayers.
-        private int halfNumGroundLayers => (Layers - 1) / MapBuilderUtils.TilesPerGroundLayer + 1;
+        private int halfNumGroundLayers => (Layers - 1) / mapBuilderSettings.TilesPerGroundLayer + 1;
 
         private GameObject[] centreTiles;
         private GameObject[] levelTiles;
@@ -49,8 +56,9 @@ namespace Fps
 
         public bool InvalidMapBuilder => gameObject == null;
 
-        public MapBuilder(GameObject gameObject)
+        public MapBuilder(MapBuilderSettings mapBuilderSettings, GameObject gameObject)
         {
+            this.mapBuilderSettings = mapBuilderSettings;
             this.gameObject = gameObject;
         }
 
@@ -91,17 +99,17 @@ namespace Fps
             // four tiles per groundLayer,
             // number of ground tiles is 2 * groundLayers
             // This value gives total tile-space including empty tiles around edge.
-            var numTotalTilesWide = halfNumGroundLayers * 2 * MapBuilderUtils.TilesPerGroundLayer;
+            var numTotalTilesWide = halfNumGroundLayers * 2 * mapBuilderSettings.TilesPerGroundLayer;
 
             Debug.Log("Finished building world\nClick for details..." +
                 "\n\tPlayable space" +
                 $"\n\t\t{numPlayableTilesWide}x{numPlayableTilesWide} tiles" +
-                $"\n\t\t{numPlayableTilesWide * MapBuilderUtils.UnitsPerTile + MapBuilderUtils.UnitsPerBlock}" +
-                $"x{numPlayableTilesWide * MapBuilderUtils.UnitsPerTile + MapBuilderUtils.UnitsPerBlock} units" +
+                $"\n\t\t{numPlayableTilesWide * mapBuilderSettings.UnitsPerTile + mapBuilderSettings.UnitsPerBlock}" +
+                $"x{numPlayableTilesWide * mapBuilderSettings.UnitsPerTile + mapBuilderSettings.UnitsPerBlock} units" +
                 "\n\tTOTAL space" +
                 $"\n\t\t{numTotalTilesWide}x{numTotalTilesWide} tiles" +
-                $"\n\t\t{numTotalTilesWide * MapBuilderUtils.UnitsPerTile + MapBuilderUtils.UnitsPerBlock}" +
-                $"x{numTotalTilesWide * MapBuilderUtils.UnitsPerTile + MapBuilderUtils.UnitsPerBlock} units\n");
+                $"\n\t\t{numTotalTilesWide * mapBuilderSettings.UnitsPerTile + mapBuilderSettings.UnitsPerBlock}" +
+                $"x{numTotalTilesWide * mapBuilderSettings.UnitsPerTile + mapBuilderSettings.UnitsPerBlock} units\n");
         }
 
         private void InitializeGroupsAndComponents()
@@ -199,8 +207,8 @@ namespace Fps
                 groundLayerIndex < halfNumGroundLayers;
                 groundLayerIndex++)
             {
-                float offset = groundLayerIndex * MapBuilderUtils.unitsPerGroundLayer;
-                offset += MapBuilderUtils.unitsPerGroundLayer * .5f; // centre is half-distance across the ground layer
+                float offset = groundLayerIndex * mapBuilderSettings.unitsPerGroundLayer;
+                offset += mapBuilderSettings.unitsPerGroundLayer * .5f; // centre is half-distance across the ground layer
                 MakeEdge(offset, 0);
                 MakeEdge(offset, 90);
                 MakeEdge(offset, 180);
@@ -210,8 +218,8 @@ namespace Fps
             var cornerOffset =
                 new Vector3
                 {
-                    x = halfNumGroundLayers * -MapBuilderUtils.unitsPerGroundLayer,
-                    z = halfNumGroundLayers * MapBuilderUtils.unitsPerGroundLayer
+                    x = halfNumGroundLayers * -mapBuilderSettings.unitsPerGroundLayer,
+                    z = halfNumGroundLayers * mapBuilderSettings.unitsPerGroundLayer
                 };
 
             for (var i = 0; i < 360; i += 90)
@@ -228,50 +236,50 @@ namespace Fps
                 rotation * new Vector3(
                     offset,
                     0,
-                    halfNumGroundLayers * MapBuilderUtils.unitsPerGroundLayer + MapBuilderUtils.UnitsPerBlock * 0.25f),
+                    halfNumGroundLayers * mapBuilderSettings.unitsPerGroundLayer + mapBuilderSettings.UnitsPerBlock * 0.25f),
                 rotation * Quaternion.Euler(90, 0, 0),
                 groundParentTransform);
             floor.transform.localScale = new Vector3(
-                MapBuilderUtils.unitsPerGroundLayer,
-                MapBuilderUtils.UnitsPerBlock * .5f,
+                mapBuilderSettings.unitsPerGroundLayer,
+                mapBuilderSettings.UnitsPerBlock * .5f,
                 1);
 
             var wall = Object.Instantiate(surroundWall,
                 rotation * new Vector3(
                     offset,
-                    MapBuilderUtils.UnitsPerBlock * .5f,
-                    halfNumGroundLayers * MapBuilderUtils.unitsPerGroundLayer + MapBuilderUtils.UnitsPerBlock * .5f),
+                    mapBuilderSettings.UnitsPerBlock * .5f,
+                    halfNumGroundLayers * mapBuilderSettings.unitsPerGroundLayer + mapBuilderSettings.UnitsPerBlock * .5f),
                 rotation,
                 surroundParentTransform);
             wall.transform.localScale = new Vector3(
-                MapBuilderUtils.unitsPerGroundLayer,
-                MapBuilderUtils.UnitsPerBlock,
+                mapBuilderSettings.unitsPerGroundLayer,
+                mapBuilderSettings.UnitsPerBlock,
                 1);
 
             var wallFloor = Object.Instantiate(groundEdge,
                 rotation * new Vector3(
                     offset,
-                    MapBuilderUtils.UnitsPerBlock,
-                    halfNumGroundLayers * MapBuilderUtils.unitsPerGroundLayer + MapBuilderUtils.UnitsPerBlock),
+                    mapBuilderSettings.UnitsPerBlock,
+                    halfNumGroundLayers * mapBuilderSettings.unitsPerGroundLayer + mapBuilderSettings.UnitsPerBlock),
                 rotation * Quaternion.Euler(90, 0, 0),
                 surroundParentTransform);
             wallFloor.transform.localScale = new Vector3(
-                MapBuilderUtils.unitsPerGroundLayer,
-                MapBuilderUtils.UnitsPerBlock,
+                mapBuilderSettings.unitsPerGroundLayer,
+                mapBuilderSettings.UnitsPerBlock,
                 1);
 
             // Collision
             var collision = Object.Instantiate(surroundWall,
                 rotation * new Vector3(
                     offset,
-                    MapBuilderUtils.UnitsPerBlock + MapBuilderUtils.BoundaryCollisionHeight * .5f,
-                    halfNumGroundLayers * MapBuilderUtils.unitsPerGroundLayer + MapBuilderUtils.UnitsPerBlock * .5f),
+                    mapBuilderSettings.UnitsPerBlock + mapBuilderSettings.BoundaryCollisionHeight * .5f,
+                    halfNumGroundLayers * mapBuilderSettings.unitsPerGroundLayer + mapBuilderSettings.UnitsPerBlock * .5f),
                 rotation,
                 surroundParentTransform);
             collision.transform.localScale =
                 new Vector3(
-                    MapBuilderUtils.unitsPerGroundLayer + MapBuilderUtils.UnitsPerBlock, // Collisions overlap to fill corners
-                    MapBuilderUtils.BoundaryCollisionHeight,
+                    mapBuilderSettings.unitsPerGroundLayer + mapBuilderSettings.UnitsPerBlock, // Collisions overlap to fill corners
+                    mapBuilderSettings.BoundaryCollisionHeight,
                     1);
             collision.gameObject.name = "Collision";
 
@@ -353,14 +361,14 @@ namespace Fps
 
         private void PlaceTile(Vector2Int tileCoord, GameObject tile, float rotation)
         {
-            var tileOffset = MapBuilderUtils.UnitsPerTile / 2;
+            var tileOffset = mapBuilderSettings.UnitsPerTile / 2;
 
             Object.Instantiate(
                 tile,
                 new Vector3
                 {
-                    x = (tileCoord.x - 1) * MapBuilderUtils.UnitsPerTile + tileOffset,
-                    z = (tileCoord.y - 1) * MapBuilderUtils.UnitsPerTile + tileOffset
+                    x = (tileCoord.x - 1) * mapBuilderSettings.UnitsPerTile + tileOffset,
+                    z = (tileCoord.y - 1) * mapBuilderSettings.UnitsPerTile + tileOffset
                 },
                 new Quaternion
                 {
@@ -389,8 +397,8 @@ namespace Fps
                 groundTile,
                 new Vector3
                 {
-                    x = groundX * MapBuilderUtils.unitsPerGroundLayer + MapBuilderUtils.unitsPerGroundLayer * .5f,
-                    z = groundZ * MapBuilderUtils.unitsPerGroundLayer + MapBuilderUtils.unitsPerGroundLayer * .5f
+                    x = groundX * mapBuilderSettings.unitsPerGroundLayer + mapBuilderSettings.unitsPerGroundLayer * .5f,
+                    z = groundZ * mapBuilderSettings.unitsPerGroundLayer + mapBuilderSettings.unitsPerGroundLayer * .5f
                 },
                 Quaternion.identity,
                 groundParentTransform.transform);
@@ -433,6 +441,65 @@ namespace Fps
             {
                 Object.DestroyImmediate(childrenToDestroy.Dequeue());
             }
+        }
+
+        public static Vector3 GetWorldDimensions(MapBuilderSettings mapBuilderSettings, int worldLayerCount)
+        {
+            var dimensions = (worldLayerCount * mapBuilderSettings.UnitsPerTile * 2) + mapBuilderSettings.UnitsPerBlock;
+            return new Vector3(dimensions, 100f, dimensions);
+        }
+
+        public static bool GetWorldLayerCount(MapBuilderSettings mapBuilderSettings,
+            string worldSize, out int worldLayerCount)
+        {
+            switch (worldSize)
+            {
+                case SmallLevelFlag:
+                    worldLayerCount = mapBuilderSettings.SmallWorldLayerCount;
+                    break;
+                case LargeLevelFlag:
+                    worldLayerCount = mapBuilderSettings.LargeWorldLayerCount;
+                    break;
+                default:
+                    return int.TryParse(worldSize, out worldLayerCount);
+            }
+
+            return true;
+        }
+
+        public static string GetWorldSizeFlag(Connection connection)
+        {
+            return connection.GetWorkerFlag("world_size");
+        }
+
+        // Get the world size from the config, and use it to generate the correct-sized level
+        public static GameObject GenerateMap(
+            MapBuilderSettings mapBuilderSettings,
+            Transform workerTransform,
+            Connection connection,
+            string workerType,
+            WorkerSystem workerSystem)
+        {
+            var levelInstance = new GameObject();
+            var worldSize = GetWorldSizeFlag(connection);
+
+            if (GetWorldLayerCount(mapBuilderSettings, worldSize, out var worldLayerCount))
+            {
+                levelInstance.name = $"FPS-Level_{worldLayerCount}({workerType})";
+                levelInstance.transform.position = workerTransform.position;
+                levelInstance.transform.rotation = workerTransform.rotation;
+
+                var mapBuilder = new MapBuilder(mapBuilderSettings, levelInstance);
+                mapBuilder.CleanAndBuild(worldLayerCount);
+            }
+            else
+            {
+                workerSystem.LogDispatcher.HandleLog(LogType.Error,
+                    new LogEvent("Invalid world_size worker flag. Make sure that it is either small or large,")
+                        .WithField("world_size", worldSize));
+            }
+
+            return levelInstance;
         }
     }
 }
