@@ -16,11 +16,29 @@ using Improbable.Gdk.Mobile.iOS;
 namespace Fps
 {
     [RequireComponent(typeof(ConnectionController))]
-    public class iOSWorkerConnector : MobileWorkerConnectorBase, ITileProvider
+    public class iOSWorkerConnector : MobileWorkerConnector, ITileProvider
     {
+        private const string AuthPlayer = "Prefabs/MobileClient/Authoritative/Player";
+        private const string NonAuthPlayer = "Prefabs/MobileClient/NonAuthoritative/Player";
+
+        private const string Small = "small";
+        private const string Large = "large";
+
         public string forcedIpAddress;
 
-        protected override string GetWorkerType() => WorkerUtils.iOSClient;
+        public int TargetFrameRate = 60;
+
+        public GameObject SmallLevelPrefab;
+        public GameObject LargeLevelPrefab;
+
+        private GameObject levelInstance;
+
+        private List<TileEnabler> levelTiles = new List<TileEnabler>();
+        public List<TileEnabler> LevelTiles => levelTiles;
+
+        private ConnectionController connectionController;
+
+        public string IpAddress { get; set; }
 
         private void OnValidate()
         {
@@ -70,10 +88,66 @@ namespace Fps
             await Connect(WorkerUtils.iOSClient, new ForwardingDispatcher()).ConfigureAwait(false);
         }
 
+        protected override string SelectDeploymentName(DeploymentList deployments)
+        {
+            // This could be replaced with a splash screen asking to select a deployment or some other user-defined logic.
+            return deployments.Deployments[0].DeploymentName;
+        }
+
         protected override ConnectionService GetConnectionService()
         {
             // TODO UTY-1590: add cloud deployment option
             return ConnectionService.Receptionist;
+        }
+
+        protected override void HandleWorkerConnectionEstablished()
+        {
+            var world = Worker.World;
+
+            // Only take the Heartbeat from the PlayerLifecycleConfig Client Systems.
+            world.GetOrCreateManager<HandlePlayerHeartbeatRequestSystem>();
+
+            GameObjectRepresentationHelper.AddSystems(world);
+            var fallback = new GameObjectCreatorFromMetadata(Worker.WorkerType, Worker.Origin, Worker.LogDispatcher);
+
+            // Set the Worker gameObject to the ClientWorker so it can access PlayerCreater reader/writers
+            GameObjectCreationHelper.EnableStandardGameObjectCreation(
+                world,
+                new AdvancedEntityPipeline(Worker, AuthPlayer, NonAuthPlayer, fallback),
+                gameObject);
+
+            LoadWorld();
+        }
+
+        protected override void HandleWorkerConnectionFailure(string errorMessage)
+        {
+            connectionController.OnFailedToConnect();
+        }
+
+        public override void Dispose()
+        {
+            if (levelInstance != null)
+            {
+                Destroy(levelInstance);
+            }
+
+            base.Dispose();
+        }
+
+        // Get the world size from the config, and use it to load the appropriate level.
+        protected virtual void LoadWorld()
+        {
+            levelInstance = MapBuilderUtils.GenerateMap(
+                transform,
+                Worker.Connection,
+                Worker.WorkerType,
+                Worker.World.GetExistingManager<WorkerSystem>());
+
+            levelInstance.GetComponentsInChildren<TileEnabler>(true, levelTiles);
+            foreach (var tileEnabler in levelTiles)
+            {
+                tileEnabler.IsClient = true;
+            }
         }
     }
 }
