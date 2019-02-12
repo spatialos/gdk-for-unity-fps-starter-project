@@ -20,6 +20,8 @@ namespace Fps
     {
         public string forcedIpAddress;
 
+        protected override string GetWorkerType() => WorkerUtils.iOSClient;
+
         private void OnValidate()
         {
             forcedIpAddress = Regex.Replace(forcedIpAddress, "[^0-9.]", "");
@@ -33,11 +35,6 @@ namespace Fps
         private void Awake()
         {
             connectionController = GetComponent<ConnectionController>();
-        }
-
-        protected override string GetWorkerType()
-        {
-            return WorkerUtils.iOSClient;
         }
 
         protected virtual async void Start()

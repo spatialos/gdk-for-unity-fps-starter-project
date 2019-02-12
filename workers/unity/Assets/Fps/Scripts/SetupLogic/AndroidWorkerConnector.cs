@@ -18,6 +18,8 @@ namespace Fps
     {
         public bool ShouldConnectLocally;
 
+        protected override string GetWorkerType() => WorkerUtils.AndroidClient;
+
         private void Awake()
         {
             connectionController = GetComponent<ConnectionController>();
@@ -34,11 +36,6 @@ namespace Fps
                     Debug.LogWarning("Unable to find DevAuthToken.txt in the Resources folder.");
                 }
             }
-        }
-
-        protected override string GetWorkerType()
-        {
-            return WorkerUtils.AndroidClient;
         }
 
         protected virtual async void Start()
