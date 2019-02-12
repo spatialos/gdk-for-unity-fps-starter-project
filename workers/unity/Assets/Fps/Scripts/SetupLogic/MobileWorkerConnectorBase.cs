@@ -15,9 +15,6 @@ namespace Fps
         private const string AuthPlayer = "Prefabs/MobileClient/Authoritative/Player";
         private const string NonAuthPlayer = "Prefabs/MobileClient/NonAuthoritative/Player";
 
-        private const string Small = "small";
-        private const string Large = "large";
-
         public int TargetFrameRate = 60;
 
         protected GameObject levelInstance;
@@ -77,54 +74,20 @@ namespace Fps
             if (levelInstance != null)
             {
                 Destroy(levelInstance);
+                levelInstance = null;
             }
 
             base.Dispose();
         }
 
-        protected bool GetWorldLayerCount(out int worldLayerCount)
-        {
-            var workerSystem = Worker.World.GetExistingManager<WorkerSystem>();
-            var worldSize = Worker.Connection.GetWorkerFlag("world_size");
-
-            switch (worldSize)
-            {
-                case Small:
-                    worldLayerCount = 4;
-                    break;
-                case Large:
-                    worldLayerCount = 24;
-                    break;
-                default:
-                    if (!int.TryParse(worldSize, out worldLayerCount))
-                    {
-                        workerSystem.LogDispatcher.HandleLog(LogType.Error,
-                            new LogEvent(
-                                    "Invalid world_size worker flag. Make sure that it is either small or large,")
-                                .WithField("world_size", worldSize));
-                        return false;
-                    }
-
-                    break;
-            }
-
-            return true;
-        }
-
         // Get the world size from the config, and use it to load the appropriate level.
         protected virtual void LoadWorld()
         {
-            if (!GetWorldLayerCount(out var worldLayerCount))
-            {
-                return;
-            }
-
-            levelInstance = new GameObject($"FPS-Level_{worldLayerCount}({Worker.WorkerType})");
-            levelInstance.transform.position = transform.position;
-            levelInstance.transform.rotation = transform.rotation;
-
-            var mapBuilder = new MapBuilder(levelInstance);
-            mapBuilder.CleanAndBuild(worldLayerCount);
+            levelInstance = MapBuilderUtils.GenerateMap(
+                transform,
+                Worker.Connection,
+                Worker.WorkerType,
+                Worker.World.GetExistingManager<WorkerSystem>());
 
             levelInstance.GetComponentsInChildren<TileEnabler>(true, levelTiles);
             foreach (var tileEnabler in levelTiles)

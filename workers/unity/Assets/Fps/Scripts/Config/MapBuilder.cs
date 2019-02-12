@@ -13,16 +13,8 @@ namespace Fps
         private string Seed;
         private float EmptyTileChance;
 
-        // Measurements.
-        // All sizes are 1:1 ratio in X/Z, so we just define one value to represent both axis.
-        private const int UnitsPerBlock = 4; // One textured square on the ground is a 'block'.
-        private const int UnitsPerTile = 9 * UnitsPerBlock;
-        private const int TilesPerGroundLayer = 4; // Ground layers are large quads that encompass 4x4 tiles.
-        private const int BoundaryCollisionHeight = 16;
-
         // Store the half-value as many calculations are simplified by going from -halfNumGroundLayers to halfNumGroundLayers.
-        private int halfNumGroundLayers => (Layers - 1) / TilesPerGroundLayer + 1;
-        private int unitsPerGroundLayer => TilesPerGroundLayer * UnitsPerTile;
+        private int halfNumGroundLayers => (Layers - 1) / MapBuilderUtils.TilesPerGroundLayer + 1;
 
         private GameObject[] centreTiles;
         private GameObject[] levelTiles;
@@ -99,15 +91,17 @@ namespace Fps
             // four tiles per groundLayer,
             // number of ground tiles is 2 * groundLayers
             // This value gives total tile-space including empty tiles around edge.
-            var numTotalTilesWide = halfNumGroundLayers * 2 * TilesPerGroundLayer;
+            var numTotalTilesWide = halfNumGroundLayers * 2 * MapBuilderUtils.TilesPerGroundLayer;
 
             Debug.Log("Finished building world\nClick for details..." +
                 "\n\tPlayable space" +
                 $"\n\t\t{numPlayableTilesWide}x{numPlayableTilesWide} tiles" +
-                $"\n\t\t{numPlayableTilesWide * UnitsPerTile + UnitsPerBlock}x{numPlayableTilesWide * UnitsPerTile + UnitsPerBlock} units" +
+                $"\n\t\t{numPlayableTilesWide * MapBuilderUtils.UnitsPerTile + MapBuilderUtils.UnitsPerBlock}" +
+                $"x{numPlayableTilesWide * MapBuilderUtils.UnitsPerTile + MapBuilderUtils.UnitsPerBlock} units" +
                 "\n\tTOTAL space" +
                 $"\n\t\t{numTotalTilesWide}x{numTotalTilesWide} tiles" +
-                $"\n\t\t{numTotalTilesWide * UnitsPerTile + UnitsPerBlock}x{numTotalTilesWide * UnitsPerTile + UnitsPerBlock} units\n");
+                $"\n\t\t{numTotalTilesWide * MapBuilderUtils.UnitsPerTile + MapBuilderUtils.UnitsPerBlock}" +
+                $"x{numTotalTilesWide * MapBuilderUtils.UnitsPerTile + MapBuilderUtils.UnitsPerBlock} units\n");
         }
 
         private void InitializeGroupsAndComponents()
@@ -205,8 +199,8 @@ namespace Fps
                 groundLayerIndex < halfNumGroundLayers;
                 groundLayerIndex++)
             {
-                float offset = groundLayerIndex * unitsPerGroundLayer;
-                offset += unitsPerGroundLayer * .5f; // centre is half-distance across the ground layer
+                float offset = groundLayerIndex * MapBuilderUtils.unitsPerGroundLayer;
+                offset += MapBuilderUtils.unitsPerGroundLayer * .5f; // centre is half-distance across the ground layer
                 MakeEdge(offset, 0);
                 MakeEdge(offset, 90);
                 MakeEdge(offset, 180);
@@ -216,8 +210,8 @@ namespace Fps
             var cornerOffset =
                 new Vector3
                 {
-                    x = halfNumGroundLayers * -unitsPerGroundLayer,
-                    z = halfNumGroundLayers * unitsPerGroundLayer
+                    x = halfNumGroundLayers * -MapBuilderUtils.unitsPerGroundLayer,
+                    z = halfNumGroundLayers * MapBuilderUtils.unitsPerGroundLayer
                 };
 
             for (var i = 0; i < 360; i += 90)
@@ -234,50 +228,50 @@ namespace Fps
                 rotation * new Vector3(
                     offset,
                     0,
-                    halfNumGroundLayers * unitsPerGroundLayer + UnitsPerBlock * 0.25f),
+                    halfNumGroundLayers * MapBuilderUtils.unitsPerGroundLayer + MapBuilderUtils.UnitsPerBlock * 0.25f),
                 rotation * Quaternion.Euler(90, 0, 0),
                 groundParentTransform);
             floor.transform.localScale = new Vector3(
-                unitsPerGroundLayer,
-                UnitsPerBlock * .5f,
+                MapBuilderUtils.unitsPerGroundLayer,
+                MapBuilderUtils.UnitsPerBlock * .5f,
                 1);
 
             var wall = Object.Instantiate(surroundWall,
                 rotation * new Vector3(
                     offset,
-                    UnitsPerBlock * .5f,
-                    halfNumGroundLayers * unitsPerGroundLayer + UnitsPerBlock * .5f),
+                    MapBuilderUtils.UnitsPerBlock * .5f,
+                    halfNumGroundLayers * MapBuilderUtils.unitsPerGroundLayer + MapBuilderUtils.UnitsPerBlock * .5f),
                 rotation,
                 surroundParentTransform);
             wall.transform.localScale = new Vector3(
-                unitsPerGroundLayer,
-                UnitsPerBlock,
+                MapBuilderUtils.unitsPerGroundLayer,
+                MapBuilderUtils.UnitsPerBlock,
                 1);
 
             var wallFloor = Object.Instantiate(groundEdge,
                 rotation * new Vector3(
                     offset,
-                    UnitsPerBlock,
-                    halfNumGroundLayers * unitsPerGroundLayer + UnitsPerBlock),
+                    MapBuilderUtils.UnitsPerBlock,
+                    halfNumGroundLayers * MapBuilderUtils.unitsPerGroundLayer + MapBuilderUtils.UnitsPerBlock),
                 rotation * Quaternion.Euler(90, 0, 0),
                 surroundParentTransform);
             wallFloor.transform.localScale = new Vector3(
-                unitsPerGroundLayer,
-                UnitsPerBlock,
+                MapBuilderUtils.unitsPerGroundLayer,
+                MapBuilderUtils.UnitsPerBlock,
                 1);
 
             // Collision
             var collision = Object.Instantiate(surroundWall,
                 rotation * new Vector3(
                     offset,
-                    UnitsPerBlock + BoundaryCollisionHeight * .5f,
-                    halfNumGroundLayers * unitsPerGroundLayer + UnitsPerBlock * .5f),
+                    MapBuilderUtils.UnitsPerBlock + MapBuilderUtils.BoundaryCollisionHeight * .5f,
+                    halfNumGroundLayers * MapBuilderUtils.unitsPerGroundLayer + MapBuilderUtils.UnitsPerBlock * .5f),
                 rotation,
                 surroundParentTransform);
             collision.transform.localScale =
                 new Vector3(
-                    unitsPerGroundLayer + UnitsPerBlock, // Collisions overlap to fill corners
-                    BoundaryCollisionHeight,
+                    MapBuilderUtils.unitsPerGroundLayer + MapBuilderUtils.UnitsPerBlock, // Collisions overlap to fill corners
+                    MapBuilderUtils.BoundaryCollisionHeight,
                     1);
             collision.gameObject.name = "Collision";
 
@@ -359,14 +353,14 @@ namespace Fps
 
         private void PlaceTile(Vector2Int tileCoord, GameObject tile, float rotation)
         {
-            var tileOffset = UnitsPerTile / 2;
+            var tileOffset = MapBuilderUtils.UnitsPerTile / 2;
 
             Object.Instantiate(
                 tile,
                 new Vector3
                 {
-                    x = (tileCoord.x - 1) * UnitsPerTile + tileOffset,
-                    z = (tileCoord.y - 1) * UnitsPerTile + tileOffset
+                    x = (tileCoord.x - 1) * MapBuilderUtils.UnitsPerTile + tileOffset,
+                    z = (tileCoord.y - 1) * MapBuilderUtils.UnitsPerTile + tileOffset
                 },
                 new Quaternion
                 {
@@ -395,8 +389,8 @@ namespace Fps
                 groundTile,
                 new Vector3
                 {
-                    x = groundX * unitsPerGroundLayer + unitsPerGroundLayer * .5f,
-                    z = groundZ * unitsPerGroundLayer + unitsPerGroundLayer * .5f
+                    x = groundX * MapBuilderUtils.unitsPerGroundLayer + MapBuilderUtils.unitsPerGroundLayer * .5f,
+                    z = groundZ * MapBuilderUtils.unitsPerGroundLayer + MapBuilderUtils.unitsPerGroundLayer * .5f
                 },
                 Quaternion.identity,
                 groundParentTransform.transform);
