@@ -119,13 +119,12 @@ namespace Fps
                 return;
             }
 
-            levelInstance = new GameObject();
+            levelInstance = new GameObject($"FPS-Level_{worldLayerCount}({Worker.WorkerType})");
             levelInstance.transform.position = transform.position;
             levelInstance.transform.rotation = transform.rotation;
-            levelInstance.name = $"FPS-Level_{worldLayerCount}({Worker.WorkerType})";
-            var mapBuilder = levelInstance.AddComponent<MapBuilder>();
+
+            var mapBuilder = new MapBuilder(levelInstance);
             mapBuilder.CleanAndBuild(worldLayerCount);
-            DestroyImmediate(mapBuilder);
 
             levelInstance.GetComponentsInChildren<TileEnabler>(true, levelTiles);
             foreach (var tileEnabler in levelTiles)

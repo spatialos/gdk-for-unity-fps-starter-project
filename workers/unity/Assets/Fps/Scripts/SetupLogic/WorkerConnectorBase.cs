@@ -82,13 +82,12 @@ namespace Fps
         {
             if (GetWorldLayerCount(out var worldLayerCount))
             {
-                levelInstance = new GameObject();
+                levelInstance = new GameObject($"FPS-Level_{worldLayerCount}({Worker.WorkerType})");
                 levelInstance.transform.position = transform.position;
                 levelInstance.transform.rotation = transform.rotation;
-                levelInstance.name = $"FPS-Level_{worldLayerCount}({Worker.WorkerType})";
-                var mapBuilder = levelInstance.AddComponent<MapBuilder>();
+
+                var mapBuilder = new MapBuilder(levelInstance);
                 mapBuilder.CleanAndBuild(worldLayerCount);
-                DestroyImmediate(mapBuilder);
             }
         }
     }

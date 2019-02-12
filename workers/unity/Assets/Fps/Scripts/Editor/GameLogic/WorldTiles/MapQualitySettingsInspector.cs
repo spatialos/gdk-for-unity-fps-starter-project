@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Fps
 {
     [CustomEditor(typeof(MapQualitySettings))]
-    public class MapQualitySettingsInspector : Editor
+    public class MapQualitySettingsInspector : UnityEditor.Editor
     {
         private int activeQualityLevel;
         private MapQualitySettings settings;

@@ -2,24 +2,24 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
 namespace Fps
 {
-    public class MapBuilder : MonoBehaviour
+    public class MapBuilder
     {
-        public int Layers = 4;
-        public string Seed = "SpatialOS GDK for Unity";
-        public float EmptyTileChance = 0.2f;
+        private int Layers;
+        private string Seed;
+        private float EmptyTileChance;
 
         // Measurements.
         // All sizes are 1:1 ratio in X/Z, so we just define one value to represent both axis.
-        public const int UnitsPerBlock = 4; // One textured square on the ground is a 'block'.
-        public const int UnitsPerTile = 9 * UnitsPerBlock;
-        public const int TilesPerGroundLayer = 4; // Ground layers are large quads that encompass 4x4 tiles.
-        public const int BoundaryCollisionHeight = 16;
+        private const int UnitsPerBlock = 4; // One textured square on the ground is a 'block'.
+        private const int UnitsPerTile = 9 * UnitsPerBlock;
+        private const int TilesPerGroundLayer = 4; // Ground layers are large quads that encompass 4x4 tiles.
+        private const int BoundaryCollisionHeight = 16;
 
-#if UNITY_EDITOR
         // Store the half-value as many calculations are simplified by going from -halfNumGroundLayers to halfNumGroundLayers.
         private int halfNumGroundLayers => (Layers - 1) / TilesPerGroundLayer + 1;
         private int unitsPerGroundLayer => TilesPerGroundLayer * UnitsPerTile;
@@ -53,8 +53,17 @@ namespace Fps
         private const string CentreTile2 = "Prefabs/Level/Tiles/Centre2";
         private const string CentreTile3 = "Prefabs/Level/Tiles/Centre3";
 
+        private GameObject gameObject;
+
+        public bool InvalidMapBuilder => gameObject == null;
+
+        public MapBuilder(GameObject gameObject)
+        {
+            this.gameObject = gameObject;
+        }
+
         public void CleanAndBuild(
-            int worldLayers,
+            int worldLayers = 4,
             string seed = "SpatialOS GDK for Unity",
             float emptyTileChance = 0.2f)
         {
@@ -73,17 +82,17 @@ namespace Fps
             InitializeGroupsAndComponents();
             Random.InitState(Seed.GetHashCode());
 
-            var originalPosition = transform.position;
-            var originalRotation = transform.rotation;
-            transform.position = Vector3.zero;
-            transform.rotation = Quaternion.identity;
+            var originalPosition = gameObject.transform.position;
+            var originalRotation = gameObject.transform.rotation;
+            gameObject.transform.position = Vector3.zero;
+            gameObject.transform.rotation = Quaternion.identity;
             PlaceTiles();
             PlaceGround();
             FillSurround();
             MakeLevelObjectStatic();
 
-            transform.position = originalPosition;
-            transform.rotation = originalRotation;
+            gameObject.transform.position = originalPosition;
+            gameObject.transform.rotation = originalRotation;
 
             var numPlayableTilesWide = Layers * 2;
 
@@ -103,7 +112,7 @@ namespace Fps
 
         private void InitializeGroupsAndComponents()
         {
-            if (GetComponentInChildren<SpawnPoints>() == null)
+            if (gameObject.GetComponentInChildren<SpawnPoints>() == null)
             {
                 spawnPointSystemTransform = MakeChildGroup(SpawnPointSystemName);
                 spawnPointSystemTransform.gameObject.AddComponent<SpawnPoints>();
@@ -183,7 +192,7 @@ namespace Fps
         private Transform MakeChildGroup(string groupName)
         {
             var group = new GameObject(groupName).transform;
-            group.parent = transform;
+            group.parent = gameObject.transform;
             group.localPosition = Vector3.zero;
             group.localRotation = Quaternion.identity;
             group.localScale = Vector3.one;
@@ -221,7 +230,7 @@ namespace Fps
         {
             var rotation = Quaternion.Euler(0, angle, 0);
 
-            var floor = Instantiate(groundEdge,
+            var floor = Object.Instantiate(groundEdge,
                 rotation * new Vector3(
                     offset,
                     0,
@@ -233,7 +242,7 @@ namespace Fps
                 UnitsPerBlock * .5f,
                 1);
 
-            var wall = Instantiate(surroundWall,
+            var wall = Object.Instantiate(surroundWall,
                 rotation * new Vector3(
                     offset,
                     UnitsPerBlock * .5f,
@@ -245,7 +254,7 @@ namespace Fps
                 UnitsPerBlock,
                 1);
 
-            var wallFloor = Instantiate(groundEdge,
+            var wallFloor = Object.Instantiate(groundEdge,
                 rotation * new Vector3(
                     offset,
                     UnitsPerBlock,
@@ -258,7 +267,7 @@ namespace Fps
                 1);
 
             // Collision
-            var collision = Instantiate(surroundWall,
+            var collision = Object.Instantiate(surroundWall,
                 rotation * new Vector3(
                     offset,
                     UnitsPerBlock + BoundaryCollisionHeight * .5f,
@@ -274,20 +283,20 @@ namespace Fps
 
             if (Application.isPlaying)
             {
-                Destroy(collision.GetComponent<MeshRenderer>());
-                Destroy(collision.GetComponent<MeshFilter>());
+                Object.Destroy(collision.GetComponent<MeshRenderer>());
+                Object.Destroy(collision.GetComponent<MeshFilter>());
             }
             else
             {
-                DestroyImmediate(collision.GetComponent<MeshRenderer>());
-                DestroyImmediate(collision.GetComponent<MeshFilter>());
+                Object.DestroyImmediate(collision.GetComponent<MeshRenderer>());
+                Object.DestroyImmediate(collision.GetComponent<MeshFilter>());
             }
         }
 
         private void MakeCorner(int angle, Vector3 cornerOffset)
         {
             var rotation = Quaternion.Euler(0, angle, 0);
-            Instantiate(cornerPiece,
+            Object.Instantiate(cornerPiece,
                 rotation * cornerOffset,
                 rotation,
                 surroundParentTransform);
@@ -352,7 +361,7 @@ namespace Fps
         {
             var tileOffset = UnitsPerTile / 2;
 
-            Instantiate(
+            Object.Instantiate(
                 tile,
                 new Vector3
                 {
@@ -382,7 +391,7 @@ namespace Fps
 
         private void PlaceGroundTile(int groundX, int groundZ)
         {
-            Instantiate(
+            Object.Instantiate(
                 groundTile,
                 new Vector3
                 {
@@ -423,15 +432,13 @@ namespace Fps
                 if (child.gameObject.name.Contains(SurroundParentName))
                 {
                     childrenToDestroy.Enqueue(child.gameObject);
-                    continue;
                 }
             }
 
             while (childrenToDestroy.Count != 0)
             {
-                DestroyImmediate(childrenToDestroy.Dequeue());
+                Object.DestroyImmediate(childrenToDestroy.Dequeue());
             }
         }
-#endif
     }
 }
