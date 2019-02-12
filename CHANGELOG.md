@@ -7,16 +7,25 @@
 - Added a Deployment Launcher window. This allows you to upload assemblies and launch deployments from the Unity Editor.
 - Added two launch configurations: `cloud_launch_large_sim_players.json` and `cloud_launch_small_sim_players.json` for simulated player deployments. 
 - Added cloud support for Android workers.
+- Added a `MapBuilderSettings` scriptable object containing the default number of layers for the small and large sized worlds.
 
 ### Changed
 
 - A simulated player now connects as a regular `UnityClient` worker rather than a `SimulatedPlayer` worker.
 - In cloud deployments, `SimulatedPlayerCoordinator` workers are ran in a separate deployment to the `UnityGameLogic` workers.
     - Note that simulated players started by the coordinators still connect into the deployment with the `UnityGameLogic` workers.
+- Updated all launch configurations.
+	- Replace transition runtime v2 templates from all launch configurations.
+	- Update `default_launch.json` to support `SimulatedPlayerCoordinator`.
+	- Reduce checkout radius of `UnityClient` and `UnityGameLogic` workers.
+- Increase the level size from 868x868 to 1732x1732.
+- Changed how `MapBuilder` and setting up the level work.
+	- `LoadWorld` now generates the level GameObject instead of instantiating it from a prefab.
 
 ### Removed
 
 - Removed the `SimulatedPlayer` worker type.
+- Remove all `FPS-Start_*` level prefabs.
 
 ## `0.1.4` - 2019-01-28
 
