@@ -166,7 +166,7 @@ namespace Fps
                 transform,
                 Worker.Connection,
                 Worker.WorkerType,
-                Worker.World.GetExistingManager<WorkerSystem>().LogDispatcher);
+                Worker.LogDispatcher);
 
             levelInstance.GetComponentsInChildren<TileEnabler>(true, levelTiles);
             foreach (var tileEnabler in levelTiles)

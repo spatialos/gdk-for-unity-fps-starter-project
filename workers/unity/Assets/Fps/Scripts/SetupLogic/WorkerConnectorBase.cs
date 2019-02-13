@@ -56,7 +56,7 @@ namespace Fps
                 transform,
                 Worker.Connection,
                 Worker.WorkerType,
-                Worker.World.GetExistingManager<WorkerSystem>().LogDispatcher);
+                Worker.LogDispatcher);
         }
     }
 }
