@@ -53,8 +53,8 @@ namespace Improbable.Gdk.DeploymentManager
             private string assemblyName = "";
             private string deploymentName = "";
             private string snapshotPath = "snapshots/cloud.snapshot";
-            private string mainLaunchJson = "cloud_launch_small.json";
-            private string simPlayerLaunchJson = "cloud_launch_small_sim_players.json";
+            private string mainLaunchJson = "cloud_launch_large.json";
+            private string simPlayerLaunchJson = "cloud_launch_large_sim_players.json";
             private string simPlayerDeploymentName = "";
             private bool simPlayerDeploymentEnabled;
             private bool simPlayerCustomDeploymentNameEnabled;
