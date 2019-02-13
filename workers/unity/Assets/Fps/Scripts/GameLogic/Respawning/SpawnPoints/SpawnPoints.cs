@@ -32,7 +32,7 @@ namespace Fps
             return spawnPointList[Random.Range(0, spawnPointList.Length)];
         }
 
-        private void Awake()
+        public void SetSpawnPoints()
         {
             var spawnPoints = FindSpawnPoints();
             var worldOffset = transform.root.position;

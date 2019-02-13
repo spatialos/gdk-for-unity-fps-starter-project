@@ -91,6 +91,8 @@ namespace Fps
             FillSurround();
             MakeLevelObjectStatic();
 
+            spawnPointSystemTransform.gameObject.GetComponent<SpawnPoints>()?.SetSpawnPoints();
+
             gameObject.transform.position = originalPosition;
             gameObject.transform.rotation = originalRotation;
 
