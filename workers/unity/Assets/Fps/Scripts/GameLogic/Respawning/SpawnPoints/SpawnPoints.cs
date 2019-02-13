@@ -19,7 +19,7 @@ namespace Fps
         }
 
         private static SpawnPoint[] spawnPointList;
-        [SerializeField] private bool snapsToGround;
+        [SerializeField] private bool snapsToGround = true;
 
         public static SpawnPoint GetRandomSpawnPoint()
         {
