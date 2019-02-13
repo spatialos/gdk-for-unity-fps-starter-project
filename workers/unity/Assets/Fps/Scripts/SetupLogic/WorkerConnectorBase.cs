@@ -9,7 +9,7 @@ namespace Fps
     {
         public int TargetFrameRate = 60;
 
-        public MapBuilderSettings MapBuilderSettings;
+        [SerializeField] protected MapBuilderSettings MapBuilderSettings;
 
         protected GameObject levelInstance;
 
@@ -56,7 +56,7 @@ namespace Fps
                 transform,
                 Worker.Connection,
                 Worker.WorkerType,
-                Worker.World.GetExistingManager<WorkerSystem>());
+                Worker.World.GetExistingManager<WorkerSystem>().LogDispatcher);
         }
     }
 }

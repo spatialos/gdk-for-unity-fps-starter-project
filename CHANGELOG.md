@@ -16,6 +16,8 @@
     - Note that simulated players started by the coordinators still connect into the deployment with the `UnityGameLogic` workers.
 - Updated all launch configurations.
 	- Replaced transition runtime v2 templates from all launch configurations.
+	- Updated cloud launch configurations to use the new `w4_r1000_e1` template.
+	- Updated simulated players launch configurations to use the new `sim_players` template.
 	- Updated `default_launch.json` to support `SimulatedPlayerCoordinator`.
 	- Reduced checkout radius of `UnityClient` and `UnityGameLogic` workers from 210 to 150.
 - Increased the level size from 868x868 to 1732x1732.

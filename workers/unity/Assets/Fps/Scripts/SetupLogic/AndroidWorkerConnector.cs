@@ -25,7 +25,7 @@ namespace Fps
         public bool ShouldConnectLocally;
         public int TargetFrameRate = 60;
 
-        public MapBuilderSettings MapBuilderSettings;
+        [SerializeField] private MapBuilderSettings MapBuilderSettings;
 
         private GameObject levelInstance;
 
@@ -166,7 +166,7 @@ namespace Fps
                 transform,
                 Worker.Connection,
                 Worker.WorkerType,
-                Worker.World.GetExistingManager<WorkerSystem>());
+                Worker.World.GetExistingManager<WorkerSystem>().LogDispatcher);
 
             levelInstance.GetComponentsInChildren<TileEnabler>(true, levelTiles);
             foreach (var tileEnabler in levelTiles)

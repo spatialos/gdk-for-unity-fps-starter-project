@@ -67,6 +67,12 @@ namespace Fps
             string seed = "SpatialOS GDK for Unity",
             float emptyTileChance = 0.2f)
         {
+            if (mapBuilderSettings == null)
+            {
+                Debug.LogError("MapBuilderSettings has not been set.");
+                return;
+            }
+
             Layers = worldLayers;
             Seed = seed;
             EmptyTileChance = emptyTileChance;
@@ -210,7 +216,8 @@ namespace Fps
                 groundLayerIndex++)
             {
                 float offset = groundLayerIndex * mapBuilderSettings.unitsPerGroundLayer;
-                offset += mapBuilderSettings.unitsPerGroundLayer * .5f; // centre is half-distance across the ground layer
+                offset += mapBuilderSettings.unitsPerGroundLayer *
+                    .5f; // centre is half-distance across the ground layer
                 MakeEdge(offset, 0);
                 MakeEdge(offset, 90);
                 MakeEdge(offset, 180);
@@ -238,7 +245,8 @@ namespace Fps
                 rotation * new Vector3(
                     offset,
                     0,
-                    halfNumGroundLayers * mapBuilderSettings.unitsPerGroundLayer + mapBuilderSettings.UnitsPerBlock * 0.25f),
+                    halfNumGroundLayers * mapBuilderSettings.unitsPerGroundLayer +
+                    mapBuilderSettings.UnitsPerBlock * 0.25f),
                 rotation * Quaternion.Euler(90, 0, 0),
                 groundParentTransform);
             floor.transform.localScale = new Vector3(
@@ -250,7 +258,8 @@ namespace Fps
                 rotation * new Vector3(
                     offset,
                     mapBuilderSettings.UnitsPerBlock * .5f,
-                    halfNumGroundLayers * mapBuilderSettings.unitsPerGroundLayer + mapBuilderSettings.UnitsPerBlock * .5f),
+                    halfNumGroundLayers * mapBuilderSettings.unitsPerGroundLayer +
+                    mapBuilderSettings.UnitsPerBlock * .5f),
                 rotation,
                 surroundParentTransform);
             wall.transform.localScale = new Vector3(
@@ -275,12 +284,14 @@ namespace Fps
                 rotation * new Vector3(
                     offset,
                     mapBuilderSettings.UnitsPerBlock + mapBuilderSettings.BoundaryCollisionHeight * .5f,
-                    halfNumGroundLayers * mapBuilderSettings.unitsPerGroundLayer + mapBuilderSettings.UnitsPerBlock * .5f),
+                    halfNumGroundLayers * mapBuilderSettings.unitsPerGroundLayer +
+                    mapBuilderSettings.UnitsPerBlock * .5f),
                 rotation,
                 surroundParentTransform);
             collision.transform.localScale =
                 new Vector3(
-                    mapBuilderSettings.unitsPerGroundLayer + mapBuilderSettings.UnitsPerBlock, // Collisions overlap to fill corners
+                    mapBuilderSettings.unitsPerGroundLayer +
+                    mapBuilderSettings.UnitsPerBlock, // Collisions overlap to fill corners
                     mapBuilderSettings.BoundaryCollisionHeight,
                     1);
             collision.gameObject.name = "Collision";
@@ -447,11 +458,11 @@ namespace Fps
 
         public static Vector3 GetWorldDimensions(MapBuilderSettings mapBuilderSettings, int worldLayerCount)
         {
-            var dimensions = (worldLayerCount * mapBuilderSettings.UnitsPerTile * 2) + mapBuilderSettings.UnitsPerBlock;
+            var dimensions = worldLayerCount * mapBuilderSettings.UnitsPerTile * 2 + mapBuilderSettings.UnitsPerBlock;
             return new Vector3(dimensions, 100f, dimensions);
         }
 
-        public static bool GetWorldLayerCount(MapBuilderSettings mapBuilderSettings,
+        public static bool TryGetWorldLayerCount(MapBuilderSettings mapBuilderSettings,
             string worldSize, out int worldLayerCount)
         {
             switch (worldSize)
@@ -480,12 +491,12 @@ namespace Fps
             Transform workerTransform,
             Connection connection,
             string workerType,
-            WorkerSystem workerSystem)
+            ILogDispatcher logDispatcher)
         {
             var levelInstance = new GameObject();
             var worldSize = GetWorldSizeFlag(connection);
 
-            if (GetWorldLayerCount(mapBuilderSettings, worldSize, out var worldLayerCount))
+            if (TryGetWorldLayerCount(mapBuilderSettings, worldSize, out var worldLayerCount))
             {
                 levelInstance.name = $"FPS-Level_{worldLayerCount}({workerType})";
                 levelInstance.transform.position = workerTransform.position;
@@ -496,7 +507,7 @@ namespace Fps
             }
             else
             {
-                workerSystem.LogDispatcher.HandleLog(LogType.Error,
+                logDispatcher.HandleLog(LogType.Error,
                     new LogEvent("Invalid world_size worker flag. Make sure that it is either small or large,")
                         .WithField("world_size", worldSize));
             }
