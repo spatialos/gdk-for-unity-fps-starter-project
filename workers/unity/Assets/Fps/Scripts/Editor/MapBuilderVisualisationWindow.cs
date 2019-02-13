@@ -5,7 +5,7 @@ using Object = UnityEngine.Object;
 
 namespace Fps.Editor
 {
-    public class MapBuilderVisualisationInspector : EditorWindow
+    public class MapBuilderVisualisationWindow : EditorWindow
     {
         private const int WarnTilesThreshold = 2500;
 
@@ -24,7 +24,7 @@ namespace Fps.Editor
         {
             // Show existing window instance. If one doesn't exist, make one.
             var inspectorWindowType = typeof(EditorWindow).Assembly.GetType("UnityEditor.InspectorWindow");
-            var deploymentWindow = GetWindow<MapBuilderVisualisationInspector>(inspectorWindowType);
+            var deploymentWindow = GetWindow<MapBuilderVisualisationWindow>(inspectorWindowType);
             deploymentWindow.titleContent.text = "Map Builder Visualisation";
             deploymentWindow.titleContent.tooltip = "A tool for visualising the level to be generated at runtime.";
             deploymentWindow.Show();
