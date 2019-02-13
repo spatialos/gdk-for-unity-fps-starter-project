@@ -1,5 +1,5 @@
 {
-  "template": "small_entity_db_v2",
+  "template": "w4_r1000_e1",
   "world": {
     "chunkEdgeLengthMeters": 50,
     "snapshots": {
@@ -14,8 +14,9 @@
     "layer_configurations": [
       {
         "layer": "UnityGameLogic",
-        "hex_grid": {
-          "num_workers": 1
+        "rectangle_grid": {
+          "cols": 1,
+          "rows": 1
         }
       }
     ]

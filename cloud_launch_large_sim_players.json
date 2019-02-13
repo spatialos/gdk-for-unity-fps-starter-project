@@ -1,13 +1,13 @@
 {
-  "template": "medium_small_entity_db_v2",
+  "template": "sim_players",
   "world": {
     "chunkEdgeLengthMeters": 50,
     "snapshots": {
       "snapshotWritePeriodSeconds": 0
     },
     "dimensions": {
-      "xMeters": 900,
-      "zMeters": 900
+      "xMeters": 1800,
+      "zMeters": 1800
     },
     "legacy_flags": [
       {
@@ -41,14 +41,14 @@
         },
         {
           "name": "fps_simulated_players_creation_interval",
-          "value": "2"
+          "value": "60"
         }
       ],
       "permissions": [
         {
           "all": {}
         }
-      ],
+      ]
     }
   ]
 }

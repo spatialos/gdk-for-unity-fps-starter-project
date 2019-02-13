@@ -1,5 +1,5 @@
 {
-  "template": "small_entity_db_v2",
+  "template": "sim_players",
   "world": {
     "chunkEdgeLengthMeters": 50,
     "snapshots": {
@@ -14,8 +14,9 @@
     "layer_configurations": [
       {
         "layer": "SimulatedPlayerCoordinator",
-        "hex_grid": {
-          "num_workers": 1
+        "rectangle_grid": {
+          "cols": 1,
+          "rows": 1
         }
       }
     ]
@@ -34,7 +35,7 @@
         },
         {
           "name": "fps_simulated_players_creation_interval",
-          "value": "2"
+          "value": "5"
         }
       ],
       "permissions": [
