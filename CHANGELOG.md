@@ -15,17 +15,17 @@
 - In cloud deployments, `SimulatedPlayerCoordinator` workers are ran in a separate deployment to the `UnityGameLogic` workers.
     - Note that simulated players started by the coordinators still connect into the deployment with the `UnityGameLogic` workers.
 - Updated all launch configurations.
-	- Replace transition runtime v2 templates from all launch configurations.
-	- Update `default_launch.json` to support `SimulatedPlayerCoordinator`.
-	- Reduce checkout radius of `UnityClient` and `UnityGameLogic` workers from 210 to 150.
-- Increase the level size from 868x868 to 1732x1732.
+	- Replaced transition runtime v2 templates from all launch configurations.
+	- Updated `default_launch.json` to support `SimulatedPlayerCoordinator`.
+	- Reduced checkout radius of `UnityClient` and `UnityGameLogic` workers from 210 to 150.
+- Increased the level size from 868x868 to 1732x1732.
 - Changed how level generation and `MapBuilder.cs` works.
 	- `LoadWorld()` now generates the level GameObject through `MapBuilder`, instead of instantiating it from a prefab.
 
 ### Removed
 
 - Removed the `SimulatedPlayer` worker type.
-- Remove all `FPS-Start_*` level prefabs.
+- Removed all `FPS-Start_*` level prefabs.
 
 ## `0.1.4` - 2019-01-28
 
