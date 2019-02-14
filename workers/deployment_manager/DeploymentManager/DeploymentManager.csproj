@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <Platforms>x64</Platforms>
+    <Platform Condition="'$(Platform)' == ''">x64</Platform>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="default.snapshot" />
+    <None Remove="launch_config.json" />
+    <None Remove="ServiceAccountToken.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="default.snapshot">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="launch_config.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServiceAccountToken.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <!--> GlobalPropertiesToRemove="SelfContained" WORKAROUND: https://github.com/dotnet/sdk/issues/1834#issuecomment-399745156 </!-->
+  <ItemGroup>
+    <ProjectReference Include="..\GeneratedCode\GeneratedCode.csproj" GlobalPropertiesToRemove="SelfContained" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Improbable.CoreSdk" Version="13.5.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="Npgsql" Version="4.0.4" />
+    <PackageReference Include="Improbable.SpatialOS.Platform" Version="13.5.1" />
+  </ItemGroup>
+
+  <Import Project="$(SolutionDir)LocalRun.targets" />
+</Project>
