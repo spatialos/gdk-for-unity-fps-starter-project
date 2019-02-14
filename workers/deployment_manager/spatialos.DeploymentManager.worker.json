@@ -1,0 +1,86 @@
+{
+  "build": {
+    "tasks": [
+      {
+        "name": "Codegen",
+        "steps": [
+          {
+            "name": "** Load Unity to generate code **",
+            "command": "echo",
+            "arguments": [ "No-op." ]
+          }
+        ]
+      },
+      {
+        "name": "build",
+        "steps": [
+          {
+            "name": "** Run ci/build-gamelogic.sh instead **",
+            "command": "echo",
+            "arguments": [ "No-op." ]
+          }
+        ]
+      },
+      {
+        "name": "clean",
+        "steps": [
+          {
+            "name": "No-op",
+            "command": "echo",
+            "arguments": [ "No-op." ]
+          }
+        ]
+      }
+    ]
+  },
+  "bridge": {
+    "worker_attribute_set": {
+      "attributes": [
+        "DeploymentManager"
+      ]
+    },
+    "entity_interest": {
+      "range_entity_interest": {
+        "radius": 500
+      }
+    },
+    "component_delivery": {
+      "default": "RELIABLE_ORDERED",
+      "checkoutAllInitially": true
+    }
+  },
+  "managed": {
+    "linux": {
+      "artifact_name": "DeploymentManager@Linux.zip",
+      "command": "DeploymentManager",
+      "arguments": [
+        "${IMPROBABLE_RECEPTIONIST_HOST}",
+        "${IMPROBABLE_RECEPTIONIST_PORT}",
+        "${IMPROBABLE_WORKER_ID}",
+        "${IMPROBABLE_LOG_FILE}",
+        "${IMPROBABLE_PROJECT_NAME}",
+        "${IMPROBABLE_ASSEMBLY_NAME}",
+        "UnityClient",
+        "session",
+        "1",
+        "4"
+      ]
+    },
+    "windows": {
+      "artifact_name": "DeploymentManager@Windows.zip",
+      "command": "DeploymentManager.exe",
+      "arguments": [
+        "${IMPROBABLE_RECEPTIONIST_HOST}",
+        "${IMPROBABLE_RECEPTIONIST_PORT}",
+        "${IMPROBABLE_WORKER_ID}",
+        "${IMPROBABLE_LOG_FILE}",
+        "${IMPROBABLE_PROJECT_NAME}",
+        "${IMPROBABLE_ASSEMBLY_NAME}",
+        "UnityClient",
+        "session",
+        "1",
+        "4"
+      ]
+    }
+  }
+}
