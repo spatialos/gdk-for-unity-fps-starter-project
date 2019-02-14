@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <!-- 
+    Output a script that local deployments can use to launch the latest version of the worker.
+    
+    Add it to your worker .csproj:
+    <Import Project="$(SolutionDir)LocalRun.targets" />
+   -->
+  
+  <Target Name="EvalLocalRunProperties">
+    <!-- $(ProjectName) isn't available in the Project scope and will be blank; evaluate in the Target context. -->
+
+    <!-- Windows platform -->
+    <PropertyGroup Condition="$([MSBuild]::IsOsPlatform(Windows))">
+      <LocalRunFile>$(SolutionDir)tmp\local\$(ProjectName)LocalRun.cmd</LocalRunFile>
+      <LocalRunCommand>dotnet "$(TargetPath)" %*</LocalRunCommand>
+    </PropertyGroup>
+
+    <!-- Linux/MacOs platforms -->
+    <PropertyGroup Condition="$([MSBuild]::IsOsPlatform(Linux)) Or $([MSBuild]::IsOsPlatform(OSX))">
+      <LocalRunFile>$(SolutionDir)tmp\local\$(ProjectName)LocalRun.sh</LocalRunFile>
+      <!-- Escape $* as %24%40 -->
+      <LocalRunCommand>dotnet "$(TargetPath)" "%24%40"</LocalRunCommand>
+    </PropertyGroup>
+  </Target>
+  
+  <!-- Write the script files after a successful build. -->
+  <Target Name="PostBuild" DependsOnTargets="EvalLocalRunProperties" AfterTargets="PostBuildEvent">
+    <MakeDir Directories="$(SolutionDir)tmp\local" />
+    <WriteLinesToFile Overwrite="true" Encoding="ASCII" File="$(LocalRunFile)" Lines="$(LocalRunCommand)" />
+    <Exec Condition="$([MSBuild]::IsOsPlatform(Linux)) Or $([MSBuild]::IsOsPlatform(OSX))" Command="chmod +x &quot;$(LocalRunFile)&quot;" />
+  </Target>
+  
+  <!-- Clean up. -->
+  <Target Name="CleanLocalRun" DependsOnTargets="EvalLocalRunProperties" AfterTargets="Clean">
+    <Delete Files="$(LocalRunFile)"/>
+  </Target>
+</Project>

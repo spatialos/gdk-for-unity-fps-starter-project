@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <!-- 
+    This well-known file is automatically loaded into every project. 
+    See https://docs.microsoft.com/en-us/visualstudio/msbuild/customize-your-build?view=vs-2017
+  -->
+  <PropertyGroup>
+    <SolutionDir Condition="'$(SolutionDir)'==''">$(MSBuildThisFileDirectory)</SolutionDir>
+  </PropertyGroup>
+  
+    <!--> WORKAROUND: https://github.com/dotnet/sdk/issues/1834#issuecomment-399745156 </!-->
+  <PropertyGroup>
+    <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
+  </PropertyGroup>
+</Project>
