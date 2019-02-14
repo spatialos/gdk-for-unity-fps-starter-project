@@ -1,0 +1,63 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <Platforms>x64</Platforms>
+    <Platform Condition="'$(Platform)' == ''">x64</Platform>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Input properties for Improbable.CoreSdk.Tools -->  
+    <SchemaGeneratedOutputDir>$(SolutionDir)GeneratedCode\gen</SchemaGeneratedOutputDir>
+    <GeneratedDescriptorTarget>$(SolutionDir)tmp\schema.descriptor</GeneratedDescriptorTarget>
+    <GeneratedBundleTarget>$(SolutionDir)tmp\schema_bundle.json</GeneratedBundleTarget>
+
+    <GeneratedCodeDir>$(SolutionDir)GeneratedCode\sync</GeneratedCodeDir>
+  </PropertyGroup>
+
+  <!-- Input items for Improbable.CoreSdk.Tools -->
+  <ItemGroup>
+      <SchemaInputDir Include="$(SolutionDir)\..\..\schema;$(SolutionDir)DeploymentManager\schema" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Improbable.CoreSdk" Version="13.5.0" />
+    <PackageReference Include="Improbable.CoreSdk.Tools" Version="13.5.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+  </ItemGroup>
+
+  <Target Name="GenerateFromSchemaAST" AfterTargets="SpatialOSGenerateSchemaCode" Condition="$(DesignTimeBuild) != true">
+    <Message Text="Processing schema bundle..." Importance="High" />
+    
+    <PropertyGroup>
+      <!-- MSBuild has already populated existing generated files in the <Compile> item - remove the duplicates to avoid compiler warnings. -->
+      <_RelativeGeneratedDir>$([MSBuild]::MakeRelative($(MSBuildProjectDirectory), $(GeneratedCodeDir)))</_RelativeGeneratedDir>
+
+      <_CodeGenProject>$(SolutionDir)CodeGen\bin\$(Configuration)\$(TargetFramework)\CodeGen.dll</_CodeGenProject>
+      <CodeGenProject>$([MSBuild]::NormalizePath($(_CodeGenProject)))</CodeGenProject>
+      
+      <CodeGenCommand>dotnet &quot;$(CodeGenProject)&quot; --input-bundle &quot;$(GeneratedBundleTarget)&quot; --output-dir &quot;$(GeneratedCodeDir)&quot;</CodeGenCommand>
+    </PropertyGroup>
+
+    <Exec WorkingDirectory="$(SolutionDir)" Command="$(CodeGenCommand)" />  
+
+    <ItemGroup>
+      <Compile Remove="$(_RelativeGeneratedDir)/**/*.cs"/>
+
+      <!-- Add the generated files into the set of files to compile. -->
+      <Compile Include="$(GeneratedCodeDir)/**/*.cs"/>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="CleanSchemaGeneratedCode" AfterTargets="Clean">
+    <RemoveDir Directories="$(GeneratedCodeDir)"/>
+  </Target>
+</Project>
