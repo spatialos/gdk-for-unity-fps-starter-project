@@ -87,12 +87,12 @@ namespace Fps
 
         private float GetDPIScalar()
         {
-            var activeQualityLevelName = QualitySettings.names[QualitySettings.GetQualityLevel()];
-
             if (dpiScalarCache > 0)
             {
                 return dpiScalarCache;
             }
+            
+            var activeQualityLevelName = QualitySettings.names[QualitySettings.GetQualityLevel()];
 
             foreach (var setting in Settings)
             {
