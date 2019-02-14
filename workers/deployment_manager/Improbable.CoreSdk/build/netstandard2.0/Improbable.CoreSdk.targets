@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <Target Name="_ValidatePlatform" BeforeTargets="Compile">
+    <!-- Any project that depends on CoreSdkDll must be x64 - validate this with a clear error here, rather than giving users an obtuse error message later. -->
+    <Error Condition="'$(Platform)' != 'x64'" Text="Project '$(ProjectName)' can only be built for the x64 platform. The current platform is $(Platform). Try re-running with -p:Platform=x64 on the command line."/>
+  </Target>
+  
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)\..\..\runtimes\win10-x64\native\CoreSdkDll.dll" Link="CoreSdkDll.dll" Condition="'$(RuntimeIdentifier)'=='win-x64' Or '$([MSBuild]::IsOSPlatform(Windows)' == 'true'">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)\..\..\runtimes\linux-x64\native\libCoreSdkDll.so" Link="libCoreSdkDll.so" Condition="'$(RuntimeIdentifier)'=='linux-x64' Or '$([MSBuild]::IsOSPlatform(Linux)' == 'true'">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Improbable.WorkerSdkCsharp">
+      <HintPath>lib\netstandard2.0\Improbable.WorkerSdkCsharp.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

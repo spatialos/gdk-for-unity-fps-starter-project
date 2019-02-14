@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Improbable.CoreSdk.Tools</id>
+    <version>13.5.0</version>
+    <authors>Improbable Worlds, Ltd</authors>
+    <copyright>Improbable Worlds, Ltd</copyright>
+    <description>SpatialOS Tools</description>
+  </metadata>
+  <files>
+    <file src="build/netstandard2.0/Improbable.CoreSdk.Tools.targets" target="/build/netstandard2.0/Improbable.CoreSdk.Tools.targets" />
+    
+    <file src="tools/linux-x64/schema_compiler" target="/tools/linux-x64/schema_compiler" />
+    <file src="tools/macos-x64/schema_compiler" target="/tools/macos-x64/schema_compiler" />
+    <file src="tools/win-x64/schema_compiler.exe" target="/tools/win-x64/schema_compiler.exe" />
+    
+    <file src="tools/standard_library/improbable/standard_library.schema" target="/tools/standard_library/improbable/standard_library.schema" />
+    <file src="tools/standard_library/improbable/vector3.schema" target="/tools/standard_library/improbable/vector3.schema" />
+  </files>
+</package>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <!--
+  Invokes the SpatialOS schema_compiler to generate C# code, descriptor and schema bundles.
+  The project containing the generated code files must define following properties and items:
+
+  <PropertyGroup>
+    <SchemaGeneratedOutputDir>$(SolutionDir)GeneratedCode\gen</SchemaGeneratedOutputDir>
+    <GeneratedDescriptorTarget>$(SolutionDir)tmp\schema.descriptor<GeneratedDescriptorTarget>
+    <GeneratedBundleTarget>$(SolutionDir)tmp\schema_bundle.json</GeneratedBundleTarget>
+  </PropertyGroup>
+
+  <ItemGroup>
+      <SchemaInputDir Include="$(SolutionDir)DatabaseWorker\schema"/>
+  </ItemGroup>
+   -->
+
+  <Target Name="SpatialOSValidateSchemaGeneration">
+
+    <Error Condition="'$(SchemaGeneratedOutputDir)' == ''"
+           Text="Property 'SchemaGeneratedOutputDir' must be specified"/>
+
+    <Error Condition="'$(GeneratedDescriptorTarget)' == ''"
+           Text="Property 'GeneratedDescriptorTarget' must be specified"/>
+
+    <Error Condition="'$(GeneratedBundleTarget)' == ''"
+           Text="Property 'GeneratedBundleTarget' must be specified"/>
+
+    <Error Condition="'@(SchemaInputDir)' == ''"
+           Text="Item 'SchemaInputDir' must be specified"/>
+  </Target>
+
+  <!-- Schema compiler paths -->
+  <PropertyGroup>
+    <_SchemaCompilerPath Condition="$([MSBuild]::IsOsPlatform(Windows))">$(MSBuildThisFileDirectory)..\..\tools\win-x64\schema_compiler.exe</_SchemaCompilerPath>
+    <_SchemaCompilerPath Condition="$([MSBuild]::IsOsPlatform(Linux))">$(MSBuildThisFileDirectory)../../tools/linux-x64/schema_compiler</_SchemaCompilerPath>
+    <_SchemaCompilerPath Condition="$([MSBuild]::IsOsPlatform(OSX))">$(MSBuildThisFileDirectory)../../tools/macos-x64/schema_compiler</_SchemaCompilerPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <SchemaCompilerPath>$([MSBuild]::NormalizePath($(_SchemaCompilerPath)))</SchemaCompilerPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Normalize paths and ensure they have the correct path separators. -->
+    <!-- Access this via the 'Normalized' metadata. -->
+    <_SchemaInputDirMerged Include="@(SchemaInputDir);$(MSBuildThisFileDirectory)..\..\tools\standard_library">
+      <Normalized>$([MSBuild]::NormalizePath(%(FullPath)))</Normalized>
+    </_SchemaInputDirMerged>
+
+    <_SchemaPathArguments Include="@(_SchemaInputDirMerged->'--schema_path=&quot;%(Normalized)&quot;')"/>
+  </ItemGroup>
+
+  <PropertyGroup>
+    <!-- Chain into compile dependencies -->
+    <CompileDependsOn>SpatialOSGenerateSchemaCode;$(CompileDependsOn)</CompileDependsOn>
+
+    <!-- Normalize paths and ensure they have the correct path separators -->
+    <_SchemaGeneratedOutputDir>$([MSBuild]::NormalizePath($(SchemaGeneratedOutputDir)))</_SchemaGeneratedOutputDir>
+    <_GeneratedDescriptorTarget>$([MSBuild]::NormalizePath($(GeneratedDescriptorTarget)))</_GeneratedDescriptorTarget>
+    <_GeneratedBundleTarget>$([MSBuild]::NormalizePath($(GeneratedBundleTarget)))</_GeneratedBundleTarget>
+    <_SchemaCompilerPath>$([MSBuild]::NormalizePath($(SchemaCompilerPath)))</_SchemaCompilerPath>
+
+    <_DescriptorTargetDir>$([System.IO.Directory]::GetParent($(_GeneratedDescriptorTarget)))</_DescriptorTargetDir>
+    <_BundleTargetDir>$([System.IO.Directory]::GetParent($(_GeneratedBundleTarget)))</_BundleTargetDir>    
+  </PropertyGroup>
+
+  <Target Name="_FindSchemaFiles">
+    <ItemGroup>
+      <_SchemaGlobs Include="@(_SchemaInputDirMerged->'%(Normalized)\**\*.schema')"/>
+    </ItemGroup>
+
+    <!-- Transform the list of file globs into a string literal that can be passed and evaluated in the _SchemaFiles ItemGroup. -->
+    <PropertyGroup>
+      <_LiteralSchemaGlobs>@(_SchemaGlobs)</_LiteralSchemaGlobs>
+    </PropertyGroup>
+
+    <!-- Evaluate the list of globs into the final list of schema files. -->
+    <ItemGroup>
+      <_SchemaFiles Include="$(_LiteralSchemaGlobs)"/>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="SpatialOSGenerateSchemaCode" DependsOnTargets="SpatialOSValidateSchemaGeneration;_FindSchemaFiles" Condition="$(DesignTimeBuild) != true">   
+    <!-- The schema compiler requires that the output directories exist. -->
+    <MakeDir Directories="$(SchemaGeneratedOutputDir);$(_DescriptorTargetDir);$(_BundleTargetDir)"/>
+
+    <Message Text="Generating code from schema... $(_SchemaFiles)" Importance="high"/>
+
+    <Exec Command="&quot;$(SchemaCompilerPath)&quot; @(_SchemaPathArguments, ' ') --csharp_out=&quot;$(_SchemaGeneratedOutputDir)&quot; --descriptor_set_out=&quot;$(_GeneratedDescriptorTarget)&quot; --bundle_json_out=&quot;$(_GeneratedBundleTarget)&quot; &quot;@(_SchemaFiles, '&quot; &quot;')&quot;"
+          WorkingDirectory="$(SolutionDir)"/>
+
+    <!-- MSBuild has already populated existing generated files in the <Compile> item - remove the duplicates to avoid compiler warnings. -->
+    <PropertyGroup>
+      <_RelativeGeneratedDir>$([MSBuild]::MakeRelative($(MSBuildProjectDirectory), $(_SchemaGeneratedOutputDir)))</_RelativeGeneratedDir>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Compile Remove="$(_RelativeGeneratedDir)/**/*.cs"/>
+
+      <!-- Add the generated files into the set of files to compile. -->
+      <Compile Include="$(_SchemaGeneratedOutputDir)/**/*.cs"/>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="SpatialOSCleanSchemaGeneratedCode" AfterTargets="Clean">
+    <RemoveDir Directories="$(_SchemaGeneratedOutputDir)"/>
+    <Delete Files="$(GeneratedDescriptorTarget);$(GeneratedBundleTarget)"/>
+  </Target>
+</Project>

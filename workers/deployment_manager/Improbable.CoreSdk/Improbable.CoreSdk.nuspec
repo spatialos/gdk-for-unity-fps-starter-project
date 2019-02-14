@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Improbable.CoreSdk</id>
+    <version>13.5.0</version>
+    <authors>Improbable Worlds, Ltd</authors>
+    <copyright>Improbable Worlds, Ltd</copyright>
+    <description>SpatialOS CoreSdk</description>
+  </metadata>
+  <files>
+    <file src="build/netstandard2.0/Improbable.CoreSdk.targets" target="/build/netstandard2.0/Improbable.CoreSdk.targets" />
+
+    <file src="lib/netstandard2.0/Improbable.WorkerSdkCsharp.dll" target="/lib/netstandard2.0/Improbable.WorkerSdkCsharp.dll" />
+    <file src="lib/netstandard2.0/Improbable.WorkerSdkCsharp.xml" target="/lib/netstandard2.0/Improbable.WorkerSdkCsharp.xml" />
+    
+    <file src="runtimes/linux-x64/native/libCoreSdkDll.so" target="/runtimes/linux-x64/native/libCoreSdkDll.so"/>
+    <file src="runtimes/osx-x64/native/libCoreSdkDll.dylib" target="/runtimes/osx-x64/native/libCoreSdkDll.dylib"/>
+    <file src="runtimes/win-x64/native/CoreSdkDll.dll" target="/runtimes/win-x64/native/libCoreSdkDll.so"/>
+  </files>
+</package>

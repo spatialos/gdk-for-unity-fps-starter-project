@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <NuspecFile>Improbable.CoreSdk.Tools.nuspec</NuspecFile>
+    <CoreSdkVersion>13.5.0</CoreSdkVersion>
+    <ZipDir>tmp/$(CoreSdkVersion)</ZipDir>
+  </PropertyGroup>
+
+  <Target Name="PreparePackages" AfterTargets="AfterCompile">
+    <RemoveDir Directories="$(ZipDir);tools"/>
+    <MakeDir Directories="$(ZipDir)"/>
+
+    <Exec Command="spatial package get tools schema_compiler-x86_64-win32 $(CoreSdkVersion) $(ZipDir)/schema_compiler-x86_64-win32.zip" />
+    <Unzip DestinationFolder="tools/win-x64" SourceFiles="$(ZipDir)/schema_compiler-x86_64-win32.zip" SkipUnchangedFiles="true"/>
+
+    <Exec Command="spatial package get tools schema_compiler-x86_64-linux $(CoreSdkVersion) $(ZipDir)/schema_compiler-x86_64-linux.zip" />
+    <Unzip DestinationFolder="tools/linux-x64" SourceFiles="$(ZipDir)/schema_compiler-x86_64-linux.zip" SkipUnchangedFiles="true"/>
+
+    <Exec Command="spatial package get tools schema_compiler-x86_64-macos $(CoreSdkVersion) $(ZipDir)/schema_compiler-x86_64-macos.zip" />
+    <Unzip DestinationFolder="tools/macos-x64" SourceFiles="$(ZipDir)/schema_compiler-x86_64-macos.zip" SkipUnchangedFiles="true"/>
+
+    <Exec Command="spatial package get schema standard_library $(CoreSdkVersion) $(ZipDir)/standard_library.zip" />
+    <Unzip DestinationFolder="tools/standard_library" SourceFiles="$(ZipDir)/standard_library.zip" SkipUnchangedFiles="true"/>
+  </Target>
+</Project>
+

@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+  <TargetFramework>netcoreapp2.1</TargetFramework>
+    <NuspecFile>Improbable.CoreSdk.nuspec</NuspecFile>
+
+    <CoreSdkVersion>13.5.0</CoreSdkVersion>
+    <ZipDir>tmp/$(CoreSdkVersion)</ZipDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath></OutputPath>
+  </PropertyGroup>
+
+  <Target Name="PreparePackages" AfterTargets="AfterCompile">
+    <RemoveDir Directories="$(ZipDir);lib;runtimes" />
+    <MakeDir Directories="$(ZipDir)" />
+
+    <Exec Command="spatial package get worker_sdk csharp $(CoreSdkVersion) $(ZipDir)/csharp.zip" />
+    <Unzip DestinationFolder="lib/netstandard2.0" SourceFiles="$(ZipDir)/csharp.zip" SkipUnchangedFiles="true" />
+
+    <!--
+      Native code that the managed DLL binds to.
+      The DestinationFolder attribute's "runtimes/<rid>/native" is important.
+      See https://docs.microsoft.com/en-us/dotnet/core/rid-catalog for the Runtime Id catalog.
+      -->
+    <Exec Command="spatial package get worker_sdk core-dynamic-x86_64-win32 $(CoreSdkVersion) $(ZipDir)/core-dynamic-x86_64-win32.zip" />
+    <Unzip DestinationFolder="runtimes/win-x64/native" SourceFiles="$(ZipDir)/core-dynamic-x86_64-win32.zip" SkipUnchangedFiles="true" />
+
+    <Exec Command="spatial package get worker_sdk core-dynamic-x86_64-macos $(CoreSdkVersion) $(ZipDir)/core-dynamic-x86_64-macos.zip" />
+    <Unzip DestinationFolder="runtimes/osx-x64/native" SourceFiles="$(ZipDir)/core-dynamic-x86_64-macos.zip" SkipUnchangedFiles="true" />
+
+    <Exec Command="spatial package get worker_sdk core-dynamic-x86_64-linux $(CoreSdkVersion) $(ZipDir)/core-dynamic-x86_64-linux.zip" />
+    <Unzip DestinationFolder="runtimes/linux-x64/native" SourceFiles="$(ZipDir)/core-dynamic-x86_64-linux.zip" SkipUnchangedFiles="true" />
+  </Target>
+</Project>
