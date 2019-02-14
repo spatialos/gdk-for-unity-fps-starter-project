@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <Platforms>x64</Platforms>
+    <Platform Condition="'$(Platform)' == ''">x64</Platform>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <SnapshotFile>$(SolutionDir)..\..\snapshots\empty.snapshot</SnapshotFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Improbable.CoreSdk" Version="13.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GeneratedCode\GeneratedCode.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Message Text="Building SpatialOS snapshot..." Importance="high" />
+    <Exec WorkingDirectory="$(TargetDir)" Command="dotnet &quot;$(TargetPath)&quot; &quot;$(SnapshotFile)&quot;" />
+  </Target>
+
+  <Target Name="CleanSnapshot" AfterTargets="Clean">
+    <Delete Files="$(SnapshotFile)"/>
+  </Target>
+</Project>
