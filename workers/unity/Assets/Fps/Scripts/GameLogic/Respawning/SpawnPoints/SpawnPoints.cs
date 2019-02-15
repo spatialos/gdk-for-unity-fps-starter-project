@@ -53,7 +53,15 @@ namespace Fps
                     SpawnYaw = spawnPointTransform.eulerAngles.y,
                     SpawnPitch = 0
                 };
-                Destroy(spawnPoints[n]);
+
+                if (Application.isPlaying)
+                {
+                    Destroy(spawnPoints[n]);
+                }
+                else
+                {
+                    DestroyImmediate(spawnPoints[n]);
+                }
             }
         }
 

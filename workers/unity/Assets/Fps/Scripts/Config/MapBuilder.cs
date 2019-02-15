@@ -95,6 +95,7 @@ namespace Fps
             PlaceTiles();
             PlaceGround();
             FillSurround();
+            CollapseTileMeshes();
             MakeLevelObjectStatic();
 
             spawnPointSystemTransform.gameObject.GetComponent<SpawnPoints>()?.SetSpawnPoints();
@@ -118,6 +119,11 @@ namespace Fps
                 $"\n\t\t{numTotalTilesWide}x{numTotalTilesWide} tiles" +
                 $"\n\t\t{numTotalTilesWide * mapBuilderSettings.UnitsPerTile + mapBuilderSettings.UnitsPerBlock}" +
                 $"x{numTotalTilesWide * mapBuilderSettings.UnitsPerTile + mapBuilderSettings.UnitsPerBlock} units\n");
+        }
+
+        private void CollapseTileMeshes()
+        {
+            tileParentTransform.GetComponent<TileCollapser>().CollapseMeshes();
         }
 
         private void InitializeGroupsAndComponents()
