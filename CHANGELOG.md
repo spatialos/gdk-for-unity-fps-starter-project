@@ -5,10 +5,15 @@
 ### Added
 
 - Added a Deployment Launcher window. This allows you to upload assemblies and launch deployments from the Unity Editor.
-- Added two launch configurations: `cloud_launch_large_sim_players.json` and `cloud_launch_small_sim_players.json` for simulated player deployments. 
+- Added two launch configurations: `cloud_launch_large_sim_players.json` and `cloud_launch_small_sim_players.json` for simulated player deployments.
 - Added cloud support for Android workers.
 - Added cloud support for iOS workers.
 - Added a `MapBuilderSettings` scriptable object containing the default number of layers for the small and large sized worlds.
+- Upgraded the project to be compatible with `2018.3.5f1`.
+
+### Fixed
+
+- The Editor now imports NavMeshes correctly when you first open the FPS project.
 
 ### Changed
 
