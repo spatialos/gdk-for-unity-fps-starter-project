@@ -43,7 +43,9 @@ namespace Fps
         {
             var serverName = "Awesome super duper deployment #" + Random.Range(0, 30);
             var availability = Random.value > .33f;
-            return new LobbyScreenController.DeploymentData(serverName, availability);
+            var maxPlayers = (Random.Range(0, 4) + 1) * 64;
+            var currentPlayers = availability ? Random.Range(0, maxPlayers) : maxPlayers;
+            return new LobbyScreenController.DeploymentData(serverName, currentPlayers, maxPlayers, availability);
         }
     }
 }

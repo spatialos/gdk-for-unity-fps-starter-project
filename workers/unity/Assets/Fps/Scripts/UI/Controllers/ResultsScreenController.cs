@@ -91,12 +91,8 @@ namespace Fps
 
         private void AddPlayerToTable(ResultsData data, bool isLocalPlayer)
         {
-            var entry = resultsTable.AddEntry();
-            entry.SetTextOnColumn(0, data.Rank.ToString());
-            entry.SetTextOnColumn(1, data.PlayerName);
-            entry.SetTextOnColumn(2, data.Kills.ToString());
-            entry.SetTextOnColumn(3, data.Deaths.ToString());
-            entry.SetTextOnColumn(4, data.KillDeathRatio.ToString("N2"));
+            var entry = (ResultsTableEntry) resultsTable.AddEntry();
+            entry.SetData(data);
             entry.SetAllTextVisuals(isLocalPlayer ? LocalPlayerTextColor : DefaultTextColor, isLocalPlayer);
             entry.SetBackgroundColor(isLocalPlayer ? LocalPlayerBackgroundColor : currentBgColor);
         }
