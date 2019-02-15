@@ -80,10 +80,13 @@ namespace Fps.Editor
                 }
             }
 
+            EditorGUI.BeginDisabledGroup(mapBuilder == null);
             if (GUILayout.Button("Clear Map"))
             {
                 mapBuilder.Clean();
             }
+
+            EditorGUI.EndDisabledGroup();
         }
 
         private bool GetGenerationUserConfirmation(int numTiles)
