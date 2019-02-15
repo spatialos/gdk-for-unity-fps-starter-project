@@ -7,7 +7,7 @@ public class TileCollapser : MonoBehaviour
     private readonly Dictionary<string, CombinedMeshAndMaterialsData> collapsedInstances =
         new Dictionary<string, CombinedMeshAndMaterialsData>();
 
-    private void Awake()
+    public void CollapseMeshes()
     {
         for (var i = 0; i < transform.childCount; i++)
         {
