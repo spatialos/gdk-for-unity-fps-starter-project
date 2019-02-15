@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Improbable.Gdk.Core;
 using MeshUtilities;
 using UnityEngine;
 
@@ -16,7 +17,7 @@ public class TileCollapser : MonoBehaviour
             if (!collapsedInstances.ContainsKey(child.name))
             {
                 var combined = TileCombinedMeshProvider.GetCombinedMeshes(child);
-                combined.combinedMesh.name = child.name + "_Mesh";
+                combined.combinedMesh.name = $"{child.name}_Mesh";
                 collapsedInstances.Add(child.name, combined);
             }
 
@@ -29,12 +30,12 @@ public class TileCollapser : MonoBehaviour
     {
         foreach (var meshRenderer in obj.GetComponentsInChildren<MeshRenderer>())
         {
-            Destroy(meshRenderer);
+            UnityObjectDestroyer.Destroy(meshRenderer);
         }
 
         foreach (var meshFilter in obj.GetComponentsInChildren<MeshFilter>())
         {
-            Destroy(meshFilter);
+            UnityObjectDestroyer.Destroy(meshFilter);
         }
     }
 

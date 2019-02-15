@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace MeshUtilities
 {
@@ -69,16 +70,20 @@ namespace MeshUtilities
             for (var j = 0; j < meshFilters.Length; j++)
             {
                 var meshFilter = meshFilters[j];
-
                 var meshRenderer = meshFilter.GetComponent<MeshRenderer>();
 
+                if (meshFilter.sharedMesh == null)
+                {
+                    Debug.LogWarning("Skipping missing mesh", meshFilter.gameObject);
+                    continue;
+                }
+
                 var material = meshRenderer.sharedMaterial;
-                var combineInstance = new CombineInstance();
+                var objMesh = Object.Instantiate(meshFilter.sharedMesh);
 
-
-                var objMesh = meshFilter.mesh;
                 ApplyScaleToVertexColours(ref objMesh, meshFilter.transform.localScale);
 
+                var combineInstance = new CombineInstance();
                 combineInstance.mesh = objMesh;
                 combineInstance.transform = meshFilter.transform.localToWorldMatrix;
 
