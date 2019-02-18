@@ -6,6 +6,9 @@ using Improbable.Worker.CInterop;
 using UnityEngine;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace Fps
 {
@@ -23,7 +26,6 @@ namespace Fps
         // Store the half-value as many calculations are simplified by going from -halfNumGroundLayers to halfNumGroundLayers.
         private int halfNumGroundLayers => (Layers - 1) / mapBuilderSettings.TilesPerGroundLayer + 1;
 
-        private GameObject[] centreTiles;
         private GameObject[] levelTiles;
         private GameObject groundTile;
         private GameObject groundEdge;
@@ -35,9 +37,9 @@ namespace Fps
         private Transform surroundParentTransform;
         private Transform spawnPointSystemTransform;
 
-        private const string TileParentName = "TileParent";
-        private const string GroundParentName = "GroundParent";
-        private const string SurroundParentName = "SurroundParent";
+        private const string TileParentName = "TileParent (auto-generated)";
+        private const string GroundParentName = "GroundParent (auto-generated)";
+        private const string SurroundParentName = "SurroundParent (auto-generated)";
         private const string SpawnPointSystemName = "SpawnPointSystem";
 
         private const string LevelTilePath = "Prefabs/Level/Tiles";
@@ -110,7 +112,7 @@ namespace Fps
             // This value gives total tile-space including empty tiles around edge.
             var numTotalTilesWide = halfNumGroundLayers * 2 * mapBuilderSettings.TilesPerGroundLayer;
 
-            Debug.Log("Finished building world\nClick for details..." +
+            Debug.Log("Finished building world (Expand for details...)\n" +
                 "\n\tPlayable space" +
                 $"\n\t\t{numPlayableTilesWide}x{numPlayableTilesWide} tiles" +
                 $"\n\t\t{numPlayableTilesWide * mapBuilderSettings.UnitsPerTile + mapBuilderSettings.UnitsPerBlock}" +
@@ -124,6 +126,24 @@ namespace Fps
         private void CollapseTileMeshes()
         {
             tileParentTransform.GetComponent<TileCollapser>().CollapseMeshes();
+        }
+
+        private void PlaceTestTiles()
+        {
+            var numTotalTilesWide = halfNumGroundLayers * 2 * TilesPerGroundLayer;
+
+            var tileIndex = 0;
+            for (var i = 0; i < numTotalTilesWide * numTotalTilesWide; i++)
+            {
+                if (i >= levelTiles.Length)
+                {
+                    break;
+                }
+
+                PlaceTile(
+                    new Vector2Int(i % numTotalTilesWide - numTotalTilesWide / 2 + 1,
+                        i / numTotalTilesWide - numTotalTilesWide / 2 + 1), levelTiles[i], 0);
+            }
         }
 
         private void InitializeGroupsAndComponents()
@@ -161,24 +181,6 @@ namespace Fps
 
             if (!TryLoadResource(CornerPath, out cornerPiece))
             {
-                return false;
-            }
-
-            centreTiles = new[]
-            {
-                Resources.Load<GameObject>(CentreTile0),
-                Resources.Load<GameObject>(CentreTile1),
-                Resources.Load<GameObject>(CentreTile2),
-                Resources.Load<GameObject>(CentreTile3)
-            };
-
-            if (centreTiles.Any(t => t == null))
-            {
-                Debug.LogError("Failed to load CentreTile resource (Expecting all the following paths to exist: " +
-                    $"\n\tResources/{CentreTile0}... (Click to expand)" +
-                    $"\n\tResources/{CentreTile1}" +
-                    $"\n\tResources/{CentreTile2}" +
-                    $"\n\tResources/{CentreTile3}");
                 return false;
             }
 
@@ -325,24 +327,23 @@ namespace Fps
 
         private void PlaceTiles()
         {
+            var blockers = GetComponentsInChildren<MapBuilderTileBlocker>();
+
             var tileCoord = new Vector2Int();
             var diff = new Vector2Int(0, -1);
 
             var tileCount = Math.Pow(2 * Layers, 2);
 
+
             // Tiles are built in a spiral manner from the centre outward to ensure increasing the # of tile layers doesn't
             // alter the existing tile types.
             for (var i = 0; i < tileCount; i++)
             {
-                // -layers < x <= layers AND -layers < y <= layers
-                if (-Layers < tileCoord.x && tileCoord.x <= Layers
-                    && -Layers < tileCoord.y && tileCoord.y <= Layers)
+                if (!TileCoordIsBlocked(tileCoord, blockers))
                 {
-                    if (i < 4)
-                    {
-                        PlaceTile(tileCoord, centreTiles[i], 0);
-                    }
-                    else
+                    // -layers < x <= layers AND -layers < y <= layers
+                    if (-Layers < tileCoord.x && tileCoord.x <= Layers
+                        && -Layers < tileCoord.y && tileCoord.y <= Layers)
                     {
                         PlaceTile(tileCoord);
                     }
@@ -363,6 +364,26 @@ namespace Fps
                 x = tileParentTransform.position.x,
                 z = tileParentTransform.position.z
             };
+        }
+
+        private bool TileCoordIsBlocked(Vector2Int tileCoord, MapBuilderTileBlocker[] blockers)
+        {
+            var worldPos = GetWorldPositionFromTileCoord(tileCoord);
+
+            foreach (var blocker in blockers)
+            {
+                var top = blocker.transform.position.z + blocker.transform.localScale.z * .5f;
+                var bot = blocker.transform.position.z - blocker.transform.localScale.z * .5f;
+                var rht = blocker.transform.position.x + blocker.transform.localScale.x * .5f;
+                var lft = blocker.transform.position.x - blocker.transform.localScale.x * .5f;
+
+                if (worldPos.x >= lft && worldPos.x <= rht && worldPos.z >= bot && worldPos.z <= top)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private void PlaceTile(Vector2Int tileCoord)
@@ -391,12 +412,19 @@ namespace Fps
                 },
                 new Quaternion
                 {
-                    eulerAngles = new Vector3
-                    {
-                        y = rotation
-                    }
-                },
-                tileParentTransform.transform);
+                    y = rotation
+                }
+            };
+            newTile.transform.parent = tileParentTransform.transform;
+        }
+
+        private Vector3 GetWorldPositionFromTileCoord(Vector2Int tileCoord)
+        {
+            return new Vector3
+            {
+                x = (tileCoord.x - 1) * UnitsPerTile + UnitsPerTile * .5f,
+                z = (tileCoord.y - 1) * UnitsPerTile + UnitsPerTile * .5f
+            };
         }
 
         private void PlaceGround()
