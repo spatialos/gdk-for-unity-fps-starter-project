@@ -1,7 +1,7 @@
 using System;
 using System.IO;
+using System.Reflection;
 using System.Threading;
-using System.Threading.Tasks;
 using Improbable.SpatialOS.Deployment.V1Alpha1;
 using Improbable.Worker;
 using Improbable.Worker.Alpha;
@@ -13,26 +13,14 @@ namespace DeploymentManager
     {
         public static string WorkerType = "DeploymentManager";
 
-        private string projectName;
-        private string assemblyName;
-        private string deploymentNamePrefix;
-        private string devAuthToken;
-        private int numberOfDeployments;
-        private string clientType;
-        private int maxPlayerCount;
-        private int playerCount;
+        private readonly DeploymentManagerOptions options;
+        private readonly string devAuthToken;
 
         private Connection metaConnection;
 
-        public DeploymentManager(string receptionistHost, ushort receptionistPort, string workerId, string projectName, string clientType,
-            string assemblyName, string deploymentNamePrefix, int numberOfDeployments, int maxPlayerCount)
+        public DeploymentManager(DeploymentManagerOptions options)
         {
-            this.projectName = projectName;
-            this.assemblyName = assemblyName;
-            this.deploymentNamePrefix = deploymentNamePrefix;
-            this.numberOfDeployments = numberOfDeployments;
-            this.clientType = clientType;
-            this.maxPlayerCount = maxPlayerCount;
+            this.options = options;
 
             var serviceAccountToken = GetFileContent("ServiceAccountToken.txt");
             DeploymentModifier.Init(serviceAccountToken);
@@ -44,53 +32,53 @@ namespace DeploymentManager
                 WorkerType = WorkerType,
             };
 
-            var connector = new Connector(WorkerType, string.Empty);
-            metaConnection = connector.TryToConnect(connectionParameters, receptionistHost, receptionistPort, workerId);
+            var connector = new Connector(WorkerType);
+            metaConnection = connector.TryToConnect(connectionParameters, options.ReceptionistHost, options.ReceptionistPort, options.WorkerId);
 
-            devAuthToken = WorkerAuthenticator.RetrieveDevelopmentAuthenticationToken(projectName);
+            Log.Print(LogLevel.Debug, options.ProjectName, metaConnection);
+            devAuthToken = WorkerAuthenticator.RetrieveDevelopmentAuthenticationToken(options.ProjectName);
         }
 
         private string GetFileContent(string fileName)
         {
-            string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
-            if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName)))
+            var result = string.Empty;
+            var assembly = Assembly.GetExecutingAssembly();
+            using (Stream stream = assembly.GetManifestResourceStream($"DeploymentManager.{fileName}"))
+            using (StreamReader reader = new StreamReader(stream))
             {
-                Log.Print(LogLevel.Warn, $"Was not able to find file in path {filePath}");
+                return reader.ReadToEnd();
             }
-
-            return File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName));
         }
 
         public void ObserveDeployments()
         {
             // spin up the other deployments
-            var snapshotPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "default.snapshot");
-            var launchConfig = new LaunchConfig
+            Log.Print(LogLevel.Info, $"number of deployments {options.NumberOfDeployments}", metaConnection);
+            for (var i = 0; i < 2; i++)
             {
-                ConfigJson = GetFileContent("launch_config.json"),
-            };
-
-            Log.Print(LogLevel.Info, $"Number of deployments {numberOfDeployments}");
-            for (var i = 0; i < numberOfDeployments; i++)
-            {
-                var deploymentName = $"{deploymentNamePrefix}_{i}";
-                Task.Run(() => StartDeployment(deploymentName, snapshotPath, launchConfig));
+                var deploymentName = $"{options.DeploymentPrefix}_{i}";
+                new Thread(new ParameterizedThreadStart(StartDeployment)).Start(deploymentName);
             }
 
-            while (metaConnection.GetConnectionStatusCode() == ConnectionStatusCode.Success)
-            {
-                // to make sure the application stays alive
-            }
+            while (metaConnection.GetConnectionStatusCode() == ConnectionStatusCode.Success);
 
             Log.Print(LogLevel.Info, "Disconnected from SpatialOS");
         }
 
-        private void StartDeployment(string deploymentName, string snapshotPath, LaunchConfig launchConfig)
+        private void StartDeployment(Object obj)
         {
             try
             {
-                Log.Print(LogLevel.Info, $"Uploading {snapshotPath} to project {projectName}", metaConnection);
-                var snapshotId = DeploymentModifier.UploadSnapshot(snapshotPath, projectName, deploymentName);
+                string deploymentName = (string)obj;
+
+                var snapshotPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "default.snapshot");
+                var launchConfig = new LaunchConfig
+                {
+                    ConfigJson = GetFileContent("launch_config.json"),
+                };
+
+                Log.Print(LogLevel.Info, $"Uploading {snapshotPath} to project {options.ProjectName}", metaConnection);
+                var snapshotId = DeploymentModifier.UploadSnapshot(snapshotPath, options.ProjectName, deploymentName);
 
                 if (snapshotId.Length == 0)
                 {
@@ -100,10 +88,10 @@ namespace DeploymentManager
 
                 var template = new DeploymentTemplate
                 {
-                    AssemblyId = assemblyName,
+                    AssemblyId = options.AssemblyName,
                     DeploymentName = deploymentName,
                     LaunchConfig = launchConfig,
-                    ProjectName = projectName,
+                    ProjectName = options.ProjectName,
                     SnapshotId = snapshotId,
                 };
 
@@ -117,11 +105,11 @@ namespace DeploymentManager
                         Log.Print(LogLevel.Info, $"Successfully created deployment {deploymentName}.", metaConnection);
 
                         var deploymentId = deploymentOperation.Result.Id;
-                        DeploymentModifier.AddDeploymentTag(deploymentId, projectName, "dev_login");
-                        DeploymentModifier.AddDeploymentTag(deploymentId, projectName, "ttl_1_hour");
+                        DeploymentModifier.AddDeploymentTag(deploymentId, options.ProjectName, "dev_login");
+                        DeploymentModifier.AddDeploymentTag(deploymentId, options.ProjectName, "ttl_1_hour");
 
                         var connection = ConnectToDeployment(metaConnection, deploymentOperation.Result);
-                        var handler = new SpatialOSReceiveHandler(connection, deploymentId, projectName);
+                        var handler = new SpatialOSReceiveHandler(connection, deploymentId, options.ProjectName);
                         var time = DateTime.Now;
 
                         while (connection.GetConnectionStatusCode() == ConnectionStatusCode.Success)
@@ -184,10 +172,10 @@ namespace DeploymentManager
 
         private void UpdatePlayerCount(string deploymentId, Connection connection)
         {
-            var maxPlayerCount = DeploymentModifier.GetMaxWorkerCapacity(deploymentId, projectName, clientType);
-            var remainingPlayerCount = DeploymentModifier.GetRemainingWorkerCapacity(deploymentId, projectName, clientType);
+            var maxPlayerCount = DeploymentModifier.GetMaxWorkerCapacity(deploymentId, options.ProjectName, options.PlayerType);
+            var remainingPlayerCount = DeploymentModifier.GetRemainingWorkerCapacity(deploymentId, options.ProjectName, options.PlayerType);
             var newPlayerCount = maxPlayerCount - remainingPlayerCount;
-            DeploymentModifier.UpdateDeploymentTag(deploymentId, projectName, "players", newPlayerCount.ToString());
+            DeploymentModifier.UpdateDeploymentTag(deploymentId, options.ProjectName, "players", newPlayerCount.ToString());
         }
     }
 }

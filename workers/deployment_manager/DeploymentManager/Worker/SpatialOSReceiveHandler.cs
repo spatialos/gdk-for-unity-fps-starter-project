@@ -41,8 +41,7 @@ namespace DeploymentManager
 
         private void OnComponentAdded(AddComponentOp<Improbable.Session.Session> componentAddOp)
         {
-            Log.Print(LogLevel.Info, "receiving component update", connection);
-            Improbable.Session.Session.Data data = (Improbable.Session.Session.Data) componentAddOp.Data; // new Improbable.Session.Session.Data(Improbable.Session.SessionData.Create());
+            Improbable.Session.Session.Data data = (Improbable.Session.Session.Data) componentAddOp.Data;
             var status = data.Value.status;
 
             DeploymentModifier.UpdateDeploymentTag(deploymentId, projectName, "status", status.ToString().ToLower());
@@ -56,10 +55,8 @@ namespace DeploymentManager
 
         private void OnComponentUpdate(ComponentUpdateOp<Improbable.Session.Session> componentUpdate)
         {
-            Log.Print(LogLevel.Info, "receiving component update", connection);
-            Improbable.Session.Session.Data data = new Improbable.Session.Session.Data(Improbable.Session.SessionData.Create());
-            componentUpdate.Update.ApplyTo(data);
-            var status = data.Value.status;
+            Improbable.Session.Session.Update update = (Improbable.Session.Session.Update) componentUpdate.Update;
+            var status = update.status;
 
             DeploymentModifier.UpdateDeploymentTag(deploymentId, projectName, "status", status.ToString().ToLower());
 

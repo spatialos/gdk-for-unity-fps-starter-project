@@ -15,6 +15,11 @@ namespace DeploymentManager
         private readonly Connection metaConnection;
         private readonly string deploymentName;
 
+        public Connector(string workerType)
+        {
+            this.workerType = workerType;
+        }
+
         public Connector(string workerType, string deploymentName, Connection metaConnection = null)
         {
             this.metaConnection = metaConnection;

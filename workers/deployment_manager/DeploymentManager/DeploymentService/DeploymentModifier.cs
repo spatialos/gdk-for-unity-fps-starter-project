@@ -8,6 +8,8 @@ using System.Security.Cryptography;
 using System;
 using System.IO;
 using System.Net;
+using System.Reflection;
+using System.Text;
 
 namespace DeploymentManager
 {
@@ -27,7 +29,15 @@ namespace DeploymentManager
         public static string UploadSnapshot(string snapshotPath, string projectName, string deploymentName)
         {
             // Read snapshot.
-            var bytes = File.ReadAllBytes(snapshotPath);
+            var result = string.Empty;
+            var assembly = Assembly.GetExecutingAssembly();
+            using (Stream stream = assembly.GetManifestResourceStream($"DeploymentManager.default.snapshot"))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                result = reader.ReadToEnd();
+            }
+
+            var bytes = Encoding.ASCII.GetBytes(result);
 
             if (bytes.Length == 0)
             {
@@ -96,14 +106,14 @@ namespace DeploymentManager
             if (!deployment.Tag.Contains(tag))
             {
                 deployment.Tag.Add(tag);
+
+                var request = new UpdateDeploymentRequest
+                {
+                    Deployment = deployment
+                };
+
+                deploymentServiceClient.UpdateDeployment(request);
             }
-
-            var request = new UpdateDeploymentRequest
-            {
-                Deployment = deployment
-            };
-
-            deploymentServiceClient.UpdateDeployment(request);
         }
 
         public static void RemoveDeploymentTag(string deploymentId, string projectName, string tag)
@@ -113,14 +123,14 @@ namespace DeploymentManager
             if (deployment.Tag.Contains(tag))
             {
                 deployment.Tag.Remove(tag);
+
+                var request = new UpdateDeploymentRequest
+                {
+                    Deployment = deployment
+                };
+
+                deploymentServiceClient.UpdateDeployment(request);
             }
-
-            var request = new UpdateDeploymentRequest
-            {
-                Deployment = deployment
-            };
-
-            deploymentServiceClient.UpdateDeployment(request);
         }
 
         public static void UpdateDeploymentTag(string deploymentId, string projectName, string tagPrefix, string value)
@@ -131,11 +141,17 @@ namespace DeploymentManager
             {
                 if (tag.Contains(tagPrefix))
                 {
-                    RemoveDeploymentTag(deploymentId, projectName, tag);
+                    deployment.Tag.Remove(tag);
                 }
             }
+            deployment.Tag.Add($"{tagPrefix}_{value}");
 
-            AddDeploymentTag(deploymentId, projectName, $"{tagPrefix}_{value}");
+            var request = new UpdateDeploymentRequest
+            {
+                Deployment = deployment
+            };
+
+            deploymentServiceClient.UpdateDeployment(request);
         }
 
         public static Google.LongRunning.Operation<Deployment, CreateDeploymentMetadata> CreateDeployment(DeploymentTemplate template)
@@ -182,7 +198,7 @@ namespace DeploymentManager
             var deployment = GetDeployment(deploymentId, projectName);
             foreach (var workerCapacity in deployment.WorkerConnectionCapacities)
             {
-                if (workerCapacity.WorkerType.Equals(workerType))
+                if (workerCapacity.WorkerType == workerType)
                 {
                     return workerCapacity.MaxCapacity;
                 }
@@ -197,7 +213,7 @@ namespace DeploymentManager
             var deployment = GetDeployment(deploymentId, projectName);
             foreach (var workerCapacity in deployment.WorkerConnectionCapacities)
             {
-                if (workerCapacity.WorkerType.Equals(workerType))
+                if (workerCapacity.WorkerType == workerType)
                 {
                     return workerCapacity.RemainingCapacity;
                 }

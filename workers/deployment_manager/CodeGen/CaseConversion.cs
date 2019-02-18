@@ -9,7 +9,6 @@ namespace CodeGen
         public static string CapitalizeFirstLetter(string text)
         {
             return char.ToUpperInvariant(text[0]) + text.Substring(1, text.Length - 1);
-            ;
         }
 
         public static string ToPascalCase(IEnumerable<string> parts)

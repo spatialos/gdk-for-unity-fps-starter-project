@@ -1,4 +1,3 @@
-using Google.Protobuf.Collections;
 using Google.Protobuf.WellKnownTypes;
 using Improbable.SpatialOS.ServiceAccount.V1Alpha1;
 using System;
@@ -6,14 +5,13 @@ using System.IO;
 
 namespace ServiceAccountGenerator
 {
-
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            if (args.Length < 1)
+            if (args.Length < 2)
             {
-                Console.Out.WriteLine("Usage: <service account token path>");
+                Console.Out.WriteLine("Usage: <service account token path> <SpatialOS project name>");
                 Environment.Exit(1);
             }
 
@@ -24,34 +22,25 @@ namespace ServiceAccountGenerator
 
             var perm = new Permission
             {
-                Parts = { new RepeatedField<string> { "prj", projectName, "*" } },
+                Parts = { "prj", projectName, "*" },
                 Verbs =
                 {
-                    new RepeatedField<Permission.Types.Verb>
-                    {
-                        Permission.Types.Verb.Read,
-                        Permission.Types.Verb.Write
-                    }
+                    Permission.Types.Verb.Read,
+                    Permission.Types.Verb.Write
                 }
             };
 
             var perm2 = new Permission
             {
-                Parts = { new RepeatedField<string> { "srv", "bundles"} },
-                Verbs =
-                {
-                    new RepeatedField<Permission.Types.Verb>
-                    {
-                        Permission.Types.Verb.Read
-                    }
-                }
+                Parts = { "srv", "bundles" },
+                Verbs = { Permission.Types.Verb.Read }
             };
 
             var resp = ServiceAccountServiceClient.Create().CreateServiceAccount(new CreateServiceAccountRequest
             {
                 Name = "GDKService",
                 ProjectName = projectName,
-                Permissions = { new RepeatedField<Permission> { perm, perm2 } },
+                Permissions = { perm, perm2 },
                 Lifetime = Duration.FromTimeSpan(new TimeSpan(1, 0, 0, 0)) // Let this service account live for one day
             });
 

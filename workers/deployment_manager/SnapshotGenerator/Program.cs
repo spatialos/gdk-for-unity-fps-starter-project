@@ -1,14 +1,15 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Improbable;
 using Improbable.Worker;
 
 namespace SnapshotGenerator
 {
-    internal class Program
+    internal static class Program
     {
         private static long nextEntityId = 1;
-        private static readonly Improbable.Collections.List<Entity> Entities = new Improbable.Collections.List<Entity>();
+        private static readonly List<Entity> Entities = new List<Entity>();
 
         private static void Main(string[] args)
         {
