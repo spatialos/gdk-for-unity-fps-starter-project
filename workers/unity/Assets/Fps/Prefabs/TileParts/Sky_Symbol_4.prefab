@@ -373,7 +373,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6836213839584988529}
-  - component: {fileID: 2415107047797265161}
+  - component: {fileID: 3028623971340054273}
   m_Layer: 0
   m_Name: Sky_Symbol_4
   m_TagString: Untagged
@@ -399,7 +399,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2415107047797265161
+--- !u!114 &3028623971340054273
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -408,7 +408,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 6229398808997999797}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2ab9cc4b5860454ca8f0aaf67441f8d, type: 3}
+  m_Script: {fileID: 11500000, guid: 0a6505a3bb71eaa47973c8308afdb608, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DegreesPerSec: 30
+  HoverTimePeriodSecs: 3
+  RotationSpeedDegreesPerSec: 30
+  HoverRange: 3
