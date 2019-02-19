@@ -20,7 +20,6 @@ namespace DeploymentManager
                     logFileName = Path.Combine(Environment.CurrentDirectory, $"{options.WorkerId}.log");
                 }
 
-
                 Log.Init(logFileName);
                 Log.Print(LogLevel.Debug, $"Opened logfile {logFileName}");
 

@@ -13,7 +13,7 @@ using System.Text;
 
 namespace DeploymentManager
 {
-    public class DeploymentModifier
+    public static class DeploymentModifier
     {
         private static DeploymentServiceClient deploymentServiceClient;
         private static SnapshotServiceClient snapshotServiceClient; 
@@ -38,12 +38,6 @@ namespace DeploymentManager
             }
 
             var bytes = Encoding.ASCII.GetBytes(result);
-
-            if (bytes.Length == 0)
-            {
-                Console.Error.WriteLine($"Unable to load {snapshotPath}. Does the file exist?");
-                return string.Empty;
-            }
 
             // Create HTTP endpoint to upload to.
             var snapshotToUpload = new Snapshot

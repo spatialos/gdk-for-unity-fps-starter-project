@@ -41,12 +41,13 @@ namespace ServiceAccountGenerator
                 Name = "GDKService",
                 ProjectName = projectName,
                 Permissions = { perm, perm2 },
-                Lifetime = Duration.FromTimeSpan(new TimeSpan(1, 0, 0, 0)) // Let this service account live for one day
+                Lifetime = Duration.FromTimeSpan(new TimeSpan(7, 0, 0, 0))
             });
 
-            var writer = new StreamWriter(Path.GetFullPath(Path.Combine(path, "ServiceAccountToken.txt")));
-            writer.WriteLine(resp.Token);
-            writer.Close();
+            using (var writer = new StreamWriter(Path.GetFullPath(Path.Combine(path, "ServiceAccountToken.txt"))))
+            {
+                writer.WriteLine(resp.Token);
+            }
         }
     }
 }

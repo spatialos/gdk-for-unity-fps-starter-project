@@ -6,13 +6,27 @@ namespace DeploymentManager
 {
     public class Connector
     {
-        public static string LocatorHost = "locator.improbable.io";
-        public static ushort LocatorPort = 444;
+        public const string LocatorHost = "locator.improbable.io";
+        public const ushort LocatorPort = 444;
 
+        /// <summary>
+        ///     The connection to the deployment as specified in the constructor.
+        /// </summary>
         public Connection Connection { get; private set; }
 
+        /// <summary>
+        ///     The type of worker we want to connect.
+        /// </summary>
         private readonly string workerType;
+
+        /// <summary>
+        ///     The connection to log any errors or warning to. This is most likely the connection to the deployment that runs the worker as a managed worker.
+        /// </summary>
         private readonly Connection metaConnection;
+
+        /// <summary>
+        ///     The name of the deployment the worker wants to connect to.
+        /// </summary>
         private readonly string deploymentName;
 
         public Connector(string workerType)
@@ -27,10 +41,10 @@ namespace DeploymentManager
             this.deploymentName = deploymentName;
         }
 
-        public string ReceivePlayerIdentityToken(string developmentAuthToken)
+        public string GetPlayerIdentityToken(string developmentAuthToken)
         {
             var playerIdentityTokenResponse = DevelopmentAuthentication.CreateDevelopmentPlayerIdentityTokenAsync(
-            LocatorHost,
+                LocatorHost,
             LocatorPort,
             new PlayerIdentityTokenRequest
             {
@@ -49,7 +63,7 @@ namespace DeploymentManager
             return playerIdentityTokenResponse.PlayerIdentityToken;
         }
 
-        public List<LoginTokenDetails> ReceiveLoginTokenDetails(string playerIdentityToken)
+        public List<LoginTokenDetails> GetLoginTokenDetails(string playerIdentityToken)
         {
             var loginTokenDetailsResponse = DevelopmentAuthentication.CreateDevelopmentLoginTokensAsync(
                 LocatorHost,
@@ -69,7 +83,7 @@ namespace DeploymentManager
             return loginTokenDetailsResponse.LoginTokens;
         }
 
-        public string ReceiveLoginToken(List<LoginTokenDetails> loginTokenDetails)
+        public string GetLoginToken(List<LoginTokenDetails> loginTokenDetails)
         {
             var loginToken = string.Empty;
             foreach (var detail in loginTokenDetails)

@@ -35,7 +35,6 @@ namespace DeploymentManager
             var connector = new Connector(WorkerType);
             metaConnection = connector.TryToConnect(connectionParameters, options.ReceptionistHost, options.ReceptionistPort, options.WorkerId);
 
-            Log.Print(LogLevel.Debug, options.ProjectName, metaConnection);
             devAuthToken = WorkerAuthenticator.RetrieveDevelopmentAuthenticationToken(options.ProjectName);
         }
 
@@ -56,11 +55,19 @@ namespace DeploymentManager
             Log.Print(LogLevel.Info, $"number of deployments {options.NumberOfDeployments}", metaConnection);
             for (var i = 0; i < 2; i++)
             {
+                // TODO check if deployment is already running
                 var deploymentName = $"{options.DeploymentPrefix}_{i}";
                 new Thread(new ParameterizedThreadStart(StartDeployment)).Start(deploymentName);
             }
 
-            while (metaConnection.GetConnectionStatusCode() == ConnectionStatusCode.Success);
+            while (metaConnection.GetConnectionStatusCode() == ConnectionStatusCode.Success)
+            {
+                using (var dispatcher = new Dispatcher())
+                using (var opList = metaConnection.GetOpList(0))
+                {
+                    dispatcher.Process(opList);
+                }
+            }
 
             Log.Print(LogLevel.Info, "Disconnected from SpatialOS");
         }
@@ -143,9 +150,9 @@ namespace DeploymentManager
         private Connection ConnectToDeployment(Connection connection, Deployment deployment)
         {
             var connector = new Connector(WorkerType, deployment.Name, connection);
-            var playerIdentityToken = connector.ReceivePlayerIdentityToken(devAuthToken);
-            var loginTokenDetails = connector.ReceiveLoginTokenDetails(playerIdentityToken);
-            var loginToken = connector.ReceiveLoginToken(loginTokenDetails);
+            var playerIdentityToken = connector.GetPlayerIdentityToken(devAuthToken);
+            var loginTokenDetails = connector.GetLoginTokenDetails(playerIdentityToken);
+            var loginToken = connector.GetLoginToken(loginTokenDetails);
 
             var connectionParameters = new ConnectionParameters
             {

@@ -5,7 +5,6 @@ cd "$(dirname "$0")"
 
 dotnet build -c Release -p:Platform=x64 CodeGen/CodeGen.csproj
 dotnet build -c Release -p:Platform=x64 GeneratedCode/GeneratedCode.csproj
-dotnet build -c Release -p:Platform=x64 SnapshotGenerator/SnapshotGenerator.csproj
 dotnet publish DeploymentManager/DeploymentManager.csproj -r linux-x64 -c Release -p:Platform=x64 --self-contained
 
 

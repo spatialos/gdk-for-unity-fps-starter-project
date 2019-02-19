@@ -7,7 +7,7 @@ using Improbable.Worker;
 
 namespace DeploymentManager
 {
-    public class Log
+    public static class Log
     {
         private static readonly Mutex logMutex = new Mutex();
 
@@ -15,43 +15,50 @@ namespace DeploymentManager
 
         public static void Print(LogLevel level, string message, Connection connection = null)
         {
-            logMutex.WaitOne();
-            var oldColor = Console.ForegroundColor;
-            var msg = $"{level}: {message}";
-            switch (level)
+            if (logStream != null)
             {
-                case LogLevel.Debug:
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                    Console.Out.WriteLine(msg);
-                    break;
-                case LogLevel.Info:
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    Console.Out.WriteLine(msg);
-                    break;
-                case LogLevel.Warn:
-                    Console.ForegroundColor = ConsoleColor.DarkYellow;
-                    Console.Out.WriteLine(msg);
-                    break;
-                case LogLevel.Error:
-                case LogLevel.Fatal:
-                    Console.ForegroundColor = ConsoleColor.DarkRed;
-                    Console.Error.WriteLine(msg);
-                    Environment.ExitCode = 1;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                lock (logStream)
+                {
+                    var oldColor = Console.ForegroundColor;
+                    var msg = $"{level}: {message}";
+                    switch (level)
+                    {
+                        case LogLevel.Debug:
+                            Console.ForegroundColor = ConsoleColor.Cyan;
+                            Console.Out.WriteLine(msg);
+                            break;
+                        case LogLevel.Info:
+                            Console.ForegroundColor = ConsoleColor.Gray;
+                            Console.Out.WriteLine(msg);
+                            break;
+                        case LogLevel.Warn:
+                            Console.ForegroundColor = ConsoleColor.DarkYellow;
+                            Console.Out.WriteLine(msg);
+                            break;
+                        case LogLevel.Error:
+                        case LogLevel.Fatal:
+                            Console.ForegroundColor = ConsoleColor.DarkRed;
+                            Console.Error.WriteLine(msg);
+                            Environment.ExitCode = 1;
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException($"Did not use a valid LogLevel. LogLevel: {level}");
+                    }
+
+                    Console.ForegroundColor = oldColor;
+
+                    Debug.WriteLine(msg);
+
+                    logStream?.WriteLine(Encoding.UTF8.GetChars(Encoding.UTF8.GetBytes(msg)));
+                }
             }
-
-            Console.ForegroundColor = oldColor;
-
-            Debug.WriteLine(msg);
-
-            logStream?.WriteLine(Encoding.UTF8.GetChars(Encoding.UTF8.GetBytes(msg)));
-            logMutex.ReleaseMutex();
 
             if (connection != null)
             {
-                connection.SendLogMessage(level, DeploymentManager.WorkerType, message);
+                lock (logStream)
+                {
+                    connection.SendLogMessage(level, DeploymentManager.WorkerType, message);
+                }
             }
         }
 
@@ -65,7 +72,7 @@ namespace DeploymentManager
         {
             if (!string.IsNullOrEmpty(logFileName))
             {
-                logStream = new StreamWriter(logFileName) {AutoFlush = true};           
+                logStream = new StreamWriter(logFileName) { AutoFlush = true };
             }
         }
 
