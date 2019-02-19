@@ -52,8 +52,7 @@ namespace DeploymentManager
         public void ObserveDeployments()
         {
             // spin up the other deployments
-            Log.Print(LogLevel.Info, $"number of deployments {options.NumberOfDeployments}", metaConnection);
-            for (var i = 0; i < 2; i++)
+            for (var i = 0; i < options.NumberOfDeployments; i++)
             {
                 // TODO check if deployment is already running
                 var deploymentName = $"{options.DeploymentPrefix}_{i}";
