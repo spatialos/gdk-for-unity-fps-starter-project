@@ -8,6 +8,7 @@ using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 #if UNITY_EDITOR
 using UnityEditor;
+
 #endif
 
 namespace Fps
@@ -23,6 +24,11 @@ namespace Fps
 
         private MapBuilderSettings mapBuilderSettings;
 
+        public Texture2D MapTileLookupTexture;
+        public MapTileCollectionAsset DefaultTileCollection;
+        public MapTileCollectionAsset[] ExtraTileCollections;
+
+#if UNITY_EDITOR
         // Store the half-value as many calculations are simplified by going from -halfNumGroundLayers to halfNumGroundLayers.
         private int halfNumGroundLayers => (Layers - 1) / mapBuilderSettings.TilesPerGroundLayer + 1;
 
@@ -78,6 +84,13 @@ namespace Fps
                 Debug.LogError("Generation aborted (See previous message)");
                 return;
             }
+
+            if (DefaultTileCollection == null)
+            {
+                Debug.LogWarning("Must have at least a Default Tile Collection asset reference to build the map");
+                return;
+            }
+
 
             Clean();
 
@@ -382,12 +395,48 @@ namespace Fps
 
         private void PlaceTile(Vector2Int tileCoord)
         {
+            GameObject tile = null;
+        if(MapTileLookupTexture!=null){
+
+            var textureCentre = Vector2Int.one * -1 +
+                new Vector2Int(MapTileLookupTexture.width / 2, MapTileLookupTexture.height / 2);
+            var texturePixelCoord = textureCentre + tileCoord;
+
+            var pixel = MapTileLookupTexture.GetPixel(texturePixelCoord.x, texturePixelCoord.y);
+
+
+            if (pixel == DefaultTileCollection.PixelRepresentationColor)
+            {
+                tile = DefaultTileCollection.GetRandomTile();
+            }
+            else
+            {
+                foreach (var tileCollection in ExtraTileCollections)
+                {
+                    if (pixel == tileCollection.PixelRepresentationColor)
+                    {
+                        tile = tileCollection.GetRandomTile();
+                        break;
+                    }
+                }
+            }
+        }else{
+            tile = DefaultTileCollection.GetRandomTile();
             if (Random.value < EmptyTileChance)
             {
+                tile = null;
+            }
+        }
+
+
+            if (tile == null)
+            {
+                //Debug.Log($"<b><color=#{ColorUtility.ToHtmlStringRGBA(pixel)}>{pixel}</color></b> did not match anything");
                 return;
             }
 
-            var tile = levelTiles[Random.Range(0, levelTiles.Length)];
+
+            //var tile = levelTiles[Random.Range(0, levelTiles.Length)];
             float rotation = 90 * Random.Range(0, 4);
 
             PlaceTile(tileCoord, tile, rotation);
