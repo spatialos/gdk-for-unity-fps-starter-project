@@ -10,45 +10,62 @@ namespace Fps
 
         public override void OnInspectorGUI()
         {
-            var myTarget = (MapBuilder) target;
+            var mapBuilder = (MapBuilder) target;
+            var defaultTileCollectionProp = serializedObject.FindProperty(nameof(mapBuilder.DefaultTileCollection));
 
-            myTarget.Layers = Mathf.Max(0,
+
+            EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(MapBuilder.MapTileLookupTexture)));
+
+            EditorGUILayout.PropertyField(defaultTileCollectionProp);
+
+            if (defaultTileCollectionProp.objectReferenceValue != null)
+            {
+                EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(MapBuilder.ExtraTileCollections)), true);
+            }
+
+            mapBuilder.Layers = Mathf.Max(0,
                 EditorGUILayout.IntField(new GUIContent(
                     "Number of Tile Layers",
-                    "N layers corresponds to 4*(N^2) tiles."), myTarget.Layers));
+                    "N layers corresponds to 4*(N^2) tiles."), mapBuilder.Layers));
 
-            myTarget.EmptyTileChance =
+            mapBuilder.EmptyTileChance =
                 Mathf.Clamp(
                     EditorGUILayout.FloatField(
                         new GUIContent("Chance of Empty Tile",
                             "The chance that a tile in one grid square of the world will be empty."),
-                        myTarget.EmptyTileChance), 0f, 1f);
+                        mapBuilder.EmptyTileChance), 0f, 1f);
 
-            var numTiles = Mathf.RoundToInt(GetTotalTilesFromLayers(myTarget.Layers) * (1f - myTarget.EmptyTileChance));
+            var numTiles =
+                Mathf.RoundToInt(GetTotalTilesFromLayers(mapBuilder.Layers) * (1f - mapBuilder.EmptyTileChance));
 
             GUI.color = numTiles < WarnTilesThreshold ? Color.white : Color.yellow;
             GUILayout.Label($"Number of tiles to generate: ~{numTiles}");
             GUI.color = Color.white;
 
-            myTarget.Seed = EditorGUILayout.TextField(new GUIContent(
+            mapBuilder.Seed = EditorGUILayout.TextField(new GUIContent(
                     "Seed for Map Generator",
                     "Different seeds produce different maps."),
-                myTarget.Seed);
+                mapBuilder.Seed);
 
 
-            if (GUILayout.Button("Generate Map"))
+            GUI.enabled = defaultTileCollectionProp.objectReferenceValue != null;
+            if (GUILayout.Button(new GUIContent("Generate Map", "Default Tile Collection must have a reference")))
             {
                 if (numTiles < WarnTilesThreshold
                     || GetGenerationUserConfirmation(numTiles))
                 {
-                    myTarget.CleanAndBuild();
+                    mapBuilder.CleanAndBuild();
                 }
             }
 
+            GUI.enabled = true;
+
             if (GUILayout.Button("Clear Map"))
             {
-                myTarget.Clean();
+                mapBuilder.Clean();
             }
+
+            serializedObject.ApplyModifiedProperties();
         }
 
         private bool GetGenerationUserConfirmation(int numTiles)
