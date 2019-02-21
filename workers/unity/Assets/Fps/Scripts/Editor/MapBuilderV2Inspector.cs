@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Fps
 {
     [CustomEditor(typeof(MapBuilderV2))]
-    public class MapBuilderV2Inspector : Editor
+    public class MapBuilderV2Inspector : UnityEditor.Editor
     {
         private const int WarnTilesThreshold = 2500;
 
