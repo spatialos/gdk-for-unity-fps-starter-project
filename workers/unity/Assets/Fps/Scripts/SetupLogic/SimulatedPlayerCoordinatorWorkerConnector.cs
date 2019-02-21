@@ -16,9 +16,6 @@ public class SimulatedPlayerCoordinatorWorkerConnector : WorkerConnectorBase
     private const string FlagDevAuthTokenId = "fps_simulated_players_dev_auth_token_id";
     private const string FlagTargetDeployment = "fps_simulated_players_target_deployment";
 
-    private static readonly Vector3 SmallWorldSize = new Vector3(148f, 100f, 148f);
-    private static readonly Vector3 LargeWorldSize = new Vector3(1156f, 100f, 1156f);
-
     public GameObject SimulatedPlayerWorkerConnector;
     public int DefaultSimulatedPlayerCount = 1;
     public int DefaultSimulatedPlayerCreationInterval = 5;
@@ -191,7 +188,12 @@ public class SimulatedPlayerCoordinatorWorkerConnector : WorkerConnectorBase
 
     public Bounds GetWorldBounds()
     {
-        var isSmall = Worker.Connection.GetWorkerFlag("world_size") == "small";
-        return new Bounds(Worker.Origin, isSmall ? SmallWorldSize : LargeWorldSize);
+        var worldSize = MapBuilder.GetWorldSizeFlag(Worker.Connection);
+        if (!MapBuilder.TryGetWorldLayerCount(MapBuilderSettings, worldSize, out var worldLayerCount))
+        {
+            worldLayerCount = MapBuilderSettings.SmallWorldLayerCount;
+        }
+
+        return new Bounds(Worker.Origin, MapBuilder.GetWorldDimensions(MapBuilderSettings, worldLayerCount));
     }
 }

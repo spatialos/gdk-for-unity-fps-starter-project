@@ -19,7 +19,7 @@ namespace Fps
         }
 
         private static SpawnPoint[] spawnPointList;
-        [SerializeField] private bool snapsToGround;
+        [SerializeField] private bool snapsToGround = true;
 
         public static SpawnPoint GetRandomSpawnPoint()
         {
@@ -32,7 +32,7 @@ namespace Fps
             return spawnPointList[Random.Range(0, spawnPointList.Length)];
         }
 
-        private void Awake()
+        public void SetSpawnPoints()
         {
             var spawnPoints = FindSpawnPoints();
             var worldOffset = transform.root.position;
@@ -53,7 +53,15 @@ namespace Fps
                     SpawnYaw = spawnPointTransform.eulerAngles.y,
                     SpawnPitch = 0
                 };
-                Destroy(spawnPoints[n]);
+
+                if (Application.isPlaying)
+                {
+                    Destroy(spawnPoints[n]);
+                }
+                else
+                {
+                    DestroyImmediate(spawnPoints[n]);
+                }
             }
         }
 

@@ -21,15 +21,12 @@ namespace Fps
         private const string AuthPlayer = "Prefabs/MobileClient/Authoritative/Player";
         private const string NonAuthPlayer = "Prefabs/MobileClient/NonAuthoritative/Player";
 
-        private const string Small = "small";
-        private const string Large = "large";
-
         public string forcedIpAddress;
 
+        public bool ShouldConnectLocally;
         public int TargetFrameRate = 60;
 
-        public GameObject SmallLevelPrefab;
-        public GameObject LargeLevelPrefab;
+        [SerializeField] private MapBuilderSettings MapBuilderSettings;
 
         private GameObject levelInstance;
 
@@ -53,6 +50,19 @@ namespace Fps
         private void Awake()
         {
             connectionController = GetComponent<ConnectionController>();
+
+            if (!ShouldConnectLocally)
+            {
+                var textAsset = Resources.Load<TextAsset>("DevAuthToken");
+                if (textAsset != null)
+                {
+                    DevelopmentAuthToken = textAsset.text.Trim();
+                }
+                else
+                {
+                    Debug.LogWarning("Unable to find DevAuthToken.txt in the Resources folder.");
+                }
+            }
         }
 
         protected virtual async void Start()
@@ -96,8 +106,12 @@ namespace Fps
 
         protected override ConnectionService GetConnectionService()
         {
-            // TODO UTY-1590: add cloud deployment option
-            return ConnectionService.Receptionist;
+            if (ShouldConnectLocally)
+            {
+                return ConnectionService.Receptionist;
+            }
+
+            return ConnectionService.AlphaLocator;
         }
 
         protected override void HandleWorkerConnectionEstablished()
@@ -137,29 +151,12 @@ namespace Fps
         // Get the world size from the config, and use it to load the appropriate level.
         protected virtual void LoadWorld()
         {
-            var workerSystem = Worker.World.GetExistingManager<WorkerSystem>();
-            var worldSize = workerSystem.Connection.GetWorkerFlag("world_size");
-
-            if (worldSize != Small && worldSize != Large)
-            {
-                workerSystem.LogDispatcher.HandleLog(LogType.Error,
-                    new LogEvent(
-                            "Invalid world_size worker flag. Make sure that it is either 'small' or 'large'.")
-                        .WithField("world_size", worldSize));
-                return;
-            }
-
-            var levelToLoad = worldSize == Large ? LargeLevelPrefab : SmallLevelPrefab;
-
-            if (levelToLoad == null)
-            {
-                workerSystem.LogDispatcher.HandleLog(LogType.Error,
-                    new LogEvent("The level to be instantiated is null."));
-                return;
-            }
-
-            levelInstance = Instantiate(levelToLoad, transform.position, transform.rotation);
-            levelInstance.name = $"{levelToLoad.name}({Worker.WorkerType})";
+            levelInstance = MapBuilder.GenerateMap(
+                MapBuilderSettings,
+                transform,
+                Worker.Connection,
+                Worker.WorkerType,
+                Worker.LogDispatcher);
 
             levelInstance.GetComponentsInChildren<TileEnabler>(true, levelTiles);
             foreach (var tileEnabler in levelTiles)
