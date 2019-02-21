@@ -182,12 +182,12 @@ public class SimulatedPlayerDriver : MonoBehaviour
 
             MoveTowards(destination, MovementSpeed.Run, rotationAmount, false);
 
-            if (shooting.IsShooting(true) && Mathf.Abs(Quaternion.Angle(targetRotation, transform.rotation)) < 5)
-            {
-                shooting.FireShot(200f, new Ray(gunOrigin, transform.forward));
-                shooting.InitiateCooldown(0.2f);
-                lastShotTime = Time.time;
-            }
+            // if (shooting.IsShooting(true) && Mathf.Abs(Quaternion.Angle(targetRotation, transform.rotation)) < 5)
+            // {
+            //     shooting.FireShot(200f, new Ray(gunOrigin, transform.forward));
+            //     shooting.InitiateCooldown(0.2f);
+            //     lastShotTime = Time.time;
+            // }
 
             if (lastShotTime < Time.time - 10f)
             {

@@ -27,9 +27,11 @@ public class SimulatedPlayerCoordinatorWorkerConnector : WorkerConnectorBase
 
     private readonly List<GameObject> simulatedPlayerConnectors = new List<GameObject>();
 
+    private int spawningDelay = 0;
+
     protected override async void Start()
     {
-        Application.targetFrameRate = 60;
+        Application.targetFrameRate = -1;
         await AttemptConnect();
     }
 
@@ -42,6 +44,14 @@ public class SimulatedPlayerCoordinatorWorkerConnector : WorkerConnectorBase
     {
         base.HandleWorkerConnectionEstablished();
 
+        if (CommandLineUtility.GetArguments().TryGetValue("simCoordInitDelay", out var simCoordInitDelayStr))
+        {
+            if (int.TryParse(simCoordInitDelayStr, out int simCoordInitDelay))
+            {
+                spawningDelay = simCoordInitDelay;
+            }
+        }
+
         Worker.World.GetOrCreateManager<MetricSendSystem>();
 
         CheckWorkerFlags();
@@ -50,8 +60,16 @@ public class SimulatedPlayerCoordinatorWorkerConnector : WorkerConnectorBase
         {
             while (simulatedPlayerConnectors.Count < DefaultSimulatedPlayerCount)
             {
-                await Task.Delay(TimeSpan.FromSeconds(
-                    Random.Range(DefaultSimulatedPlayerCreationInterval, 1.25f * DefaultSimulatedPlayerCreationInterval)));
+                var waitTime = Random.Range(DefaultSimulatedPlayerCreationInterval,
+                    1.25f * DefaultSimulatedPlayerCreationInterval);
+
+                if (simulatedPlayerConnectors.Count == 0)
+                {
+                    waitTime += spawningDelay;
+                }
+
+                await Task.Delay(TimeSpan.FromSeconds(waitTime));
+
                 var simulatedPlayer = Instantiate(SimulatedPlayerWorkerConnector, transform.position, transform.rotation);
                 await simulatedPlayer.GetComponent<SimulatedPlayerWorkerConnector>()
                     .ConnectSimulatedPlayer(Worker.LogDispatcher, SimulatedPlayerDevAuthTokenId, SimulatedPlayerTargetDeployment);

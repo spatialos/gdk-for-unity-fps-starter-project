@@ -1,6 +1,7 @@
 ﻿using Improbable;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectCreation;
+using Improbable.Gdk.Guns;
 using Improbable.Gdk.Movement;
 using Improbable.Gdk.StandardTypes;
 using Improbable.Worker;
@@ -39,12 +40,12 @@ public class AdvancedEntityPipeline : IEntityGameObjectCreator
         var prefabName = entity.GetComponent<Metadata.Component>().EntityType;
         if (prefabName.Equals(PlayerMetadata))
         {
-            var clientMovement = entity.GetComponent<ClientMovement.Component>();
+            var gunState = entity.GetComponent<GunStateComponent.Component>();
             if (entity.GetComponent<EntityAcl.Component>().ComponentWriteAcl
-                .TryGetValue(clientMovement.ComponentId, out var clientMovementWrite))
+                .TryGetValue(gunState.ComponentId, out var gunStateWrite))
             {
                 var authority = false;
-                foreach (var attributeSet in clientMovementWrite.AttributeSet)
+                foreach (var attributeSet in gunStateWrite.AttributeSet)
                 {
                     if (attributeSet.Attribute.Contains(workerIdAttribute))
                     {

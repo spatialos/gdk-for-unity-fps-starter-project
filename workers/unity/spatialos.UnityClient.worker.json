@@ -28,7 +28,50 @@
     },
     "component_delivery": {
       "default": "RELIABLE_ORDERED",
-      "checkoutAllInitially": true
+      "override": {
+        "improbable.Position": {
+          "checkout_initially": true
+        },
+        "improbable.Metadata": {
+          "checkout_initially": true
+        },
+        "improbable.Persistence": {
+          "checkout_initially": true
+        },
+        "improbable.EntityAcl": {
+          "checkout_initially": true
+        },
+        "improbable.gdk.movement.ClientRotation": {
+          "checkout_initially": true
+        },
+        "improbable.gdk.movement.ServerMovement": {
+          "checkout_initially": true
+        },
+        "improbable.gdk.guns.ShootingComponent": {
+          "checkout_initially": true
+        },
+        "improbable.gdk.guns.GunStateComponent": {
+          "checkout_initially": true
+        },
+        "improbable.gdk.guns.GunComponent": {
+          "checkout_initially": true
+        },
+        "improbable.player_lifecycle.PlayerHeartbeatClient": {
+          "checkout_initially": true
+        },
+        "improbable.player_lifecycle.PlayerHeartbeatServer": {
+          "checkout_initially": true
+        },
+        "improbable.player_lifecycle.OwningWorker": {
+          "checkout_initially": true
+        },
+        "improbable.gdk.health.HealthComponent": {
+          "checkout_initially": true
+        },
+        "improbable.gdk.health.HealthRegenComponent": {
+          "checkout_initially": true
+        }
+      }
     }
   },
   "external": {

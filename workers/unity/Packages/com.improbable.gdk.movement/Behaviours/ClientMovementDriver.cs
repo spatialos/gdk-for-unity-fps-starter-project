@@ -140,6 +140,18 @@ namespace Improbable.Gdk.Movement
             origin = spatialOSComponent.Worker.Origin;
             server.LatestUpdated += OnServerUpdate;
             server.OnForcedRotation += OnForcedRotation;
+
+            if (int.TryParse(spatialOSComponent.Worker.Connection.GetWorkerFlag("movement_rate"), out var mov))
+            {
+                transformUpdateHz = mov;
+                transformUpdateDelta = 1.0f / transformUpdateHz;
+            }
+
+            if (int.TryParse(spatialOSComponent.Worker.Connection.GetWorkerFlag("rotation_rate"), out var rot))
+            {
+                rotationUpdateHz = rot;
+                rotationUpdateDelta = 1.0f / rotationUpdateHz;
+            }
         }
 
         private void OnForcedRotation(RotationUpdate forcedRotation)
@@ -318,7 +330,7 @@ namespace Improbable.Gdk.Movement
         {
             //Send network data if required (If moved, or was still moving last update)
             var anyUpdate = false;
-
+            cumulativeRotationTimeDelta += Time.deltaTime;
             if (cumulativeRotationTimeDelta > rotationUpdateDelta)
             {
                 if (pitchDirty || rollDirty || yawDirty)
@@ -337,10 +349,6 @@ namespace Improbable.Gdk.Movement
 
                 cumulativeRotationTimeDelta = 0;
                 pitchDirty = rollDirty = yawDirty = false;
-            }
-            else
-            {
-                cumulativeRotationTimeDelta += Time.deltaTime;
             }
 
             return anyUpdate;
