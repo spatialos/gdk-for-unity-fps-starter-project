@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## `0.1.5` - 2019-02-21
+
 ### Added
 
 - Added a Deployment Launcher window. This allows you to upload assemblies and launch deployments from the Unity Editor.
