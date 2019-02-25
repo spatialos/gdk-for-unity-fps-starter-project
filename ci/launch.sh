@@ -10,7 +10,7 @@ source ".shared-ci/scripts/pinned-tools.sh"
 # Download the artifacts and reconstruct the build/assemblies folder.
 buildkite-agent artifact download "build\assembly\**\*" .
 
-setAssemblyName "${PREFIX}"
+uploadAssembly "${PREFIX}" "${PROJECT_NAME}"
 
 markStartOfBlock "Launching deployments"
 
