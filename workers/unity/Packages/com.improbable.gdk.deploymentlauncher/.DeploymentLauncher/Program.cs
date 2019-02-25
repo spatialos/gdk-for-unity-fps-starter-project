@@ -181,8 +181,7 @@ namespace Improbable
 
                     simDeploymentConfig.Tag.Add("simulated_clients");
 
-                    Console.WriteLine(
-                        $"Creating the simulated player deployment {simDeploymentName} in project {projectName} with snapshot ID {simSnapshotId}.");
+                    Console.WriteLine($"Creating the simulated player deployment {simDeploymentName} in project {projectName}.");
 
                     var simDeploymentCreateOp = deploymentServiceClient.CreateDeployment(new CreateDeploymentRequest
                     {
