@@ -1,20 +1,29 @@
 #!/usr/bin/env bash
-set -e -u -x -o pipefail
+set -e -u -o pipefail
+
+if [[ -n "${DEBUG-}" ]]; then
+  set -x
+fi
+
+echo "Building for: ${WORKER_TYPE} ${BUILD_TARGET} ${SCRIPTING_TYPE}"
 
 cd "$(dirname "$0")/../"
 
-# Get shared CI and prepare Unity
 ci/bootstrap.sh
-.shared-ci/scripts/prepare-unity.sh
-.shared-ci/scripts/prepare-unity-mobile.sh "$(pwd)/logs/PrepareUnityMobile.log"
-
 source ".shared-ci/scripts/pinned-tools.sh"
 
-.shared-ci/scripts/build.sh "workers/unity" UnityClient cloud mono "$(pwd)/logs/UnityClientBuild-mono.log"
-.shared-ci/scripts/build.sh "workers/unity" UnityGameLogic cloud mono "$(pwd)/logs/UnityGameLogicBuild-mono.log"
-.shared-ci/scripts/build.sh "workers/unity" SimulatedPlayerCoordinator cloud mono "$(pwd)/logs/SimulatedPlayerCoordinatorSimulatedPlayerCoordinatorBuild-mono.log"
-.shared-ci/scripts/build.sh "workers/unity" AndroidClient local mono "$(pwd)/logs/AndroidClientBuild-mono.log"
-
-if isMacOS; then
-  .shared-ci/scripts/build.sh "workers/unity" iOSClient local il2cpp "$(pwd)/logs/iOSClientBuild.log"
+if [[ ${WORKER_TYPE} == "AndroidClient" ]]; then
+    .shared-ci/scripts/prepare-unity-mobile.sh "$(pwd)/logs/PrepareUnityMobile.log"
 fi
+
+if [[ ${WORKER_TYPE} == "iOSClient" ]]; then
+    if ! isMacOS; then
+        echo "I can't build for iOS!"
+        exit 0
+    fi
+fi
+
+LOG_LOCATION="$(pwd)/logs/${WORKER_TYPE}-${BUILD_TARGET}-${SCRIPTING_TYPE}.log"
+
+.shared-ci/scripts/build.sh "workers/unity" ${WORKER_TYPE} ${BUILD_TARGET} ${SCRIPTING_TYPE} "${LOG_LOCATION}"
+spatial prepare-for-run
