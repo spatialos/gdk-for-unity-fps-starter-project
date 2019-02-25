@@ -10,13 +10,8 @@ PROJECT_NAME="unity_gdk"
 source ".shared-ci/scripts/profiling.sh"
 source ".shared-ci/scripts/pinned-tools.sh"
 
-if [[ -n "${BUILDKITE-}" ]]; then
-    # In buildkite, download the artifacts and reconstruct the build/assemblies folder.
-    buildkite-agent artifact download "build\assembly\**\*" .
-else
-    # In TeamCity, just build.
-    ci/build-legacy.sh
-fi
+# Download the artifacts and reconstruct the build/assemblies folder.
+buildkite-agent artifact download "build\assembly\**\*" .
 
 setAssemblyName "${PREFIX}"
 
