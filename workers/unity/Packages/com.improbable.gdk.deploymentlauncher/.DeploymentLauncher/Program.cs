@@ -70,7 +70,7 @@ namespace Improbable
 
         private static int CreateDeployment(string[] args)
         {
-            bool launchSimPlayerDeployment = args.Length == 9;
+            bool launchSimPlayerDeployment = args.Length == 8;
 
             var projectName = args[1];
             var assemblyName = args[2];
@@ -262,7 +262,7 @@ namespace Improbable
         {
             Console.WriteLine("Usage:");
             Console.WriteLine(
-                "DeploymentManager create <project-name> <assembly-name> <main-deployment-name> <main-deployment-json> <main-deployment-snapshot> [<sim-deployment-name> <sim-deployment-json> <sim-deployment-snapshot>]");
+                "DeploymentManager create <project-name> <assembly-name> <main-deployment-name> <main-deployment-json> <main-deployment-snapshot> [<sim-deployment-name> <sim-deployment-json>]");
             Console.WriteLine("DeploymentManager stop <project-name> <deployment-id>");
             Console.WriteLine("DeploymentManager list <project-name>");
         }
@@ -270,7 +270,7 @@ namespace Improbable
         private static int Main(string[] args)
         {
             if (args.Length == 0 ||
-                args[0] == "create" && (args.Length != 9 && args.Length != 6) ||
+                args[0] == "create" && (args.Length != 8 && args.Length != 6) ||
                 args[0] == "stop" && args.Length != 3 ||
                 args[0] == "list" && args.Length != 2)
             {
