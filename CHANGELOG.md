@@ -43,6 +43,10 @@
 - Increased the level size from 868x868 to 1732x1732.
 - Changed how level generation and `MapBuilder.cs` works.
 	- `LoadWorld()` now generates the level GameObject through `MapBuilder`, instead of instantiating it from a prefab.
+	- The four middle tiles of the world are no longer forced to be of certain tile type.
+- World tile prefabs improved.
+	- Now make use of nested prefabs.
+	- Completely new set of default tiles used to populate the world
 
 ### Removed
 
