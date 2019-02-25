@@ -26,7 +26,7 @@ common: &common
 
 steps:
   - label: "build :android:"
-    command: bash -c ci/build.sh
+    command: bash -c .shared-ci/scripts/build.sh
     <<: *common
     artifact_paths:
       - logs/**/*
@@ -37,7 +37,7 @@ steps:
       SCRIPTING_TYPE: "mono"
 
   - label: "build :iphone:"
-    command: bash -c ci/build.sh
+    command: bash -c .shared-ci/scripts/build.sh
     <<: *common
     artifact_paths:
       - logs/**/*
@@ -48,7 +48,7 @@ steps:
       SCRIPTING_TYPE: "il2cpp"
 
   - label: "build UnityClient mono"
-    command: bash -c ci/build.sh
+    command: bash -c .shared-ci/scripts/build.sh
     <<: *common
     artifact_paths:
       - logs/**/*
@@ -59,7 +59,7 @@ steps:
       SCRIPTING_TYPE: "mono"
 
   - label: "build UnityGameLogic mono"
-    command: bash -c ci/build.sh
+    command: bash -c .shared-ci/scripts/build.sh
     <<: *common
     artifact_paths:
       - logs/**/*
@@ -70,7 +70,7 @@ steps:
       SCRIPTING_TYPE: "mono"
 
   - label: "build SimulatedPlayerCoordinator mono"
-    command: bash -c ci/build.sh
+    command: bash -c .shared-ci/scripts/build.sh
     <<: *common
     artifact_paths:
       - logs/**/*

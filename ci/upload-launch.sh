@@ -27,18 +27,11 @@ markStartOfBlock "Launching deployments"
 dotnet run -p workers/unity/Packages/com.improbable.gdk.deploymentlauncher/.DeploymentLauncher/DeploymentLauncher.csproj -- \
     create "${PROJECT_NAME}" "${ASSEMBLY_NAME}" \
     "${ASSEMBLY_NAME}" cloud_launch_large.json snapshots/cloud.snapshot \
-    "${ASSEMBLY_NAME}_sim_players" cloud_launch_large_sim_players.json \
-    | tee -a ./launch.log
+    "${ASSEMBLY_NAME}_sim_players" cloud_launch_large_sim_players.json
 
 if [[ -n "${BUILDKITE-}" ]]; then
-    CONSOLE_REGEX='.*Console URL:(.*)\\n"'
-    LAUNCH_LOG=$(cat ./launch.log)
-    if [[ $LAUNCH_LOG =~ $CONSOLE_REGEX ]]; then
-        CONSOLE_URL=${BASH_REMATCH[1]}
-        buildkite-agent annotate --style "success" "Deployment URL: ${CONSOLE_URL}"
-    else
-        buildkite-agent annotate --style "warning" "Could not parse deployment URL from launch log."
-    fi
+  CONSOLE_URL="https://console.improbable.io/projects/${PROJECT_NAME}/deployments/${ASSEMBLY_NAME}"
+  buildkite-agent annotate --style "success" "Deployment URL: ${CONSOLE_URL}"
 fi
 
 markEndOfBlock "Launching deployments"
