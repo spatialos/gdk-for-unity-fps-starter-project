@@ -80,6 +80,16 @@ steps:
       BUILD_TARGET: "cloud"
       SCRIPTING_TYPE: "mono"
   - wait
-  - label: Launch deployment
-    command: bash -c ci/upload-launch.sh
+  - label: Upload assemblies
+    command: bash -c .shared-ci/scripts/upload-assemblies.sh
     <<: *common
+    env:
+      PREFIX: "fps"
+      PROJECT_NAME: "unity_gdk"
+  - wait
+  - label: Launch deployments
+    command: bash -c ci/launch.sh
+    <<: *common
+    env:
+      PREFIX: "fps"
+      PROJECT_NAME: "unity_gdk"

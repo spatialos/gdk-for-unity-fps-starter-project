@@ -4,9 +4,6 @@ set -e -u -x -o pipefail
 
 cd "$(dirname "$0")/../"
 
-PREFIX="fps"
-PROJECT_NAME="unity_gdk"
-
 source ".shared-ci/scripts/profiling.sh"
 source ".shared-ci/scripts/pinned-tools.sh"
 
@@ -14,8 +11,6 @@ source ".shared-ci/scripts/pinned-tools.sh"
 buildkite-agent artifact download "build\assembly\**\*" .
 
 setAssemblyName "${PREFIX}"
-
-spatial cloud upload "${ASSEMBLY_NAME}" --log_level=debug --force --enable_pre_upload_check=false --project_name="${PROJECT_NAME}"
 
 markStartOfBlock "Launching deployments"
 
