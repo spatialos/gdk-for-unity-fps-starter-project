@@ -24,7 +24,7 @@ spatial cloud upload "${ASSEMBLY_NAME}" --log_level=debug --force --enable_pre_u
 
 markStartOfBlock "Launching deployments"
 
-dotnet run -p {DotNetProjectPath} -- \
+dotnet run -p workers/unity/Packages/com.improbable.gdk.deploymentlauncher/.DeploymentLauncher/DeploymentLauncher.csproj -- \
     create "${PROJECT_NAME}" "${ASSEMBLY_NAME}" \
     "${ASSEMBLY_NAME}" cloud_launch_large.json snapshots/cloud.snapshot \
     "${ASSEMBLY_NAME}_sim_players" cloud_launch_large_sim_players.json \
