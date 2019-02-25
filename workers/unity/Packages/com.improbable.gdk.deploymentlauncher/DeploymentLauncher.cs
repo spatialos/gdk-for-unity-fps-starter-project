@@ -307,7 +307,6 @@ namespace Improbable.Gdk.DeploymentManager
                         return false;
                     }
 
-                    var simSnapshotPath = GenerateTempSnapshot();
                     var arguments = new List<string>
                     {
                         "create",
@@ -322,8 +321,7 @@ namespace Improbable.Gdk.DeploymentManager
                         arguments.AddRange(new List<string>
                         {
                             deploymentName + "_sim_workers",
-                            Path.Combine(ProjectRootPath, simPlayerLaunchJson),
-                            simSnapshotPath
+                            Path.Combine(ProjectRootPath, simPlayerLaunchJson)
                         });
                     }
 
@@ -493,16 +491,6 @@ namespace Improbable.Gdk.DeploymentManager
                 }
 
                 return Regex.Match(deploymentName, "^[a-z0-9_]{2,32}$").Success;
-            }
-
-            private static string GenerateTempSnapshot()
-            {
-                var snapshotPath = FileUtil.GetUniqueTempPathInProject();
-
-                var snapshot = new Snapshot();
-                snapshot.WriteToFile(snapshotPath);
-
-                return snapshotPath;
             }
 
             private static string[] ConstructArguments(List<string> args)

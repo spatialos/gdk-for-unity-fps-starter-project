@@ -80,13 +80,11 @@ namespace Improbable
 
             var simDeploymentName = string.Empty;
             var simDeploymentJson = string.Empty;
-            var simDeploymentSnapshotFilePath = string.Empty;
 
             if (launchSimPlayerDeployment)
             {
                 simDeploymentName = args[6];
                 simDeploymentJson = args[7];
-                simDeploymentSnapshotFilePath = args[8];
             }
 
             // Create service clients.
@@ -103,19 +101,6 @@ namespace Improbable
                 if (mainSnapshotId.Length == 0)
                 {
                     return 1;
-                }
-
-                var simSnapshotId = string.Empty;
-
-                if (launchSimPlayerDeployment)
-                {
-                    simSnapshotId = UploadSnapshot(snapshotServiceClient, simDeploymentSnapshotFilePath, projectName,
-                        simDeploymentName);
-
-                    if (simSnapshotId.Length == 0)
-                    {
-                        return 1;
-                    }
                 }
 
                 // Create main deployment.
@@ -191,8 +176,7 @@ namespace Improbable
                             ConfigJson = simWorkerConfigJson
                         },
                         Name = simDeploymentName,
-                        ProjectName = projectName,
-                        StartingSnapshotId = simSnapshotId
+                        ProjectName = projectName
                     };
 
                     simDeploymentConfig.Tag.Add("simulated_clients");
