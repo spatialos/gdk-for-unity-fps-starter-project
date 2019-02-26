@@ -29,6 +29,7 @@ steps:
     command: |
       buildkite-agent annotate --style "success" "Deployment URL: durl"
       buildkite-agent annotate --style "success" "Simulated Player Deployment URL: spdurl" --append
+    <<: *common
 
   - label: "build :android:"
     command: bash -c .shared-ci/scripts/build-worker.sh
