@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using Improbable.Common;
-using Improbable.Gdk.GameObjectRepresentation;
+using Improbable.Gdk.Core;
+using Improbable.Gdk.Subscriptions;
 using Improbable.Gdk.Guns;
 using Improbable.Gdk.Health;
 using Improbable.Gdk.Movement;
@@ -20,12 +21,13 @@ public class SimulatedPlayerDriver : MonoBehaviour
 
     private PlayerState state = PlayerState.Unknown;
 
-    [Require] private HealthComponent.Requirable.Reader HealthReader;
-    [Require] private HealthComponent.Requirable.CommandRequestSender HealthCommands;
+    [Require] private HealthComponentReader HealthReader;
+    [Require] private HealthComponentCommandSender HealthCommands;
+    [Require] private EntityId entityId;
 
     private ClientMovementDriver movementDriver;
     private ClientShooting shooting;
-    private SpatialOSComponent spatial;
+    private LinkedEntityComponent spatial;
     private NavMeshAgent agent;
     private SimulatedPlayerCoordinatorWorkerConnector coordinator;
 
@@ -65,9 +67,9 @@ public class SimulatedPlayerDriver : MonoBehaviour
 
     private void OnEnable()
     {
-        HealthReader.OnHealthModified += OnHealthModified;
-        HealthReader.OnRespawn += OnRespawn;
-        spatial = GetComponent<SpatialOSComponent>();
+        HealthReader.OnHealthModifiedEvent += OnHealthModified;
+        HealthReader.OnRespawnEvent += OnRespawn;
+        spatial = GetComponent<LinkedEntityComponent>();
         SetPlayerState(PlayerState.LookingForTarget);
     }
 
@@ -224,9 +226,9 @@ public class SimulatedPlayerDriver : MonoBehaviour
             return false;
         }
 
-        var targetSpatial = target.GetComponent<SpatialOSComponent>();
-        var entityManager = targetSpatial.World.GetExistingManager<EntityManager>();
-        var entity = targetSpatial.Entity;
+        var linkedComponent = target.GetComponent<LinkedEntityComponent>();
+        var entityManager = linkedComponent.World.GetExistingManager<EntityManager>();
+        linkedComponent.Worker.TryGetEntity(linkedComponent.EntityId, out var entity);
         if (entityManager.Exists(entity) && entityManager.HasComponent<HealthComponent.Component>(entity))
         {
             var targetHealth = entityManager.GetComponentData<HealthComponent.Component>(entity);
@@ -287,7 +289,7 @@ public class SimulatedPlayerDriver : MonoBehaviour
             yield return new WaitForSeconds(5);
             if (HealthCommands != null && spatial != null)
             {
-                HealthCommands.SendRequestRespawnRequest(spatial.SpatialEntityId, new Empty());
+                HealthCommands.SendRequestRespawnCommand(entityId, new Empty());
             }
         }
     }
@@ -300,7 +302,7 @@ public class SimulatedPlayerDriver : MonoBehaviour
             var gunPosition = transform.position + Vector3.up;
             foreach (var nearbyCollider in Physics.OverlapSphere(transform.position, 50f))
             {
-                if (nearbyCollider.GetComponent<SpatialOSComponent>() != null)
+                if (nearbyCollider.GetComponent<LinkedEntityComponent>() != null)
                 {
                     if (Physics.Linecast(gunPosition, nearbyCollider.transform.position + Vector3.up,
                         out var hitInfo))

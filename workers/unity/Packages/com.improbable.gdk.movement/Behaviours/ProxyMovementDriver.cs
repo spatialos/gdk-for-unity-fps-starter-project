@@ -1,4 +1,4 @@
-using Improbable.Gdk.GameObjectRepresentation;
+using Improbable.Gdk.Subscriptions;
 using Improbable.Gdk.StandardTypes;
 using Improbable.Worker.CInterop;
 using UnityEngine;
@@ -7,8 +7,8 @@ namespace Improbable.Gdk.Movement
 {
     public class ProxyMovementDriver : GroundCheckingDriver
     {
-        [Require] private ServerMovement.Requirable.Reader server;
-        [Require] private ClientRotation.Requirable.Reader client;
+        [Require] private ServerMovementReader server;
+        [Require] private ClientRotationReader client;
 
         [SerializeField] private RotationConstraints rotationConstraints = new RotationConstraints
         {
@@ -17,7 +17,7 @@ namespace Improbable.Gdk.Movement
             ZAxisRotation = true
         };
 
-        private SpatialOSComponent spatialOSComponent;
+        private LinkedEntityComponent LinkedEntityComponent;
         private Vector3 origin;
 
         //Rotation Variables
@@ -29,11 +29,11 @@ namespace Improbable.Gdk.Movement
 
         private void OnEnable()
         {
-            spatialOSComponent = GetComponent<SpatialOSComponent>();
-            origin = spatialOSComponent.Worker.Origin;
+            LinkedEntityComponent = GetComponent<LinkedEntityComponent>();
+            origin = LinkedEntityComponent.Worker.Origin;
 
-            server.LatestUpdated += OnServerUpdate;
-            client.LatestUpdated += OnClientUpdate;
+            server.OnLatestUpdate += OnServerUpdate;
+            client.OnLatestUpdate += OnClientUpdate;
 
             OnClientUpdate(client.Data.Latest);
             OnServerUpdate(server.Data.Latest);
