@@ -23,6 +23,6 @@ CONSOLE_URL="https://console.improbable.io/projects/${PROJECT_NAME}/deployments/
 CONSOLE_URL_SIM_PLAYERS="https://console.improbable.io/projects/${PROJECT_NAME}/deployments/${ASSEMBLY_NAME}_sim_players/overview"
 
 buildkite-agent annotate --style "success" "Deployment URL: ${CONSOLE_URL}"
-buildkite-agent annotate --style "success" "Simulated Player Deployment URL: ${CONSOLE_URL_SIM_PLAYERS}"
+buildkite-agent annotate --style "success" "Simulated Player Deployment URL: ${CONSOLE_URL_SIM_PLAYERS}" --append
 
 markEndOfBlock "Launching deployments"
