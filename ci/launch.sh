@@ -15,7 +15,7 @@ else
     ci/build-test.sh
 fi
 
-uploadAssembly "${PREFIX}" "${PROJECT_NAME}"
+uploadAssembly "${ASSEMBLY_PREFIX}" "${PROJECT_NAME}"
 
 markStartOfBlock "Launching deployments"
 

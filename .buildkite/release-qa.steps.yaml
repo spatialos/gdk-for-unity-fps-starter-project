@@ -84,5 +84,5 @@ steps:
     command: bash -c ci/launch.sh
     <<: *common
     env:
-      PREFIX: "fps"
+      ASSEMBLY_PREFIX: "fps"
       PROJECT_NAME: "unity_gdk"
