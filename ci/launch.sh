@@ -22,7 +22,7 @@ dotnet run -p workers/unity/Packages/com.improbable.gdk.deploymentlauncher/.Depl
 CONSOLE_URL="https://console.improbable.io/projects/${PROJECT_NAME}/deployments/${ASSEMBLY_NAME}/overview"
 CONSOLE_URL_SIM_PLAYERS="https://console.improbable.io/projects/${PROJECT_NAME}/deployments/${ASSEMBLY_NAME}_sim_players/overview"
 
-buildkite-agent annotate --style "success" "Deployment URL: ${CONSOLE_URL}"
+buildkite-agent annotate --style "success" "Deployment URL: ${CONSOLE_URL}<br/>"
 buildkite-agent annotate --style "success" "Simulated Player Deployment URL: ${CONSOLE_URL_SIM_PLAYERS}" --append
 
 markEndOfBlock "Launching deployments"

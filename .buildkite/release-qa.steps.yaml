@@ -25,12 +25,6 @@ common: &common
 # These are then relied on to have stable names by other things, so once named, please beware renaming has consequences.
 
 steps:
-  - label: ":console: Annotation Test"
-    command: |
-      buildkite-agent annotate --style "success" "Deployment URL: test<br/>"
-      buildkite-agent annotate --style "success" "Simulated Player Deployment URL: test2" --append
-    <<: *common
-
   - label: "build :android:"
     command: bash -c .shared-ci/scripts/build-worker.sh
     <<: *common
