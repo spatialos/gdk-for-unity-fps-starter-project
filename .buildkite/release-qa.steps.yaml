@@ -27,8 +27,9 @@ common: &common
 steps:
   - label: ":console: Annotation Test"
     command: |
-      buildkite-agent annotate --style "success" "Deployment URL: durl  "
-      buildkite-agent annotate --style "success" "Simulated Player Deployment URL: spdurl" --append
+      echo "Deployment URL: durl " >> annotation.md
+      echo "Simulated Player Deployment URL: spdurl" >> annotation.md
+      cat annotation.md | buildkite-agent annotate --style "success"
     <<: *common
 
   - label: "build :android:"
