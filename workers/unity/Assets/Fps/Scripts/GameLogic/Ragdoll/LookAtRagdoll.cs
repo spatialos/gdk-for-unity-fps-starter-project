@@ -1,5 +1,5 @@
 ﻿using Improbable.Common;
-using Improbable.Gdk.GameObjectRepresentation;
+using Improbable.Gdk.Subscriptions;
 using Improbable.Gdk.Health;
 using Improbable.Gdk.Ragdoll;
 using UnityEngine;
@@ -9,7 +9,7 @@ namespace Fps
     [RequireComponent(typeof(RagdollSpawner))]
     public class LookAtRagdoll : MonoBehaviour
     {
-        [Require] private HealthComponent.Requirable.Reader health;
+        [Require] private HealthComponentReader health;
         private RagdollSpawner ragdollSpawner;
         private PoolableRagdoll ragdoll;
 
@@ -27,13 +27,7 @@ namespace Fps
         private void OnEnable()
         {
             ragdollSpawner.OnRagdollSpawned += SetRagdoll;
-            health.OnRespawn += OnRespawn;
-        }
-
-        private void OnDisable()
-        {
-            ragdollSpawner.OnRagdollSpawned -= SetRagdoll;
-            health.OnRespawn -= OnRespawn;
+            health.OnRespawnEvent += OnRespawn;
         }
 
         private void SetRagdoll(GameObject ragdollObject)

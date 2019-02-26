@@ -1,4 +1,4 @@
-﻿using Improbable.Gdk.GameObjectRepresentation;
+﻿using Improbable.Gdk.Subscriptions;
 using Improbable.Gdk.Health;
 using Improbable.Gdk.ObjectPooling;
 using UnityEngine;
@@ -7,7 +7,7 @@ namespace Improbable.Gdk.Ragdoll
 {
     public class RagdollSpawner : MonoBehaviour
     {
-        [Require] private HealthComponent.Requirable.Reader health;
+        [Require] private HealthComponentReader health;
 
         [SerializeField] private GameObject ragdollPrefab;
         [SerializeField] private UnityEngine.Transform transformToMatch;
@@ -20,7 +20,7 @@ namespace Improbable.Gdk.Ragdoll
 
         private void OnEnable()
         {
-            health.OnHealthModified += OnHealthModified;
+            health.OnHealthModifiedEvent += OnHealthModified;
             pool = ObjectPooler.GetOrCreateObjectPool<PoolableRagdoll>(ragdollPrefab, 2);
         }
 

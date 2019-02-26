@@ -1,4 +1,3 @@
-using UnityEditor;
 using UnityEngine;
 
 namespace Improbable.Gdk.Guns
@@ -55,6 +54,12 @@ namespace Improbable.Gdk.Guns
         private void OnAnimatorIK(int layer)
         {
             var recoilOffset = GetRecoilOffset();
+
+            if (gunSocket.Gun == null)
+            {
+                return;
+            }
+
             if (applyRecoil)
             {
                 var rightHandBone = animator.GetBoneTransform(HumanBodyBones.RightHand);

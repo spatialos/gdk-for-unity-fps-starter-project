@@ -1,10 +1,14 @@
-﻿using Improbable;
+﻿using System;
+using System.Collections.Generic;
+using Improbable;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.Movement;
 using Improbable.Gdk.StandardTypes;
-using Improbable.Worker;
+using Improbable.Gdk.Subscriptions;
+using Unity.Entities;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 public class AdvancedEntityPipeline : IEntityGameObjectCreator
 {
@@ -19,6 +23,14 @@ public class AdvancedEntityPipeline : IEntityGameObjectCreator
     private readonly string workerIdAttribute;
     private readonly Worker worker;
 
+    private readonly Dictionary<EntityId, GameObject> gameObjectsCreated = new Dictionary<EntityId, GameObject>();
+
+    private readonly Type[] componentsToAdd =
+    {
+        typeof(Transform),
+        typeof(Rigidbody)
+    };
+
     public AdvancedEntityPipeline(Worker worker, string authPlayer, string nonAuthPlayer,
         IEntityGameObjectCreator fallback)
     {
@@ -29,11 +41,11 @@ public class AdvancedEntityPipeline : IEntityGameObjectCreator
         cachedNonAuthPlayer = Resources.Load<GameObject>(nonAuthPlayer);
     }
 
-    public GameObject OnEntityCreated(SpatialOSEntity entity)
+    public void OnEntityCreated(SpatialOSEntity entity, EntityGameObjectLinker linker)
     {
         if (!entity.HasComponent<Metadata.Component>())
         {
-            return null;
+            return;
         }
 
         var prefabName = entity.GetComponent<Metadata.Component>().EntityType;
@@ -58,12 +70,14 @@ public class AdvancedEntityPipeline : IEntityGameObjectCreator
                 var prefab = authority ? cachedAuthPlayer : cachedNonAuthPlayer;
                 var gameObject = Object.Instantiate(prefab, position, Quaternion.identity);
 
+                gameObjectsCreated.Add(entity.SpatialOSEntityId, gameObject);
                 gameObject.name = GetGameObjectName(prefab, entity, worker);
-                return gameObject;
+                linker.LinkGameObjectToSpatialOSEntity(entity.SpatialOSEntityId, gameObject, componentsToAdd);
+                return;
             }
         }
 
-        return fallback.OnEntityCreated(entity);
+        fallback.OnEntityCreated(entity, linker);
     }
 
     private static string GetGameObjectName(GameObject prefab, SpatialOSEntity entity, Worker worker)
@@ -71,8 +85,15 @@ public class AdvancedEntityPipeline : IEntityGameObjectCreator
         return string.Format(GameobjectNameFormat, prefab.name, entity.SpatialOSEntityId, worker.WorkerType);
     }
 
-    public void OnEntityRemoved(EntityId entityId, GameObject linkedGameObject)
+    public void OnEntityRemoved(EntityId entityId)
     {
-        fallback.OnEntityRemoved(entityId, linkedGameObject);
+        if (!gameObjectsCreated.TryGetValue(entityId, out var go))
+        {
+            fallback.OnEntityRemoved(entityId);
+            return;
+        }
+
+        gameObjectsCreated.Remove(entityId);
+        Object.Destroy(go);
     }
 }

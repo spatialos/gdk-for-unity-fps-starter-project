@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectCreation;
-using Improbable.Gdk.GameObjectRepresentation;
+using Improbable.Gdk.Subscriptions;
 using Improbable.Gdk.Mobile;
 using Improbable.Gdk.PlayerLifecycle;
 using Improbable.Worker.CInterop;
@@ -131,7 +131,6 @@ namespace Fps
             // Only take the Heartbeat from the PlayerLifecycleConfig Client Systems.
             world.GetOrCreateManager<HandlePlayerHeartbeatRequestSystem>();
 
-            GameObjectRepresentationHelper.AddSystems(world);
             var fallback = new GameObjectCreatorFromMetadata(Worker.WorkerType, Worker.Origin, Worker.LogDispatcher);
 
             // Set the Worker gameObject to the ClientWorker so it can access PlayerCreater reader/writers

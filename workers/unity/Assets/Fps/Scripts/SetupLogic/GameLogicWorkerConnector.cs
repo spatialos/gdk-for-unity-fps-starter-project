@@ -1,6 +1,6 @@
 using UnityEngine;
 using Improbable.Gdk.GameObjectCreation;
-using Improbable.Gdk.GameObjectRepresentation;
+using Improbable.Gdk.Subscriptions;
 using Improbable.Gdk.Guns;
 using Improbable.Gdk.Health;
 using Improbable.Gdk.PlayerLifecycle;
@@ -27,7 +27,6 @@ namespace Fps
             var world = Worker.World;
 
             PlayerLifecycleHelper.AddServerSystems(world);
-            GameObjectRepresentationHelper.AddSystems(world);
             GameObjectCreationHelper.EnableStandardGameObjectCreation(world);
 
             // Shooting
