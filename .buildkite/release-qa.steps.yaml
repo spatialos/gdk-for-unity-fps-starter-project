@@ -27,7 +27,7 @@ common: &common
 steps:
   - label: ":console: Annotation Test"
     command: |
-      buildkite-agent annotate --style "success" "Deployment URL: test\n"
+      buildkite-agent annotate --style "success" "Deployment URL: test<br/>"
       buildkite-agent annotate --style "success" "Simulated Player Deployment URL: test2" --append
     <<: *common
 
