@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+### Added
+
+- Tweaked the Deployment Launcher window:
+    - Added ability to choose deployment region (US, EU).
+    - Added ability to force-upload an assembly.
+    - Automatically open the SpatialOS Console page for a launched deployment.
+
+### Changed
+
+- Reduced `fps_simulated_players_creation_interval` from 60 to 5.
+- Disabled the `Generate Map` button in the MapBuilder window if `MapBuilderSettings` is not set.
+
 ## `0.1.5` - 2019-02-21
 
 ### Added

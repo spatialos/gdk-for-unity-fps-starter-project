@@ -27,6 +27,9 @@ namespace Improbable.Gdk.DeploymentManager
         private static readonly string ProjectRootPath =
             Path.Combine(Application.dataPath, "../../../");
 
+        private static readonly string ConsoleURLFormat =
+            "https://console.improbable.io/projects/{0}/deployments/{1}/overview";
+
         private static readonly Material spinnerMaterial = new Material(Shader.Find("UI/Default"));
 
         [MenuItem(DeploymentLauncherMenuItem, false, DeploymentLauncherPriority)]
@@ -46,6 +49,12 @@ namespace Improbable.Gdk.DeploymentManager
             public string Id;
         }
 
+        internal enum DeploymentRegionCode
+        {
+            US,
+            EU
+        }
+
         internal class DeploymentEditorWindow : EditorWindow
         {
             private string projectName = "unity_gdk";
@@ -56,8 +65,12 @@ namespace Improbable.Gdk.DeploymentManager
             private string mainLaunchJson = "cloud_launch_large.json";
             private string simPlayerLaunchJson = "cloud_launch_large_sim_players.json";
             private string simPlayerDeploymentName = "";
+
+            private bool forceUploadAssembly = false;
             private bool simPlayerDeploymentEnabled;
             private bool simPlayerCustomDeploymentNameEnabled;
+
+            private DeploymentRegionCode deploymentRegionCode = DeploymentRegionCode.US;
 
             private List<DeploymentInfo> deploymentList;
             private int selectedDeployment;
@@ -92,6 +105,7 @@ namespace Improbable.Gdk.DeploymentManager
                 EditorGUILayout.Space();
                 EditorGUILayout.LabelField("Assembly", EditorStyles.boldLabel);
                 uploadAssemblyName = EditorGUILayout.TextField("Assembly Name", uploadAssemblyName).Trim();
+                forceUploadAssembly = EditorGUILayout.Toggle("Force Upload", forceUploadAssembly);
                 var validUploadAssembly = true;
                 if (!ValidateAssemblyName(uploadAssemblyName))
                 {
@@ -115,6 +129,8 @@ namespace Improbable.Gdk.DeploymentManager
                 deploymentName = EditorGUILayout.TextField("Deployment Name", deploymentName).Trim();
                 snapshotPath = EditorGUILayout.TextField("Snapshot File", snapshotPath);
                 mainLaunchJson = EditorGUILayout.TextField("Launch Config File", mainLaunchJson);
+                deploymentRegionCode = (DeploymentRegionCode) EditorGUILayout.EnumPopup(
+                    "Deployment Region", deploymentRegionCode);
                 using (var simPlayerDeploymentScope =
                     new EditorGUILayout.ToggleGroupScope("Enable Simulated Players", simPlayerDeploymentEnabled))
                 {
@@ -281,8 +297,9 @@ namespace Improbable.Gdk.DeploymentManager
                     uploadAssemblyName,
                     "--project_name",
                     projectName,
-                    "--json_output"
+                    forceUploadAssembly ? "--json_output --force" : "--json_output"
                 };
+
                 var processResult = await RedirectedProcess.Command(Tools.Common.SpatialBinary).WithArgs(arguments)
                     .RedirectOutputOptions(OutputRedirectBehaviour.RedirectStdOut | OutputRedirectBehaviour.RedirectStdErr | OutputRedirectBehaviour.ProcessSpatialOutput)
                     .InDirectory(ProjectRootPath)
@@ -314,13 +331,14 @@ namespace Improbable.Gdk.DeploymentManager
                         assemblyName,
                         deploymentName,
                         Path.Combine(ProjectRootPath, mainLaunchJson),
-                        Path.Combine(ProjectRootPath, snapshotPath)
+                        Path.Combine(ProjectRootPath, snapshotPath),
+                        deploymentRegionCode.ToString()
                     };
                     if (simPlayerDeploymentEnabled)
                     {
                         arguments.AddRange(new List<string>
                         {
-                            deploymentName + "_sim_workers",
+                            simPlayerDeploymentName,
                             Path.Combine(ProjectRootPath, simPlayerLaunchJson)
                         });
                     }
@@ -331,6 +349,16 @@ namespace Improbable.Gdk.DeploymentManager
                             OutputRedirectBehaviour.RedirectStdErr)
                         .InDirectory(DotNetWorkingDirectory)
                         .RunAsync();
+
+                    if (processResult.ExitCode == 0)
+                    {
+                        Application.OpenURL(string.Format(ConsoleURLFormat, projectName, deploymentName));
+                        if (simPlayerDeploymentEnabled)
+                        {
+                            Application.OpenURL(string.Format(ConsoleURLFormat, projectName, simPlayerDeploymentName));
+                        }
+                    }
+
                     return processResult.ExitCode != 0;
                 }
                 finally

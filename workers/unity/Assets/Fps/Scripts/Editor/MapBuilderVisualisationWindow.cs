@@ -66,6 +66,7 @@ namespace Fps.Editor
                 mapBuilderSettings,
                 typeof(MapBuilderSettings));
 
+            EditorGUI.BeginDisabledGroup(mapBuilderSettings == null);
             if (GUILayout.Button("Generate Map"))
             {
                 if (numTiles < WarnTilesThreshold
@@ -79,6 +80,8 @@ namespace Fps.Editor
                     mapBuilder.CleanAndBuild(layerCount, seed, emptyTileChance);
                 }
             }
+
+            EditorGUI.EndDisabledGroup();
 
             EditorGUI.BeginDisabledGroup(mapBuilder == null);
             if (GUILayout.Button("Clear Map"))
