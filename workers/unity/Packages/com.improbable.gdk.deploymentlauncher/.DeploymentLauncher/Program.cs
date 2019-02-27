@@ -70,24 +70,22 @@ namespace Improbable
 
         private static int CreateDeployment(string[] args)
         {
-            bool launchSimPlayerDeployment = args.Length == 10;
+            bool launchSimPlayerDeployment = args.Length == 9;
 
             var projectName = args[1];
             var assemblyName = args[2];
             var mainDeploymentName = args[3];
             var mainDeploymentJson = args[4];
             var mainDeploymentSnapshotFilePath = args[5];
-            var mainDeploymentRegionCode = args[6];
+            var deploymentRegionCode = args[6];
 
             var simDeploymentName = string.Empty;
             var simDeploymentJson = string.Empty;
-            var simDeploymentRegionCode = String.Empty;
 
             if (launchSimPlayerDeployment)
             {
                 simDeploymentName = args[7];
                 simDeploymentJson = args[8];
-                simDeploymentRegionCode = args[9];
             }
 
             // Create service clients.
@@ -117,7 +115,7 @@ namespace Improbable
                     Name = mainDeploymentName,
                     ProjectName = projectName,
                     StartingSnapshotId = mainSnapshotId,
-                    RegionCode = mainDeploymentRegionCode
+                    RegionCode = deploymentRegionCode
                 };
 
                 if (launchSimPlayerDeployment)
@@ -181,7 +179,7 @@ namespace Improbable
                         },
                         Name = simDeploymentName,
                         ProjectName = projectName,
-                        RegionCode = simDeploymentRegionCode
+                        RegionCode = deploymentRegionCode
                     };
 
                     simDeploymentConfig.Tag.Add("simulated_clients");
@@ -267,7 +265,7 @@ namespace Improbable
         {
             Console.WriteLine("Usage:");
             Console.WriteLine(
-                "DeploymentManager create <project-name> <assembly-name> <main-deployment-name> <main-deployment-json> <main-deployment-snapshot> <main-deployment-region> [<sim-deployment-name> <sim-deployment-json> <sim-deployment-region>]");
+                "DeploymentManager create <project-name> <assembly-name> <main-deployment-name> <main-deployment-json> <main-deployment-snapshot> <main-deployment-region> [<sim-deployment-name> <sim-deployment-json>]");
             Console.WriteLine("DeploymentManager stop <project-name> <deployment-id>");
             Console.WriteLine("DeploymentManager list <project-name>");
         }
@@ -275,7 +273,7 @@ namespace Improbable
         private static int Main(string[] args)
         {
             if (args.Length == 0 ||
-                args[0] == "create" && (args.Length != 10 && args.Length != 7) ||
+                args[0] == "create" && (args.Length != 9 && args.Length != 7) ||
                 args[0] == "stop" && args.Length != 3 ||
                 args[0] == "list" && args.Length != 2)
             {

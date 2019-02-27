@@ -52,8 +52,7 @@ namespace Improbable.Gdk.DeploymentManager
         internal enum DeploymentRegionCode
         {
             US,
-            EU,
-            AP
+            EU
         }
 
         internal class DeploymentEditorWindow : EditorWindow
@@ -71,8 +70,7 @@ namespace Improbable.Gdk.DeploymentManager
             private bool simPlayerDeploymentEnabled;
             private bool simPlayerCustomDeploymentNameEnabled;
 
-            private DeploymentRegionCode mainDeploymentRegionCode = DeploymentRegionCode.US;
-            private DeploymentRegionCode simPlayerDeploymentRegionCode = DeploymentRegionCode.US;
+            private DeploymentRegionCode deploymentRegionCode = DeploymentRegionCode.US;
 
             private List<DeploymentInfo> deploymentList;
             private int selectedDeployment;
@@ -131,8 +129,8 @@ namespace Improbable.Gdk.DeploymentManager
                 deploymentName = EditorGUILayout.TextField("Deployment Name", deploymentName).Trim();
                 snapshotPath = EditorGUILayout.TextField("Snapshot File", snapshotPath);
                 mainLaunchJson = EditorGUILayout.TextField("Launch Config File", mainLaunchJson);
-                mainDeploymentRegionCode = (DeploymentRegionCode) EditorGUILayout.EnumPopup(
-                    "Deployment Region", mainDeploymentRegionCode);
+                deploymentRegionCode = (DeploymentRegionCode) EditorGUILayout.EnumPopup(
+                    "Deployment Region", deploymentRegionCode);
                 using (var simPlayerDeploymentScope =
                     new EditorGUILayout.ToggleGroupScope("Enable Simulated Players", simPlayerDeploymentEnabled))
                 {
@@ -148,8 +146,6 @@ namespace Improbable.Gdk.DeploymentManager
                     }
 
                     simPlayerLaunchJson = EditorGUILayout.TextField("Launch Config File", simPlayerLaunchJson);
-                    simPlayerDeploymentRegionCode = (DeploymentRegionCode) EditorGUILayout.EnumPopup(
-                        "Deployment Region", simPlayerDeploymentRegionCode);
                 }
 
                 var validLaunchParameters = true;
@@ -336,15 +332,14 @@ namespace Improbable.Gdk.DeploymentManager
                         deploymentName,
                         Path.Combine(ProjectRootPath, mainLaunchJson),
                         Path.Combine(ProjectRootPath, snapshotPath),
-                        mainDeploymentRegionCode.ToString()
+                        deploymentRegionCode.ToString()
                     };
                     if (simPlayerDeploymentEnabled)
                     {
                         arguments.AddRange(new List<string>
                         {
                             simPlayerDeploymentName,
-                            Path.Combine(ProjectRootPath, simPlayerLaunchJson),
-                            simPlayerDeploymentRegionCode.ToString()
+                            Path.Combine(ProjectRootPath, simPlayerLaunchJson)
                         });
                     }
 
