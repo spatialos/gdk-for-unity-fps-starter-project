@@ -19,11 +19,6 @@ namespace Fps
 
         private MapBuilderSettings mapBuilderSettings;
 
-        public Texture2D MapTileLookupTexture;
-        public MapTileCollectionAsset DefaultTileCollection;
-        public MapTileCollectionAsset[] ExtraTileCollections;
-
-#if UNITY_EDITOR
         // Store the half-value as many calculations are simplified by going from -halfNumGroundLayers to halfNumGroundLayers.
         private int halfNumGroundLayers => (Layers - 1) / mapBuilderSettings.TilesPerGroundLayer + 1;
 
