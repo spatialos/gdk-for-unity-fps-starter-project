@@ -19,13 +19,17 @@ namespace Fps
             WorkerDisconnected
         }
 
+        public delegate void ConnectionStateChange(State state, string information);
+
+        public static ConnectionStateChange OnConnectionStateChange;
+        public static State CurrentState;
+        public static string CurrentInformation;
         public static bool IsConnected { get; private set; }
         public static bool HaveDeployments { get; private set; }
         public static bool IsSpawned { get; private set; }
 
-        public static string CurrentInformation;
-
-        public static State CurrentState;
+        private static ConnectionController connectionController;
+        private static ScreenUIController screenUIController;
 
         public static void TryConnect()
         {
@@ -76,14 +80,6 @@ namespace Fps
 
             OnConnectionStateChange?.Invoke(state, information);
         }
-
-        public delegate void ConnectionStateChange(State state, string information);
-
-        public static ConnectionStateChange OnConnectionStateChange;
-
-
-        private static ConnectionController connectionController;
-        private static ScreenUIController screenUIController;
 
         public static void InformOfConnectionController(ConnectionController controller)
         {
