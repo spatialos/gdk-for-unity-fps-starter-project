@@ -10,7 +10,6 @@ namespace Fps
 
         private TableEntry EntryTemplate;
 
-
         public float EntryHeight
         {
             get
