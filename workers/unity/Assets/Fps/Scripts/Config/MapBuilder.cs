@@ -1,11 +1,8 @@
 using System;
 using System.Collections.Generic;
-<<<<<<< HEAD
 using System.Linq;
 using Improbable.Gdk.Core;
 using Improbable.Worker.CInterop;
-=======
->>>>>>> MapBuilder uses texture lookup to place tiles. MaptileCollectionAsset holds list of prefabs to spawn for associated colour found in texture lookup.
 using UnityEngine;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
@@ -23,22 +20,6 @@ namespace Fps
 
         private MapBuilderSettings mapBuilderSettings;
 
-<<<<<<< HEAD
-=======
-        public Texture2D MapTileLookupTexture;
-        public MapTileCollectionAsset DefaultTileCollection;
-        public MapTileCollectionAsset[] ExtraTileCollections;
-
-        // Measurements.
-        // All sizes are 1:1 ratio in X/Z, so we just define one value to represent both axis.
-        public const int UnitsPerBlock = 4; // One textured square on the ground is a 'block'.
-        public const int UnitsPerTile = 9 * UnitsPerBlock;
-        public const int TilesPerGroundLayer = 4; // Ground layers are large quads that encompass 4x4 tiles.
-        public const int BoundaryCollisionHeight = 16;
-
-
-#if UNITY_EDITOR
->>>>>>> MapBuilder uses texture lookup to place tiles. MaptileCollectionAsset holds list of prefabs to spawn for associated colour found in texture lookup.
         // Store the half-value as many calculations are simplified by going from -halfNumGroundLayers to halfNumGroundLayers.
         private int halfNumGroundLayers => (Layers - 1) / mapBuilderSettings.TilesPerGroundLayer + 1;
 
