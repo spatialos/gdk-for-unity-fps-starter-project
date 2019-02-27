@@ -47,12 +47,11 @@ namespace Fps
             frontEndUiController.SwitchToSessionScreen();
         }
 
-        public void SetResults(ResultsData[] results)
+        /// <param name="playerRank">zero-based value of player's rank.</param>
+        public void SetResults(ResultsData[] results, int playerRank)
         {
             resultsTable.ClearEntries();
             currentBgColor = BackgroundStripColor1;
-
-            var playerRank = Random.Range(0, results.Length); // TODO Replace with players rank from game
 
             AdjustTableHeight(playerRank);
 

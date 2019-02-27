@@ -35,7 +35,7 @@ namespace Fps
                 results[i] = MakeResult(i);
             }
 
-            controller.SetResults(results);
+            controller.SetResults(results, Random.Range(0, NumResultsToGenerate));
         }
 
 
