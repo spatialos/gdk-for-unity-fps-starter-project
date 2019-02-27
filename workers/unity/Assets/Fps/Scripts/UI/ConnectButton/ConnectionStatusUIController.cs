@@ -78,7 +78,7 @@ namespace Fps
 
         private void State_None()
         {
-            StatusText.text = "";
+            StatusText.text = string.Empty;
             SetSymbol(null);
         }
 

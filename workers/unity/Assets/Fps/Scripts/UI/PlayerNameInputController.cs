@@ -21,7 +21,7 @@ namespace Fps
         {
             inputField = GetComponentInChildren<InputField>();
             Validate(false);
-            HintText.text = "";
+            HintText.text = string.Empty;
             inputField.onEndEdit.AddListener(OnEnd);
         }
 
@@ -30,7 +30,7 @@ namespace Fps
             inputField.enabled = AllowEdit;
             HintText.gameObject.SetActive(AllowEdit);
 
-            if (!AllowEdit && inputField.text == "")
+            if (!AllowEdit && inputField.text == string.Empty)
             {
                 inputField.text = "<player name>  ";
             }
@@ -50,7 +50,7 @@ namespace Fps
         private void Validate(bool areEditing)
         {
             NameIsValid = true;
-            HintText.text = "";
+            HintText.text = string.Empty;
 
             if (!areEditing)
             {
