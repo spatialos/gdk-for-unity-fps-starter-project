@@ -72,7 +72,7 @@ namespace Fps.Editor
                 if (numTiles < WarnTilesThreshold
                     || GetGenerationUserConfirmation(numTiles))
                 {
-                    if (mapBuilderSettings == null || mapBuilder == null || mapBuilder.InvalidMapBuilder)
+                    if (mapBuilder == null || mapBuilder.InvalidMapBuilder)
                     {
                         SetupMapBuilder();
                     }
