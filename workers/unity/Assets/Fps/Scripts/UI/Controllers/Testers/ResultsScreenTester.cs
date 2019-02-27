@@ -29,7 +29,7 @@ namespace Fps
         {
             var controller = GetComponent<ResultsScreenController>();
 
-            var results = new ResultsScreenController.ResultsData[NumResultsToGenerate];
+            var results = new ResultsData[NumResultsToGenerate];
             for (var i = 0; i < NumResultsToGenerate; i++)
             {
                 results[i] = MakeResult(i);
@@ -39,12 +39,12 @@ namespace Fps
         }
 
 
-        private ResultsScreenController.ResultsData MakeResult(int rank)
+        private ResultsData MakeResult(int rank)
         {
             var playerName = RandomNameGenerator.GetName();
             var kills = Random.Range(0, 40);
             var deaths = Random.Range(0, 40);
-            return new ResultsScreenController.ResultsData(rank, playerName, kills, deaths);
+            return new ResultsData(rank, playerName, kills, deaths);
         }
     }
 }

@@ -12,7 +12,7 @@ public class LobbyTableEntry : TableEntry
     [SerializeField] private Text AvailabilityText;
 
 
-    public void SetData(LobbyScreenController.DeploymentData data)
+    public void SetData(DeploymentData data)
     {
         DeploymentNameText.text = data.Name;
         PlayersText.text = data.CurrentPlayers.ToString();

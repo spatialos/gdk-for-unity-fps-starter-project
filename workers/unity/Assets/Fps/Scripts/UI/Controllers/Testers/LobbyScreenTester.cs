@@ -29,7 +29,7 @@ namespace Fps
         {
             var controller = GetComponent<LobbyScreenController>();
 
-            var results = new LobbyScreenController.DeploymentData[NumResultsToGenerate];
+            var results = new DeploymentData[NumResultsToGenerate];
             for (var i = 0; i < NumResultsToGenerate; i++)
             {
                 results[i] = MakeDeployment();
@@ -39,13 +39,13 @@ namespace Fps
         }
 
 
-        private LobbyScreenController.DeploymentData MakeDeployment()
+        private DeploymentData MakeDeployment()
         {
             var serverName = "Awesome super duper deployment #" + Random.Range(0, 30);
             var availability = Random.value > .33f;
             var maxPlayers = (Random.Range(0, 4) + 1) * 64;
             var currentPlayers = availability ? Random.Range(0, maxPlayers) : maxPlayers;
-            return new LobbyScreenController.DeploymentData(serverName, currentPlayers, maxPlayers, availability);
+            return new DeploymentData(serverName, currentPlayers, maxPlayers, availability);
         }
     }
 }

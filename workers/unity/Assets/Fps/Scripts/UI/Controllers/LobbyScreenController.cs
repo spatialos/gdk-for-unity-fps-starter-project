@@ -201,21 +201,5 @@ namespace Fps
             entry.SetBackgroundColor(index % 2 == 0 ? BackgroundColor1 : BackgroundColor2);
             entry.SetAllTextVisuals(deploymentList[index].IsAvailable ? DefaultTextColor : UnavailableTextColor, false);
         }
-
-        public class DeploymentData
-        {
-            public readonly string Name;
-            public readonly int CurrentPlayers;
-            public readonly int MaxPlayers;
-            public readonly bool IsAvailable;
-
-            public DeploymentData(string name, int currentPlayers, int maxPlayers, bool isAvailable)
-            {
-                Name = name;
-                CurrentPlayers = currentPlayers;
-                MaxPlayers = maxPlayers;
-                IsAvailable = isAvailable;
-            }
-        }
     }
 }

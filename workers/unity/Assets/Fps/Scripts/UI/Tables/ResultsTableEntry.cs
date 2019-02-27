@@ -11,7 +11,7 @@ public class ResultsTableEntry : TableEntry
     [SerializeField] private Text KDText;
 
 
-    public void SetData(ResultsScreenController.ResultsData data)
+    public void SetData(ResultsData data)
     {
         RankText.text = data.Rank.ToString();
         PlayerNameText.text = data.PlayerName;
