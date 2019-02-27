@@ -6,6 +6,15 @@ namespace Fps
 {
     public class FrontEndUIController : MonoBehaviour
     {
+        public enum ScreenType
+        {
+            None,
+            DefaultConnect,
+            SessionScreen,
+            Lobby,
+            Results
+        }
+
         [Header("General")] public Button QuitButton;
         public GameObject FrontEndCamera;
 
@@ -14,11 +23,10 @@ namespace Fps
         public LobbyScreenController LobbyScreenController;
         public ResultsScreenController ResultsScreenController;
 
+        public ScreenType CurrentScreen { get; private set; }
 
         [Header("Editor / Testing")] public bool testResultsAvailable;
         [SerializeField] private ScreenType EditorCurrentScreen;
-
-        public ScreenType CurrentScreen { get; private set; }
 
         private void OnValidate()
         {
@@ -105,15 +113,6 @@ namespace Fps
                 default:
                     throw new ArgumentOutOfRangeException(nameof(screenType), screenType, null);
             }
-        }
-
-        public enum ScreenType
-        {
-            None,
-            DefaultConnect,
-            SessionScreen,
-            Lobby,
-            Results
         }
 
         /// <summary>

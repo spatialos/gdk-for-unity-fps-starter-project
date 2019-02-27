@@ -8,28 +8,26 @@ namespace Fps
     [RequireComponent(typeof(Animator))]
     public class KillNotification : MonoBehaviour
     {
-        public float Lifetime;
+        private static string LabelColorHex;
+        private static string NameColorHex;
 
+        public float Lifetime;
         public Color LabelColor;
         public Color NameColor;
+        public Text KillTextObject;
 
         [Header("Relegate options")] public float RelegateScale = .8f;
         public float RelegateDuration = .5f;
         public float RelegateYBuffer = 5;
         public bool RelegateUpward;
 
+        public Action OnDespawn;
+
         private float relegateTime;
         private int relegateLevel;
         private float targetScale;
         private float targetYOffset;
         private bool isRelegating;
-
-        private static string LabelColorHex;
-        private static string NameColorHex;
-
-        public Text KillTextObject;
-
-        public Action OnDespawn;
 
         private string Label => $"<color=#{LabelColorHex}>You killed</color>";
 
@@ -94,7 +92,6 @@ namespace Fps
 
             OnDespawn();
         }
-
 
         public void Relegate()
         {

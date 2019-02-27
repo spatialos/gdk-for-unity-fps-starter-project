@@ -11,7 +11,6 @@ namespace Fps
         public Color HighlightedTextColor;
         public Color UnavailableTextColor;
         public Color DefaultTextColor;
-
         public Button JoinButton;
         public Button BackButton;
 
@@ -20,7 +19,6 @@ namespace Fps
         private const int maxRows = 11; // Includes header
         private int currentlyHighlightedEntry = -1;
         private DeploymentData[] deploymentList;
-
         private FrontEndUIController frontEndUiController;
 
         private void Awake()
@@ -52,7 +50,6 @@ namespace Fps
                 JoinButton.enabled = HighlightedIsAvailable();
             }
         }
-
 
         private void JoinButtonPressed()
         {
@@ -110,7 +107,6 @@ namespace Fps
                 TryPressBackButton();
             }
         }
-
 
         private void TryPressJoinButton()
         {
