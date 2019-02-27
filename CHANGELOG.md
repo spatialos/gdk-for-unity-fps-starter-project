@@ -13,6 +13,7 @@
 
 - Reduced `fps_simulated_players_creation_interval` from 60 to 5.
 - Disabled the `Generate Map` button in the MapBuilder window if `MapBuilderSettings` is not set.
+- The four middle tiles of the world are no longer forced to be of certain tile type.
 
 ## `0.1.5` - 2019-02-21
 
@@ -42,8 +43,7 @@
 	- Reduced checkout radius of `UnityClient` and `UnityGameLogic` workers from 210 to 150.
 - Increased the level size from 868x868 to 1732x1732.
 - Changed how level generation and `MapBuilder.cs` works.
-	- `LoadWorld()` now generates the level GameObject through `MapBuilder`, instead of instantiating it from a prefab.
-	- The four middle tiles of the world are no longer forced to be of certain tile type.
+	- `LoadWorld()` now generates the level GameObject through `MapBuilder`, instead of instantiating it from a prefab.	
 - World tile prefabs improved.
 	- Now make use of nested prefabs.
 	- Completely new set of default tiles used to populate the world
