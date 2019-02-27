@@ -390,6 +390,24 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 514115472}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1137031868 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1980441004664082, guid: 928af08170e7d0243a977f4f26fe42a0,
+    type: 3}
+  m_PrefabInstance: {fileID: 2327225}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1137031870
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1137031868}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a453de0e2d4bc2f46b52e3a98b1d9e3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1143388046
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -561,6 +579,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4648737916515989303, guid: d52364553e6842940944c62b73e5e1b1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4688935748361665597, guid: d52364553e6842940944c62b73e5e1b1,
         type: 3}
       propertyPath: EditorCurrentScreen
@@ -1088,7 +1111,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 2327225}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1137031868}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4232ef4d7fd04444b8229fe77ae04088, type: 3}
