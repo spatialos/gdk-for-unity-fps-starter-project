@@ -8,8 +8,6 @@ namespace Fps
     {
         public RectTransform EntriesParentRect;
 
-        private TableEntry EntryTemplate;
-
         public float EntryHeight
         {
             get
@@ -24,6 +22,7 @@ namespace Fps
             }
         }
 
+        private TableEntry EntryTemplate;
         private float entryHeightCached = -1f;
 
         [NonSerialized] private readonly List<TableEntry> Entries = new List<TableEntry>();
