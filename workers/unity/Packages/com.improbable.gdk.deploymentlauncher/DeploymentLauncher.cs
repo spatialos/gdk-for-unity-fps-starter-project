@@ -358,7 +358,10 @@ namespace Improbable.Gdk.DeploymentManager
                     if (processResult.ExitCode == 0)
                     {
                         Application.OpenURL(string.Format(ConsoleURLFormat, projectName, deploymentName));
-                        Application.OpenURL(string.Format(ConsoleURLFormat, projectName, simPlayerDeploymentName));
+                        if (simPlayerDeploymentEnabled)
+                        {
+                            Application.OpenURL(string.Format(ConsoleURLFormat, projectName, simPlayerDeploymentName));
+                        }
                     }
 
                     return processResult.ExitCode != 0;
