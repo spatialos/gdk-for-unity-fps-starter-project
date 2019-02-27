@@ -64,7 +64,8 @@ namespace Fps.Editor
                     "Map Builder Settings",
                     "Different seeds produce different maps."),
                 mapBuilderSettings,
-                typeof(MapBuilderSettings));
+                typeof(MapBuilderSettings),
+                false);
 
             EditorGUI.BeginDisabledGroup(mapBuilderSettings == null);
             if (GUILayout.Button("Generate Map"))
