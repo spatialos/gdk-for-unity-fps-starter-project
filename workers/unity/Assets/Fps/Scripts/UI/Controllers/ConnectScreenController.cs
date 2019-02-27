@@ -14,7 +14,7 @@ namespace Fps
 
         public void ConnectClicked()
         {
-            if (ConnectionStateReporter.AreConnected)
+            if (ConnectionStateReporter.IsConnected)
             {
                 ConnectionStateReporter.TrySpawn();
             }

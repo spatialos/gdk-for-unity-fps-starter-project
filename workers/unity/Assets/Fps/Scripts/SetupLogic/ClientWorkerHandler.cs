@@ -26,7 +26,7 @@ namespace Fps
 
         [SerializeField] private bool UseSessionBasedFlow;
 
-        public static bool AreInSessionBasedGame => Instance.UseSessionBasedFlow;
+        public static bool IsInSessionBasedGame => Instance.UseSessionBasedFlow;
 
 
         public static void CreateClient()

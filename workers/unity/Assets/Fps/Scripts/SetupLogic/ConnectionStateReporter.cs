@@ -19,9 +19,9 @@ namespace Fps
             WorkerDisconnected
         }
 
-        public static bool AreConnected { get; private set; }
+        public static bool IsConnected { get; private set; }
         public static bool HaveDeployments { get; private set; }
-        public static bool AreSpawned { get; private set; }
+        public static bool IsSpawned { get; private set; }
 
         public static string CurrentInformation;
 
@@ -29,7 +29,7 @@ namespace Fps
 
         public static void TryConnect()
         {
-            if (AreConnected)
+            if (IsConnected)
             {
                 Debug.LogWarning("Tried connecting when already connected");
                 return;
@@ -40,13 +40,13 @@ namespace Fps
 
         public static void TrySpawn()
         {
-            if (!AreConnected)
+            if (!IsConnected)
             {
                 Debug.LogWarning("Tried spawning when we weren't connected");
                 return;
             }
 
-            if (AreSpawned)
+            if (IsSpawned)
             {
                 Debug.LogWarning("Tried spawning when we were already spawned");
                 return;
@@ -65,14 +65,14 @@ namespace Fps
             CurrentState = state;
             CurrentInformation = information;
 
-            AreConnected = CurrentState == State.Connected
+            IsConnected = CurrentState == State.Connected
                 || CurrentState == State.Spawned
                 || CurrentState == State.Spawning
                 || CurrentState == State.SpawningFailed;
             HaveDeployments = CurrentState != State.None
                 && CurrentState != State.GettingDeploymentList
                 && CurrentState != State.FailedToGetDeploymentList;
-            AreSpawned = CurrentState == State.Spawned;
+            IsSpawned = CurrentState == State.Spawned;
 
             OnConnectionStateChange?.Invoke(state, information);
         }

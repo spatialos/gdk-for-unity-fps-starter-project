@@ -48,7 +48,7 @@ namespace Fps
                 return;
             }
 
-            SetScreenTo(ClientWorkerHandler.AreInSessionBasedGame
+            SetScreenTo(ClientWorkerHandler.IsInSessionBasedGame
                 ? ScreenType.SessionScreen
                 : ScreenType.DefaultConnect);
         }
