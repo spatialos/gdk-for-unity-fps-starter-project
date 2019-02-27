@@ -31,7 +31,7 @@ namespace Fps
         {
             if (IsConnected)
             {
-                Debug.LogWarning("Tried connecting when already connected");
+                Debug.LogWarning("Tried connecting whilst already connected");
                 return;
             }
 
@@ -42,13 +42,13 @@ namespace Fps
         {
             if (!IsConnected)
             {
-                Debug.LogWarning("Tried spawning when we weren't connected");
+                Debug.LogWarning("Tried spawning whilst not connected");
                 return;
             }
 
             if (IsSpawned)
             {
-                Debug.LogWarning("Tried spawning when we were already spawned");
+                Debug.LogWarning("Tried spawning whilst already spawned");
                 return;
             }
 
