@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: M_Spatial_Terrain_Grey
   m_Shader: {fileID: 4800000, guid: fdf0abd9d7f7d75458a8017e2f98bd12, type: 3}
-  m_ShaderKeywords: 
+  m_ShaderKeywords: _OVERRIDECLIPDISTANCETOGLOBALS_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
@@ -100,7 +100,7 @@ Material:
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
-    - _OverrideClipDistanceToGlobals: 0
+    - _OverrideClipDistanceToGlobals: 1
     - _Parallax: 0.02
     - _Proj_Offset_X: 0.5
     - _Proj_Offset_Y: 0.5
