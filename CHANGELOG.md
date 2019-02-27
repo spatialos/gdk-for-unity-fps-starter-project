@@ -5,7 +5,7 @@
 ### Added
 
 - Tweaked the Deployment Launcher window:
-    - Added ability to choose deployment region (US, EU, AP).
+    - Added ability to choose deployment region (US, EU).
     - Added ability to force-upload an assembly.
     - Automatically open the SpatialOS Console page for a launched deployment.
 
