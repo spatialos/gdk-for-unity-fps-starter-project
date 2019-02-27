@@ -1,5 +1,7 @@
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Fps.Editor
 {
@@ -13,6 +15,8 @@ namespace Fps.Editor
 
         private MapBuilder mapBuilder;
         private MapBuilderSettings mapBuilderSettings;
+
+        private GameObject TileTypeVolumesPrefab;
 
         private const string MapBuilderMenuItem = "SpatialOS/Map Builder";
         private const int MapBuilderMenuPriority = 52;

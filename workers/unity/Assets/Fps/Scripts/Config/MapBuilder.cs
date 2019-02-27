@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Improbable.Gdk.Core;
 using Improbable.Worker.CInterop;
 using UnityEngine;
@@ -28,7 +27,6 @@ namespace Fps
         // Store the half-value as many calculations are simplified by going from -halfNumGroundLayers to halfNumGroundLayers.
         private int halfNumGroundLayers => (Layers - 1) / mapBuilderSettings.TilesPerGroundLayer + 1;
 
-        private GameObject[] levelTiles;
         private GameObject groundTile;
         private GameObject groundEdge;
         private GameObject surroundWall;
@@ -44,7 +42,6 @@ namespace Fps
         private const string SurroundParentName = "SurroundParent";
         private const string SpawnPointSystemName = "SpawnPointSystem";
 
-        private const string LevelTilePath = "Prefabs/Level/Tiles";
         private const string GroundTilePath = "Prefabs/Level/Ground/Ground4x4";
         private const string GroundEdgePath = "Prefabs/Level/Ground/Edge";
         private const string SurroundPath = "Prefabs/Level/Surround/Wall";
@@ -59,6 +56,27 @@ namespace Fps
             this.mapBuilderSettings = mapBuilderSettings;
             this.gameObject = gameObject;
         }
+
+        private GameObject GetTileObjectAtCoordinate(Vector2Int coordinate)
+        {
+            var hits = Physics.OverlapSphere(GetWorldLocationFromCoordinate(coordinate), .5f);
+
+            foreach (var hit in hits)
+            {
+                var volume = hit.gameObject.GetComponent<TileTypeVolume>();
+                if (volume == null)
+                {
+                    continue;
+                }
+
+                return volume.TypeCollection.GetRandomTile();
+            }
+
+            return mapBuilderSettings.DefaultTileType == null
+                ? null
+                : mapBuilderSettings.DefaultTileType.GetRandomTile();
+        }
+
 
         public void CleanAndBuild(
             int worldLayers = 4,
@@ -162,14 +180,6 @@ namespace Fps
                 return false;
             }
 
-            levelTiles = Resources.LoadAll<GameObject>(LevelTilePath);
-
-            if (levelTiles.Length <= 0)
-            {
-                Debug.LogError($"Failed to load any resources at Resources/{LevelTilePath}");
-                return false;
-            }
-
             return true;
         }
 
@@ -184,6 +194,7 @@ namespace Fps
             Debug.LogError($"Failed to load resource at Resources/{resourcePath}");
             return false;
         }
+
 
         private Transform MakeChildGroup(string groupName)
         {
@@ -340,15 +351,26 @@ namespace Fps
 
         private void PlaceTile(Vector2Int tileCoord)
         {
-            if (Random.value < EmptyTileChance)
+            var tile = GetTileObjectAtCoordinate(tileCoord);
+
+            if (tile == null)
             {
                 return;
             }
 
-            var tile = levelTiles[Random.Range(0, levelTiles.Length)];
             float rotation = 90 * Random.Range(0, 4);
 
             PlaceTile(tileCoord, tile, rotation);
+        }
+
+        private Vector3 GetWorldLocationFromCoordinate(Vector2Int coordinate)
+        {
+            var tileOffset = mapBuilderSettings.UnitsPerTile / 2;
+            return new Vector3
+            {
+                x = (coordinate.x - 1) * mapBuilderSettings.UnitsPerTile + tileOffset,
+                z = (coordinate.y - 1) * mapBuilderSettings.UnitsPerTile + tileOffset
+            };
         }
 
         private void PlaceTile(Vector2Int tileCoord, GameObject tile, float rotation)
@@ -357,11 +379,7 @@ namespace Fps
 
             Object.Instantiate(
                 tile,
-                new Vector3
-                {
-                    x = (tileCoord.x - 1) * mapBuilderSettings.UnitsPerTile + tileOffset,
-                    z = (tileCoord.y - 1) * mapBuilderSettings.UnitsPerTile + tileOffset
-                },
+                GetWorldLocationFromCoordinate(tileCoord),
                 new Quaternion
                 {
                     eulerAngles = new Vector3
@@ -482,7 +500,32 @@ namespace Fps
                 levelInstance.transform.rotation = workerTransform.rotation;
 
                 var mapBuilder = new MapBuilder(mapBuilderSettings, levelInstance);
-                mapBuilder.CleanAndBuild(worldLayerCount);
+
+                GameObject volumesPrefab;
+                switch (worldSize)
+                {
+                    case SmallLevelFlag:
+                        volumesPrefab = mapBuilderSettings.SmallWorldTileVolumes;
+                        break;
+                    case LargeLevelFlag:
+                        volumesPrefab = mapBuilderSettings.LargeWorldTileVolumes;
+                        break;
+                    default:
+                        volumesPrefab = null;
+                        break;
+                }
+
+                if (volumesPrefab != null)
+                {
+                    volumesPrefab = MonoBehaviour.Instantiate(volumesPrefab);
+                }
+
+                mapBuilder.CleanAndBuild(worldLayerCount, worldSize);
+
+                if (volumesPrefab != null)
+                {
+                    MonoBehaviour.Destroy(volumesPrefab);
+                }
             }
             else
             {
