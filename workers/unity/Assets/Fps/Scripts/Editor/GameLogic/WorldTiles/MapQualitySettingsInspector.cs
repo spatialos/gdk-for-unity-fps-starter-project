@@ -54,6 +54,11 @@ namespace Fps
 
             GUILayout.Space(10);
 
+            GUILayout.Label("Resolution Scaling Fixed DPI Factor (Mobile / tablet devices)", EditorStyles.boldLabel);
+            DrawDPIFactorProperties();
+
+            GUILayout.Space(10);
+
             if ((!Application.isPlaying || MapQualitySettings.Instance == settings) && DrawPreviewToggle())
             {
                 DrawQualityPreviewButtons();
@@ -146,6 +151,19 @@ namespace Fps
                 settings.Settings[i].CheckoutDistance = Mathf.Max(0,
                     EditorGUILayout.FloatField(qualityName, checkoutDistance));
                 GUI.color = Color.white;
+            }
+        }
+
+        private void DrawDPIFactorProperties()
+        {
+            GUI.color = Color.white;
+            for (var i = 0; i < settings.Settings.Count; i++)
+            {
+                var qualityName = settings.Settings[i].QualityName;
+                var dpiScalar = settings.Settings[i].DpiScalar;
+
+                settings.Settings[i].DpiScalar = Mathf.Max(0,
+                    EditorGUILayout.FloatField(qualityName, dpiScalar));
             }
         }
 
