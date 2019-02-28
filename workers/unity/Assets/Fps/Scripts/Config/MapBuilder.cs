@@ -496,24 +496,9 @@ namespace Fps
 
                 var mapBuilder = new MapBuilder(mapBuilderSettings, levelInstance);
 
-                GameObject volumesPrefab;
-                switch (worldSize)
-                {
-                    case SmallLevelFlag:
-                        volumesPrefab = mapBuilderSettings.SmallWorldTileVolumes;
-                        break;
-                    case LargeLevelFlag:
-                        volumesPrefab = mapBuilderSettings.LargeWorldTileVolumes;
-                        break;
-                    default:
-                        volumesPrefab = null;
-                        break;
-                }
-
-                if (volumesPrefab != null)
-                {
-                    volumesPrefab = MonoBehaviour.Instantiate(volumesPrefab);
-                }
+                var volumesPrefab = mapBuilderSettings.WorldTileVolumes == null
+                    ? null
+                    : MonoBehaviour.Instantiate(mapBuilderSettings.WorldTileVolumes);
 
                 mapBuilder.CleanAndBuild(worldLayerCount, worldSize);
 

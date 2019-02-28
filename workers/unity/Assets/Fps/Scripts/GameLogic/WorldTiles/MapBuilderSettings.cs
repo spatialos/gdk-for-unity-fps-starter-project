@@ -8,8 +8,7 @@ namespace Fps
         public int SmallWorldLayerCount = 4;
         public int LargeWorldLayerCount = 24;
 
-        public GameObject SmallWorldTileVolumes;
-        public GameObject LargeWorldTileVolumes;
+        public GameObject WorldTileVolumes;
 
         // Measurements.
         // All sizes are 1:1 ratio in X/Z, so we just define one value to represent both axis.
