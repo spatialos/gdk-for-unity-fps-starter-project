@@ -9,7 +9,7 @@ using UnityEditor.Experimental.SceneManagement;
 public class TileFootprintHelper : MonoBehaviour
 {
 #if UNITY_EDITOR
-    public float TileSize = 8 * 4;
+    public float InnerTileSize = 8 * 4;
     public float ConnectorLength = 8;
     public float ConnectorDepth = 4;
     public Color Color = new Color(.2f, .7f, .2f, .4f);
@@ -54,22 +54,22 @@ public class TileFootprintHelper : MonoBehaviour
     {
         Gizmos.color = Color;
 
-        DrawFlatSquare(transform.position, Vector2.one * TileSize);
+        DrawFlatSquare(transform.position, Vector2.one * InnerTileSize);
         DrawFlatSquare(
             transform.position + Quaternion.Euler(0, 0, 0) *
-            new Vector3(.5f * ConnectorLength, 0, TileSize * .5f + .5f * ConnectorDepth),
+            new Vector3(.5f * ConnectorLength, 0, InnerTileSize * .5f + .5f * ConnectorDepth),
             new Vector2(ConnectorLength, ConnectorDepth));
         DrawFlatSquare(
             transform.position + Quaternion.Euler(0, 90, 0) *
-            new Vector3(.5f * ConnectorLength, 0, TileSize * .5f + .5f * ConnectorDepth),
+            new Vector3(.5f * ConnectorLength, 0, InnerTileSize * .5f + .5f * ConnectorDepth),
             new Vector2(ConnectorDepth, ConnectorLength));
         DrawFlatSquare(
             transform.position + Quaternion.Euler(0, 180, 0) *
-            new Vector3(.5f * ConnectorLength, 0, TileSize * .5f + .5f * ConnectorDepth),
+            new Vector3(.5f * ConnectorLength, 0, InnerTileSize * .5f + .5f * ConnectorDepth),
             new Vector2(ConnectorLength, ConnectorDepth));
         DrawFlatSquare(
             transform.position + Quaternion.Euler(0, 270, 0) *
-            new Vector3(.5f * ConnectorLength, 0, TileSize * .5f + .5f * ConnectorDepth),
+            new Vector3(.5f * ConnectorLength, 0, InnerTileSize * .5f + .5f * ConnectorDepth),
             new Vector2(ConnectorDepth, ConnectorLength));
     }
 
