@@ -12,7 +12,6 @@ namespace Fps
     {
         private int Layers;
         private string Seed;
-        private float EmptyTileChance;
 
         private const string SmallLevelFlag = "small";
         private const string LargeLevelFlag = "large";
@@ -52,31 +51,9 @@ namespace Fps
             this.gameObject = gameObject;
         }
 
-        private GameObject GetTileObjectAtCoordinate(Vector2Int coordinate)
-        {
-            var hits = Physics.OverlapSphere(GetWorldLocationFromCoordinate(coordinate), .5f);
-
-            foreach (var hit in hits)
-            {
-                var volume = hit.gameObject.GetComponent<TileTypeVolume>();
-                if (volume == null)
-                {
-                    continue;
-                }
-
-                return volume.TypeCollection.GetRandomTile();
-            }
-
-            return mapBuilderSettings.DefaultTileType == null
-                ? null
-                : mapBuilderSettings.DefaultTileType.GetRandomTile();
-        }
-
-
         public void CleanAndBuild(
             int worldLayers = 4,
-            string seed = "SpatialOS GDK for Unity",
-            float emptyTileChance = 0.2f)
+            string seed = "SpatialOS GDK for Unity")
         {
             if (mapBuilderSettings == null)
             {
@@ -86,7 +63,6 @@ namespace Fps
 
             Layers = worldLayers;
             Seed = seed;
-            EmptyTileChance = emptyTileChance;
 
             if (!TryLoadResources())
             {
@@ -416,6 +392,26 @@ namespace Fps
             {
                 childTransform.gameObject.isStatic = true;
             }
+        }
+
+        private GameObject GetTileObjectAtCoordinate(Vector2Int coordinate)
+        {
+            var hits = Physics.OverlapSphere(GetWorldLocationFromCoordinate(coordinate), .5f);
+
+            foreach (var hit in hits)
+            {
+                var volume = hit.gameObject.GetComponent<TileTypeVolume>();
+                if (volume == null)
+                {
+                    continue;
+                }
+
+                return volume.TypeCollection.GetRandomTile();
+            }
+
+            return mapBuilderSettings.DefaultTileType == null
+                ? null
+                : mapBuilderSettings.DefaultTileType.GetRandomTile();
         }
 
         public void Clean()
