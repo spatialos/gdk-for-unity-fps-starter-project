@@ -5,7 +5,10 @@ using UnityEditor.Experimental.SceneManagement;
 
 #endif
 
-
+/// <summary>
+/// This component is to aid with tile-authoring. So long as all tile geometry is placed within the outline of the
+/// gizmos, tiles will never overlap with other tile geometry.
+/// </summary>
 public class TileFootprintHelper : MonoBehaviour
 {
 #if UNITY_EDITOR
