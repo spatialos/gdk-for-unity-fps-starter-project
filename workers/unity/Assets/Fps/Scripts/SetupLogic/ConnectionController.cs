@@ -1,3 +1,4 @@
+using System.Collections;
 using Improbable;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.Subscriptions;
@@ -11,85 +12,89 @@ namespace Fps
     {
         [Require] private PlayerCreatorCommandSender commandSender;
 
-        private GameObject canvasCameraObj;
-        private ScreenUIController screenUIController;
-        private Animator connectButton;
         private WorkerConnector clientWorkerConnector;
 
         private void Start()
         {
+            ConnectionStateReporter.InformOfConnectionController(this);
             clientWorkerConnector = gameObject.GetComponent<WorkerConnector>();
-            connectButton = screenUIController.ConnectScreen.GetComponentInChildren<Animator>();
+            clientWorkerConnector.OnWorkerCreationFinished += OnWorkerCreated;
         }
 
-        public void InformOfUI(GameObject canvasCameraObj, ScreenUIController screenUIController)
+        private void OnWorkerCreated(Worker worker)
         {
-            this.canvasCameraObj = canvasCameraObj;
-            this.screenUIController = screenUIController;
+            if (worker.Connection.GetConnectionStatusCode() == ConnectionStatusCode.Success)
+            {
+                StartCoroutine(nameof(DelayedConnectedMessage));
+            }
+            else
+            {
+                ConnectionStateReporter.SetState(ConnectionStateReporter.State.ConnectionFailed,
+                    worker.Connection.GetConnectionStatusCode().ToString());
+            }
+        }
+
+        private IEnumerator DelayedConnectedMessage()
+        {
+            // 1 frame delay necessary to allow [Require] components to active on ConnectionController
+            yield return null;
+            ConnectionStateReporter.SetState(ConnectionStateReporter.State.Connected);
+        }
+
+        private void OnEnable()
+        {
+            if (responseHandler != null)
+            {
+                responseHandler.OnCreatePlayerResponse += OnCreatePlayerResponse;
+            }
         }
 
         private void OnCreatePlayerResponse(PlayerCreator.CreatePlayer.ReceivedResponse obj)
         {
             if (obj.StatusCode == StatusCode.Success)
             {
-                canvasCameraObj.SetActive(false);
-                screenUIController.ConnectScreen.SetActive(false);
-                screenUIController.InGameHud.SetActive(true);
+                ConnectionStateReporter.SetState(ConnectionStateReporter.State.Spawned);
             }
             else
             {
-                connectButton.SetTrigger("FailedToSpawn");
+                ConnectionStateReporter.SetState(ConnectionStateReporter.State.SpawningFailed,
+                    obj.StatusCode.ToString());
             }
         }
 
-        private void Update()
+        public void OnFailedToConnect(string errorMessage)
         {
-            if (!connectButton.isActiveAndEnabled)
-            {
-                return;
-            }
-
-            if (clientWorkerConnector != null && clientWorkerConnector.Worker != null)
-            {
-                // Worker successfully connected
-                if (connectButton.GetCurrentAnimatorStateInfo(0).IsName("ConnectingState"))
-                {
-                    connectButton.SetTrigger("Ready");
-                }
-            }
+            ConnectionStateReporter.SetState(ConnectionStateReporter.State.ConnectionFailed, errorMessage);
         }
 
-        public void OnFailedToConnect()
+        public void OnDisconnected()
         {
-            // Worker failed to connect
-            connectButton.SetTrigger("FailedToConnect");
-        }
 
-
-        private void SpawnPlayer()
-        {
-            var request = new CreatePlayerRequestType();
             commandSender.SendCreatePlayerCommand(new EntityId(1), request, OnCreatePlayerResponse);
+            ConnectionStateReporter.SetState(ConnectionStateReporter.State.WorkerDisconnected);
         }
 
         public void ConnectAction()
         {
-            if (connectButton.GetCurrentAnimatorStateInfo(0).IsName("ReadyState"))
+            ClientWorkerHandler.CreateClient();
+        }
+
+        public void DisconnectAction()
+        {
+            // TODO Disconnect?
+            if (clientWorkerConnector != null)
             {
-                connectButton.SetTrigger("Connecting");
-                SpawnPlayer();
+                Destroy(clientWorkerConnector.gameObject);
             }
-            else if (connectButton.GetCurrentAnimatorStateInfo(0).IsName("FailedToSpawn"))
-            {
-                connectButton.SetTrigger("Retry");
-                SpawnPlayer();
-            }
-            else if (connectButton.GetCurrentAnimatorStateInfo(0).IsName("FailedToConnect")
-                || connectButton.GetCurrentAnimatorStateInfo(0).IsName("WorkerDisconnected"))
-            {
-                connectButton.SetTrigger("Retry");
-                ClientWorkerHandler.CreateClient();
-            }
+        }
+
+        public void SpawnPlayerAction()
+        {
+            ConnectionStateReporter.SetState(ConnectionStateReporter.State.Spawning);
+            var request = new CreatePlayerRequestType(new Vector3f { X = 0, Y = 0, Z = 0 });
+            Debug.Log($"commandSender: {commandSender}\n" +
+                $"request: {request}");
+            commandSender.SendCreatePlayerRequest(new EntityId(1), request);
         }
     }
 }
