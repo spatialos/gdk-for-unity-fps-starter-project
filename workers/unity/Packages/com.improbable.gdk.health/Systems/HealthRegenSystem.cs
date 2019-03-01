@@ -1,5 +1,4 @@
 using Improbable.Gdk.Core;
-using Improbable.Gdk.ReactiveComponents;
 using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
@@ -16,7 +15,7 @@ namespace Improbable.Gdk.Health
             [ReadOnly] public EntityArray Entities;
             [ReadOnly] public ComponentDataArray<HealthRegenComponent.Component> HealthRegenComponents;
             [ReadOnly] public SubtractiveComponent<HealthRegenData> DenotesMissingData;
-            [ReadOnly] public ComponentDataArray<Authoritative<HealthComponent.Component>> DenotesAuthority;
+            [ReadOnly] public SharedComponentDataArray<HealthComponent.ComponentAuthority> Authority;
         }
 
         public struct TakingDamage
@@ -24,30 +23,37 @@ namespace Improbable.Gdk.Health
             public readonly int Length;
             public ComponentDataArray<HealthRegenData> RegenData;
             public ComponentDataArray<HealthRegenComponent.Component> HealthRegenComponents;
-            [ReadOnly] public ComponentDataArray<HealthComponent.ReceivedEvents.HealthModified> HealthModifiedEvents;
-            [ReadOnly] public ComponentDataArray<Authoritative<HealthComponent.Component>> DenotesAuthority;
+            [ReadOnly] public ComponentDataArray<SpatialEntityId> EntityIds;
+            [ReadOnly] public SharedComponentDataArray<HealthComponent.ComponentAuthority> Authority;
         }
 
         public struct EntitiesToRegen
         {
             public readonly int Length;
-            public ComponentDataArray<HealthComponent.CommandSenders.ModifyHealth> ModifyHealthCommandSenders;
             public ComponentDataArray<HealthRegenComponent.Component> HealthRegenComponents;
             public ComponentDataArray<HealthRegenData> RegenData;
             [ReadOnly] public ComponentDataArray<HealthComponent.Component> HealthComponents;
             [ReadOnly] public ComponentDataArray<SpatialEntityId> EntityId;
-            [ReadOnly] public ComponentDataArray<Authoritative<HealthComponent.Component>> DenotesAuthority;
+            [ReadOnly] public SharedComponentDataArray<HealthComponent.ComponentAuthority> Authority;
+            [ReadOnly] public EntityArray Entities;
         }
 
         [Inject] private EntitiesNeedingRegenData needData;
         [Inject] private TakingDamage takingDamage;
         [Inject] private EntitiesToRegen toRegen;
+        [Inject] private CommandSystem commandSystem;
+        [Inject] private ComponentUpdateSystem componentUpdateSystem;
 
         protected override void OnUpdate()
         {
             // Add the HealthRegenData if you don't currently have it.
             for (var i = 0; i < needData.Length; i++)
             {
+                if (!needData.Authority[i].HasAuthority)
+                {
+                    continue;
+                }
+
                 var healthRegenComponent = needData.HealthRegenComponents[i];
 
                 var regenData = new HealthRegenData();
@@ -64,18 +70,25 @@ namespace Improbable.Gdk.Health
             // When the HealthComponent takes a damaging event, reset the DamagedRecently timer.
             for (var i = 0; i < takingDamage.Length; i++)
             {
-                var healthModifiedEvents = takingDamage.HealthModifiedEvents[i];
-                var damagedRecently = false;
-
-                foreach (var modifiedEvent in takingDamage.HealthModifiedEvents[i].Events)
+                if (!takingDamage.Authority[i].HasAuthority)
                 {
-                    var modifier = modifiedEvent.Modifier;
+                    continue;
+                }
+
+                var events = componentUpdateSystem.GetEventsReceived<HealthComponent.HealthModified.Event>(takingDamage.EntityIds[i]
+                    .EntityId);
+                var damagedRecently = false;
+                for (int j = 0; j < events.Count; ++j)
+                {
+                    var modifier = events[j].Event.Payload.Modifier;
                     if (modifier.Amount < 0)
                     {
                         damagedRecently = true;
                         break;
                     }
                 }
+
+
                 if (!damagedRecently)
                 {
                     continue;
@@ -97,6 +110,11 @@ namespace Improbable.Gdk.Health
             // Count down the timers, and update the HealthComponent accordingly.
             for (var i = 0; i < toRegen.Length; i++)
             {
+                if (!toRegen.Authority[i].HasAuthority)
+                {
+                    continue;
+                }
+
                 var healthComponent = toRegen.HealthComponents[i];
                 var regenComponent = toRegen.HealthRegenComponents[i];
 
@@ -146,14 +164,13 @@ namespace Improbable.Gdk.Health
                         regenData.NextRegenTimer += regenComponent.RegenInterval;
 
                         // Send command to regen entity.
-                        var commandSender = toRegen.ModifyHealthCommandSenders[i];
                         var modifyHealthRequest = new HealthComponent.ModifyHealth.Request(
                             toRegen.EntityId[i].EntityId,
                             new HealthModifier()
                             {
-                                Amount = regenComponent.RegenAmount
+                                Amount = regenComponent.RegenAmount - 3
                             });
-                        commandSender.RequestsToSend.Add(modifyHealthRequest);
+                        commandSystem.SendCommand(modifyHealthRequest, toRegen.Entities[i]);
                     }
 
                     toRegen.RegenData[i] = regenData;
