@@ -37,6 +37,10 @@ namespace Fps
                 case ConnectionStateReporter.State.ConnectionFailed:
                     animator.SetTrigger("FailedToConnect");
                     break;
+                case ConnectionStateReporter.State.WaitingForGameStart:
+                    break;
+                case ConnectionStateReporter.State.GameReady:
+                    break;
                 case ConnectionStateReporter.State.Spawning:
                     animator.SetTrigger("Connecting");
                     break;
