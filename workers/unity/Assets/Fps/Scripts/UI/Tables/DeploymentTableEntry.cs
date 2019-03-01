@@ -4,7 +4,7 @@ using Fps;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LobbyTableEntry : TableEntry
+public class DeploymentTableEntry : TableEntry
 {
     [SerializeField] private Text DeploymentNameText;
     [SerializeField] private Text PlayersText;

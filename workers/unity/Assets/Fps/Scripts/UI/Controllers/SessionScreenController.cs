@@ -6,7 +6,6 @@ namespace Fps
     {
         [SerializeField] private FpsUIButton quickJoinButton;
         [SerializeField] private FpsUIButton browseButton;
-        [SerializeField] private PlayerNameInputController playerNameInputController;
 
         private FrontEndUIController frontEndUIController;
 
@@ -21,30 +20,23 @@ namespace Fps
             frontEndUIController = GetComponentInParent<FrontEndUIController>();
             Debug.Assert(frontEndUIController != null);
 
-            playerNameInputController.OnNameChanged += OnNameUpdated;
-            Debug.Assert(playerNameInputController != null);
-
             ConnectionStateReporter.OnConnectionStateChange += ConnectionStateChanged;
         }
 
         private void ConnectionStateChanged(ConnectionStateReporter.State state, string information)
         {
-            playerNameInputController.AllowEdit = ConnectionStateReporter.HaveDeployments;
-            RefreshButtons();
-        }
+            if (state == ConnectionStateReporter.State.Connected)
+            {
+                frontEndUIController.SwitchToLobbyScreen();
+                return;
+            }
 
-
-        private bool nameIsValid;
-
-        private void OnNameUpdated(bool isValid)
-        {
-            nameIsValid = isValid;
             RefreshButtons();
         }
 
         private void RefreshButtons()
         {
-            var enableButtons = nameIsValid && ConnectionStateReporter.HaveDeployments;
+            var enableButtons = ConnectionStateReporter.HaveDeployments;
 
             quickJoinButton.enabled = enableButtons;
             browseButton.enabled = enableButtons;
@@ -58,7 +50,7 @@ namespace Fps
 
         public void BrowseButtonPressed()
         {
-            frontEndUIController.SwitchToLobbyScreen();
+            frontEndUIController.SwitchToDeploymentListScreen();
         }
     }
 }

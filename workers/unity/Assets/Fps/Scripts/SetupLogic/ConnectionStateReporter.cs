@@ -13,11 +13,15 @@ namespace Fps
             Connecting,
             Connected,
             ConnectionFailed,
+            WaitingForGameStart,
+            GameReady,
             Spawning,
             Spawned,
             SpawningFailed,
             WorkerDisconnected
         }
+
+        public static float TimeUntilGameStart { get; private set; }
 
         public delegate void ConnectionStateChange(State state, string information);
 
@@ -70,6 +74,8 @@ namespace Fps
             CurrentInformation = information;
 
             IsConnected = CurrentState == State.Connected
+                || CurrentState == State.WaitingForGameStart
+                || CurrentState == State.GameReady
                 || CurrentState == State.Spawned
                 || CurrentState == State.Spawning
                 || CurrentState == State.SpawningFailed;
@@ -89,6 +95,11 @@ namespace Fps
         public static void InformOfUIController(ScreenUIController controller)
         {
             screenUIController = controller;
+        }
+
+        public static void SetTimeUntilGameStart(float timeInSeconds)
+        {
+            TimeUntilGameStart = timeInSeconds;
         }
     }
 }

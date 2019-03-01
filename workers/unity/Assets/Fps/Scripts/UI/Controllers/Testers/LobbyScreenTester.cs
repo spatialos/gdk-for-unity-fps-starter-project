@@ -1,51 +1,38 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using Fps;
+using UnityEngine;
 
-namespace Fps
+public class LobbyScreenTester : MonoBehaviour
 {
-    [RequireComponent(typeof(LobbyScreenController))]
-    public class LobbyScreenTester : MonoBehaviour
+    public float TimeUntilStart = 60;
+    private float timeUntilStart;
+
+    void Awake()
     {
-        public bool Test;
-        public int NumResultsToGenerate;
+        ConnectionStateReporter.OnConnectionStateChange += ConnectionStateChanged;
+    }
 
-        private void Update()
+    private void ConnectionStateChanged(ConnectionStateReporter.State state, string information)
+    {
+        if (state == ConnectionStateReporter.State.Connected)
         {
-            if (!Test)
-            {
-                return;
-            }
+            ConnectionStateReporter.SetTimeUntilGameStart(timeUntilStart);
+            ConnectionStateReporter.SetState(ConnectionStateReporter.State.WaitingForGameStart);
+            timeUntilStart = TimeUntilStart;
+            StartCoroutine(nameof(CountDownTime));
+        }
+    }
 
-            Test = false;
-            RunTest();
+    private IEnumerator CountDownTime()
+    {
+        while (timeUntilStart > 0)
+        {
+            ConnectionStateReporter.SetTimeUntilGameStart(timeUntilStart);
+            yield return new WaitForEndOfFrame();
+            timeUntilStart -= Time.deltaTime;
         }
 
-        private void OnEnable()
-        {
-            Test = false;
-            Invoke(nameof(RunTest), 1);
-        }
-
-        private void RunTest()
-        {
-            var controller = GetComponent<LobbyScreenController>();
-
-            var results = new DeploymentData[NumResultsToGenerate];
-            for (var i = 0; i < NumResultsToGenerate; i++)
-            {
-                results[i] = MakeDeployment();
-            }
-
-            controller.SetDeployments(results);
-        }
-
-
-        private DeploymentData MakeDeployment()
-        {
-            var serverName = "Awesome super duper deployment #" + Random.Range(0, 30);
-            var availability = Random.value > .33f;
-            var maxPlayers = (Random.Range(0, 4) + 1) * 64;
-            var currentPlayers = availability ? Random.Range(0, maxPlayers) : maxPlayers;
-            return new DeploymentData(serverName, currentPlayers, maxPlayers, availability);
-        }
+        ConnectionStateReporter.SetState(ConnectionStateReporter.State.GameReady);
     }
 }
