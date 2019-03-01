@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Improbable.Gdk.Core;
+using Improbable.Worker.CInterop;
 using UnityEngine;
 
 namespace Fps
@@ -9,7 +10,6 @@ namespace Fps
         private static ClientWorkerHandler Instance;
 
         [SerializeField] private GameObject clientWorkerPrefab;
-        [SerializeField] private GameObject canvasCameraObj;
 
         [SerializeField] private ScreenUIController screenUIController;
 
@@ -24,15 +24,34 @@ namespace Fps
         public static ConnectionController ConnectionController => Instance.connectionController;
         public static ScreenUIController ScreenUIController => Instance.screenUIController;
 
+        [SerializeField] private bool UseSessionBasedFlow;
+
+        public static bool IsInSessionBasedGame => Instance.UseSessionBasedFlow;
+
+
         public static void CreateClient()
         {
             Instance.CreateClientWorker();
         }
 
-        private void Start()
+        private void Awake()
         {
             Instance = this;
-            CreateClientWorker();
+            screenUIController.gameObject.SetActive(false);
+        }
+
+        private void Start()
+        {
+            screenUIController.gameObject.SetActive(true);
+
+            if (UseSessionBasedFlow)
+            {
+                GetComponent<SessionFlowTester>().enabled = true;
+            }
+            else
+            {
+                CreateClientWorker();
+            }
         }
 
         private void Update()
@@ -43,6 +62,7 @@ namespace Fps
 
         private void CreateClientWorker()
         {
+            ConnectionStateReporter.SetState(ConnectionStateReporter.State.Connecting);
             if (currentClientWorker != null)
             {
                 Destroy(currentClientWorker);
@@ -52,28 +72,17 @@ namespace Fps
             workerConnector = currentClientWorker.GetComponent<WorkerConnector>();
             tileProvider = workerConnector as ITileProvider;
             connectionController = currentClientWorker.GetComponent<ConnectionController>();
-            connectionController.InformOfUI(canvasCameraObj, screenUIController);
         }
 
         private void DisconnectCheck()
         {
             if (workerConnector != null
                 && workerConnector.Worker != null
-                && !workerConnector.Worker.Connection.IsConnected)
+                && workerConnector.Worker.Connection.GetConnectionStatusCode() != ConnectionStatusCode.Success)
             {
-                screenUIController.OnDisconnect();
+                connectionController.OnDisconnected();
                 Destroy(currentClientWorker);
             }
-        }
-
-
-        public void Quit()
-        {
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-#else
-            Application.Quit();
-#endif
         }
     }
 }
