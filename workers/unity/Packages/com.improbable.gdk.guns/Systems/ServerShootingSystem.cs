@@ -11,27 +11,28 @@ namespace Improbable.Gdk.Guns
         private struct PlayersShooting
         {
             public readonly int Length;
-            public ComponentDataArray<HealthComponent.CommandSenders.ModifyHealth> ModifyHealthCommandSenders;
             [ReadOnly] public ComponentDataArray<SpatialEntityId> EntityId;
-            [ReadOnly] public ComponentDataArray<ShootingComponent.ReceivedEvents.Shots> Shots;
             [ReadOnly] public ComponentDataArray<GunComponent.Component> Gun;
+            [ReadOnly] public EntityArray Entities;
         }
 
         [Inject] private PlayersShooting playersShooting;
+        [Inject] private CommandSystem commandSystem;
+        [Inject] private ComponentUpdateSystem updateSystem;
 
         protected override void OnUpdate()
         {
             for (var i = 0; i < playersShooting.Length; i++)
             {
-                var commandSender = playersShooting.ModifyHealthCommandSenders[i];
-                var commandSent = false;
                 var gunId = playersShooting.Gun[i].GunId;
                 var gunSettings = GunDictionary.Get(gunId);
                 var damage = gunSettings.ShotDamage;
 
-                foreach (var shot in playersShooting.Shots[i].Events)
+                var events =
+                    updateSystem.GetEventsReceived<ShootingComponent.Shots.Event>(playersShooting.EntityId[i].EntityId);
+                for (int j = 0; j < events.Count; ++j)
                 {
-                    var shotInfo = shot;
+                    ref readonly var shotInfo = ref events[j].Event.Payload;
                     if (!ValidateShot(shotInfo))
                     {
                         continue;
@@ -46,13 +47,7 @@ namespace Improbable.Gdk.Guns
                             Origin = shotInfo.HitOrigin,
                             AppliedLocation = shotInfo.HitLocation
                         });
-                    commandSender.RequestsToSend.Add(modifyHealthRequest);
-                    commandSent = true;
-                }
-
-                if (commandSent)
-                {
-                    playersShooting.ModifyHealthCommandSenders[i] = commandSender;
+                    commandSystem.SendCommand(modifyHealthRequest, playersShooting.Entities[i]);
                 }
             }
         }
