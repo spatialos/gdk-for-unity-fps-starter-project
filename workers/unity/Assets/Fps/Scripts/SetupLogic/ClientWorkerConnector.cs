@@ -58,7 +58,7 @@ namespace Fps
 
         protected override void HandleWorkerConnectionFailure(string errorMessage)
         {
-            connectionController.OnFailedToConnect();
+            connectionController.OnFailedToConnect(errorMessage);
         }
 
         protected override void LoadWorld()
