@@ -6,48 +6,66 @@ using UnityEngine;
 
 namespace Improbable.Gdk.Health
 {
-    [AlwaysUpdateSystem]
     [UpdateInGroup(typeof(SpatialOSUpdateGroup))]
     public class ServerHealthModifierSystem : ComponentSystem
     {
-        [Inject] private CommandSystem commandSystem;
+        private struct EntitiesWithModifiedHealth
+        {
+            public readonly int Length;
+            public ComponentDataArray<HealthComponent.Component> Health;
+            [ReadOnly] public SharedComponentDataArray<HealthComponent.ComponentAuthority> Authority;
+            [ReadOnly] public ComponentDataArray<SpatialEntityId> EntityIds;
+            [ReadOnly] public EntityArray Entity;
+        }
+
+        [Inject] private EntitiesWithModifiedHealth entitiesWithModifiedHealth;
         [Inject] private ComponentUpdateSystem updateSystem;
-        [Inject] private WorkerSystem workerSystem;
+        [Inject] private CommandSystem commandSystem;
 
         protected override void OnUpdate()
         {
-            var requests = commandSystem.GetRequests<HealthComponent.ModifyHealth.ReceivedRequest>();
-            for (int i = 0; i < requests.Count; ++i)
+            for (var i = 0; i < entitiesWithModifiedHealth.Length; i++)
             {
-                var entityId = requests[i].EntityId;
-                ref readonly var modifier = ref requests[i].Payload;
-                workerSystem.TryGetEntity(entityId, out var entity);
-                var health = EntityManager.GetComponentData<HealthComponent.Component>(entity);
+                if (!entitiesWithModifiedHealth.Authority[i].HasAuthority)
+                {
+                    continue;
+                }
+
+                var health = entitiesWithModifiedHealth.Health[i];
 
                 if (health.Health <= 0)
                 {
                     continue;
                 }
 
-
-                var healthModifiedInfo = new HealthModifiedInfo
+                var entityId = entitiesWithModifiedHealth.EntityIds[i].EntityId;
+                var requests = commandSystem.GetRequests<HealthComponent.ModifyHealth.ReceivedRequest>(entityId);
+                for (int j = 0; j < requests.Count; ++j)
                 {
-                    Modifier = modifier,
-                    HealthBefore = health.Health
-                };
+                    ref readonly var request = ref requests[j];
+                    var modifier = request.Payload;
 
-                health.Health = Mathf.Clamp(health.Health + modifier.Amount, 0, health.MaxHealth);
-                healthModifiedInfo.HealthAfter = health.Health;
+                    var healthModifiedInfo = new HealthModifiedInfo
+                    {
+                        Modifier = modifier,
+                        HealthBefore = health.Health
+                    };
+
+                    health.Health = Mathf.Clamp(health.Health + modifier.Amount, 0, health.MaxHealth);
+                    healthModifiedInfo.HealthAfter = health.Health;
 
 
-                if (health.Health <= 0)
-                {
-                    healthModifiedInfo.Died = true;
+                    if (health.Health <= 0)
+                    {
+                        healthModifiedInfo.Died = true;
+                        updateSystem.SendEvent(new HealthComponent.HealthModified.Event(healthModifiedInfo), entityId);
+                        break;
+                    }
+
+                    updateSystem.SendEvent(new HealthComponent.HealthModified.Event(healthModifiedInfo), entityId);
                 }
 
-                updateSystem.SendEvent(new HealthComponent.HealthModified.Event(healthModifiedInfo), entityId);
-
-                EntityManager.SetComponentData(entity, health);
+                entitiesWithModifiedHealth.Health[i] = health;
             }
         }
     }
