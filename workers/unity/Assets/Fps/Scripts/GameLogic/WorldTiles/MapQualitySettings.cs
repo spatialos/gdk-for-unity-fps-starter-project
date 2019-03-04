@@ -8,12 +8,16 @@ namespace Fps
     public class MapQualitySettings : ScriptableObject
     {
         public const float DefaultCheckoutDistance = 300f;
+        public const float DefaultDpiScalar = 1f;
+        public static float DPIScalar => Instance.GetDPIScalar();
+
 
         public static bool ShowPreview;
         public List<MapQualityLevelData> Settings = new List<MapQualityLevelData>();
 
         private static MapQualitySettings instance;
         private float checkoutDistanceCache = -1;
+        private float dpiScalarCache = -1;
 
         public static float CheckoutDistance => Instance.GetCheckoutDistance();
 
@@ -81,12 +85,41 @@ namespace Fps
             return checkoutDistanceCache;
         }
 
+        private float GetDPIScalar()
+        {
+            if (dpiScalarCache > 0)
+            {
+                return dpiScalarCache;
+            }
+            
+            var activeQualityLevelName = QualitySettings.names[QualitySettings.GetQualityLevel()];
+
+            foreach (var setting in Settings)
+            {
+                if (setting.QualityName != activeQualityLevelName)
+                {
+                    continue;
+                }
+
+                dpiScalarCache = setting.DpiScalar;
+                return dpiScalarCache;
+            }
+
+            Debug.LogWarning("Quality setting not found; using default DPI scaling of " +
+                $"{DefaultDpiScalar} for all quality levels");
+            return DefaultDpiScalar;
+        }
 
         public void Apply()
         {
-            checkoutDistanceCache = -1; // Force a checkout distance calculation based on project Quality level
+            // Force a recache
+            dpiScalarCache = -1;
+            checkoutDistanceCache = -1;
+
+            QualitySettings.resolutionScalingFixedDPIFactor = GetDPIScalar();
             var checkoutDistance = GetCheckoutDistance();
             Shader.SetGlobalFloat("_GlobalClipDistance", checkoutDistance);
+
             var tiles = FindObjectsOfType<TileEnabler>();
             foreach (var tile in tiles)
             {
@@ -104,7 +137,7 @@ namespace Fps
         private void OnDisable()
         {
             UnityEditor.EditorApplication.playModeStateChanged -= PlayModeStateChanged;
-            RestoreClipDistance();
+            RestoreSettings();
         }
 
         private void PlayModeStateChanged(UnityEditor.PlayModeStateChange stateChange)
@@ -114,11 +147,12 @@ namespace Fps
                 return;
             }
 
-            RestoreClipDistance();
+            RestoreSettings();
         }
 
-        private void RestoreClipDistance()
+        private void RestoreSettings()
         {
+            QualitySettings.resolutionScalingFixedDPIFactor = 1;
             Shader.SetGlobalFloat("_GlobalClipDistance", -1);
             ShowPreview = false;
         }
@@ -129,6 +163,7 @@ namespace Fps
     public class MapQualityLevelData
     {
         public string QualityName;
-        public float CheckoutDistance;
+        public float CheckoutDistance = MapQualitySettings.DefaultCheckoutDistance;
+        public float DpiScalar = MapQualitySettings.DefaultDpiScalar;
     }
 }

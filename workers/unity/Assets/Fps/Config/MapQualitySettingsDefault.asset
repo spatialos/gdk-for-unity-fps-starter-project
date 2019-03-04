@@ -4,7 +4,8 @@
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -12,9 +13,15 @@ MonoBehaviour:
   m_Name: MapQualitySettingsDefault
   m_EditorClassIdentifier: 
   Settings:
-  - QualityName: Low
-    CheckoutDistance: 150
-  - QualityName: Medium
-    CheckoutDistance: 225
-  - QualityName: High
+  - QualityName: DesktopHigh
     CheckoutDistance: 300
+    DpiScalar: 1
+  - QualityName: DesktopLow
+    CheckoutDistance: 200
+    DpiScalar: 1
+  - QualityName: MobileHigh
+    CheckoutDistance: 120
+    DpiScalar: 1
+  - QualityName: MobileLow
+    CheckoutDistance: 90
+    DpiScalar: 0.75
