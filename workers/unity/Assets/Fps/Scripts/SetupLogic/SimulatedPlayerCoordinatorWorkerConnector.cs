@@ -64,9 +64,10 @@ public class SimulatedPlayerCoordinatorWorkerConnector : WorkerConnectorBase
         }
     }
 
-    private void OnDestroy()
+    public override void Dispose()
     {
         StopAllCoroutines();
+        base.Dispose();
     }
 
     private IEnumerator MonitorSimulatedPlayers()
