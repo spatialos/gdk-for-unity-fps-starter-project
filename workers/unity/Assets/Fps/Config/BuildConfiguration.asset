@@ -17,45 +17,125 @@ MonoBehaviour:
     ScenesForWorker:
     - {fileID: 102900000, guid: f25e339cbf804e542a03aed351b5488c, type: 3}
     LocalBuildConfig:
-      BuildPlatforms: 1
-      BuildOptions: 1
+      BuildTargets:
+      - Options: 1
+        Enabled: 1
+      - Options: 0
+        Enabled: 0
+      - Options: 0
+        Enabled: 0
     CloudBuildConfig:
-      BuildPlatforms: 20
-      BuildOptions: 0
+      BuildTargets:
+      - Options: 0
+        Enabled: 1
+      - Options: 0
+        Enabled: 0
+      - Options: 16384
+        Enabled: 0
+      - Options: 0
+        Enabled: 1
+      - Options: 0
+        Enabled: 0
+      - Options: 0
+        Enabled: 0
   - WorkerType: UnityGameLogic
     ScenesForWorker:
     - {fileID: 102900000, guid: ec633e48fe0dc6c40acf1b3bc5bcc2da, type: 3}
     LocalBuildConfig:
-      BuildPlatforms: 1
-      BuildOptions: 1
+      BuildTargets:
+      - Options: 0
+        Enabled: 1
+      - Options: 0
+        Enabled: 0
+      - Options: 0
+        Enabled: 0
     CloudBuildConfig:
-      BuildPlatforms: 8
-      BuildOptions: 16384
+      BuildTargets:
+      - Options: 0
+        Enabled: 0
+      - Options: 0
+        Enabled: 0
+      - Options: 16384
+        Enabled: 1
+      - Options: 0
+        Enabled: 0
+      - Options: 0
+        Enabled: 0
+      - Options: 0
+        Enabled: 0
   - WorkerType: SimulatedPlayerCoordinator
     ScenesForWorker:
     - {fileID: 102900000, guid: 2cc9e8eb323f45b4c8dad1fb41dc2831, type: 3}
     LocalBuildConfig:
-      BuildPlatforms: 1
-      BuildOptions: 1
+      BuildTargets:
+      - Options: 0
+        Enabled: 1
+      - Options: 0
+        Enabled: 0
+      - Options: 0
+        Enabled: 0
     CloudBuildConfig:
-      BuildPlatforms: 8
-      BuildOptions: 16384
+      BuildTargets:
+      - Options: 0
+        Enabled: 0
+      - Options: 0
+        Enabled: 0
+      - Options: 16384
+        Enabled: 1
+      - Options: 0
+        Enabled: 1
+      - Options: 0
+        Enabled: 0
+      - Options: 0
+        Enabled: 0
   - WorkerType: AndroidClient
     ScenesForWorker:
     - {fileID: 102900000, guid: 92916326a1ceade4a92343dfbc7d64d7, type: 3}
     LocalBuildConfig:
-      BuildPlatforms: 32
-      BuildOptions: 1
+      BuildTargets:
+      - Options: 0
+        Enabled: 0
+      - Options: 1
+        Enabled: 1
+      - Options: 0
+        Enabled: 0
     CloudBuildConfig:
-      BuildPlatforms: 32
-      BuildOptions: 0
+      BuildTargets:
+      - Options: 0
+        Enabled: 0
+      - Options: 0
+        Enabled: 0
+      - Options: 16384
+        Enabled: 0
+      - Options: 0
+        Enabled: 0
+      - Options: 0
+        Enabled: 1
+      - Options: 0
+        Enabled: 0
   - WorkerType: iOSClient
     ScenesForWorker:
     - {fileID: 102900000, guid: bb11f1dbb703b6c42b515e4f37f59041, type: 3}
     LocalBuildConfig:
-      BuildPlatforms: 64
-      BuildOptions: 1
+      BuildTargets:
+      - Options: 0
+        Enabled: 0
+      - Options: 0
+        Enabled: 0
+      - Options: 1
+        Enabled: 1
     CloudBuildConfig:
-      BuildPlatforms: 64
-      BuildOptions: 0
+      BuildTargets:
+      - Options: 0
+        Enabled: 0
+      - Options: 0
+        Enabled: 0
+      - Options: 16384
+        Enabled: 0
+      - Options: 0
+        Enabled: 0
+      - Options: 0
+        Enabled: 0
+      - Options: 0
+        Enabled: 1
   isInitialised: 1

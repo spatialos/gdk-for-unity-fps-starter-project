@@ -13,6 +13,11 @@
 
 - Reduced `fps_simulated_players_creation_interval` from 60 to 5.
 - Disabled the `Generate Map` button in the MapBuilder window if `MapBuilderSettings` is not set.
+- Updated the build configuration asset
+
+### Fixed
+
+-Fixed a bug where the `SimulatedPlayerCoordinatorWorkerConnector` would throw errors, if you stopped the application while it was spawning more simulated players.
 
 ## `0.1.5` - 2019-02-21
 
