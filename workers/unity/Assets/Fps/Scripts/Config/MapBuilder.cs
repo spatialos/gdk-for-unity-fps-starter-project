@@ -164,7 +164,6 @@ namespace Fps
             return false;
         }
 
-
         private Transform MakeChildGroup(string groupName)
         {
             var group = new GameObject(groupName).transform;
