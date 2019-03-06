@@ -1,12 +1,12 @@
-using Improbable.Gdk.GameObjectRepresentation;
 using Improbable.Gdk.StandardTypes;
+using Improbable.Gdk.Subscriptions;
 using UnityEngine;
 
 namespace Improbable.Gdk.Guns
 {
     public class ClientShooting : MonoBehaviour, IRequiresGun
     {
-        [Require] private ShootingComponent.Requirable.Writer shooting;
+        [Require] private ShootingComponentWriter shooting;
 
         [SerializeField] private LayerMask shootingLayerMask;
 
@@ -14,13 +14,13 @@ namespace Improbable.Gdk.Guns
         private float nextShotTime;
         private GunSettings gunSettings;
         private Trigger shotTrigger;
-        private SpatialOSComponent spatial;
+        private LinkedEntityComponent spatial;
 
         public bool IsOnCooldown => nextShotTime > Time.time;
 
         private void OnEnable()
         {
-            spatial = GetComponent<SpatialOSComponent>();
+            spatial = GetComponent<LinkedEntityComponent>();
         }
 
         private void Start()
@@ -75,10 +75,10 @@ namespace Improbable.Gdk.Guns
             {
                 hitSomething = true;
                 hitLocation = hit.point;
-                var spatialEntity = hit.transform.root.GetComponent<SpatialOSComponent>();
+                var spatialEntity = hit.transform.root.GetComponent<LinkedEntityComponent>();
                 if (spatialEntity != null)
                 {
-                    entityId = spatialEntity.SpatialEntityId.Id;
+                    entityId = spatialEntity.EntityId.Id;
                 }
             }
 
@@ -90,7 +90,7 @@ namespace Improbable.Gdk.Guns
                 HitOrigin = (ray.origin - spatial.Worker.Origin).ToIntAbsolute()
             };
 
-            shooting.SendShots(shotInfo);
+            shooting.SendShotsEvent(shotInfo);
         }
     }
 }

@@ -39,6 +39,11 @@ namespace Improbable.Gdk.Guns
 
         private void LateUpdate()
         {
+            if (aimRecoil == null || hipRecoil == null)
+            {
+                return;
+            }
+
             ApplyVelocityAndDampening(aimRecoil, ref aimOffset, ref aimVelocity);
             ApplyVelocityAndDampening(hipRecoil, ref hipOffset, ref hipVelocity);
             socketOffset.localPosition = socketInitialOffset + (isAiming ? aimOffset : hipOffset);

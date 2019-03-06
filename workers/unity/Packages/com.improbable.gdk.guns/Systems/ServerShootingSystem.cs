@@ -38,7 +38,7 @@ namespace Improbable.Gdk.Guns
                     }
 
                     // Send command to entity being shot.
-                    var modifyHealthRequest = HealthComponent.ModifyHealth.CreateRequest(
+                    var modifyHealthRequest = new HealthComponent.ModifyHealth.Request(
                         new EntityId(shotInfo.EntityId),
                         new HealthModifier()
                         {

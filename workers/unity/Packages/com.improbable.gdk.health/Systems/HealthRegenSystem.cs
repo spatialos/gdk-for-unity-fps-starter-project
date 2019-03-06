@@ -1,4 +1,5 @@
 using Improbable.Gdk.Core;
+using Improbable.Gdk.ReactiveComponents;
 using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
@@ -93,7 +94,7 @@ namespace Improbable.Gdk.Health
                 takingDamage.RegenData[i] = regenData;
             }
 
-            // Count down the timers, and update the HealthComponent accordingly. 
+            // Count down the timers, and update the HealthComponent accordingly.
             for (var i = 0; i < toRegen.Length; i++)
             {
                 var healthComponent = toRegen.HealthComponents[i];
@@ -136,7 +137,7 @@ namespace Improbable.Gdk.Health
                     return;
                 }
 
-                // If not damaged recently, and not already fully healed, regen. 
+                // If not damaged recently, and not already fully healed, regen.
                 if (healthComponent.Health < healthComponent.MaxHealth)
                 {
                     regenData.NextRegenTimer -= Time.deltaTime;
@@ -146,7 +147,7 @@ namespace Improbable.Gdk.Health
 
                         // Send command to regen entity.
                         var commandSender = toRegen.ModifyHealthCommandSenders[i];
-                        var modifyHealthRequest = HealthComponent.ModifyHealth.CreateRequest(
+                        var modifyHealthRequest = new HealthComponent.ModifyHealth.Request(
                             toRegen.EntityId[i].EntityId,
                             new HealthModifier()
                             {
@@ -154,9 +155,9 @@ namespace Improbable.Gdk.Health
                             });
                         commandSender.RequestsToSend.Add(modifyHealthRequest);
                     }
+
                     toRegen.RegenData[i] = regenData;
                 }
-
             }
         }
     }

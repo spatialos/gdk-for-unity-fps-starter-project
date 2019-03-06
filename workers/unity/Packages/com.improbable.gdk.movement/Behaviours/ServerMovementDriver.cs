@@ -1,4 +1,4 @@
-using Improbable.Gdk.GameObjectRepresentation;
+using Improbable.Gdk.Subscriptions;
 using Improbable.Gdk.StandardTypes;
 using UnityEngine;
 
@@ -6,14 +6,14 @@ namespace Improbable.Gdk.Movement
 {
     public class ServerMovementDriver : CharacterControllerMotor
     {
-        [Require] private ServerMovement.Requirable.Writer server;
-        [Require] private ClientMovement.Requirable.Reader client;
-        [Require] private Position.Requirable.Writer spatialPosition;
+        [Require] private ServerMovementWriter server;
+        [Require] private ClientMovementReader client;
+        [Require] private PositionWriter spatialPosition;
 
         [SerializeField] private float spatialPositionUpdateHz = 1.0f;
         [SerializeField, HideInInspector] private float spatialPositionUpdateDelta;
 
-        private SpatialOSComponent spatialOSComponent;
+        private LinkedEntityComponent LinkedEntityComponent;
 
         private Vector3 lastPosition;
         private Vector3 origin;
@@ -35,10 +35,10 @@ namespace Improbable.Gdk.Movement
 
         private void OnEnable()
         {
-            spatialOSComponent = GetComponent<SpatialOSComponent>();
-            origin = spatialOSComponent.Worker.Origin;
+            LinkedEntityComponent = GetComponent<LinkedEntityComponent>();
+            origin = LinkedEntityComponent.Worker.Origin;
 
-            client.LatestUpdated += OnClientUpdate;
+            client.OnLatestUpdate += OnClientUpdate;
         }
 
         private void OnClientUpdate(ClientRequest request)
@@ -57,12 +57,12 @@ namespace Improbable.Gdk.Movement
                 TimeDelta = request.TimeDelta
             };
             var update = new ServerMovement.Update { Latest = response };
-            server.Send(update);
+            server.SendUpdate(update);
 
             if (Time.time - lastSpatialPositionTime > spatialPositionUpdateDelta)
             {
                 var positionUpdate = new Position.Update { Coords = positionNoOffset.ToSpatialCoordinates() };
-                spatialPosition.Send(positionUpdate);
+                spatialPosition.SendUpdate(positionUpdate);
                 lastSpatialPositionTime = Time.time;
             }
         }
