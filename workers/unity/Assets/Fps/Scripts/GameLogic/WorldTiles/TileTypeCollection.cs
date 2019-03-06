@@ -2,7 +2,7 @@
 
 namespace Fps
 {
-    [CreateAssetMenu(fileName = "New Prefab Collection", menuName = "Improbable/Create Prefab Collection")]
+    [CreateAssetMenu(fileName = "New TileTypeCollection", menuName = "Improbable/Create Tile Type Collection")]
     public class TileTypeCollection : ScriptableObject
     {
         [SerializeField] private GameObject[] Tiles;
