@@ -496,7 +496,7 @@ namespace Fps
                     ? null
                     : MonoBehaviour.Instantiate(mapBuilderSettings.WorldTileVolumes);
 
-                mapBuilder.CleanAndBuild(worldLayerCount, worldSize);
+                mapBuilder.CleanAndBuild(worldLayerCount);
 
                 if (volumesPrefab != null)
                 {
