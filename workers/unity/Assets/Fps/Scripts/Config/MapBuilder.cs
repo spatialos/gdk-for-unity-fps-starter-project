@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Improbable.Gdk.Core;
 using Improbable.Worker.CInterop;
 using UnityEngine;
@@ -13,7 +12,6 @@ namespace Fps
     {
         private int Layers;
         private string Seed;
-        private float EmptyTileChance;
 
         private const string SmallLevelFlag = "small";
         private const string LargeLevelFlag = "large";
@@ -23,7 +21,6 @@ namespace Fps
         // Store the half-value as many calculations are simplified by going from -halfNumGroundLayers to halfNumGroundLayers.
         private int halfNumGroundLayers => (Layers - 1) / mapBuilderSettings.TilesPerGroundLayer + 1;
 
-        private GameObject[] levelTiles;
         private GameObject groundTile;
         private GameObject groundEdge;
         private GameObject surroundWall;
@@ -39,7 +36,6 @@ namespace Fps
         private const string SurroundParentName = "SurroundParent";
         private const string SpawnPointSystemName = "SpawnPointSystem";
 
-        private const string LevelTilePath = "Prefabs/Level/Tiles";
         private const string GroundTilePath = "Prefabs/Level/Ground/Ground4x4";
         private const string GroundEdgePath = "Prefabs/Level/Ground/Edge";
         private const string SurroundPath = "Prefabs/Level/Surround/Wall";
@@ -57,8 +53,7 @@ namespace Fps
 
         public void CleanAndBuild(
             int worldLayers = 4,
-            string seed = "SpatialOS GDK for Unity",
-            float emptyTileChance = 0.2f)
+            string seed = "SpatialOS GDK for Unity")
         {
             if (mapBuilderSettings == null)
             {
@@ -68,7 +63,6 @@ namespace Fps
 
             Layers = worldLayers;
             Seed = seed;
-            EmptyTileChance = emptyTileChance;
 
             if (!TryLoadResources())
             {
@@ -90,6 +84,30 @@ namespace Fps
             FillSurround();
             CollapseTileMeshes();
             MakeLevelObjectStatic();
+
+
+            var allSpawns = gameObject.GetComponentsInChildren<SpawnPointIndicator>();
+            var destroyed = 0;
+            foreach (var spawn in allSpawns)
+            {
+                var hits = Physics.OverlapSphere(spawn.transform.position, .5f);
+                foreach (var hit in hits)
+                {
+                    var volume = hit.gameObject.GetComponent<SpawnRemoverVolume>();
+                    if (volume == null)
+                    {
+                        continue;
+                    }
+
+                    destroyed++;
+                    spawn.gameObject.SetActive(false);
+                    break;
+                }
+            }
+
+
+            Debug.Log($"destroyed {destroyed} spawns");
+            Debug.Log($"{gameObject.GetComponentsInChildren<SpawnPointIndicator>().Length} objects remain");
 
             spawnPointSystemTransform.gameObject.GetComponent<SpawnPoints>()?.SetSpawnPoints();
 
@@ -157,14 +175,6 @@ namespace Fps
                 return false;
             }
 
-            levelTiles = Resources.LoadAll<GameObject>(LevelTilePath);
-
-            if (levelTiles.Length <= 0)
-            {
-                Debug.LogError($"Failed to load any resources at Resources/{LevelTilePath}");
-                return false;
-            }
-
             return true;
         }
 
@@ -179,6 +189,7 @@ namespace Fps
             Debug.LogError($"Failed to load resource at Resources/{resourcePath}");
             return false;
         }
+
 
         private Transform MakeChildGroup(string groupName)
         {
@@ -335,15 +346,26 @@ namespace Fps
 
         private void PlaceTile(Vector2Int tileCoord)
         {
-            if (Random.value < EmptyTileChance)
+            var tile = GetTileObjectAtCoordinate(tileCoord);
+
+            if (tile == null)
             {
                 return;
             }
 
-            var tile = levelTiles[Random.Range(0, levelTiles.Length)];
             float rotation = 90 * Random.Range(0, 4);
 
             PlaceTile(tileCoord, tile, rotation);
+        }
+
+        private Vector3 GetWorldLocationFromCoordinate(Vector2Int coordinate)
+        {
+            var tileOffset = mapBuilderSettings.UnitsPerTile / 2;
+            return new Vector3
+            {
+                x = (coordinate.x - 1) * mapBuilderSettings.UnitsPerTile + tileOffset,
+                z = (coordinate.y - 1) * mapBuilderSettings.UnitsPerTile + tileOffset
+            };
         }
 
         private void PlaceTile(Vector2Int tileCoord, GameObject tile, float rotation)
@@ -352,11 +374,7 @@ namespace Fps
 
             Object.Instantiate(
                 tile,
-                new Vector3
-                {
-                    x = (tileCoord.x - 1) * mapBuilderSettings.UnitsPerTile + tileOffset,
-                    z = (tileCoord.y - 1) * mapBuilderSettings.UnitsPerTile + tileOffset
-                },
+                GetWorldLocationFromCoordinate(tileCoord),
                 new Quaternion
                 {
                     eulerAngles = new Vector3
@@ -398,6 +416,26 @@ namespace Fps
             {
                 childTransform.gameObject.isStatic = true;
             }
+        }
+
+        private GameObject GetTileObjectAtCoordinate(Vector2Int coordinate)
+        {
+            var hits = Physics.OverlapSphere(GetWorldLocationFromCoordinate(coordinate), .5f);
+
+            foreach (var hit in hits)
+            {
+                var volume = hit.gameObject.GetComponent<TileTypeVolume>();
+                if (volume == null)
+                {
+                    continue;
+                }
+
+                return volume.TypeCollection.GetRandomTile();
+            }
+
+            return mapBuilderSettings.DefaultTileType == null
+                ? null
+                : mapBuilderSettings.DefaultTileType.GetRandomTile();
         }
 
         public void Clean()
@@ -477,7 +515,17 @@ namespace Fps
                 levelInstance.transform.rotation = workerTransform.rotation;
 
                 var mapBuilder = new MapBuilder(mapBuilderSettings, levelInstance);
-                mapBuilder.CleanAndBuild(worldLayerCount);
+
+                var volumesPrefab = mapBuilderSettings.WorldTileVolumes == null
+                    ? null
+                    : MonoBehaviour.Instantiate(mapBuilderSettings.WorldTileVolumes);
+
+                mapBuilder.CleanAndBuild(worldLayerCount, worldSize);
+
+                if (volumesPrefab != null)
+                {
+                    MonoBehaviour.Destroy(volumesPrefab);
+                }
             }
             else
             {
