@@ -51,9 +51,7 @@ namespace Fps
             this.gameObject = gameObject;
         }
 
-        public void CleanAndBuild(
-            int worldLayers = 4,
-            string seed = "SpatialOS GDK for Unity")
+        public void CleanAndBuild(int worldLayers = 4, string seed = "SpatialOS GDK for Unity")
         {
             if (mapBuilderSettings == null)
             {
