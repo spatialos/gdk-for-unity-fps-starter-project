@@ -1,52 +1,49 @@
-﻿using Fps;
-using UnityEngine;
+﻿using UnityEngine;
 
-[RequireComponent(typeof(BoxCollider))]
-public class TileTypeVolume : MonoBehaviour
+namespace Fps
 {
-    public TileTypeCollection TypeCollection;
-    public bool AutoRename;
-    private BoxCollider boxCollider;
-
-    private void Awake()
+    [RequireComponent(typeof(BoxCollider))]
+    public class TileTypeVolume : MonoBehaviour
     {
-        boxCollider = GetComponent<BoxCollider>();
-    }
+        public TileTypeCollection TypeCollection;
+        public bool AutoRename;
+        private BoxCollider boxCollider;
 
-    private void OnValidate()
-    {
-        if (!AutoRename)
-        {
-            return;
-        }
-
-        gameObject.name = TypeCollection == null ? "Empty TileTypeCollection" : $"{TypeCollection.name} TypeVolume";
-    }
-
-    private void OnDrawGizmos()
-    {
-        if (TypeCollection == null)
-        {
-            return;
-        }
-
-        if (boxCollider == null)
+        private void Awake()
         {
             boxCollider = GetComponent<BoxCollider>();
         }
 
-        Gizmos.color = TypeCollection.DisplayColor;
-        Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, transform.lossyScale);
-        Gizmos.DrawCube(boxCollider.center, boxCollider.size);
-    }
-
-    public GameObject GetRandomTile()
-    {
-        if (TypeCollection == null)
+        private void OnValidate()
         {
-            return null;
+            if (!AutoRename)
+            {
+                return;
+            }
+
+            gameObject.name = TypeCollection == null ? "Empty TileTypeCollection" : $"{TypeCollection.name} TypeVolume";
         }
 
-        return TypeCollection.GetRandomTile();
+        private void OnDrawGizmos()
+        {
+            if (TypeCollection == null)
+            {
+                return;
+            }
+
+            if (boxCollider == null)
+            {
+                boxCollider = GetComponent<BoxCollider>();
+            }
+
+            Gizmos.color = TypeCollection.DisplayColor;
+            Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, transform.lossyScale);
+            Gizmos.DrawCube(boxCollider.center, boxCollider.size);
+        }
+
+        public GameObject GetRandomTile()
+        {
+            return TypeCollection?.GetRandomTile();
+        }
     }
 }
