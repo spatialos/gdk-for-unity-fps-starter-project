@@ -167,6 +167,8 @@ public class SimulatedPlayerDriver : MonoBehaviour
         agent.nextPosition = transform.position;
     }
 
+    private bool areFiringVolley;
+
     private void Update_ShootingTarget()
     {
         if (TargetIsValid())
@@ -184,9 +186,14 @@ public class SimulatedPlayerDriver : MonoBehaviour
 
             if (shooting.IsShooting(true) && Mathf.Abs(Quaternion.Angle(targetRotation, transform.rotation)) < 5)
             {
-                shooting.FireShot(200f, new Ray(gunOrigin, transform.forward));
-                shooting.InitiateCooldown(0.2f);
-                lastShotTime = Time.time;
+                if (areFiringVolley)
+                {
+                    FireVolleyUpdate(gunOrigin);
+                }
+                else
+                {
+                    VolleyPauseUpdate();
+                }
             }
 
             if (lastShotTime < Time.time - 10f)
@@ -200,6 +207,42 @@ public class SimulatedPlayerDriver : MonoBehaviour
             target = null;
             SetPlayerState(PlayerState.LookingForTarget);
         }
+    }
+
+    private float volleyPhaseStartTime;
+    private float volleyPhaseDuration;
+
+    private void FireVolleyUpdate(Vector3 gunOrigin)
+    {
+        shooting.FireShot(200f, new Ray(gunOrigin, transform.forward));
+        shooting.InitiateCooldown(0.2f);
+        lastShotTime = Time.time;
+        if (Time.time - volleyPhaseStartTime >= volleyPhaseDuration)
+        {
+            PauseVolley();
+        }
+    }
+
+    private void PauseVolley()
+    {
+        areFiringVolley = false;
+        volleyPhaseStartTime = Time.time;
+        volleyPhaseDuration = Random.Range(.6f, 1.2f);
+    }
+
+    private void VolleyPauseUpdate()
+    {
+        if (Time.time - volleyPhaseStartTime >= volleyPhaseDuration)
+        {
+            StartVolley();
+        }
+    }
+
+    private void StartVolley()
+    {
+        areFiringVolley = true;
+		volleyPhaseStartTime = Time.time;
+        volleyPhaseDuration = Random.Range(1.9f, 2.5f);
     }
 
     private void MoveTowards(Vector3 destination, MovementSpeed speed, Quaternion rotation, bool jump = false)
@@ -252,6 +295,7 @@ public class SimulatedPlayerDriver : MonoBehaviour
                     break;
                 case PlayerState.ShootingTarget:
                     lastShotTime = Time.time;
+					StartVolley();
                     StartCoroutine(RandomlyStrafe());
                     break;
                 case PlayerState.LookingForTarget:

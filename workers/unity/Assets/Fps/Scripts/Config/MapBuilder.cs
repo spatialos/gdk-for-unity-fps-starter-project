@@ -85,6 +85,30 @@ namespace Fps
             CollapseTileMeshes();
             MakeLevelObjectStatic();
 
+
+            var allSpawns = gameObject.GetComponentsInChildren<SpawnPointIndicator>();
+            var destroyed = 0;
+            foreach (var spawn in allSpawns)
+            {
+                var hits = Physics.OverlapSphere(spawn.transform.position, .5f);
+                foreach (var hit in hits)
+                {
+                    var volume = hit.gameObject.GetComponent<SpawnRemoverVolume>();
+                    if (volume == null)
+                    {
+                        continue;
+                    }
+
+                    destroyed++;
+                    spawn.gameObject.SetActive(false);
+                    break;
+                }
+            }
+
+
+            Debug.Log($"destroyed {destroyed} spawns");
+            Debug.Log($"{gameObject.GetComponentsInChildren<SpawnPointIndicator>().Length} objects remain");
+
             spawnPointSystemTransform.gameObject.GetComponent<SpawnPoints>()?.SetSpawnPoints();
 
             gameObject.transform.position = originalPosition;

@@ -56,11 +56,11 @@ namespace Fps
 
                 if (Application.isPlaying)
                 {
-                    Destroy(spawnPoints[n]);
+                    //   Destroy(spawnPoints[n]);
                 }
                 else
                 {
-                    DestroyImmediate(spawnPoints[n]);
+                    // DestroyImmediate(spawnPoints[n]);
                 }
             }
         }
@@ -76,6 +76,7 @@ namespace Fps
                 gameObjects[i] = spawnPointIndicators[i].gameObject;
             }
 
+            Debug.Log($"Found {gameObjects.Length} spawn objects");
             return gameObjects;
         }
 

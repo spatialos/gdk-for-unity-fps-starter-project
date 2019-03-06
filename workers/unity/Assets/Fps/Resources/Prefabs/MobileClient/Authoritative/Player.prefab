@@ -135,6 +135,7 @@ GameObject:
   - component: {fileID: 114898509530246980}
   - component: {fileID: 114781168066614706}
   - component: {fileID: 114088738930675206}
+  - component: {fileID: 3352255221046203044}
   m_Layer: 11
   m_Name: Player
   m_TagString: Player
@@ -449,6 +450,18 @@ MonoBehaviour:
   PitchMultiplier: 0.12
   FiringLookMultiplier: 0.8
   SprintMaxAngle: 30
+--- !u!114 &3352255221046203044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1627949407420470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7eb9cbc20d24e4742b2bfaf1df4be5c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1889680010243874
 GameObject:
   m_ObjectHideFlags: 0
@@ -619,7 +632,7 @@ PrefabInstance:
     - target: {fileID: 1371366245061083600, guid: 99c1c836e4262284d9b458f03442a4f6,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.22
+      value: -0.22
       objectReference: {fileID: 0}
     - target: {fileID: 1371366245061083600, guid: 99c1c836e4262284d9b458f03442a4f6,
         type: 3}
