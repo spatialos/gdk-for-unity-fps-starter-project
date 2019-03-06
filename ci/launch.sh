@@ -16,7 +16,7 @@ markStartOfBlock "Launching deployments"
 
 dotnet run -p workers/unity/Packages/com.improbable.gdk.deploymentlauncher/.DeploymentLauncher/DeploymentLauncher.csproj -- \
     create "${PROJECT_NAME}" "${ASSEMBLY_NAME}" \
-    "${ASSEMBLY_NAME}" cloud_launch_large.json snapshots/cloud.snapshot \
+    "${ASSEMBLY_NAME}" cloud_launch_large.json snapshots/cloud.snapshot EU \
     "${ASSEMBLY_NAME}_sim_players" cloud_launch_large_sim_players.json
 
 CONSOLE_URL="https://console.improbable.io/projects/${PROJECT_NAME}/deployments/${ASSEMBLY_NAME}/overview"
