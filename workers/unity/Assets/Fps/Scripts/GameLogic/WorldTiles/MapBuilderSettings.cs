@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Fps
 {
@@ -19,6 +20,7 @@ namespace Fps
         public int BoundaryCollisionHeight = 16;
 
         public int unitsPerGroundLayer => TilesPerGroundLayer * UnitsPerTile;
-        public TileTypeCollection DefaultTileType;
+
+        public TileTypeCollection DefaultTileTypeCollection;
     }
 }

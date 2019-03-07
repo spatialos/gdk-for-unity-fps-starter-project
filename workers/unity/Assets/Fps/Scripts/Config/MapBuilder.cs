@@ -406,9 +406,7 @@ namespace Fps
                 return volume.TypeCollection.GetRandomTile();
             }
 
-            return mapBuilderSettings.DefaultTileType == null
-                ? null
-                : mapBuilderSettings.DefaultTileType.GetRandomTile();
+            return mapBuilderSettings.DefaultTileTypeCollection?.GetRandomTile();
         }
 
         public void Clean()
