@@ -2,6 +2,7 @@
 
 namespace Fps
 {
+    //TODO Remove class + usages on prefabs before release
     [RequireComponent(typeof(ResultsScreenController))]
     public class ResultsScreenTester : MonoBehaviour
     {
