@@ -5,7 +5,7 @@ namespace Fps
     public class SpawnPointIndicator : MonoBehaviour
     {
         private static readonly Color gizmoColor = new Color(.1f, 1f, .1f, .8f); // Transparent green
-        public static readonly Vector3 BoxDimensions = new Vector3(.5f, 2f, .5f);
+        private static readonly Vector3 boxDimensions = new Vector3(.5f, 2f, .5f);
 
         private void OnDrawGizmos()
         {
@@ -18,8 +18,8 @@ namespace Fps
                 Vector3.one
             );
 
-            Gizmos.DrawCube(Vector3.up * BoxDimensions.y * .5f, BoxDimensions);
-            Gizmos.DrawLine(Vector3.forward * BoxDimensions.z * .5f, Vector3.forward * BoxDimensions.z);
+            Gizmos.DrawCube(Vector3.up * boxDimensions.y * .5f, boxDimensions);
+            Gizmos.DrawLine(Vector3.forward * boxDimensions.z * .5f, Vector3.forward * boxDimensions.z);
         }
     }
 }
