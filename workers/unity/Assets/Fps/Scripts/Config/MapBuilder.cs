@@ -489,13 +489,13 @@ namespace Fps
 
                 var volumesPrefab = mapBuilderSettings.WorldTileVolumes == null
                     ? null
-                    : MonoBehaviour.Instantiate(mapBuilderSettings.WorldTileVolumes);
+                    : Object.Instantiate(mapBuilderSettings.WorldTileVolumes);
 
                 mapBuilder.CleanAndBuild(worldLayerCount);
 
                 if (volumesPrefab != null)
                 {
-                    MonoBehaviour.Destroy(volumesPrefab);
+                    Object.Destroy(volumesPrefab);
                 }
             }
             else
