@@ -25,7 +25,7 @@ namespace Fps
         {
             if (worker.Connection.GetConnectionStatusCode() == ConnectionStatusCode.Success)
             {
-                StartCoroutine(nameof(DelayedConnectedMessage));
+                StartCoroutine(DelayedConnectedMessage());
             }
             else
             {
