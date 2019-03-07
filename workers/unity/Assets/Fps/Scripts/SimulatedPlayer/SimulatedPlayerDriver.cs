@@ -212,10 +212,12 @@ public class SimulatedPlayerDriver : MonoBehaviour
     private float volleyPhaseStartTime;
     private float volleyPhaseDuration;
 
+    private const float FireRateInterval = 1f / 8f;
+
     private void FireVolleyUpdate(Vector3 gunOrigin)
     {
         shooting.FireShot(200f, new Ray(gunOrigin, transform.forward));
-        shooting.InitiateCooldown(0.2f);
+        shooting.InitiateCooldown(FireRateInterval);
         lastShotTime = Time.time;
         if (Time.time - volleyPhaseStartTime >= volleyPhaseDuration)
         {
