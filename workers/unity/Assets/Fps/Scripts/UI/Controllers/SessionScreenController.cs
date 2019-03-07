@@ -23,6 +23,11 @@ namespace Fps
             ConnectionStateReporter.OnConnectionStateChange += ConnectionStateChanged;
         }
 
+        private void OnEnable()
+        {
+            RefreshButtons();
+        }
+
         private void ConnectionStateChanged(ConnectionStateReporter.State state, string information)
         {
             if (state == ConnectionStateReporter.State.Connected)
