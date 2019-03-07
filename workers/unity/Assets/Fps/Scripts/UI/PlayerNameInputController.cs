@@ -1,39 +1,79 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Fps
 {
     public class PlayerNameInputController : MonoBehaviour
     {
-        public Text HintText;
-
-        public bool AllowEdit;
-
         public delegate void OnNameChangeDelegate(bool isValid);
 
         public OnNameChangeDelegate OnNameChanged;
 
+        public Text HintText;
+        public bool AllowEdit;
         public bool NameIsValid { get; private set; }
+        [NonSerialized] public bool DisplayEnterNameHint;
+
+        public int CurrentNameLength => inputField.text.Length;
 
         private InputField inputField;
+
+        private readonly Color HintTextColor = new Color(1f, .4f, .4f);
 
         private void Awake()
         {
             inputField = GetComponentInChildren<InputField>();
-            Validate(false);
             HintText.text = string.Empty;
+            SendOnNameChanged(false);
+            inputField.onValueChanged.AddListener(ValueChanged);
             inputField.onEndEdit.AddListener(OnEnd);
+            HintText.color = HintTextColor;
+        }
+
+        private void ValueChanged(string value)
+        {
+            UpdateHintText();
+            NameIsValid = value.Trim().Length >= 3;
+            SendOnNameChanged(NameIsValid);
+        }
+
+        public void UpdateHintText()
+        {
+            var nameLength = inputField.text.Trim().Length;
+
+            if (nameLength == 0)
+            {
+                HintText.text = DisplayEnterNameHint ? "You must enter a name to play" : string.Empty;
+            }
+            else if (nameLength < 3)
+            {
+                HintText.text = "Minimum 3 characters required";
+            }
+            else
+            {
+                HintText.text = string.Empty;
+            }
         }
 
         private void OnEnable()
         {
             inputField.enabled = AllowEdit;
+
             HintText.gameObject.SetActive(AllowEdit);
 
-            if (!AllowEdit && inputField.text == string.Empty)
+            if (!AllowEdit)
             {
-                inputField.text = "<player name>  ";
+                if (inputField.text == string.Empty)
+                {
+                    inputField.text = "<name missing>";
+                }
+
+                return;
             }
+
+            inputField.Select();
+            inputField.ActivateInputField();
         }
 
         private void OnDisable()
@@ -44,35 +84,7 @@ namespace Fps
 
         private void OnEnd(string theString)
         {
-            Validate(false);
-        }
-
-        private void Validate(bool areEditing)
-        {
-            NameIsValid = true;
-            HintText.text = string.Empty;
-
-            if (!areEditing)
-            {
-                inputField.text = inputField.text.Trim();
-            }
-
-            if (inputField.text.Length == 0)
-            {
-                NameIsValid = false;
-            }
-
-            if (inputField.text.Length < 3)
-            {
-                if (!areEditing)
-                {
-                    HintText.text = "Minimum 3 characters required";
-                }
-
-                NameIsValid = false;
-            }
-
-            SendOnNameChanged(NameIsValid);
+            inputField.text = inputField.text.Trim();
         }
 
         private void SendOnNameChanged(bool value)

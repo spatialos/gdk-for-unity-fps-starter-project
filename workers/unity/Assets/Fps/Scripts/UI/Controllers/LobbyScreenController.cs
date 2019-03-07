@@ -23,8 +23,8 @@ namespace Fps
             frontEndUIController = GetComponentInParent<FrontEndUIController>();
             Debug.Assert(frontEndUIController != null);
 
-            playerNameInputController.OnNameChanged += OnNameUpdated;
             Debug.Assert(playerNameInputController != null);
+            playerNameInputController.OnNameChanged += OnNameUpdated;
 
             ConnectionStateReporter.OnConnectionStateChange += ConnectionStateChanged;
         }
@@ -37,6 +37,8 @@ namespace Fps
         private void ConnectionStateChanged(ConnectionStateReporter.State state, string information)
         {
             gameBegun = state == ConnectionStateReporter.State.GameReady;
+            playerNameInputController.DisplayEnterNameHint = gameBegun;
+            playerNameInputController.UpdateHintText();
             RefreshButtons();
         }
 
