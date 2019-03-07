@@ -64,6 +64,7 @@ namespace Fps
             Layers = worldLayers;
             Seed = seed;
 
+
             if (!TryLoadResources())
             {
                 Debug.LogError("Generation aborted (See previous message)");
@@ -520,7 +521,7 @@ namespace Fps
                     ? null
                     : MonoBehaviour.Instantiate(mapBuilderSettings.WorldTileVolumes);
 
-                mapBuilder.CleanAndBuild(worldLayerCount, worldSize);
+                mapBuilder.CleanAndBuild(worldLayerCount);
 
                 if (volumesPrefab != null)
                 {
