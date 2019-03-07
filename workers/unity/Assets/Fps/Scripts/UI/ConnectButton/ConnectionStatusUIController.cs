@@ -31,9 +31,14 @@ namespace Fps
             ConnectionStateReporter.OnConnectionStateChange += OnConnectionStateChange;
         }
 
-        public void OnEnable()
+        private void OnEnable()
         {
             OnConnectionStateChange(ConnectionStateReporter.CurrentState, ConnectionStateReporter.CurrentInformation);
+        }
+
+        private void OnDisable()
+        {
+            StopAllCoroutines();
         }
 
         public void OnConnectionStateChange(ConnectionStateReporter.State state, string information)
@@ -133,7 +138,7 @@ namespace Fps
         private void StateWaitingForGameStart()
         {
             SetSymbol(SpinnerSymbol);
-            StartCoroutine(nameof(UpdateGameStartTime));
+            StartCoroutine(UpdateGameStartTime());
         }
 
         private void StateGameReady()
