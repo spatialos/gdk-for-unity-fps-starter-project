@@ -2,19 +2,20 @@
 
 namespace Fps
 {
-    [CreateAssetMenu(fileName = "New TileTypeCollection", menuName = "Improbable/Create Tile Type Collection")]
+    [CreateAssetMenu(fileName = "New TileTypeCollection", menuName = "Improbable/Tile Type Collection")]
     public class TileTypeCollection : ScriptableObject
     {
-        [SerializeField] private GameObject[] Tiles;
-        [Range(0f, 1f)] public float ChanceOfEmptyTile;
-        public Color DisplayColor = Color.blue;
+        [SerializeField] private GameObject[] tiles;
+        [SerializeField] [Range(0f, 1f)] private float chanceOfEmptyTile;
+        [SerializeField] private Color displayColor = Color.blue;
+        public Color DisplayColor => displayColor;
 
         public GameObject GetRandomTile()
         {
             var rand = Random.value;
-            if (ChanceOfEmptyTile == 0f || rand > ChanceOfEmptyTile)
+            if (chanceOfEmptyTile == 0f || rand > chanceOfEmptyTile)
             {
-                return Tiles[Random.Range(0, Tiles.Length)];
+                return tiles[Random.Range(0, tiles.Length)];
             }
 
             return null;
