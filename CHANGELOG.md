@@ -8,6 +8,12 @@
     - Added ability to choose deployment region (US, EU).
     - Added ability to force-upload an assembly.
     - Automatically open the SpatialOS Console page for a launched deployment.
+- New way to control tile distribution and types in the world via TileTypeVolume component :-
+    - Create a collection of tile types with a TileTypeCollection asset (Assets > Create > Improbable > Tile Type Collection).
+    - Place GOs with a TileTypeVolume component into a prefab to control where to spawn those tiles in the world.
+    - Specify the above TileTypeVolumes prefab to use inside MapBuilderSettings config object.
+    - Specify a 'default' TileTypeCollection to use in the MapBuilderSettings to use if no volume found at a tile location.
+    - Preexisting tile types: 'Default', 'Mountain', 'Residential', 'Structure', 'Tower', 'Wild'
 
 ### Changed
 
@@ -46,7 +52,7 @@
 	- Reduced checkout radius of `UnityClient` and `UnityGameLogic` workers from 210 to 150.
 - Increased the level size from 868x868 to 1732x1732.
 - Changed how level generation and `MapBuilder.cs` works.
-	- `LoadWorld()` now generates the level GameObject through `MapBuilder`, instead of instantiating it from a prefab.	
+	- `LoadWorld()` now generates the level GameObject through `MapBuilder`, instead of instantiating it from a prefab.
 
 ### Removed
 
