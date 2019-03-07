@@ -5,22 +5,11 @@ using UnityEngine;
 public class TileTypeVolume : MonoBehaviour
 {
     public TileTypeCollection TypeCollection;
-    public bool AutoRename;
     private BoxCollider boxCollider;
 
     private void Awake()
     {
         boxCollider = GetComponent<BoxCollider>();
-    }
-
-    private void OnValidate()
-    {
-        if (!AutoRename)
-        {
-            return;
-        }
-
-        gameObject.name = TypeCollection == null ? "Empty TileTypeCollection" : $"{TypeCollection.name} TypeVolume";
     }
 
     private void OnDrawGizmos()
