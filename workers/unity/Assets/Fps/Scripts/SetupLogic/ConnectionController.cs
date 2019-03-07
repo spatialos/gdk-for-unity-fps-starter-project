@@ -41,14 +41,6 @@ namespace Fps
             ConnectionStateReporter.SetState(ConnectionStateReporter.State.Connected);
         }
 
-        private void OnEnable()
-        {
-            if (responseHandler != null)
-            {
-                responseHandler.OnCreatePlayerResponse += OnCreatePlayerResponse;
-            }
-        }
-
         private void OnCreatePlayerResponse(PlayerCreator.CreatePlayer.ReceivedResponse obj)
         {
             if (obj.StatusCode == StatusCode.Success)
@@ -69,12 +61,7 @@ namespace Fps
 
         public void OnDisconnected()
         {
-<<<<<<< HEAD
-            var request = new CreatePlayerRequestType(new Vector3f { X = 0, Y = 0, Z = 0 });
-            commandSender.SendCreatePlayerCommand(new EntityId(1), request, OnCreatePlayerResponse);
-=======
             ConnectionStateReporter.SetState(ConnectionStateReporter.State.WorkerDisconnected);
->>>>>>> First pass on UI
         }
 
         public void ConnectAction()
@@ -94,10 +81,10 @@ namespace Fps
         public void SpawnPlayerAction()
         {
             ConnectionStateReporter.SetState(ConnectionStateReporter.State.Spawning);
-            var request = new CreatePlayerRequestType(new Vector3f { X = 0, Y = 0, Z = 0 });
+            var request = new CreatePlayerRequestType();
             Debug.Log($"commandSender: {commandSender}\n" +
                 $"request: {request}");
-            commandSender.SendCreatePlayerRequest(new EntityId(1), request);
+            commandSender.SendCreatePlayerCommand(new EntityId(1), request, OnCreatePlayerResponse);
         }
     }
 }

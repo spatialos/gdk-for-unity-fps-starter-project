@@ -45,7 +45,7 @@ namespace Fps
             return template;
         }
 
-        public static EntityTemplate Player(string workerId, Vector3f position)
+        public static EntityTemplate Player(string workerId, byte[] playerCreationArguments)
         {
             var client = $"workerId:{workerId}";
 
