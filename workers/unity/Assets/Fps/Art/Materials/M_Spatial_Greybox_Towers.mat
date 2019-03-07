@@ -7,9 +7,9 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: M_Spatial_Greybox_Foliage
+  m_Name: M_Spatial_Greybox_Towers
   m_Shader: {fileID: 4800000, guid: 9653d9a7b6fecfd428d15a551a408988, type: 3}
-  m_ShaderKeywords: _OVERRIDECLIPDISTANCETOGLOBALS_ON
+  m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
@@ -24,7 +24,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture2D_98D77128:
-        m_Texture: {fileID: 2800000, guid: ac2233a55e6e7fc4fa9eb0874e5d6d0d, type: 3}
+        m_Texture: {fileID: 2800000, guid: a9a9ff12953a10e4e98a9793d3dd3b46, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
@@ -67,16 +67,20 @@ Material:
         m_Texture: {fileID: 2800000, guid: a9a9ff12953a10e4e98a9793d3dd3b46, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _T_Main:
+        m_Texture: {fileID: 2800000, guid: a9a9ff12953a10e4e98a9793d3dd3b46, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _T_Normal:
         m_Texture: {fileID: 2800000, guid: fb45312733a26e0448d9d840bfec28ae, type: 3}
-        m_Scale: {x: 2, y: 2}
+        m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _T_Sides:
-        m_Texture: {fileID: 2800000, guid: 4f42b10bee66a664eb3f9320e0d0429f, type: 3}
+        m_Texture: {fileID: 2800000, guid: a9a9ff12953a10e4e98a9793d3dd3b46, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _T_Top:
-        m_Texture: {fileID: 2800000, guid: 4f42b10bee66a664eb3f9320e0d0429f, type: 3}
+        m_Texture: {fileID: 2800000, guid: 2823495f2a12c9640914e706d38c0230, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _T_Trim:
@@ -111,7 +115,7 @@ Material:
     - _Gloss_Power_Top: 0.45
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _LocalClipDistance: 200
+    - _LocalClipDistance: 600
     - _Metal_Sides: 0
     - _Metal_Top: 0
     - _Metallic: 0
@@ -120,7 +124,7 @@ Material:
     - _Metallicity_Top: 0
     - _Mode: 0
     - _OcclusionStrength: 1
-    - _OverrideClipDistanceToGlobals: 1
+    - _OverrideClipDistanceToGlobals: 0
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
@@ -128,10 +132,10 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - Color_F94BEF6B: {r: 0.4316038, g: 0.46086508, b: 0.5754717, a: 1}
+    - Color_F94BEF6B: {r: 0.3962264, g: 0.3962264, b: 0.3962264, a: 0}
     - Vector3_67D67044: {r: 0.5, g: 0.5, b: 0.5, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Color_Tint: {r: 0.62077254, g: 0.6657003, b: 0.8490566, a: 0}
+    - _Color_Tint: {r: 1, g: 1, b: 1, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _Sides_Colour: {r: 0.69803923, g: 0.69803923, b: 0.66313726, a: 1}
-    - _Top_Colour: {r: 0.47686276, g: 0.5019608, b: 0.47686276, a: 1}
+    - _Sides_Colour: {r: 0.75, g: 0.75, b: 0.75, a: 1}
+    - _Top_Colour: {r: 0.3, g: 0.3, b: 0.3, a: 1}
