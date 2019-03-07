@@ -20,7 +20,7 @@ public class LobbyScreenTester : MonoBehaviour
             ConnectionStateReporter.SetTimeUntilGameStart(timeUntilStart);
             ConnectionStateReporter.SetState(ConnectionStateReporter.State.WaitingForGameStart);
             timeUntilStart = TimeUntilStart;
-            StartCoroutine(nameof(CountDownTime));
+            StartCoroutine(CountDownTime());
         }
     }
 
@@ -34,5 +34,10 @@ public class LobbyScreenTester : MonoBehaviour
         }
 
         ConnectionStateReporter.SetState(ConnectionStateReporter.State.GameReady);
+    }
+
+    void OnDisable()
+    {
+        StopAllCoroutines();
     }
 }
