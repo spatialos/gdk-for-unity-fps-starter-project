@@ -82,7 +82,7 @@ namespace Fps
         {
             ConnectionStateReporter.SetState(ConnectionStateReporter.State.Spawning);
             var request = new CreatePlayerRequestType();
-            commandSender.SendCreatePlayerRequest(new EntityId(1), request, OnCreatePlayerResponse);
+            commandSender.SendCreatePlayerCommand(new EntityId(1), request, OnCreatePlayerResponse);
         }
     }
 }
