@@ -47,7 +47,7 @@ namespace Fps
             else
             {
                 // Are there any cases we don't want to reenable the join button on a valid deployment?
-                JoinButton.enabled = HighlightedIsAvailable();
+                JoinButton.enabled = IsHighlightedAvailable();
             }
         }
 
@@ -63,14 +63,16 @@ namespace Fps
 
         private void Update()
         {
+            if (currentlyHighlightedEntry == -1
+                && (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow))
+                && deploymentList.Length > 0)
+            {
+                SelectEntry(0);
+                return;
+            }
+
             if (Input.GetKeyDown(KeyCode.UpArrow))
             {
-                if (currentlyHighlightedEntry == -1)
-                {
-                    SelectEntry(0);
-                    return;
-                }
-
                 if (currentlyHighlightedEntry == 0)
                 {
                     return;
@@ -81,12 +83,6 @@ namespace Fps
 
             if (Input.GetKeyDown(KeyCode.DownArrow))
             {
-                if (currentlyHighlightedEntry == -1)
-                {
-                    SelectEntry(0);
-                    return;
-                }
-
                 if (currentlyHighlightedEntry == deploymentList.Length - 1)
                 {
                     return;
@@ -94,6 +90,7 @@ namespace Fps
 
                 SelectEntry(currentlyHighlightedEntry + 1);
             }
+
 
             if ((Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return))
                 && currentlyHighlightedEntry >= 0)
@@ -132,6 +129,7 @@ namespace Fps
             deploymentListTable.ClearEntries();
             currentBgColor = BackgroundColor1;
 
+            // TODO If previously-selected deployment is in list of new deployments, try and retain its position in the table
             for (var i = 0; i < Mathf.Min(maxRows - 1, deployments.Length); i++)
             {
                 AddDeploymentToTable(deployments[i], i);
@@ -139,6 +137,7 @@ namespace Fps
             }
 
             deploymentList = deployments;
+            currentlyHighlightedEntry = -1; // TODO Select previously-selected deployment if present in new list
         }
 
         private void OnEnable()
@@ -172,10 +171,10 @@ namespace Fps
 
             currentlyHighlightedEntry = index;
 
-            JoinButton.enabled = HighlightedIsAvailable();
+            JoinButton.enabled = IsHighlightedAvailable();
         }
 
-        private bool HighlightedIsAvailable()
+        private bool IsHighlightedAvailable()
         {
             if (currentlyHighlightedEntry < 0
                 || deploymentList == null
