@@ -24,10 +24,10 @@ namespace Fps
         private void Awake()
         {
             Debug.Assert(JoinButton != null);
-            JoinButton.onClick.AddListener(JoinButtonPressed);
+            JoinButton.onClick.AddListener(OnJoinButtonPressed);
 
             Debug.Assert(BackButton != null);
-            BackButton.onClick.AddListener(BackButtonPressed);
+            BackButton.onClick.AddListener(OnBackButtonPressed);
 
             deploymentListTable = GetComponentInChildren<Table>();
             Debug.Assert(deploymentListTable != null);
@@ -51,12 +51,12 @@ namespace Fps
             }
         }
 
-        private void JoinButtonPressed()
+        private void OnJoinButtonPressed()
         {
             ConnectionStateReporter.TryConnect(); // TODO replace with actual connect-to-deployment logic
         }
 
-        private void BackButtonPressed()
+        private void OnBackButtonPressed()
         {
             frontEndUiController.SwitchToSessionScreen();
         }

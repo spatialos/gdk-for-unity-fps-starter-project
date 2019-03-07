@@ -15,10 +15,10 @@ namespace Fps
         private void Awake()
         {
             Debug.Assert(startButton != null);
-            startButton.onClick.AddListener(StartButtonPressed);
+            startButton.onClick.AddListener(OnStartButtonPressed);
 
             Debug.Assert(cancelButton != null);
-            cancelButton.onClick.AddListener(CancelButtonPressed);
+            cancelButton.onClick.AddListener(OnCancelButtonPressed);
 
             frontEndUIController = GetComponentInParent<FrontEndUIController>();
             Debug.Assert(frontEndUIController != null);
@@ -26,7 +26,7 @@ namespace Fps
             Debug.Assert(playerNameInputController != null);
             playerNameInputController.OnNameChanged += OnNameUpdated;
 
-            ConnectionStateReporter.OnConnectionStateChange += ConnectionStateChanged;
+            ConnectionStateReporter.OnConnectionStateChange += OnConnectionStateChanged;
         }
 
         private void OnEnable()
@@ -34,7 +34,7 @@ namespace Fps
             RefreshButtons();
         }
 
-        private void ConnectionStateChanged(ConnectionStateReporter.State state, string information)
+        private void OnConnectionStateChanged(ConnectionStateReporter.State state, string information)
         {
             gameBegun = state == ConnectionStateReporter.State.GameReady;
             playerNameInputController.DisplayEnterNameHint = gameBegun;
@@ -53,12 +53,12 @@ namespace Fps
             startButton.enabled = gameBegun && nameIsValid;
         }
 
-        public void StartButtonPressed()
+        public void OnStartButtonPressed()
         {
             ConnectionStateReporter.TrySpawn();
         }
 
-        public void CancelButtonPressed()
+        public void OnCancelButtonPressed()
         {
             ConnectionStateReporter.TryDisconnect();
             frontEndUIController.SwitchToSessionScreen();

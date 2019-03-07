@@ -23,7 +23,7 @@ namespace Fps
         private void Awake()
         {
             Debug.Assert(DoneButton != null);
-            DoneButton.onClick.AddListener(DoneButtonPressed);
+            DoneButton.onClick.AddListener(OnDoneButtonPressed);
 
             resultsTable = GetComponentInChildren<Table>();
             Debug.Assert(resultsTable != null);
@@ -42,7 +42,7 @@ namespace Fps
             }
         }
 
-        private void DoneButtonPressed()
+        private void OnDoneButtonPressed()
         {
             frontEndUiController.SwitchToSessionScreen();
         }

@@ -12,15 +12,15 @@ namespace Fps
         private void Awake()
         {
             Debug.Assert(quickJoinButton != null);
-            quickJoinButton.onClick.AddListener(QuickJoinPressed);
+            quickJoinButton.onClick.AddListener(OnQuickJoinPressed);
 
             Debug.Assert(browseButton != null);
-            browseButton.onClick.AddListener(BrowseButtonPressed);
+            browseButton.onClick.AddListener(OnBrowseButtonPressed);
 
             frontEndUIController = GetComponentInParent<FrontEndUIController>();
             Debug.Assert(frontEndUIController != null);
 
-            ConnectionStateReporter.OnConnectionStateChange += ConnectionStateChanged;
+            ConnectionStateReporter.OnConnectionStateChange += OnConnectionStateChanged;
         }
 
         private void OnEnable()
@@ -28,7 +28,7 @@ namespace Fps
             RefreshButtons();
         }
 
-        private void ConnectionStateChanged(ConnectionStateReporter.State state, string information)
+        private void OnConnectionStateChanged(ConnectionStateReporter.State state, string information)
         {
             if (state == ConnectionStateReporter.State.Connected)
             {
@@ -48,12 +48,12 @@ namespace Fps
         }
 
 
-        public void QuickJoinPressed()
+        public void OnQuickJoinPressed()
         {
             ConnectionStateReporter.TryConnect();
         }
 
-        public void BrowseButtonPressed()
+        public void OnBrowseButtonPressed()
         {
             frontEndUIController.SwitchToDeploymentListScreen();
         }

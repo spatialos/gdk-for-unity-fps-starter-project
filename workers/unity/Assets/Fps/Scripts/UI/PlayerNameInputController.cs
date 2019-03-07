@@ -26,12 +26,12 @@ namespace Fps
             inputField = GetComponentInChildren<InputField>();
             HintText.text = string.Empty;
             SendOnNameChanged(false);
-            inputField.onValueChanged.AddListener(ValueChanged);
+            inputField.onValueChanged.AddListener(OnValueChanged);
             inputField.onEndEdit.AddListener(OnEnd);
             HintText.color = HintTextColor;
         }
 
-        private void ValueChanged(string value)
+        private void OnValueChanged(string value)
         {
             UpdateHintText();
             NameIsValid = value.Trim().Length >= 3;
