@@ -5,7 +5,8 @@ Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: M_Spatial_Pickup_Blue
   m_Shader: {fileID: 4800000, guid: ac7762a1006da2649bbd7d57183e90f0, type: 3}
   m_ShaderKeywords: 
@@ -62,8 +63,12 @@ Material:
         m_Texture: {fileID: 2800000, guid: 0709cb2822ac5c54fa2e791a3198b631, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _T_Mask:
+    - _T_Light:
         m_Texture: {fileID: 2800000, guid: 868b4d2d97f0b58459b8baa3eb598ac3, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _T_Mask:
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _T_Orm:
@@ -98,6 +103,10 @@ Material:
     - _OcclusionStrength: 1
     - _OverrideClipDistanceToGlobals: 0
     - _Parallax: 0.02
+    - _Rgh_Pow_Base: 1
+    - _Rgh_Pow_Primary: 1
+    - _Rgh_Pow_Secondary: 1
+    - _Rgh_Pow_Tertiary: 1
     - _Secondary_Light_Brightness: 0
     - _Secondary_Light_Pow: 1
     - _SmoothnessTextureChannel: 0
@@ -109,7 +118,8 @@ Material:
     - _Base_Colour: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 0, g: 0.36276957, b: 1, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _Main_Colour: {r: 1, g: 0.7, b: 0, a: 1}
+    - _Main_Colour: {r: 1, g: 1, b: 1, a: 1}
     - _Main_Light: {r: 0.09803921, g: 0.39869294, b: 1, a: 1}
     - _Secondary_Colour: {r: 1, g: 1, b: 1, a: 1}
     - _Secondary_Light: {r: 1, g: 1, b: 1, a: 1}
+    - _Tertiary_Colour: {r: 1, g: 1, b: 1, a: 1}

@@ -256,6 +256,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: ThirdPersonModel
       objectReference: {fileID: 0}
+    - target: {fileID: 6904808606989008612, guid: fb231ed0cc39caf4e897380b9666c858,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: e0d57925aedff664da5e7a836353a233, type: 2}
     - target: {fileID: 7462652536711723481, guid: fb231ed0cc39caf4e897380b9666c858,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -311,11 +316,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6904808606989008612, guid: fb231ed0cc39caf4e897380b9666c858,
+    - target: {fileID: 2812026842374944459, guid: fb231ed0cc39caf4e897380b9666c858,
         type: 3}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 9100000, guid: e0d57925aedff664da5e7a836353a233, type: 2}
+      propertyPath: m_LODs.Array.data[0].screenRelativeHeight
+      value: 0.7509412
+      objectReference: {fileID: 0}
+    - target: {fileID: 2812026842374944459, guid: fb231ed0cc39caf4e897380b9666c858,
+        type: 3}
+      propertyPath: m_LODs.Array.data[1].screenRelativeHeight
+      value: 0.3500084
+      objectReference: {fileID: 0}
+    - target: {fileID: 2812026842374944459, guid: fb231ed0cc39caf4e897380b9666c858,
+        type: 3}
+      propertyPath: m_LODs.Array.data[2].screenRelativeHeight
+      value: 0.119061634
+      objectReference: {fileID: 0}
+    - target: {fileID: 2812026842374944459, guid: fb231ed0cc39caf4e897380b9666c858,
+        type: 3}
+      propertyPath: m_LODs.Array.data[3].screenRelativeHeight
+      value: 0.03590262
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fb231ed0cc39caf4e897380b9666c858, type: 3}
 --- !u!1 &7600742695259309303 stripped
