@@ -108,7 +108,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -70, y: -31}
+  m_AnchoredPosition: {x: -70, y: -29}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5978301991586419279
@@ -211,7 +211,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -247,12 +247,17 @@ MonoBehaviour:
   ErrorSymbol: {fileID: 4212465101278386776}
   SuccessSymbol: {fileID: 8182972233629507334}
   StatusText: {fileID: 2845632616082728801}
-  GatheringDeploymentsText: Getting deployment list...
-  GatheringDeploymentsFailedText: Failed to get deployment list!
-  SearchingText: Searching for deployments...
-  SearchFailedText: Failed to find deployments!
-  JoiningText: Joining deployment...
-  SpawnFailedText: Failed to spawn player!
+  DeploymentListAvailableText: Deployments available
+  GettingDeploymentListText: Getting deployment list...
+  FailedToGetDeploymentListText: Failed to get deployment list!
+  ConnectingText: Searching for deployment to join...
+  ConnectionFailedText: Failed to join deployment!
+  ConnectedText: Connected
+  WaitingForGameStartText: Game starting in {0:#} SECONDS
+  WaitingForGameToStartText_NoNumber: Game starting...
+  GameReadyText: Game begun! Ready to spawn.
+  SpawningText: Joining deployment...
+  SpawningFailedText: Failed to spawn player!
   WorkerDisconnectedText: Worker was disconnected
 --- !u!1 &8182972233629507334
 GameObject:
@@ -288,7 +293,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -70, y: -31}
+  m_AnchoredPosition: {x: -70, y: -29}
   m_SizeDelta: {x: 66, y: 66}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4655755236364586093
@@ -362,7 +367,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -70, y: -31}
+  m_AnchoredPosition: {x: -70, y: -29}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &1368910871922215793
