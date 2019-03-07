@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Fps
@@ -19,7 +20,7 @@ namespace Fps
         public string ConnectionFailedText = "Failed to join deployment!";
         public string ConnectedText = "Connected";
         public string WaitingForGameStartText = "Game starting in {0:#} SECONDS";
-        public string WaitingForGameToStartText_NoNumber = "Game starting...";
+        public string GameStartingImminentText = "Game starting...";
         public string GameReadyText = "Game begun! Ready to spawn.";
         public string SpawningText = "Joining deployment...";
         public string SpawningFailedText = "Failed to spawn player!";
@@ -45,114 +46,114 @@ namespace Fps
             switch (state)
             {
                 case ConnectionStateReporter.State.None:
-                    State_None();
+                    StateNone();
                     break;
                 case ConnectionStateReporter.State.GettingDeploymentList:
-                    State_GettingDeploymentList();
+                    StateGettingDeploymentList();
                     break;
                 case ConnectionStateReporter.State.DeploymentListAvailable:
-                    State_DeploymentListAvailable();
+                    StateDeploymentListAvailable();
                     break;
                 case ConnectionStateReporter.State.FailedToGetDeploymentList:
-                    State_FailedToGetDeploymentList(information);
+                    StateFailedToGetDeploymentList(information);
                     break;
                 case ConnectionStateReporter.State.Connecting:
-                    State_Connecting();
+                    StateConnecting();
                     break;
                 case ConnectionStateReporter.State.Connected:
-                    State_Connected();
+                    StateConnected();
                     break;
                 case ConnectionStateReporter.State.ConnectionFailed:
-                    State_ConnectionFailed(information);
+                    StateConnectionFailed(information);
                     break;
                 case ConnectionStateReporter.State.WaitingForGameStart:
-                    State_WaitingForGameStart();
+                    StateWaitingForGameStart();
                     break;
                 case ConnectionStateReporter.State.GameReady:
-                    State_GameReady();
+                    StateGameReady();
                     break;
                 case ConnectionStateReporter.State.Spawning:
-                    State_Spawning();
+                    StateSpawning();
                     break;
                 case ConnectionStateReporter.State.Spawned:
                     break;
                 case ConnectionStateReporter.State.SpawningFailed:
-                    State_SpawningFailed(information);
+                    StateSpawningFailed(information);
                     break;
                 case ConnectionStateReporter.State.WorkerDisconnected:
-                    State_WorkerDisconnected();
+                    StateWorkerDisconnected();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(state), state, null);
             }
         }
 
-        private void State_None()
+        private void StateNone()
         {
             StatusText.text = string.Empty;
             SetSymbol(null);
         }
 
-        private void State_GettingDeploymentList()
+        private void StateGettingDeploymentList()
         {
             StatusText.text = GettingDeploymentListText;
             SetSymbol(SpinnerSymbol);
         }
 
-        private void State_DeploymentListAvailable()
+        private void StateDeploymentListAvailable()
         {
             StatusText.text = DeploymentListAvailableText;
             SetSymbol(SuccessSymbol);
         }
 
-        private void State_FailedToGetDeploymentList(string error)
+        private void StateFailedToGetDeploymentList(string error)
         {
             StatusText.text = $"{FailedToGetDeploymentListText}\n Error: {error}";
             SetSymbol(ErrorSymbol);
         }
 
-        private void State_Connecting()
+        private void StateConnecting()
         {
             StatusText.text = ConnectingText;
             SetSymbol(SpinnerSymbol);
         }
 
-        private void State_Connected()
+        private void StateConnected()
         {
             StatusText.text = ConnectedText;
             SetSymbol(SuccessSymbol);
         }
 
-        private void State_ConnectionFailed(string error)
+        private void StateConnectionFailed(string error)
         {
             StatusText.text = $"{ConnectionFailedText}\nError: {error}";
             SetSymbol(ErrorSymbol);
         }
 
-        private void State_WaitingForGameStart()
+        private void StateWaitingForGameStart()
         {
             SetSymbol(SpinnerSymbol);
             StartCoroutine(nameof(UpdateGameStartTime));
         }
 
-        private void State_GameReady()
+        private void StateGameReady()
         {
             SetSymbol(SuccessSymbol);
             StatusText.text = GameReadyText;
         }
 
-        private void State_Spawning()
+        private void StateSpawning()
         {
             StatusText.text = SpawningText;
         }
 
-        private void State_SpawningFailed(string error)
+        private void StateSpawningFailed(string error)
         {
             StatusText.text = $"{SpawningFailedText}\nError: {error}";
             SetSymbol(ErrorSymbol);
         }
 
-        private void State_WorkerDisconnected()
+        private void StateWorkerDisconnected()
         {
             StatusText.text = WorkerDisconnectedText;
             SetSymbol(ErrorSymbol);
@@ -187,7 +188,7 @@ namespace Fps
             {
                 var timeUntilStart = ConnectionStateReporter.TimeUntilGameStart;
                 StatusText.text = timeUntilStart < 1
-                    ? WaitingForGameToStartText_NoNumber
+                    ? GameStartingImminentText
                     : string.Format(WaitingForGameStartText, ConnectionStateReporter.TimeUntilGameStart);
 
                 yield return new WaitForSeconds(.5f);
