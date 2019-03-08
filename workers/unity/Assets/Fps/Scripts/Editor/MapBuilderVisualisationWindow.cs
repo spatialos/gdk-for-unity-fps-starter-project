@@ -70,7 +70,23 @@ namespace Fps.Editor
                         SetupMapBuilder();
                     }
 
+                    var volumesPrefab = mapBuilderSettings.WorldTileVolumes == null
+                        ? null
+                        : Instantiate(mapBuilderSettings.WorldTileVolumes);
+
                     mapBuilder.CleanAndBuild(layerCount, seed);
+
+                    if (volumesPrefab != null)
+                    {
+                        if (Application.isPlaying)
+                        {
+                            Destroy(volumesPrefab);
+                        }
+                        else
+                        {
+                            DestroyImmediate(volumesPrefab);
+                        }
+                    }
                 }
             }
 
