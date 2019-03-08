@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Improbable.Gdk.Core;
 using Improbable.Worker.CInterop;
 using Random = UnityEngine.Random;
-using Improbable.Worker.CInterop.Alpha;
 
 public class SimulatedPlayerCoordinatorWorkerConnector : WorkerConnectorBase
 {
@@ -48,18 +47,27 @@ public class SimulatedPlayerCoordinatorWorkerConnector : WorkerConnectorBase
 
         if (SimulatedPlayerWorkerConnector != null)
         {
-            while (simulatedPlayerConnectors.Count < DefaultSimulatedPlayerCount)
+            while (Application.isPlaying && simulatedPlayerConnectors.Count < DefaultSimulatedPlayerCount)
             {
-                await Task.Delay(TimeSpan.FromSeconds(
-                    Random.Range(DefaultSimulatedPlayerCreationInterval, 1.25f * DefaultSimulatedPlayerCreationInterval)));
                 var simulatedPlayer = Instantiate(SimulatedPlayerWorkerConnector, transform.position, transform.rotation);
                 await simulatedPlayer.GetComponent<SimulatedPlayerWorkerConnector>()
                     .ConnectSimulatedPlayer(Worker.LogDispatcher, SimulatedPlayerDevAuthTokenId, SimulatedPlayerTargetDeployment);
                 simulatedPlayerConnectors.Add(simulatedPlayer);
+                await Task.Delay(TimeSpan.FromSeconds(
+                    Random.Range(DefaultSimulatedPlayerCreationInterval, 1.25f * DefaultSimulatedPlayerCreationInterval)));
             }
 
-            StartCoroutine(MonitorSimulatedPlayers());
+            if (Application.isPlaying)
+            {
+                StartCoroutine(MonitorSimulatedPlayers());
+            }
         }
+    }
+
+    public override void Dispose()
+    {
+        StopAllCoroutines();
+        base.Dispose();
     }
 
     private IEnumerator MonitorSimulatedPlayers()

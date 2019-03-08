@@ -23,6 +23,11 @@
 - World tile prefabs improved.
 	- Now make use of nested prefabs.
 	- Completely new set of default tiles used to populate the world
+- Updated the build configuration asset
+
+### Fixed
+
+-Fixed a bug where the `SimulatedPlayerCoordinatorWorkerConnector` would throw errors, if you stopped the application while it was spawning more simulated players.
 
 ## `0.1.5` - 2019-02-21
 

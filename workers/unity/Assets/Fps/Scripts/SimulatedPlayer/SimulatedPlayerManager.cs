@@ -1,5 +1,5 @@
 ﻿using Improbable.Gdk.Core;
-using Improbable.Gdk.GameObjectRepresentation;
+using Improbable.Gdk.Subscriptions;
 using UnityEngine;
 
 public class SimulatedPlayerManager : MonoBehaviour
@@ -12,8 +12,8 @@ public class SimulatedPlayerManager : MonoBehaviour
         coordinator = FindObjectOfType<SimulatedPlayerCoordinatorWorkerConnector>();
         if (coordinator != null)
         {
-            var spatial = GetComponent<SpatialOSComponent>();
-            entityId = spatial.SpatialEntityId;
+            var spatial = GetComponent<LinkedEntityComponent>();
+            entityId = spatial.EntityId;
             coordinator.RegisterLocalSimulatedPlayer(entityId, gameObject);
         }
     }

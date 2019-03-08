@@ -1,5 +1,5 @@
 ﻿using System;
-using Improbable.Gdk.GameObjectRepresentation;
+using Improbable.Gdk.Subscriptions;
 using UnityEngine;
 
 namespace Fps

@@ -1,7 +1,7 @@
 using System.Collections;
 using Improbable.Common;
 using Improbable.Gdk.Core;
-using Improbable.Gdk.GameObjectRepresentation;
+using Improbable.Gdk.Subscriptions;
 using Improbable.Gdk.Guns;
 using Improbable.Gdk.Health;
 using Improbable.Gdk.StandardTypes;
@@ -18,8 +18,8 @@ namespace Fps
         [SerializeField] private float hitEffectDuration = 1f;
         [SerializeField] private float hitEffectFocus = 16f;
 
-        [Require] private HealthComponent.Requirable.Reader healthReader;
-        [Require] private GunStateComponent.Requirable.Reader gunStateReader;
+        [Require] private HealthComponentReader healthReader;
+        [Require] private GunStateComponentReader gunStateReader;
 
         private float currentFocus;
         private ScreenUIController screenUIController;
@@ -41,9 +41,9 @@ namespace Fps
 
         private void OnEnable()
         {
-            healthReader.OnHealthModified += OnHealthModified;
-            healthReader.OnRespawn += OnRespawn;
-            gunStateReader.IsAimingUpdated += AimingUpdated;
+            healthReader.OnHealthModifiedEvent += OnHealthModified;
+            healthReader.OnRespawnEvent += OnRespawn;
+            gunStateReader.OnIsAimingUpdate += AimingUpdated;
         }
 
         private void OnRespawn(Empty obj)
