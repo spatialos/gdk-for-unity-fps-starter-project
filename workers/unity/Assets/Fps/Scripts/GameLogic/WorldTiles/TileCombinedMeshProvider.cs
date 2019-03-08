@@ -81,7 +81,7 @@ namespace MeshUtilities
                 var material = meshRenderer.sharedMaterial;
                 var objMesh = Object.Instantiate(meshFilter.sharedMesh);
 
-                ApplyScaleToVertexColours(ref objMesh, meshFilter.transform.localScale);
+                ApplyScaleToVertexColours(ref objMesh, meshFilter.transform.lossyScale);
 
                 var combineInstance = new CombineInstance();
                 combineInstance.mesh = objMesh;
