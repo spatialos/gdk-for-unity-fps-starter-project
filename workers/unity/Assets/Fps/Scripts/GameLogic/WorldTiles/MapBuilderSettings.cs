@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Fps
 {
@@ -7,6 +8,8 @@ namespace Fps
     {
         public int SmallWorldLayerCount = 4;
         public int LargeWorldLayerCount = 24;
+
+        public GameObject WorldTileVolumes;
 
         // Measurements.
         // All sizes are 1:1 ratio in X/Z, so we just define one value to represent both axis.
@@ -17,5 +20,7 @@ namespace Fps
         public int BoundaryCollisionHeight = 16;
 
         public int unitsPerGroundLayer => TilesPerGroundLayer * UnitsPerTile;
+
+        public TileTypeCollection DefaultTileTypeCollection;
     }
 }

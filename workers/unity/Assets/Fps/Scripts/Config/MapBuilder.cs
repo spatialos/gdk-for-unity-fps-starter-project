@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Improbable.Gdk.Core;
 using Improbable.Worker.CInterop;
 using UnityEngine;
@@ -13,7 +12,6 @@ namespace Fps
     {
         private int Layers;
         private string Seed;
-        private float EmptyTileChance;
 
         private const string SmallLevelFlag = "small";
         private const string LargeLevelFlag = "large";
@@ -23,8 +21,6 @@ namespace Fps
         // Store the half-value as many calculations are simplified by going from -halfNumGroundLayers to halfNumGroundLayers.
         private int halfNumGroundLayers => (Layers - 1) / mapBuilderSettings.TilesPerGroundLayer + 1;
 
-        private GameObject[] centreTiles;
-        private GameObject[] levelTiles;
         private GameObject groundTile;
         private GameObject groundEdge;
         private GameObject surroundWall;
@@ -40,17 +36,10 @@ namespace Fps
         private const string SurroundParentName = "SurroundParent";
         private const string SpawnPointSystemName = "SpawnPointSystem";
 
-        private const string LevelTilePath = "Prefabs/Level/Tiles";
         private const string GroundTilePath = "Prefabs/Level/Ground/Ground4x4";
         private const string GroundEdgePath = "Prefabs/Level/Ground/Edge";
         private const string SurroundPath = "Prefabs/Level/Surround/Wall";
         private const string CornerPath = "Prefabs/Level/Surround/Corner";
-
-        // Central tiles are hardcoded.
-        private const string CentreTile0 = "Prefabs/Level/Tiles/Centre0";
-        private const string CentreTile1 = "Prefabs/Level/Tiles/Centre1";
-        private const string CentreTile2 = "Prefabs/Level/Tiles/Centre2";
-        private const string CentreTile3 = "Prefabs/Level/Tiles/Centre3";
 
         private GameObject gameObject;
 
@@ -62,10 +51,7 @@ namespace Fps
             this.gameObject = gameObject;
         }
 
-        public void CleanAndBuild(
-            int worldLayers = 4,
-            string seed = "SpatialOS GDK for Unity",
-            float emptyTileChance = 0.2f)
+        public void CleanAndBuild(int worldLayers = 4, string seed = "SpatialOS GDK for Unity")
         {
             if (mapBuilderSettings == null)
             {
@@ -75,7 +61,6 @@ namespace Fps
 
             Layers = worldLayers;
             Seed = seed;
-            EmptyTileChance = emptyTileChance;
 
             if (!TryLoadResources())
             {
@@ -161,32 +146,6 @@ namespace Fps
 
             if (!TryLoadResource(CornerPath, out cornerPiece))
             {
-                return false;
-            }
-
-            centreTiles = new[]
-            {
-                Resources.Load<GameObject>(CentreTile0),
-                Resources.Load<GameObject>(CentreTile1),
-                Resources.Load<GameObject>(CentreTile2),
-                Resources.Load<GameObject>(CentreTile3)
-            };
-
-            if (centreTiles.Any(t => t == null))
-            {
-                Debug.LogError("Failed to load CentreTile resource (Expecting all the following paths to exist: " +
-                    $"\n\tResources/{CentreTile0}... (Click to expand)" +
-                    $"\n\tResources/{CentreTile1}" +
-                    $"\n\tResources/{CentreTile2}" +
-                    $"\n\tResources/{CentreTile3}");
-                return false;
-            }
-
-            levelTiles = Resources.LoadAll<GameObject>(LevelTilePath);
-
-            if (levelTiles.Length <= 0)
-            {
-                Debug.LogError($"Failed to load any resources at Resources/{LevelTilePath}");
                 return false;
             }
 
@@ -338,14 +297,7 @@ namespace Fps
                 if (-Layers < tileCoord.x && tileCoord.x <= Layers
                     && -Layers < tileCoord.y && tileCoord.y <= Layers)
                 {
-                    if (i < 4)
-                    {
-                        PlaceTile(tileCoord, centreTiles[i], 0);
-                    }
-                    else
-                    {
-                        PlaceTile(tileCoord);
-                    }
+                    PlaceTile(tileCoord);
                 }
 
                 if (tileCoord.x == tileCoord.y ||
@@ -367,15 +319,26 @@ namespace Fps
 
         private void PlaceTile(Vector2Int tileCoord)
         {
-            if (Random.value < EmptyTileChance)
+            var tile = GetTileObjectAtCoordinate(tileCoord);
+
+            if (tile == null)
             {
                 return;
             }
 
-            var tile = levelTiles[Random.Range(0, levelTiles.Length)];
             float rotation = 90 * Random.Range(0, 4);
 
             PlaceTile(tileCoord, tile, rotation);
+        }
+
+        private Vector3 GetWorldLocationFromCoordinate(Vector2Int coordinate)
+        {
+            var tileOffset = mapBuilderSettings.UnitsPerTile / 2;
+            return new Vector3
+            {
+                x = (coordinate.x - 1) * mapBuilderSettings.UnitsPerTile + tileOffset,
+                z = (coordinate.y - 1) * mapBuilderSettings.UnitsPerTile + tileOffset
+            };
         }
 
         private void PlaceTile(Vector2Int tileCoord, GameObject tile, float rotation)
@@ -384,11 +347,7 @@ namespace Fps
 
             Object.Instantiate(
                 tile,
-                new Vector3
-                {
-                    x = (tileCoord.x - 1) * mapBuilderSettings.UnitsPerTile + tileOffset,
-                    z = (tileCoord.y - 1) * mapBuilderSettings.UnitsPerTile + tileOffset
-                },
+                GetWorldLocationFromCoordinate(tileCoord),
                 new Quaternion
                 {
                     eulerAngles = new Vector3
@@ -430,6 +389,24 @@ namespace Fps
             {
                 childTransform.gameObject.isStatic = true;
             }
+        }
+
+        private GameObject GetTileObjectAtCoordinate(Vector2Int coordinate)
+        {
+            var hits = Physics.OverlapSphere(GetWorldLocationFromCoordinate(coordinate), .5f);
+
+            foreach (var hit in hits)
+            {
+                var volume = hit.gameObject.GetComponent<TileTypeVolume>();
+                if (volume == null)
+                {
+                    continue;
+                }
+
+                return volume.TypeCollection.GetRandomTile();
+            }
+
+            return mapBuilderSettings.DefaultTileTypeCollection?.GetRandomTile();
         }
 
         public void Clean()
@@ -509,7 +486,17 @@ namespace Fps
                 levelInstance.transform.rotation = workerTransform.rotation;
 
                 var mapBuilder = new MapBuilder(mapBuilderSettings, levelInstance);
+
+                var volumesPrefab = mapBuilderSettings.WorldTileVolumes == null
+                    ? null
+                    : Object.Instantiate(mapBuilderSettings.WorldTileVolumes);
+
                 mapBuilder.CleanAndBuild(worldLayerCount);
+
+                if (volumesPrefab != null)
+                {
+                    Object.Destroy(volumesPrefab);
+                }
             }
             else
             {

@@ -9,10 +9,11 @@ namespace Fps.Editor
 
         private int layerCount = 4;
         private string seed = "SpatialOS GDK for Unity";
-        private float emptyTileChance = 0.2f;
 
         private MapBuilder mapBuilder;
         private MapBuilderSettings mapBuilderSettings;
+
+        private GameObject TileTypeVolumesPrefab;
 
         private const string MapBuilderMenuItem = "SpatialOS/Map Builder";
         private const int MapBuilderMenuPriority = 52;
@@ -40,16 +41,7 @@ namespace Fps.Editor
                     "Number of Tile Layers",
                     "N layers corresponds to 4*(N^2) tiles."), layerCount));
 
-            emptyTileChance =
-                Mathf.Clamp(
-                    EditorGUILayout.FloatField(
-                        new GUIContent("Chance of Empty Tile",
-                            "The chance that a tile in one grid square of the world will be empty."),
-                        emptyTileChance), 0f, 1f);
-
-            var numTiles =
-                Mathf.RoundToInt(
-                    GetTotalTilesFromLayers(layerCount) * (1f - emptyTileChance));
+            var numTiles = Mathf.RoundToInt(GetTotalTilesFromLayers(layerCount));
 
             GUI.color = numTiles < WarnTilesThreshold ? Color.white : Color.yellow;
             GUILayout.Label($"Number of tiles to generate: ~{numTiles}");
@@ -64,7 +56,8 @@ namespace Fps.Editor
                     "Map Builder Settings",
                     "Different seeds produce different maps."),
                 mapBuilderSettings,
-                typeof(MapBuilderSettings));
+                typeof(MapBuilderSettings),
+                false);
 
             EditorGUI.BeginDisabledGroup(mapBuilderSettings == null);
             if (GUILayout.Button("Generate Map"))
@@ -77,7 +70,7 @@ namespace Fps.Editor
                         SetupMapBuilder();
                     }
 
-                    mapBuilder.CleanAndBuild(layerCount, seed, emptyTileChance);
+                    mapBuilder.CleanAndBuild(layerCount, seed);
                 }
             }
 
