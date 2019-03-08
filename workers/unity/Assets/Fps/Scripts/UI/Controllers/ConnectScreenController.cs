@@ -9,10 +9,10 @@ namespace Fps
 
         public void Awake()
         {
-            ConnectButton.onClick.AddListener(ConnectClicked);
+            ConnectButton.onClick.AddListener(OnConnectClicked);
         }
 
-        public void ConnectClicked()
+        public void OnConnectClicked()
         {
             if (ConnectionStateReporter.IsConnected)
             {

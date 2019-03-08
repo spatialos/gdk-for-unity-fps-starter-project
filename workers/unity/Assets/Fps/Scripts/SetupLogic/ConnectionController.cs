@@ -25,12 +25,12 @@ namespace Fps
         {
             if (worker.Connection.GetConnectionStatusCode() == ConnectionStatusCode.Success)
             {
-                StartCoroutine(nameof(DelayedConnectedMessage));
+                StartCoroutine(DelayedConnectedMessage());
             }
             else
             {
                 ConnectionStateReporter.SetState(ConnectionStateReporter.State.ConnectionFailed,
-                    worker.Connection.GetConnectionStatusCode().ToString());
+                    worker.Connection.GetConnectionStatusCodeDetailString());
             }
         }
 
@@ -64,12 +64,12 @@ namespace Fps
 <            ConnectionStateReporter.SetState(ConnectionStateReporter.State.WorkerDisconnected);
         }
 
-        public void ConnectAction()
+        public void Connect()
         {
             ClientWorkerHandler.CreateClient();
         }
 
-        public void DisconnectAction()
+        public void Disconnect()
         {
             // TODO Disconnect?
             if (clientWorkerConnector != null)
@@ -82,8 +82,6 @@ namespace Fps
         {
             ConnectionStateReporter.SetState(ConnectionStateReporter.State.Spawning);
             var request = new CreatePlayerRequestType();
-            Debug.Log($"commandSender: {commandSender}\n" +
-                $"request: {request}");
             commandSender.SendCreatePlayerCommand(new EntityId(1), request, OnCreatePlayerResponse);
         }
     }

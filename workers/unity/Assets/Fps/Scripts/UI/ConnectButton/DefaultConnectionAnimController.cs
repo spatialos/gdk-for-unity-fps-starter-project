@@ -21,16 +21,6 @@ namespace Fps
 
             switch (state)
             {
-                case ConnectionStateReporter.State.None:
-                    break;
-                case ConnectionStateReporter.State.GettingDeploymentList:
-                    break;
-                case ConnectionStateReporter.State.DeploymentListAvailable:
-                    break;
-                case ConnectionStateReporter.State.FailedToGetDeploymentList:
-                    break;
-                case ConnectionStateReporter.State.Connecting:
-                    break;
                 case ConnectionStateReporter.State.Connected:
                     animator.SetTrigger("Ready");
                     break;
@@ -40,13 +30,20 @@ namespace Fps
                 case ConnectionStateReporter.State.Spawning:
                     animator.SetTrigger("Connecting");
                     break;
-                case ConnectionStateReporter.State.Spawned:
-                    break;
                 case ConnectionStateReporter.State.SpawningFailed:
                     animator.SetTrigger("FailedToSpawn");
                     break;
                 case ConnectionStateReporter.State.WorkerDisconnected:
                     animator.SetTrigger("Disconnected");
+                    break;
+                case ConnectionStateReporter.State.None:
+                case ConnectionStateReporter.State.GettingDeploymentList:
+                case ConnectionStateReporter.State.DeploymentListAvailable:
+                case ConnectionStateReporter.State.FailedToGetDeploymentList:
+                case ConnectionStateReporter.State.Connecting:
+                case ConnectionStateReporter.State.WaitingForGameStart:
+                case ConnectionStateReporter.State.GameReady:
+                case ConnectionStateReporter.State.Spawned:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(state), state, null);

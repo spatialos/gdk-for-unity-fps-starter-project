@@ -1,205 +1,67 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 
 namespace Fps
 {
     public class LobbyScreenController : MonoBehaviour
     {
-        public Color BackgroundColor1;
-        public Color BackgroundColor2;
-        public Color HighlightedColor;
-        public Color HighlightedTextColor;
-        public Color UnavailableTextColor;
-        public Color DefaultTextColor;
-        public Button JoinButton;
-        public Button BackButton;
+        [SerializeField] private FpsUIButton startButton;
+        [SerializeField] private FpsUIButton cancelButton;
+        [SerializeField] private PlayerNameInputController playerNameInputController;
+        private bool nameIsValid;
+        private bool gameBegun;
 
-        private Color currentBgColor;
-        private Table lobbyTable;
-        private const int maxRows = 11; // Includes header
-        private int currentlyHighlightedEntry = -1;
-        private DeploymentData[] deploymentList;
-        private FrontEndUIController frontEndUiController;
+        private FrontEndUIController frontEndUIController;
 
         private void Awake()
         {
-            Debug.Assert(JoinButton != null);
-            JoinButton.onClick.AddListener(JoinButtonPressed);
+            Debug.Assert(startButton != null);
+            startButton.onClick.AddListener(OnStartButtonPressed);
 
-            Debug.Assert(BackButton != null);
-            BackButton.onClick.AddListener(BackButtonPressed);
+            Debug.Assert(cancelButton != null);
+            cancelButton.onClick.AddListener(OnCancelButtonPressed);
 
-            lobbyTable = GetComponentInChildren<Table>();
-            Debug.Assert(lobbyTable != null);
+            frontEndUIController = GetComponentInParent<FrontEndUIController>();
+            Debug.Assert(frontEndUIController != null);
 
-            frontEndUiController = GetComponentInParent<FrontEndUIController>();
-            Debug.Assert(frontEndUiController != null);
+            Debug.Assert(playerNameInputController != null);
+            playerNameInputController.OnNameChanged += OnNameUpdated;
 
             ConnectionStateReporter.OnConnectionStateChange += OnConnectionStateChanged;
         }
 
-        private void OnConnectionStateChanged(ConnectionStateReporter.State state, string information)
-        {
-            if (state == ConnectionStateReporter.State.Connecting)
-            {
-                JoinButton.enabled = false;
-            }
-            else
-            {
-                // Are there any cases we don't want to reenable the join button on a valid deployment?
-                JoinButton.enabled = HighlightedIsAvailable();
-            }
-        }
-
-        private void JoinButtonPressed()
-        {
-            ConnectionStateReporter.TryConnect();
-            Debug.Log($"Joining deployment {deploymentList[currentlyHighlightedEntry].Name}"); // TODO replace
-        }
-
-        private void BackButtonPressed()
-        {
-            frontEndUiController.SwitchToSessionScreen();
-        }
-
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.UpArrow))
-            {
-                if (currentlyHighlightedEntry == -1)
-                {
-                    SelectEntry(0);
-                    return;
-                }
-
-                if (currentlyHighlightedEntry == 0)
-                {
-                    return;
-                }
-
-                SelectEntry(currentlyHighlightedEntry - 1);
-            }
-
-            if (Input.GetKeyDown(KeyCode.DownArrow))
-            {
-                if (currentlyHighlightedEntry == -1)
-                {
-                    SelectEntry(0);
-                    return;
-                }
-
-                if (currentlyHighlightedEntry == deploymentList.Length - 1)
-                {
-                    return;
-                }
-
-                SelectEntry(currentlyHighlightedEntry + 1);
-            }
-
-            if ((Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return))
-                && currentlyHighlightedEntry >= 0)
-            {
-                TryPressJoinButton();
-            }
-
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                TryPressBackButton();
-            }
-        }
-
-        private void TryPressJoinButton()
-        {
-            if (!JoinButton.enabled)
-            {
-                return;
-            }
-
-            JoinButton.onClick.Invoke();
-        }
-
-        private void TryPressBackButton()
-        {
-            if (!BackButton.enabled)
-            {
-                return;
-            }
-
-            BackButton.onClick.Invoke();
-        }
-
-        public void SetDeployments(DeploymentData[] deployments)
-        {
-            lobbyTable.ClearEntries();
-            currentBgColor = BackgroundColor1;
-
-            for (var i = 0; i < Mathf.Min(maxRows - 1, deployments.Length); i++)
-            {
-                AddDeploymentToTable(deployments[i], i);
-                currentBgColor = i % 2 == 0 ? BackgroundColor2 : BackgroundColor1;
-            }
-
-            deploymentList = deployments;
-        }
-
         private void OnEnable()
         {
-            if (currentlyHighlightedEntry >= 0)
-            {
-                UnhighlightEntry(currentlyHighlightedEntry);
-            }
-
-            currentlyHighlightedEntry = -1;
+            RefreshButtons();
         }
 
-        private void AddDeploymentToTable(DeploymentData deployment, int index)
+        private void OnConnectionStateChanged(ConnectionStateReporter.State state, string information)
         {
-            var entry = (LobbyTableEntry) lobbyTable.AddEntry();
-            var entryButton = entry.GetComponent<Button>();
-            entryButton.onClick.AddListener(() => SelectEntry(index));
-            entry.SetData(deployment);
-            entry.SetAllTextVisuals(deployment.IsAvailable ? DefaultTextColor : UnavailableTextColor, false);
-            entry.SetBackgroundColor(currentBgColor);
+            gameBegun = state == ConnectionStateReporter.State.GameReady;
+            playerNameInputController.DisplayEnterNameHint = gameBegun;
+            playerNameInputController.UpdateHintText();
+            RefreshButtons();
         }
 
-        private void SelectEntry(int index)
+        private void OnNameUpdated(bool isValid)
         {
-            if (currentlyHighlightedEntry >= 0)
-            {
-                UnhighlightEntry(currentlyHighlightedEntry);
-            }
-
-            HighlightEntry(index);
-
-            currentlyHighlightedEntry = index;
-
-            JoinButton.enabled = HighlightedIsAvailable();
+            nameIsValid = isValid;
+            RefreshButtons();
         }
 
-        private bool HighlightedIsAvailable()
+        private void RefreshButtons()
         {
-            if (currentlyHighlightedEntry < 0
-                || deploymentList == null
-                || currentlyHighlightedEntry >= deploymentList.Length)
-            {
-                return false;
-            }
-
-            return deploymentList[currentlyHighlightedEntry].IsAvailable;
+            startButton.enabled = gameBegun && nameIsValid;
         }
 
-        private void HighlightEntry(int index)
+        public void OnStartButtonPressed()
         {
-            var entry = lobbyTable.GetEntry(index);
-            entry.SetBackgroundColor(HighlightedColor);
-            entry.SetAllTextVisuals(HighlightedTextColor, deploymentList[index].IsAvailable);
+            ConnectionStateReporter.TrySpawn();
         }
 
-        private void UnhighlightEntry(int index)
+        public void OnCancelButtonPressed()
         {
-            var entry = lobbyTable.GetEntry(index);
-            entry.SetBackgroundColor(index % 2 == 0 ? BackgroundColor1 : BackgroundColor2);
-            entry.SetAllTextVisuals(deploymentList[index].IsAvailable ? DefaultTextColor : UnavailableTextColor, false);
+            ConnectionStateReporter.TryDisconnect();
+            frontEndUIController.SwitchToSessionScreen();
         }
     }
 }

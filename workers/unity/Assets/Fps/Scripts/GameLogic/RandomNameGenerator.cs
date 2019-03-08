@@ -2,6 +2,7 @@
 
 namespace Fps
 {
+    //TODO Remove class + usages before public release
     public static class RandomNameGenerator
     {
         public static string GetName()
