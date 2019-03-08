@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Fps
@@ -11,6 +12,7 @@ namespace Fps
             None,
             DefaultConnect,
             SessionScreen,
+            DeploymentList,
             Lobby,
             Results
         }
@@ -20,8 +22,9 @@ namespace Fps
 
         [Header("Screens")] public ConnectScreenController ConnectScreenController;
         public SessionScreenController SessionScreenController;
-        public LobbyScreenController LobbyScreenController;
+        public DeploymentListScreenController DeploymentListScreenController;
         public ResultsScreenController ResultsScreenController;
+        [FormerlySerializedAs("PregameScreenController")] public LobbyScreenController LobbyScreenController;
 
         public ScreenType CurrentScreen { get; private set; }
 
@@ -38,7 +41,7 @@ namespace Fps
             CurrentScreen = ScreenType.None;
             ConnectScreenController.gameObject.SetActive(false);
             SessionScreenController.gameObject.SetActive(false);
-            LobbyScreenController.gameObject.SetActive(false);
+            DeploymentListScreenController.gameObject.SetActive(false);
             ResultsScreenController.gameObject.SetActive(false);
             QuitButton.onClick.AddListener(ScreenUIController.Quit);
         }
@@ -77,13 +80,15 @@ namespace Fps
             var currentScreenGO = GetGOFromScreen(CurrentScreen);
             ConnectScreenController.gameObject.SetActive(ConnectScreenController.gameObject == currentScreenGO);
             SessionScreenController.gameObject.SetActive(SessionScreenController.gameObject == currentScreenGO);
-            LobbyScreenController.gameObject.SetActive(LobbyScreenController.gameObject == currentScreenGO);
+            DeploymentListScreenController.gameObject.SetActive(DeploymentListScreenController.gameObject ==
+                currentScreenGO);
             ResultsScreenController.gameObject.SetActive(ResultsScreenController.gameObject == currentScreenGO);
+            LobbyScreenController.gameObject.SetActive(LobbyScreenController.gameObject == currentScreenGO);
         }
 
-        public void SwitchToLobbyScreen()
+        public void SwitchToDeploymentListScreen()
         {
-            SetScreenTo(ScreenType.Lobby);
+            SetScreenTo(ScreenType.DeploymentList);
         }
 
         public void SwitchToSessionScreen()
@@ -96,6 +101,11 @@ namespace Fps
             SetScreenTo(ScreenType.Results);
         }
 
+        public void SwitchToLobbyScreen()
+        {
+            SetScreenTo(ScreenType.Lobby);
+        }
+
         private GameObject GetGOFromScreen(ScreenType screenType)
         {
             switch (screenType)
@@ -106,10 +116,12 @@ namespace Fps
                     return ConnectScreenController.gameObject;
                 case ScreenType.SessionScreen:
                     return SessionScreenController.gameObject;
-                case ScreenType.Lobby:
-                    return LobbyScreenController.gameObject;
+                case ScreenType.DeploymentList:
+                    return DeploymentListScreenController.gameObject;
                 case ScreenType.Results:
                     return ResultsScreenController.gameObject;
+                case ScreenType.Lobby:
+                    return LobbyScreenController.gameObject;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(screenType), screenType, null);
             }

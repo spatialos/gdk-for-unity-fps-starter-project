@@ -28,7 +28,6 @@ namespace Fps
             }
 
             TestSeconds = Mathf.Clamp(TestSeconds, 0, 100 * 60 - 1);
-            UpdateTime(TestSeconds);
         }
 
         private void Start()

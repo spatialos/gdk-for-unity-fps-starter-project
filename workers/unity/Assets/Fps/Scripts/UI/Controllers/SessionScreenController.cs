@@ -6,59 +6,56 @@ namespace Fps
     {
         [SerializeField] private FpsUIButton quickJoinButton;
         [SerializeField] private FpsUIButton browseButton;
-        [SerializeField] private PlayerNameInputController playerNameInputController;
 
         private FrontEndUIController frontEndUIController;
 
         private void Awake()
         {
             Debug.Assert(quickJoinButton != null);
-            quickJoinButton.onClick.AddListener(QuickJoinPressed);
+            quickJoinButton.onClick.AddListener(OnQuickJoinPressed);
 
             Debug.Assert(browseButton != null);
-            browseButton.onClick.AddListener(BrowseButtonPressed);
+            browseButton.onClick.AddListener(OnBrowseButtonPressed);
 
             frontEndUIController = GetComponentInParent<FrontEndUIController>();
             Debug.Assert(frontEndUIController != null);
 
-            playerNameInputController.OnNameChanged += OnNameUpdated;
-            Debug.Assert(playerNameInputController != null);
-
-            ConnectionStateReporter.OnConnectionStateChange += ConnectionStateChanged;
+            ConnectionStateReporter.OnConnectionStateChange += OnConnectionStateChanged;
         }
 
-        private void ConnectionStateChanged(ConnectionStateReporter.State state, string information)
+        private void OnEnable()
         {
-            playerNameInputController.AllowEdit = ConnectionStateReporter.HaveDeployments;
             RefreshButtons();
         }
 
-
-        private bool nameIsValid;
-
-        private void OnNameUpdated(bool isValid)
+        private void OnConnectionStateChanged(ConnectionStateReporter.State state, string information)
         {
-            nameIsValid = isValid;
+            if (state == ConnectionStateReporter.State.Connected)
+            {
+                frontEndUIController.SwitchToLobbyScreen();
+                return;
+            }
+
             RefreshButtons();
         }
 
         private void RefreshButtons()
         {
-            var enableButtons = nameIsValid && ConnectionStateReporter.HaveDeployments;
+            var enableButtons = ConnectionStateReporter.HaveDeployments;
 
             quickJoinButton.enabled = enableButtons;
             browseButton.enabled = enableButtons;
         }
 
 
-        public void QuickJoinPressed()
+        public void OnQuickJoinPressed()
         {
             ConnectionStateReporter.TryConnect();
         }
 
-        public void BrowseButtonPressed()
+        public void OnBrowseButtonPressed()
         {
-            frontEndUIController.SwitchToLobbyScreen();
+            frontEndUIController.SwitchToDeploymentListScreen();
         }
     }
 }
