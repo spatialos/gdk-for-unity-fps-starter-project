@@ -261,16 +261,8 @@ namespace Fps
                     1);
             collision.gameObject.name = "Collision";
 
-            if (Application.isPlaying)
-            {
-                Object.Destroy(collision.GetComponent<MeshRenderer>());
-                Object.Destroy(collision.GetComponent<MeshFilter>());
-            }
-            else
-            {
-                Object.DestroyImmediate(collision.GetComponent<MeshRenderer>());
-                Object.DestroyImmediate(collision.GetComponent<MeshFilter>());
-            }
+            UnityObjectDestroyer.Destroy(collision.GetComponent<MeshRenderer>());
+            UnityObjectDestroyer.Destroy(collision.GetComponent<MeshFilter>());
         }
 
         private void MakeCorner(int angle, Vector3 cornerOffset)
@@ -495,7 +487,7 @@ namespace Fps
 
                 if (volumesPrefab != null)
                 {
-                    Object.Destroy(volumesPrefab);
+                    UnityObjectDestroyer.Destroy(volumesPrefab);
                 }
             }
             else
