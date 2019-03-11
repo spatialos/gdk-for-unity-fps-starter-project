@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Improbable.Gdk.Core;
@@ -29,7 +30,7 @@ namespace Fps
 
         [SerializeField] private MapBuilderSettings MapBuilderSettings;
 
-        private GameObject levelInstance;
+        public GameObject LevelInstance;
 
         private List<TileEnabler> levelTiles = new List<TileEnabler>();
         public List<TileEnabler> LevelTiles => levelTiles;
@@ -192,7 +193,7 @@ namespace Fps
                 new AdvancedEntityPipeline(Worker, AuthPlayer, NonAuthPlayer, fallback),
                 gameObject);
 
-            LoadWorld();
+            StartCoroutine(LoadWorld());
         }
 
         protected override void HandleWorkerConnectionFailure(string errorMessage)
@@ -202,25 +203,26 @@ namespace Fps
 
         public override void Dispose()
         {
-            if (levelInstance != null)
+            if (LevelInstance != null)
             {
-                Destroy(levelInstance);
+                Destroy(LevelInstance);
             }
 
             base.Dispose();
         }
 
         // Get the world size from the config, and use it to load the appropriate level.
-        protected virtual void LoadWorld()
+        protected virtual IEnumerator LoadWorld()
         {
-            levelInstance = MapBuilder.GenerateMap(
+            yield return MapBuilder.GenerateMap(
                 MapBuilderSettings,
                 transform,
                 Worker.Connection,
                 Worker.WorkerType,
-                Worker.LogDispatcher);
+                Worker.LogDispatcher,
+                this);
 
-            levelInstance.GetComponentsInChildren<TileEnabler>(true, levelTiles);
+            LevelInstance.GetComponentsInChildren<TileEnabler>(true, levelTiles);
             foreach (var tileEnabler in levelTiles)
             {
                 tileEnabler.IsClient = true;

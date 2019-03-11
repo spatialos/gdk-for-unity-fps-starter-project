@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Improbable.Gdk.Core;
 using UnityEngine;
@@ -151,11 +152,11 @@ namespace Fps
             connectionController.OnFailedToConnect(errorMessage);
         }
 
-        protected override void LoadWorld()
+        protected override IEnumerator LoadWorld()
         {
-            base.LoadWorld();
+            yield return base.LoadWorld();
 
-            levelInstance.GetComponentsInChildren(true, levelTiles);
+            LevelInstance.GetComponentsInChildren(true, levelTiles);
             foreach (var tileEnabler in levelTiles)
             {
                 tileEnabler.IsClient = true;

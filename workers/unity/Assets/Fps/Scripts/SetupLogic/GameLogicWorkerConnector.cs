@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.Subscriptions;
@@ -46,13 +47,13 @@ namespace Fps
             base.HandleWorkerConnectionEstablished();
         }
 
-        protected override void LoadWorld()
+        protected override IEnumerator LoadWorld()
         {
-            base.LoadWorld();
+            yield return base.LoadWorld();
 
             if (DisableRenderers)
             {
-                foreach (var childRenderer in levelInstance.GetComponentsInChildren<Renderer>())
+                foreach (var childRenderer in LevelInstance.GetComponentsInChildren<Renderer>())
                 {
                     childRenderer.enabled = false;
                 }
