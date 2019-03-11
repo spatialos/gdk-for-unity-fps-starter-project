@@ -15,6 +15,9 @@ namespace Fps
 
         private WorkerConnector clientWorkerConnector;
 
+        private bool isReadyToSpawn;
+        private bool wantsSpawn;
+
         private void Start()
         {
             clientWorkerConnector = gameObject.GetComponent<WorkerConnector>();
@@ -43,6 +46,16 @@ namespace Fps
             }
         }
 
+        private void Update()
+        {
+            if (wantsSpawn && isReadyToSpawn)
+            {
+                SendRequest();
+                wantsSpawn = false;
+            }
+        }
+
+
         private IEnumerator DelayedConnectedMessage()
         {
             // 1 frame delay necessary to allow [Require] components to active on ConnectionController
@@ -61,6 +74,12 @@ namespace Fps
                 ConnectionStateReporter.SetState(ConnectionStateReporter.State.SpawningFailed,
                     obj.StatusCode.ToString());
             }
+
+            if (wantsSpawn && isReadyToSpawn)
+            {
+                SendRequest();
+                wantsSpawn = false;
+            }
         }
 
         public void OnFailedToConnect(string errorMessage)
@@ -73,7 +92,20 @@ namespace Fps
             ConnectionStateReporter.SetState(ConnectionStateReporter.State.WorkerDisconnected);
         }
 
+        public void OnReadyToSpawn()
+        {
+            isReadyToSpawn = true;
+        }
+
+        private string playerName;
+
         public void SpawnPlayerAction(string playerName)
+        {
+            this.playerName = playerName;
+            wantsSpawn = true;
+        }
+
+        public void SendRequest()
         {
             var serializedArgs = PlayerLifecycleHelper.SerializeArguments(playerName);
             var request = new CreatePlayerRequestType(serializedArgs);

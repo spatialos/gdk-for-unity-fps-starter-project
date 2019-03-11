@@ -161,6 +161,8 @@ namespace Fps
             {
                 tileEnabler.IsClient = true;
             }
+
+            connectionController.OnReadyToSpawn();
         }
 
         public override void Dispose()
