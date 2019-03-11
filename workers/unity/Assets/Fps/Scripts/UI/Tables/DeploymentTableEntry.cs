@@ -8,7 +8,8 @@ namespace Fps
         [SerializeField] private Text DeploymentNameText;
         [SerializeField] private Text PlayersText;
         [SerializeField] private Text MaxPlayersText;
-        [SerializeField] private Text AvailabilityText;
+        [SerializeField] private GameObject AvailableSymbol;
+        [SerializeField] private GameObject UnavailableSymbol;
 
 
         public void SetData(DeploymentData data)
@@ -16,7 +17,8 @@ namespace Fps
             DeploymentNameText.text = data.Name;
             PlayersText.text = data.CurrentPlayers.ToString();
             MaxPlayersText.text = data.MaxPlayers.ToString();
-            AvailabilityText.text = data.IsAvailable ? "Available" : "Unavailable";
+            AvailableSymbol.SetActive(data.IsAvailable);
+            UnavailableSymbol.SetActive(!data.IsAvailable);
         }
     }
 }
