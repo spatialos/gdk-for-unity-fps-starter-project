@@ -13,27 +13,18 @@ namespace Fps
         public Color DefaultTextColor;
         public Button JoinButton;
         public Button BackButton;
-
+        public Table deploymentListTable;
+        public FrontEndUIController frontEndUiController;
+        
         private Color currentBgColor;
-        private Table deploymentListTable;
         private const int maxRows = 11; // Includes header
         private int currentlyHighlightedEntry = -1;
         private DeploymentData[] deploymentList;
-        private FrontEndUIController frontEndUiController;
 
         private void Awake()
         {
-            Debug.Assert(JoinButton != null);
             JoinButton.onClick.AddListener(OnJoinButtonPressed);
-
-            Debug.Assert(BackButton != null);
             BackButton.onClick.AddListener(OnBackButtonPressed);
-
-            deploymentListTable = GetComponentInChildren<Table>();
-            Debug.Assert(deploymentListTable != null);
-
-            frontEndUiController = GetComponentInParent<FrontEndUIController>();
-            Debug.Assert(frontEndUiController != null);
 
             ConnectionStateReporter.OnConnectionStateChange += OnConnectionStateChanged;
         }
@@ -53,11 +44,13 @@ namespace Fps
 
         private void OnJoinButtonPressed()
         {
-            ConnectionStateReporter.TryConnect(); // TODO replace with actual connect-to-deployment logic
+            var deploymentName = deploymentList[currentlyHighlightedEntry].Name;
+            ConnectionStateReporter.SetState(ConnectionStateReporter.State.Connecting, deploymentName);
         }
 
         private void OnBackButtonPressed()
         {
+            ConnectionStateReporter.SetState(ConnectionStateReporter.State.None);
             frontEndUiController.SwitchToSessionScreen();
         }
 
@@ -125,7 +118,7 @@ namespace Fps
         }
 
         public void SetDeployments(DeploymentData[] deployments)
-        {
+        {            
             deploymentListTable.ClearEntries();
             currentBgColor = BackgroundColor1;
 

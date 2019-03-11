@@ -8,6 +8,7 @@ namespace Fps
         [SerializeField] private FpsUIButton browseButton;
 
         private FrontEndUIController frontEndUIController;
+        private bool nameIsValid;
 
         private void Awake()
         {
@@ -50,7 +51,7 @@ namespace Fps
 
         public void OnQuickJoinPressed()
         {
-            ConnectionStateReporter.TryConnect();
+            ConnectionStateReporter.SetState(ConnectionStateReporter.State.QuickJoin);
         }
 
         public void OnBrowseButtonPressed()

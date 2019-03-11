@@ -45,7 +45,9 @@ namespace Fps
             var playerName = RandomNameGenerator.GetName();
             var kills = Random.Range(0, 40);
             var deaths = Random.Range(0, 40);
-            return new ResultsData(rank, playerName, kills, deaths);
+            var resultsData = new ResultsData(playerName, kills, deaths);
+            resultsData.SetRank(rank);
+            return resultsData;
         }
     }
 }

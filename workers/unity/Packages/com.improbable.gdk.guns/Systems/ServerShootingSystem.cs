@@ -2,6 +2,7 @@ using Improbable.Gdk.Core;
 using Improbable.Gdk.Health;
 using Unity.Collections;
 using Unity.Entities;
+using UnityEngine;
 
 namespace Improbable.Gdk.Guns
 {
@@ -40,12 +41,14 @@ namespace Improbable.Gdk.Guns
                     // Send command to entity being shot.
                     var modifyHealthRequest = new HealthComponent.ModifyHealth.Request(
                         new EntityId(shotInfo.EntityId),
-                        new HealthModifier()
+                        new HealthModifier
                         {
                             Amount = -damage,
                             Origin = shotInfo.HitOrigin,
-                            AppliedLocation = shotInfo.HitLocation
+                            AppliedLocation = shotInfo.HitLocation,
+                            Owner = shotInfo.OwnId
                         });
+                    
                     commandSender.RequestsToSend.Add(modifyHealthRequest);
                     commandSent = true;
                 }

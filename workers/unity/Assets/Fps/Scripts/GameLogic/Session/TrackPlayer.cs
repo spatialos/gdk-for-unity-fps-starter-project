@@ -24,7 +24,7 @@ namespace Fps
 
         private void OnConnectionStateChange(ConnectionStateReporter.State state, string information)
         {
-            if (state == ConnectionStateReporter.State.ShowResults)
+            if (state == ConnectionStateReporter.State.GatherResults)
             {
                 var results = new List<ResultsData>();
                 var ownPlayerFilter = new[]
@@ -51,15 +51,15 @@ namespace Fps
                     var result = new ResultsData(playerState.Name, playerState.Kills, playerState.Deaths);
                     results.Add(result);
                 }
-                
 
-                results.Sort((x, y) => x.KillDeathRatio.CompareTo(y.KillDeathRatio));
+
+                results.Sort((x, y) => y.KillDeathRatio.CompareTo(x.KillDeathRatio));
                 var playerRank = -1;
 
                 for (var i = 0; i < results.Count; i++)
                 {
                     var result = results[i];
-                    result.Rank = i;
+                    result.Rank = i + 1;
                     results[i] = result;
 
                     if (playerName == result.PlayerName)
@@ -70,6 +70,7 @@ namespace Fps
 
                 resultsScreenController.gameObject.SetActive(true);
                 resultsScreenController.SetResults(results.ToArray(), playerRank);
+                ConnectionStateReporter.SetState(ConnectionStateReporter.State.ShowResults);
             }
         }
 

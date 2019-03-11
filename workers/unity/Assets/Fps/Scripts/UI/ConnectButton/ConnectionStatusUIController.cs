@@ -13,18 +13,17 @@ namespace Fps
         public GameObject SuccessSymbol;
         public Text StatusText;
 
-        public string DeploymentListAvailableText = "Deployments available";
-        public string GettingDeploymentListText = "Getting deployment list...";
-        public string FailedToGetDeploymentListText = "Failed to get deployment list!";
-        public string ConnectingText = "Searching for deployment to join...";
-        public string ConnectionFailedText = "Failed to join deployment!";
-        public string ConnectedText = "Connected";
-        public string WaitingForGameStartText = "Game starting in {0:#} SECONDS";
-        public string GameStartingImminentText = "Game starting...";
-        public string GameReadyText = "Game begun! Ready to spawn.";
-        public string SpawningText = "Joining deployment...";
-        public string SpawningFailedText = "Failed to spawn player!";
-        public string WorkerDisconnectedText = "Worker was disconnected";
+        public string DeploymentListAvailableText;
+        public string GettingDeploymentListText;
+        public string FailedToGetDeploymentListText;
+        public string ConnectionFailedText;
+        public string ConnectedText;
+        public string WaitingForGameStartText;
+        public string SpawningText;
+        public string GameReadyText;
+        public string ConnectingText;
+        public string SpawningFailedText;
+        public string WorkerDisconnectedText;
 
         private void Awake()
         {
@@ -62,6 +61,7 @@ namespace Fps
                 case ConnectionStateReporter.State.FailedToGetDeploymentList:
                     StateFailedToGetDeploymentList(information);
                     break;
+                case ConnectionStateReporter.State.QuickJoin:
                 case ConnectionStateReporter.State.Connecting:
                     StateConnecting();
                     break;
@@ -87,6 +87,10 @@ namespace Fps
                     break;
                 case ConnectionStateReporter.State.WorkerDisconnected:
                     StateWorkerDisconnected();
+                    break;
+                case ConnectionStateReporter.State.GatherResults:
+                case ConnectionStateReporter.State.ShowResults:
+                case ConnectionStateReporter.State.EndSession:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(state), state, null);
@@ -137,8 +141,8 @@ namespace Fps
 
         private void StateWaitingForGameStart()
         {
+            StatusText.text = WaitingForGameStartText;
             SetSymbol(SpinnerSymbol);
-            StartCoroutine(UpdateGameStartTime());
         }
 
         private void StateGameReady()
@@ -184,19 +188,6 @@ namespace Fps
             if (SuccessSymbol != null)
             {
                 SuccessSymbol.SetActive(symbol == SuccessSymbol);
-            }
-        }
-
-        private IEnumerator UpdateGameStartTime()
-        {
-            while (ConnectionStateReporter.CurrentState == ConnectionStateReporter.State.WaitingForGameStart)
-            {
-                var timeUntilStart = ConnectionStateReporter.TimeUntilGameStart;
-                StatusText.text = timeUntilStart < 1
-                    ? GameStartingImminentText
-                    : string.Format(WaitingForGameStartText, ConnectionStateReporter.TimeUntilGameStart);
-
-                yield return new WaitForSeconds(.5f);
             }
         }
     }

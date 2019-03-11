@@ -17,8 +17,8 @@ namespace Fps
             gameUITimer = GameObject.FindGameObjectWithTag("Timer").GetComponent<GameUITimer>();
             gameUITimer.SetMaxTime(timerReader.Data.MaxTimeSeconds);
             gameUITimer.SynchronizeTime(timerReader.Data.CurrentTimeSeconds);
-            
-            
+
+
             sessionReader.OnStatusUpdate += OnSessionStatusUpdated;
             timerReader.OnCurrentTimeSecondsUpdate += OnCurrentTimeSecondsUpdated;
 
@@ -35,11 +35,7 @@ namespace Fps
         {
             if (status == Status.STOPPING && ConnectionStateReporter.CurrentState == ConnectionStateReporter.State.Spawned)
             {
-                ConnectionStateReporter.SetState(ConnectionStateReporter.State.ShowResults);
-            }
-            else if (status == Status.STOPPED && ConnectionStateReporter.CurrentState != ConnectionStateReporter.State.EndSession)
-            {
-                ConnectionStateReporter.SetState(ConnectionStateReporter.State.EndSession);
+                ConnectionStateReporter.SetState(ConnectionStateReporter.State.GatherResults);
             }
         }
     }

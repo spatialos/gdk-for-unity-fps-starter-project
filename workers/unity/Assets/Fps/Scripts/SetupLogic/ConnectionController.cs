@@ -1,6 +1,7 @@
 using System.Collections;
 using Improbable;
 using Improbable.Gdk.Core;
+using Improbable.Gdk.PlayerLifecycle;
 using Improbable.Gdk.Subscriptions;
 using Improbable.PlayerLifecycle;
 using Improbable.Worker.CInterop;
@@ -16,21 +17,29 @@ namespace Fps
 
         private void Start()
         {
-            ConnectionStateReporter.InformOfConnectionController(this);
             clientWorkerConnector = gameObject.GetComponent<WorkerConnector>();
             clientWorkerConnector.OnWorkerCreationFinished += OnWorkerCreated;
+            ConnectionStateReporter.OnConnectionStateChange += OnConnectionStateChange;
+        }
+
+        private void OnConnectionStateChange(ConnectionStateReporter.State state, string information)
+        {
+            if (state == ConnectionStateReporter.State.Spawning)
+            {
+                SpawnPlayerAction(information);
+            }
         }
 
         private void OnWorkerCreated(Worker worker)
         {
-            if (worker.Connection.GetConnectionStatusCode() == ConnectionStatusCode.Success)
+            if (worker?.Connection.GetConnectionStatusCode() == ConnectionStatusCode.Success)
             {
                 StartCoroutine(DelayedConnectedMessage());
             }
             else
             {
                 ConnectionStateReporter.SetState(ConnectionStateReporter.State.ConnectionFailed,
-                    worker.Connection.GetConnectionStatusCodeDetailString());
+                    worker?.Connection.GetConnectionStatusCodeDetailString());
             }
         }
 
@@ -64,25 +73,16 @@ namespace Fps
             ConnectionStateReporter.SetState(ConnectionStateReporter.State.WorkerDisconnected);
         }
 
-        public void Connect()
+        public void SpawnPlayerAction(string playerName)
         {
-            ClientWorkerHandler.CreateClient();
-        }
-
-        public void Disconnect()
-        {
-            // TODO Disconnect?
-            if (clientWorkerConnector != null)
-            {
-                Destroy(clientWorkerConnector.gameObject);
-            }
-        }
-
-        public void SpawnPlayerAction()
-        {
-            ConnectionStateReporter.SetState(ConnectionStateReporter.State.Spawning);
-            var request = new CreatePlayerRequestType();
+            var serializedArgs = PlayerLifecycleHelper.SerializeArguments(playerName);
+            var request = new CreatePlayerRequestType(serializedArgs);
             commandSender.SendCreatePlayerCommand(new EntityId(1), request, OnCreatePlayerResponse);
+        }
+
+        private void OnDestroy()
+        {
+            ConnectionStateReporter.OnConnectionStateChange -= OnConnectionStateChange;
         }
     }
 }

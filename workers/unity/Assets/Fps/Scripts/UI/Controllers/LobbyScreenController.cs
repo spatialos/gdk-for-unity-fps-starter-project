@@ -55,12 +55,12 @@ namespace Fps
 
         public void OnStartButtonPressed()
         {
-            ConnectionStateReporter.TrySpawn();
+            ConnectionStateReporter.SetState(ConnectionStateReporter.State.Spawning, playerNameInputController.GetPlayerName());
         }
 
         public void OnCancelButtonPressed()
         {
-            ConnectionStateReporter.TryDisconnect();
+            ConnectionStateReporter.SetState(ConnectionStateReporter.State.None);
             frontEndUIController.SwitchToSessionScreen();
         }
     }

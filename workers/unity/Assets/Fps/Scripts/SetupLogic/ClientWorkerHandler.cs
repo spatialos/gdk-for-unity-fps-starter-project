@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Improbable.Gdk.Core;
 using Improbable.Worker.CInterop;
@@ -7,32 +8,22 @@ namespace Fps
 {
     public class ClientWorkerHandler : MonoBehaviour
     {
+        public static List<TileEnabler> LevelTiles => Instance.tileProvider.LevelTiles;
+        public static ScreenUIController ScreenUIController => Instance.screenUIController;
+
         private static ClientWorkerHandler Instance;
 
         [SerializeField] private GameObject clientWorkerPrefab;
-
         [SerializeField] private ScreenUIController screenUIController;
+        [SerializeField] private bool UseSessionBasedFlow;
 
         private GameObject currentClientWorker;
         private ConnectionController connectionController;
         private WorkerConnector workerConnector;
         private ITileProvider tileProvider;
 
-        public static List<TileEnabler> LevelTiles => Instance.tileProvider.LevelTiles;
-
-        public static WorkerConnector ClientWorkerConnector => Instance.workerConnector;
-        public static ConnectionController ConnectionController => Instance.connectionController;
-        public static ScreenUIController ScreenUIController => Instance.screenUIController;
-
-        [SerializeField] private bool UseSessionBasedFlow;
-
         public static bool IsInSessionBasedGame => Instance.UseSessionBasedFlow;
-
-
-        public static void CreateClient()
-        {
-            Instance.CreateClientWorker();
-        }
+        public static string Deployment;
 
         private void Awake()
         {
@@ -46,11 +37,12 @@ namespace Fps
 
             if (UseSessionBasedFlow)
             {
-                GetComponent<SessionFlowTester>().enabled = true;
+                GetComponent<SessionFlowController>().enabled = true;
             }
             else
             {
                 CreateClientWorker();
+                ConnectionStateReporter.SetState(ConnectionStateReporter.State.Connecting);
             }
         }
 
@@ -60,9 +52,8 @@ namespace Fps
             DisconnectCheck();
         }
 
-        private void CreateClientWorker()
+        public void CreateClientWorker()
         {
-            ConnectionStateReporter.SetState(ConnectionStateReporter.State.Connecting);
             if (currentClientWorker != null)
             {
                 Destroy(currentClientWorker);
@@ -82,6 +73,8 @@ namespace Fps
             {
                 connectionController.OnDisconnected();
                 Destroy(currentClientWorker);
+
+                ConnectionStateReporter.SetState(ConnectionStateReporter.State.None);
             }
         }
     }

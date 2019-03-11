@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Improbable.Worker.CInterop;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Fps
@@ -20,7 +21,7 @@ namespace Fps
 
         private FrontEndUIController frontEndUiController;
 
-        private void Awake()
+        private void OnEnable()
         {
             Debug.Assert(DoneButton != null);
             DoneButton.onClick.AddListener(OnDoneButtonPressed);
@@ -44,13 +45,14 @@ namespace Fps
 
         private void OnDoneButtonPressed()
         {
+            ConnectionStateReporter.SetState(ConnectionStateReporter.State.EndSession);
             frontEndUiController.SwitchToSessionScreen();
         }
 
         /// <param name="playerRank">zero-based value of player's rank.</param>
         public void SetResults(ResultsData[] results, int playerRank)
         {
-            resultsTable.ClearEntries();
+            resultsTable.ClearEntries(); // TODO THIS IS NULL >.<
             currentBgColor = BackgroundStripColor1;
 
             AdjustTableHeight(playerRank);

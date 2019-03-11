@@ -16,11 +16,10 @@ namespace Fps
         {
             if (ConnectionStateReporter.IsConnected)
             {
-                ConnectionStateReporter.TrySpawn();
             }
             else
             {
-                ConnectionStateReporter.TryConnect();
+                ConnectionStateReporter.SetState(ConnectionStateReporter.State.Connecting);
             }
         }
 

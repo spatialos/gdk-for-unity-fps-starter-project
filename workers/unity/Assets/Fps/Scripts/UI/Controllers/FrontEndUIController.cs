@@ -50,14 +50,7 @@ namespace Fps
         {
             FrontEndCamera.SetActive(true);
             Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.Confined;
-
-            if (testResultsAvailable)
-            {
-                // TODO Replace this test logic
-                SetScreenTo(ScreenType.Results);
-                return;
-            }
+            Cursor.lockState = CursorLockMode.None;
 
             SetScreenTo(ClientWorkerHandler.IsInSessionBasedGame
                 ? ScreenType.SessionScreen

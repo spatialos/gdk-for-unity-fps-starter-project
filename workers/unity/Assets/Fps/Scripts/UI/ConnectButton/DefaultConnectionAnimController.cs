@@ -44,6 +44,9 @@ namespace Fps
                 case ConnectionStateReporter.State.WaitingForGameStart:
                 case ConnectionStateReporter.State.GameReady:
                 case ConnectionStateReporter.State.Spawned:
+                case ConnectionStateReporter.State.GatherResults:
+                case ConnectionStateReporter.State.ShowResults:
+                case ConnectionStateReporter.State.EndSession:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(state), state, null);

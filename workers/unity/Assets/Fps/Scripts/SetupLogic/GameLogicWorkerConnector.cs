@@ -4,6 +4,7 @@ using Improbable.Gdk.Subscriptions;
 using Improbable.Gdk.Guns;
 using Improbable.Gdk.Health;
 using Improbable.Gdk.PlayerLifecycle;
+using Improbable.Gdk.Session;
 
 namespace Fps
 {
@@ -31,6 +32,9 @@ namespace Fps
 
             // Shooting
             world.GetOrCreateManager<ServerShootingSystem>();
+            
+            // Session
+            world.GetOrCreateManager<PlayerStateServerSystem>();
 
             // Metrics
             world.GetOrCreateManager<MetricSendSystem>();
