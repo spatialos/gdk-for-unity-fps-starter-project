@@ -5,7 +5,7 @@ using Improbable.Gdk.Core;
 using Improbable.Worker.CInterop;
 using UnityEngine;
 using Object = UnityEngine.Object;
-using Random = UnityEngine.Random;
+using Random = System.Random;
 
 namespace Fps
 {
@@ -44,6 +44,8 @@ namespace Fps
 
         private GameObject gameObject;
 
+        private Random random;
+
         public bool InvalidMapBuilder => gameObject == null;
 
         public MapBuilder(MapBuilderSettings mapBuilderSettings, GameObject gameObject)
@@ -62,6 +64,7 @@ namespace Fps
 
             Layers = worldLayers;
             Seed = seed;
+            random = new Random(seed.GetHashCode());
 
             if (!TryLoadResources())
             {
@@ -72,7 +75,6 @@ namespace Fps
             Clean();
 
             InitializeGroupsAndComponents();
-            Random.InitState(Seed.GetHashCode());
 
             var originalPosition = gameObject.transform.position;
             var originalRotation = gameObject.transform.rotation;
@@ -330,7 +332,7 @@ namespace Fps
                 return;
             }
 
-            float rotation = 90 * Random.Range(0, 4);
+            float rotation = 90 * random.Next(0, 4);
 
             PlaceTile(tileCoord, tile, rotation);
         }
@@ -407,10 +409,10 @@ namespace Fps
                     continue;
                 }
 
-                return volume.TypeCollection.GetRandomTile();
+                return volume.TypeCollection.GetRandomTile(random);
             }
 
-            return mapBuilderSettings.DefaultTileTypeCollection?.GetRandomTile();
+            return mapBuilderSettings.DefaultTileTypeCollection?.GetRandomTile(random);
         }
 
         public void Clean()
