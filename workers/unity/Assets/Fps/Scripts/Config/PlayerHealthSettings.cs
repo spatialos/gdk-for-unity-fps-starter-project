@@ -6,7 +6,7 @@
 
         public static float RegenAfterDamageCooldown = 5.0f;
         public static float RegenInterval = 0.2f;
-        public static float RegenAmount = 5.0f;
+        public static float RegenAmount = 2.0f;
         public static float SpatialCooldownSyncInterval = 0.5f;
     }
 }
