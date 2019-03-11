@@ -1,3 +1,4 @@
+using Improbable.Gdk.Core;
 using UnityEditor;
 using UnityEngine;
 
@@ -78,14 +79,7 @@ namespace Fps.Editor
 
                     if (volumesPrefab != null)
                     {
-                        if (Application.isPlaying)
-                        {
-                            Destroy(volumesPrefab);
-                        }
-                        else
-                        {
-                            DestroyImmediate(volumesPrefab);
-                        }
+                        UnityObjectDestroyer.Destroy(volumesPrefab);
                     }
                 }
             }
