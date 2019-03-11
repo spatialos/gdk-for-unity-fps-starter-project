@@ -174,6 +174,8 @@ namespace Fps
             {
                 tileEnabler.IsClient = true;
             }
+
+            connectionController.OnReadyToSpawn();
         }
     }
 }
