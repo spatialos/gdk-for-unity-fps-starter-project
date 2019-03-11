@@ -24,6 +24,7 @@
 	- Now make use of nested prefabs.
 	- Completely new set of default tiles used to populate the world
 - Updated the build configuration asset
+- Reduced the amount of health that gets regenerated. 
 
 ### Fixed
 
