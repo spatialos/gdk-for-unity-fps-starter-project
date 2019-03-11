@@ -85,7 +85,7 @@ public class SimulatedPlayerCoordinatorWorkerConnector : WorkerConnectorBase
                     var simulatedPlayer = Instantiate(SimulatedPlayerWorkerConnector, transform.position, transform.rotation);
                     var task = simulatedPlayer.GetComponent<SimulatedPlayerWorkerConnector>()
                         .ConnectSimulatedPlayer(Worker.LogDispatcher, SimulatedPlayerDevAuthTokenId, SimulatedPlayerTargetDeployment);
-                    task.Wait();
+                    yield return new WaitUntil(() => task.IsCompleted);
                     simulatedPlayerConnectors.Add(simulatedPlayer);
                 }
 

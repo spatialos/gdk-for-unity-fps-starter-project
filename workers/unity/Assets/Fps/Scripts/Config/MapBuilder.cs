@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Improbable.Gdk.Core;
 using Improbable.Worker.CInterop;
@@ -51,12 +52,12 @@ namespace Fps
             this.gameObject = gameObject;
         }
 
-        public void CleanAndBuild(int worldLayers = 4, string seed = "SpatialOS GDK for Unity")
+        public IEnumerator CleanAndBuild(int worldLayers = 4, string seed = "SpatialOS GDK for Unity")
         {
             if (mapBuilderSettings == null)
             {
                 Debug.LogError("MapBuilderSettings has not been set.");
-                return;
+                yield break;
             }
 
             Layers = worldLayers;
@@ -65,7 +66,7 @@ namespace Fps
             if (!TryLoadResources())
             {
                 Debug.LogError("Generation aborted (See previous message)");
-                return;
+                yield break;
             }
 
             Clean();
@@ -77,10 +78,15 @@ namespace Fps
             var originalRotation = gameObject.transform.rotation;
             gameObject.transform.position = Vector3.zero;
             gameObject.transform.rotation = Quaternion.identity;
-            PlaceTiles();
+            yield return null;
+            yield return PlaceTiles();
+            yield return null;
             PlaceGround();
+            yield return null;
             FillSurround();
+            yield return null;
             CollapseTileMeshes();
+            yield return null;
             MakeLevelObjectStatic();
 
             spawnPointSystemTransform.gameObject.GetComponent<SpawnPoints>()?.SetSpawnPoints();
@@ -274,8 +280,10 @@ namespace Fps
                 surroundParentTransform);
         }
 
-        private void PlaceTiles()
+        private IEnumerator PlaceTiles()
         {
+            const int tilesPerFrame = 50;
+
             var tileCoord = new Vector2Int();
             var diff = new Vector2Int(0, -1);
 
@@ -290,6 +298,10 @@ namespace Fps
                     && -Layers < tileCoord.y && tileCoord.y <= Layers)
                 {
                     PlaceTile(tileCoord);
+                    if (i % tilesPerFrame == 0)
+                    {
+                        yield return null;
+                    }
                 }
 
                 if (tileCoord.x == tileCoord.y ||
@@ -460,15 +472,57 @@ namespace Fps
             return connection.GetWorkerFlag("world_size");
         }
 
-        // Get the world size from the config, and use it to generate the correct-sized level
-        public static GameObject GenerateMap(
+        public static IEnumerator GenerateMap(
             MapBuilderSettings mapBuilderSettings,
             Transform workerTransform,
             Connection connection,
             string workerType,
-            ILogDispatcher logDispatcher)
+            ILogDispatcher logDispatcher,
+            WorkerConnectorBase worker)
         {
-            var levelInstance = new GameObject();
+            worker.LevelInstance = new GameObject();
+
+            yield return GenerateMap(mapBuilderSettings, workerTransform, connection, workerType, logDispatcher,
+                worker.LevelInstance);
+        }
+
+        public static IEnumerator GenerateMap(
+            MapBuilderSettings mapBuilderSettings,
+            Transform workerTransform,
+            Connection connection,
+            string workerType,
+            ILogDispatcher logDispatcher,
+            AndroidWorkerConnector worker)
+        {
+            worker.LevelInstance = new GameObject();
+
+            yield return GenerateMap(mapBuilderSettings, workerTransform, connection, workerType, logDispatcher,
+                worker.LevelInstance);
+        }
+
+        public static IEnumerator GenerateMap(
+            MapBuilderSettings mapBuilderSettings,
+            Transform workerTransform,
+            Connection connection,
+            string workerType,
+            ILogDispatcher logDispatcher,
+            iOSWorkerConnector worker)
+        {
+            worker.LevelInstance = new GameObject();
+
+            yield return GenerateMap(mapBuilderSettings, workerTransform, connection, workerType, logDispatcher,
+                worker.LevelInstance);
+        }
+
+        // Get the world size from the config, and use it to generate the correct-sized level
+        public static IEnumerator GenerateMap(
+            MapBuilderSettings mapBuilderSettings,
+            Transform workerTransform,
+            Connection connection,
+            string workerType,
+            ILogDispatcher logDispatcher,
+            GameObject levelInstance)
+        {
             var worldSize = GetWorldSizeFlag(connection);
 
             if (TryGetWorldLayerCount(mapBuilderSettings, worldSize, out var worldLayerCount))
@@ -483,7 +537,7 @@ namespace Fps
                     ? null
                     : Object.Instantiate(mapBuilderSettings.WorldTileVolumes);
 
-                mapBuilder.CleanAndBuild(worldLayerCount);
+                yield return mapBuilder.CleanAndBuild(worldLayerCount);
 
                 if (volumesPrefab != null)
                 {
@@ -496,8 +550,6 @@ namespace Fps
                     new LogEvent("Invalid world_size worker flag. Make sure that it is either small or large,")
                         .WithField("world_size", worldSize));
             }
-
-            return levelInstance;
         }
     }
 }

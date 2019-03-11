@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Improbable.Gdk.GameObjectCreation;
@@ -61,11 +62,11 @@ namespace Fps
             connectionController.OnFailedToConnect();
         }
 
-        protected override void LoadWorld()
+        protected override IEnumerator LoadWorld()
         {
-            base.LoadWorld();
+            yield return base.LoadWorld();
 
-            levelInstance.GetComponentsInChildren<TileEnabler>(true, levelTiles);
+            LevelInstance.GetComponentsInChildren<TileEnabler>(true, levelTiles);
             foreach (var tileEnabler in levelTiles)
             {
                 tileEnabler.IsClient = true;
