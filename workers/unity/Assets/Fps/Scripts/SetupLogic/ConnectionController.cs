@@ -61,7 +61,7 @@ namespace Fps
 
         public void OnDisconnected()
         {
-<            ConnectionStateReporter.SetState(ConnectionStateReporter.State.WorkerDisconnected);
+            ConnectionStateReporter.SetState(ConnectionStateReporter.State.WorkerDisconnected);
         }
 
         public void Connect()
