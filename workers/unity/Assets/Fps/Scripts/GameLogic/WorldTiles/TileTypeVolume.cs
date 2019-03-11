@@ -29,10 +29,5 @@ namespace Fps
             Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, transform.lossyScale);
             Gizmos.DrawCube(boxCollider.center, boxCollider.size);
         }
-
-        public GameObject GetRandomTile()
-        {
-            return TypeCollection?.GetRandomTile();
-        }
     }
 }
