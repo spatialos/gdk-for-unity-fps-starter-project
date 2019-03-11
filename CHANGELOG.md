@@ -10,7 +10,7 @@
     - Automatically open the SpatialOS Console page for a launched deployment.
 - New way to control tile distribution and types in the world via TileTypeVolume component:
     - Create a collection of tile types with a TileTypeCollection asset (Assets > Create > Improbable > Tile Type Collection).
-    - Place GOs with a TileTypeVolume component into a prefab to control where to spawn those tiles in the world.
+    - Place GameObjects with TileTypeVolume components into a prefab to control where to spawn those tiles in the world.
     - Specify the above TileTypeVolumes prefab to use inside MapBuilderSettings config object.
     - Specify a 'default' TileTypeCollection to use in the MapBuilderSettings to use if no volume found at a tile location.
     - Preexisting tile types: 'Default', 'Mountain', 'Residential', 'Structure', 'Tower', 'Wild'

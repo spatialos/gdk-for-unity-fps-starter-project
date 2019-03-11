@@ -1,3 +1,4 @@
+using Improbable.Gdk.Core;
 using UnityEditor;
 using UnityEngine;
 
@@ -70,7 +71,16 @@ namespace Fps.Editor
                         SetupMapBuilder();
                     }
 
+                    var volumesPrefab = mapBuilderSettings.WorldTileVolumes == null
+                        ? null
+                        : Instantiate(mapBuilderSettings.WorldTileVolumes);
+
                     mapBuilder.CleanAndBuild(layerCount, seed);
+
+                    if (volumesPrefab != null)
+                    {
+                        UnityObjectDestroyer.Destroy(volumesPrefab);
+                    }
                 }
             }
 
