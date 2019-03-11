@@ -48,7 +48,7 @@ namespace Fps
                 Destroy(currentClientWorker);
             }
 
-            currentClientWorker = Instantiate(clientWorkerPrefab);
+            currentClientWorker = Instantiate(clientWorkerPrefab, transform.position, Quaternion.identity);
             workerConnector = currentClientWorker.GetComponent<WorkerConnector>();
             tileProvider = workerConnector as ITileProvider;
             connectionController = currentClientWorker.GetComponent<ConnectionController>();
