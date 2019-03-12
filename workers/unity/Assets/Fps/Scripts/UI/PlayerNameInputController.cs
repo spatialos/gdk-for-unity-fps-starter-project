@@ -17,13 +17,12 @@ namespace Fps
 
         public int CurrentNameLength => inputField.text.Length;
 
-        private InputField inputField;
+        public InputField inputField;
 
         private readonly Color HintTextColor = new Color(1f, .4f, .4f);
 
         private void Awake()
         {
-            inputField = GetComponentInChildren<InputField>();
             HintText.text = string.Empty;
             SendOnNameChanged(false);
             inputField.onValueChanged.AddListener(OnValueChanged);
