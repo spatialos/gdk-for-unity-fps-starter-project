@@ -11,12 +11,13 @@ namespace Fps
     [DisableAutoCreation]
     public class TrackPlayerSystem : ComponentSystem
     {
+        private ScreenUIController controller;
         private ResultsScreenController resultsScreenController;
 
         protected override void OnCreateManager()
         {
             base.OnCreateManager();
-            var controller = Object.FindObjectOfType<ScreenUIController>();
+            controller = Object.FindObjectOfType<ScreenUIController>();
             resultsScreenController = controller.FrontEndController.ResultsScreenController;
             ConnectionStateReporter.OnConnectionStateChange += OnConnectionStateChange;
             Enabled = false;
@@ -68,7 +69,8 @@ namespace Fps
                     }
                 }
 
-                resultsScreenController.gameObject.SetActive(true);
+                controller.ShowFrontEnd();
+                controller.FrontEndController.SwitchToResultsScreen();
                 resultsScreenController.SetResults(results.ToArray(), playerRank);
                 ConnectionStateReporter.SetState(ConnectionStateReporter.State.ShowResults);
             }

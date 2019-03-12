@@ -12,14 +12,10 @@ namespace Fps
 
         private void Awake()
         {
-            Debug.Assert(quickJoinButton != null);
             quickJoinButton.onClick.AddListener(OnQuickJoinPressed);
-
-            Debug.Assert(browseButton != null);
             browseButton.onClick.AddListener(OnBrowseButtonPressed);
 
             frontEndUIController = GetComponentInParent<FrontEndUIController>();
-            Debug.Assert(frontEndUIController != null);
 
             ConnectionStateReporter.OnConnectionStateChange += OnConnectionStateChanged;
         }
@@ -31,6 +27,7 @@ namespace Fps
 
         private void OnConnectionStateChanged(ConnectionStateReporter.State state, string information)
         {
+            Debug.Log(state);
             if (state == ConnectionStateReporter.State.Connected)
             {
                 frontEndUIController.SwitchToLobbyScreen();

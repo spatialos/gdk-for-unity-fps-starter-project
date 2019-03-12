@@ -85,7 +85,6 @@ namespace Fps
                     break;
                 case ConnectionStateReporter.State.GatherResults:
                 case ConnectionStateReporter.State.ShowResults:
-                case ConnectionStateReporter.State.EndSession:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(state), state, null);

@@ -45,7 +45,6 @@ namespace Fps
 
         private void OnDoneButtonPressed()
         {
-            ConnectionStateReporter.SetState(ConnectionStateReporter.State.EndSession);
             frontEndUiController.SwitchToSessionScreen();
         }
 

@@ -14,10 +14,7 @@ namespace Fps
 
         public void OnConnectClicked()
         {
-            if (ConnectionStateReporter.IsConnected)
-            {
-            }
-            else
+            if (!ConnectionStateReporter.IsConnected)
             {
                 ConnectionStateReporter.SetState(ConnectionStateReporter.State.Connecting);
             }

@@ -20,7 +20,6 @@
             WorkerDisconnected,
             GatherResults,
             ShowResults,
-            EndSession,
         }
 
         public delegate void ConnectionStateChange(State state, string information);

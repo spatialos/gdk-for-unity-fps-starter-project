@@ -139,7 +139,7 @@ namespace Fps
             {
                 foreach (var loginToken in loginTokens)
                 {
-                    if (loginToken.Tags.Contains("state_lobby"))
+                    if (loginToken.Tags.Contains("state_lobby") || loginToken.Tags.Contains("state_running"))
                     {
                         return loginToken.LoginToken;
                     }
@@ -187,6 +187,11 @@ namespace Fps
 
             var fallback = new GameObjectCreatorFromMetadata(Worker.WorkerType, Worker.Origin, Worker.LogDispatcher);
 
+            if (ClientWorkerHandler.IsInSessionBasedGame)
+            {
+                world.GetOrCreateManager<TrackPlayerSystem>();
+            }
+
             // Set the Worker gameObject to the ClientWorker so it can access PlayerCreater reader/writers
             GameObjectCreationHelper.EnableStandardGameObjectCreation(
                 world,
@@ -208,6 +213,7 @@ namespace Fps
                 Destroy(LevelInstance);
             }
 
+            ConnectionStateReporter.OnConnectionStateChange -= OnConnectionStateChange;
             base.Dispose();
         }
 

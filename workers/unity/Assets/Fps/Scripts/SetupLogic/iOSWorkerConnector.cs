@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -8,6 +9,7 @@ using Improbable.Gdk.Subscriptions;
 using Improbable.Gdk.Mobile;
 using Improbable.Gdk.PlayerLifecycle;
 using Improbable.Worker.CInterop;
+using Improbable.Worker.CInterop.Alpha;
 using UnityEngine;
 
 #if UNITY_IOS
@@ -43,10 +45,7 @@ namespace Fps
             forcedIpAddress = Regex.Replace(forcedIpAddress, "[^0-9.]", "");
         }
 
-        public async void TryConnect()
-        {
-            await Connect(WorkerUtils.iOSClient, new ForwardingDispatcher()).ConfigureAwait(false);
-        }
+        private string chosenDeployment;
 
         private void Awake()
         {
@@ -64,14 +63,37 @@ namespace Fps
                     Debug.LogWarning("Unable to find DevAuthToken.txt in the Resources folder.");
                 }
             }
+
+            ConnectionStateReporter.OnConnectionStateChange += OnConnectionStateChange;
+        }
+
+        private async void OnConnectionStateChange(ConnectionStateReporter.State state, string information)
+        {
+            if (state == ConnectionStateReporter.State.Connecting)
+            {
+                if (ClientWorkerHandler.IsInSessionBasedGame)
+                {
+                    chosenDeployment = information;
+                }
+
+                await AttemptConnect();
+
+                if (!ClientWorkerHandler.IsInSessionBasedGame)
+                {
+                    GetComponent<ConnectionController>().SpawnPlayerAction("Local player");
+                }
+            }
+            else if (state == ConnectionStateReporter.State.ShowResults)
+            {
+                ConnectionStateReporter.SetState(ConnectionStateReporter.State.None);
+                Destroy(gameObject);
+            }
         }
 
         protected virtual async void Start()
         {
             Application.targetFrameRate = TargetFrameRate;
             IpAddress = forcedIpAddress;
-
-            await AttemptConnect();
         }
 
         protected override string GetHostIp()
@@ -124,6 +146,11 @@ namespace Fps
 
             var fallback = new GameObjectCreatorFromMetadata(Worker.WorkerType, Worker.Origin, Worker.LogDispatcher);
 
+            if (ClientWorkerHandler.IsInSessionBasedGame)
+            {
+                world.GetOrCreateManager<TrackPlayerSystem>();
+            }
+
             // Set the Worker gameObject to the ClientWorker so it can access PlayerCreater reader/writers
             GameObjectCreationHelper.EnableStandardGameObjectCreation(
                 world,
@@ -131,6 +158,30 @@ namespace Fps
                 gameObject);
 
             StartCoroutine(LoadWorld());
+        }
+
+        protected override string SelectLoginToken(List<LoginTokenDetails> loginTokens)
+        {
+            if (string.IsNullOrEmpty(chosenDeployment))
+            {
+                foreach (var loginToken in loginTokens)
+                {
+                    if (loginToken.Tags.Contains("state_lobby") || loginToken.Tags.Contains("state_running"))
+                    {
+                        return loginToken.LoginToken;
+                    }
+                }
+            }
+
+            foreach (var loginToken in loginTokens)
+            {
+                if (loginToken.DeploymentName == chosenDeployment)
+                {
+                    return loginToken.LoginToken;
+                }
+            }
+
+            throw new ArgumentException("Was not able to connect to chosen deployment. Going back to beginning");
         }
 
         protected override void HandleWorkerConnectionFailure(string errorMessage)
@@ -145,6 +196,7 @@ namespace Fps
                 Destroy(LevelInstance);
             }
 
+            ConnectionStateReporter.OnConnectionStateChange -= OnConnectionStateChange;
             base.Dispose();
         }
 

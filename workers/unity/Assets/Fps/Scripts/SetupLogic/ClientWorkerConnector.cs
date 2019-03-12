@@ -69,7 +69,7 @@ namespace Fps
             {
                 foreach (var loginToken in loginTokens)
                 {
-                    if (loginToken.Tags.Contains("state_lobby"))
+                    if (loginToken.Tags.Contains("state_lobby") || loginToken.Tags.Contains("state_running"))
                     {
                         return loginToken.LoginToken;
                     }

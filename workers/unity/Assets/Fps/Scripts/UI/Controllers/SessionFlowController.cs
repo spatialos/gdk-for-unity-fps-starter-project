@@ -9,6 +9,7 @@ using Improbable.Gdk.PlayerLifecycle;
 using Improbable.Worker.CInterop;
 using Improbable.Worker.CInterop.Alpha;
 using UnityEngine;
+using Random = System.Random;
 
 namespace Fps
 {
