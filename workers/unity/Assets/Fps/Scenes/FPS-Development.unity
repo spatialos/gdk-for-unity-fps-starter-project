@@ -174,7 +174,7 @@ PrefabInstance:
     - target: {fileID: 114220086504602960, guid: 928af08170e7d0243a977f4f26fe42a0,
         type: 3}
       propertyPath: UseSessionBasedFlow
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 928af08170e7d0243a977f4f26fe42a0, type: 3}
@@ -396,7 +396,7 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 2327225}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1137031870
+--- !u!114 &1137031869
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -405,9 +405,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1137031868}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a453de0e2d4bc2f46b52e3a98b1d9e3a, type: 3}
+  m_Script: {fileID: 11500000, guid: 9a92f41dd80384764a56ab93ae04d581, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DeploymentListController: {fileID: 1345553515}
 --- !u!1001 &1143388046
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -591,6 +592,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c29c8b12a7d111e45a7d87d2753e91ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1345553515 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5238200821785583470, guid: d52364553e6842940944c62b73e5e1b1,
+    type: 3}
+  m_PrefabInstance: {fileID: 1345553512}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cc898fb93634574a9485403c278d570, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1352389042
@@ -1037,6 +1050,11 @@ PrefabInstance:
     - target: {fileID: 114510834623507516, guid: a18c738cbcda9914591d9af24a618907,
         type: 3}
       propertyPath: DefaultSimulatedPlayerCount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114510834623507516, guid: a18c738cbcda9914591d9af24a618907,
+        type: 3}
+      propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []

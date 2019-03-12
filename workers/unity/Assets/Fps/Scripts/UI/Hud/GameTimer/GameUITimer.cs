@@ -12,39 +12,25 @@ namespace Fps
         public Color DefaultColor;
         public Color LowTimeColor;
 
-        public int RedSeconds = 60;
-        public int TestSeconds;
+        private int RedSeconds = 60;
 
         public bool CountUp;
-        public int TestStartTime = 330;
 
-        private int time;
+        private float time;
 
-        private void OnValidate()
-        {
-            if (!gameObject.scene.isLoaded)
-            {
-                return;
-            }
-
-            TestSeconds = Mathf.Clamp(TestSeconds, 0, 100 * 60 - 1);
-        }
-
-        private void Start()
-        {
-            time = TestStartTime;
-        }
+        private uint maxTime;
 
         private void Update()
         {
+            time -= Time.deltaTime;
             if (CountUp)
             {
                 RedSeconds = -1;
-                UpdateTime((int) Time.time);
+                UpdateTime(Mathf.RoundToInt(time));
             }
             else
             {
-                UpdateTime(Mathf.Max(0, (int) (TestStartTime - Time.time)));
+                UpdateTime(Mathf.Max(0, (int) (maxTime - time)));
             }
         }
 
@@ -58,6 +44,16 @@ namespace Fps
             Minutes.color = col;
             Seconds.color = col;
             Divider.color = col;
+        }
+
+        public void SynchronizeTime(uint seconds)
+        {
+            time = seconds;
+        }
+
+        public void SetMaxTime(uint seconds)
+        {
+            maxTime = seconds;
         }
     }
 }

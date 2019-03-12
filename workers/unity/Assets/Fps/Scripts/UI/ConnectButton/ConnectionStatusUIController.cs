@@ -13,18 +13,17 @@ namespace Fps
         public GameObject SuccessSymbol;
         public Text StatusText;
 
-        public string DeploymentListAvailableText = "Deployments available";
-        public string GettingDeploymentListText = "Getting deployment list...";
-        public string FailedToGetDeploymentListText = "Failed to get deployment list!";
-        public string ConnectingText = "Searching for deployment to join...";
-        public string ConnectionFailedText = "Failed to join deployment!";
-        public string ConnectedText = "Connected";
-        public string WaitingForGameStartText = "Game starting in {0:#} SECONDS";
-        public string GameStartingImminentText = "Game starting...";
-        public string GameReadyText = "Game begun! Ready to spawn.";
-        public string SpawningText = "Joining deployment...";
-        public string SpawningFailedText = "Failed to spawn player!";
-        public string WorkerDisconnectedText = "Worker was disconnected";
+        private string DeploymentListAvailableText = "Deployments available";
+        private string GettingDeploymentListText = "Getting deployment list...";
+        private string FailedToGetDeploymentListText = "Failed to get deployment list!";
+        private string ConnectionFailedText = "Failed to join deployment!";
+        private string ConnectedText = "Joined deployment!";
+        private string WaitingForGameStartText = "Waiting for game to start...";
+        private string SpawningText = "Spawning player...";
+        private string GameReadyText = "Press start to play";
+        private string ConnectingText = "Joining deployment...";
+        private string SpawningFailedText = "Failed to spawn player!";
+        private string WorkerDisconnectedText = "Worker was disconnected!";
 
         private void Awake()
         {
@@ -43,11 +42,6 @@ namespace Fps
 
         public void OnConnectionStateChange(ConnectionStateReporter.State state, string information)
         {
-            if (!gameObject.activeInHierarchy)
-            {
-                return;
-            }
-
             switch (state)
             {
                 case ConnectionStateReporter.State.None:
@@ -62,6 +56,7 @@ namespace Fps
                 case ConnectionStateReporter.State.FailedToGetDeploymentList:
                     StateFailedToGetDeploymentList(information);
                     break;
+                case ConnectionStateReporter.State.QuickJoin:
                 case ConnectionStateReporter.State.Connecting:
                     StateConnecting();
                     break;
@@ -87,6 +82,10 @@ namespace Fps
                     break;
                 case ConnectionStateReporter.State.WorkerDisconnected:
                     StateWorkerDisconnected();
+                    break;
+                case ConnectionStateReporter.State.GatherResults:
+                case ConnectionStateReporter.State.ShowResults:
+                case ConnectionStateReporter.State.EndSession:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(state), state, null);
@@ -137,8 +136,8 @@ namespace Fps
 
         private void StateWaitingForGameStart()
         {
+            StatusText.text = WaitingForGameStartText;
             SetSymbol(SpinnerSymbol);
-            StartCoroutine(UpdateGameStartTime());
         }
 
         private void StateGameReady()
@@ -184,19 +183,6 @@ namespace Fps
             if (SuccessSymbol != null)
             {
                 SuccessSymbol.SetActive(symbol == SuccessSymbol);
-            }
-        }
-
-        private IEnumerator UpdateGameStartTime()
-        {
-            while (ConnectionStateReporter.CurrentState == ConnectionStateReporter.State.WaitingForGameStart)
-            {
-                var timeUntilStart = ConnectionStateReporter.TimeUntilGameStart;
-                StatusText.text = timeUntilStart < 1
-                    ? GameStartingImminentText
-                    : string.Format(WaitingForGameStartText, ConnectionStateReporter.TimeUntilGameStart);
-
-                yield return new WaitForSeconds(.5f);
             }
         }
     }

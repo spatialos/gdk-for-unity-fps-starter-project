@@ -1,8 +1,13 @@
+using System;
 using System.Collections.Generic;
+using Improbable.Gdk.Core;
 using UnityEngine;
 using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.Subscriptions;
 using Improbable.Gdk.PlayerLifecycle;
+using Improbable.Worker.CInterop.Alpha;
+using Unity.Entities;
+using Random = System.Random;
 
 namespace Fps
 {
@@ -16,16 +21,40 @@ namespace Fps
         public List<TileEnabler> LevelTiles => levelTiles;
 
         private ConnectionController connectionController;
+        private string chosenDeployment;
 
         private void Awake()
         {
             connectionController = GetComponent<ConnectionController>();
+            ConnectionStateReporter.OnConnectionStateChange += OnConnectionStateChange;
         }
 
-        protected override async void Start()
+        private async void OnConnectionStateChange(ConnectionStateReporter.State state, string information)
+        {
+            if (state == ConnectionStateReporter.State.Connecting)
+            {
+                if (ClientWorkerHandler.IsInSessionBasedGame)
+                {
+                    chosenDeployment = information;
+                }
+
+                await AttemptConnect();
+
+                if (!ClientWorkerHandler.IsInSessionBasedGame)
+                {
+                    GetComponent<ConnectionController>().SpawnPlayerAction("Local player");
+                }
+            }
+            else if (state == ConnectionStateReporter.State.ShowResults)
+            {
+                ConnectionStateReporter.SetState(ConnectionStateReporter.State.None);
+                Destroy(gameObject);
+            }
+        }
+
+        protected override void Start()
         {
             Application.targetFrameRate = 60;
-            await AttemptConnect();
         }
 
         protected override string GetWorkerType()
@@ -33,9 +62,65 @@ namespace Fps
             return WorkerUtils.UnityClient;
         }
 
-        public async void Reconnect()
+        protected override string SelectLoginToken(List<LoginTokenDetails> loginTokens)
         {
-            await AttemptConnect();
+            if (string.IsNullOrEmpty(chosenDeployment))
+            {
+                foreach (var loginToken in loginTokens)
+                {
+                    if (loginToken.Tags.Contains("state_lobby"))
+                    {
+                        return loginToken.LoginToken;
+                    }
+                }
+            }
+
+            foreach (var loginToken in loginTokens)
+            {
+                if (loginToken.DeploymentName == chosenDeployment)
+                {
+                    return loginToken.LoginToken;
+                }
+            }
+
+            throw new ArgumentException("Was not able to connect to chosen deployment. Going back to beginning");
+        }
+
+        protected override AlphaLocatorConfig GetAlphaLocatorConfig(string workerType)
+        {
+            var pit = GetDevelopmentPlayerIdentityToken(DevelopmentAuthToken, GetPlayerId(), GetDisplayName());
+            var loginTokenDetails = GetDevelopmentLoginTokens(workerType, pit);
+            var loginToken = SelectLoginToken(loginTokenDetails);
+
+            return new AlphaLocatorConfig
+            {
+                LocatorHost = RuntimeConfigDefaults.LocatorHost,
+                LocatorParameters = new LocatorParameters
+                {
+                    PlayerIdentity = new PlayerIdentityCredentials
+                    {
+                        PlayerIdentityToken = pit,
+                        LoginToken = loginToken,
+                    },
+                    UseInsecureConnection = false,
+                }
+            };
+        }
+
+        protected override ConnectionService GetConnectionService()
+        {
+            if (ClientWorkerHandler.IsInSessionBasedGame)
+            {
+                var textAsset = Resources.Load<TextAsset>("DevAuthToken");
+                if (textAsset != null)
+                {
+                    DevelopmentAuthToken = textAsset.text.Trim();
+                }
+
+                return ConnectionService.AlphaLocator;
+            }
+
+            return base.GetConnectionService();
         }
 
         protected override void HandleWorkerConnectionEstablished()
@@ -53,6 +138,11 @@ namespace Fps
                 new AdvancedEntityPipeline(Worker, AuthPlayer, NonAuthPlayer, fallback),
                 gameObject);
 
+            if (ClientWorkerHandler.IsInSessionBasedGame)
+            {
+                world.GetOrCreateManager<TrackPlayerSystem>();
+            }
+
             base.HandleWorkerConnectionEstablished();
         }
 
@@ -65,11 +155,17 @@ namespace Fps
         {
             base.LoadWorld();
 
-            levelInstance.GetComponentsInChildren<TileEnabler>(true, levelTiles);
+            levelInstance.GetComponentsInChildren(true, levelTiles);
             foreach (var tileEnabler in levelTiles)
             {
                 tileEnabler.IsClient = true;
             }
+        }
+
+        public override void Dispose()
+        {
+            ConnectionStateReporter.OnConnectionStateChange -= OnConnectionStateChange;
+            base.Dispose();
         }
     }
 }

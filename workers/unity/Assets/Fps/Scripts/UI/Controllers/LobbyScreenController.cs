@@ -50,17 +50,20 @@ namespace Fps
 
         private void RefreshButtons()
         {
+            gameBegun = ConnectionStateReporter.CurrentState == ConnectionStateReporter.State.GameReady;
+            playerNameInputController.DisplayEnterNameHint = gameBegun;
+            playerNameInputController.UpdateHintText();
             startButton.enabled = gameBegun && nameIsValid;
         }
 
         public void OnStartButtonPressed()
         {
-            ConnectionStateReporter.TrySpawn();
+            ConnectionStateReporter.SetState(ConnectionStateReporter.State.Spawning, playerNameInputController.GetPlayerName());
         }
 
         public void OnCancelButtonPressed()
         {
-            ConnectionStateReporter.TryDisconnect();
+            ConnectionStateReporter.SetState(ConnectionStateReporter.State.None);
             frontEndUIController.SwitchToSessionScreen();
         }
     }

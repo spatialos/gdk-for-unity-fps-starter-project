@@ -8,16 +8,18 @@ namespace Fps
 {
     public class SnapshotMenu : MonoBehaviour
     {
-        public static readonly string DefaultSnapshotPath =
+        private static readonly string DefaultSnapshotPath =
             Path.Combine(Application.dataPath, "../../../snapshots/default.snapshot");
 
-        public static readonly string CloudSnapshotPath =
+        private static readonly string CloudSnapshotPath =
             Path.Combine(Application.dataPath, "../../../snapshots/cloud.snapshot");
 
         private static void GenerateSnapshot(Snapshot snapshot)
         {
             var spawner = FpsEntityTemplates.Spawner();
+            var observer = FpsEntityTemplates.SessionObserver();
             snapshot.AddEntity(spawner);
+            snapshot.AddEntity(observer);
         }
 
         [MenuItem("SpatialOS/Generate FPS Snapshot")]

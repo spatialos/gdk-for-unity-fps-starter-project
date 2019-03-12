@@ -18,7 +18,6 @@ namespace Fps
         {
             if (state == ConnectionStateReporter.State.Connected)
             {
-                ConnectionStateReporter.SetTimeUntilGameStart(timeUntilStart);
                 ConnectionStateReporter.SetState(ConnectionStateReporter.State.WaitingForGameStart);
                 timeUntilStart = TimeUntilStart;
                 StartCoroutine(CountDownTime());
@@ -29,7 +28,6 @@ namespace Fps
         {
             while (timeUntilStart > 0)
             {
-                ConnectionStateReporter.SetTimeUntilGameStart(timeUntilStart);
                 yield return new WaitForEndOfFrame();
                 timeUntilStart -= Time.deltaTime;
             }

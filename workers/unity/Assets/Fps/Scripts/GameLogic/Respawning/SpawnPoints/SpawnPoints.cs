@@ -29,7 +29,7 @@ namespace Fps
                 return new SpawnPoint();
             }
 
-            return spawnPointList[Random.Range(0, spawnPointList.Length)];
+            return spawnPointList[Random.Range(0, 1)];
         }
 
         public void SetSpawnPoints()

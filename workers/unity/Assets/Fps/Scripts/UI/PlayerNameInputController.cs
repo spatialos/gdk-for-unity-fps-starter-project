@@ -76,6 +76,11 @@ namespace Fps
             inputField.ActivateInputField();
         }
 
+        public string GetPlayerName()
+        {
+            return inputField.text;
+        }
+
         private void OnDisable()
         {
             inputField.enabled = false;

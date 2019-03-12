@@ -8,6 +8,7 @@ type HealthModifier {
   float amount = 2;
   improbable.gdk.standardtypes.IntAbsolute applied_location = 3;
   improbable.gdk.standardtypes.IntAbsolute origin = 4;
+  int64 owner = 5;
 }
 
 type HealthModifiedInfo {
@@ -15,6 +16,7 @@ type HealthModifiedInfo {
   float health_before = 2;
   float health_after = 3;
   bool died = 4;
+  int64 owner = 5;
 }
 
 component HealthComponent {

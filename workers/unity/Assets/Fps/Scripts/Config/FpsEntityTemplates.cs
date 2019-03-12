@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Improbable;
 using Improbable.Gdk.Core;
@@ -5,6 +6,7 @@ using Improbable.Gdk.Guns;
 using Improbable.Gdk.Health;
 using Improbable.Gdk.Movement;
 using Improbable.Gdk.PlayerLifecycle;
+using Improbable.Gdk.Session;
 using Improbable.Gdk.StandardTypes;
 using Improbable.PlayerLifecycle;
 using UnityEngine;
@@ -13,6 +15,27 @@ namespace Fps
 {
     public static class FpsEntityTemplates
     {
+        public static EntityTemplate SessionObserver()
+        {
+            uint sessionTimeSeconds = 300;
+
+            var position = new Position.Snapshot { Coords = new Vector3().ToSpatialCoordinates() };
+            var metadata = new Metadata.Snapshot { EntityType = "DeploymentState" };
+
+            var template = new EntityTemplate();
+            template.AddComponent(position, WorkerUtils.UnityGameLogic);
+            template.AddComponent(metadata, WorkerUtils.UnityGameLogic);
+            template.AddComponent(new Persistence.Snapshot(), WorkerUtils.UnityGameLogic);
+            template.AddComponent(new Session.Snapshot { Status = Status.LOBBY }, WorkerUtils.UnityGameLogic);
+            template.AddComponent(new Timer.Snapshot { CurrentTimeSeconds = 0, MaxTimeSeconds = sessionTimeSeconds }, WorkerUtils.UnityGameLogic);
+            template.AddComponent(new Deployment.Snapshot(), WorkerUtils.DeploymentManager);
+
+            template.SetReadAccess(WorkerUtils.UnityGameLogic, WorkerUtils.DeploymentManager, WorkerUtils.UnityClient, WorkerUtils.AndroidClient, WorkerUtils.iOSClient);
+            template.SetComponentWriteAccess(EntityAcl.ComponentId, WorkerUtils.UnityGameLogic);
+
+            return template;
+        }
+
         public static EntityTemplate Spawner()
         {
             var position = new Position.Snapshot { Coords = new Vector3().ToSpatialCoordinates() };
@@ -85,6 +108,52 @@ namespace Fps
                 RegenPauseTime = 0,
             };
 
+            var playerInterest = new ComponentInterest
+            {
+                Queries = new List<ComponentInterest.Query>
+                {
+                    new ComponentInterest.Query
+                    {
+                        Constraint = new ComponentInterest.QueryConstraint
+                        {
+                            ComponentConstraint = PlayerState.ComponentId,
+                            AndConstraint = new List<ComponentInterest.QueryConstraint>(),
+                            OrConstraint = new List<ComponentInterest.QueryConstraint>(),
+                        },
+                        FullSnapshotResult = true,
+                        ResultComponentId = new List<uint>(),
+                    },
+                    new ComponentInterest.Query
+                    {
+                        Constraint = new ComponentInterest.QueryConstraint
+                        {
+                            ComponentConstraint = Session.ComponentId,
+                            AndConstraint = new List<ComponentInterest.QueryConstraint>(),
+                            OrConstraint = new List<ComponentInterest.QueryConstraint>(),
+                        },
+                        FullSnapshotResult = true,
+                        ResultComponentId = new List<uint>(),
+                    }
+                }
+            };
+
+            var interestComponent = new Interest.Snapshot
+            {
+                ComponentInterest = new Dictionary<uint, ComponentInterest>
+                {
+                    { ClientMovement.ComponentId, playerInterest },
+                },
+            };
+
+            var playerName = PlayerLifecycleHelper.DeserializeArguments<string>(args);
+
+            var playerStateComponent = new PlayerState.Snapshot
+            {
+                Name = playerName,
+                Kills = 0,
+                Deaths = 0,
+            };
+
             var template = new EntityTemplate();
             template.AddComponent(pos, WorkerUtils.UnityGameLogic);
             template.AddComponent(new Metadata.Snapshot { EntityType = "Player" }, WorkerUtils.UnityGameLogic);
@@ -96,6 +165,8 @@ namespace Fps
             template.AddComponent(gunStateComponent, client);
             template.AddComponent(healthComponent, WorkerUtils.UnityGameLogic);
             template.AddComponent(healthRegenComponent, WorkerUtils.UnityGameLogic);
+            template.AddComponent(playerStateComponent, WorkerUtils.UnityGameLogic);
+            template.AddComponent(interestComponent, WorkerUtils.UnityClient);
             PlayerLifecycleHelper.AddPlayerLifecycleComponents(template, workerId, client, WorkerUtils.UnityGameLogic);
 
             template.SetReadAccess(WorkerUtils.UnityClient, WorkerUtils.UnityGameLogic, WorkerUtils.AndroidClient, WorkerUtils.iOSClient);

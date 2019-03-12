@@ -1,5 +1,6 @@
+using Improbable.Common;
 using Improbable.Gdk.Core;
-using Improbable.Gdk.Health;
+using Improbable.Gdk.Session;
 using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
@@ -16,6 +17,8 @@ namespace Improbable.Gdk.Health
             public ComponentDataArray<HealthComponent.Component> Health;
             [ReadOnly] public ComponentDataArray<HealthComponent.CommandRequests.ModifyHealth> ModifyHealthRequests;
             public ComponentDataArray<HealthComponent.EventSender.HealthModified> HealthModifiedEventSenders;
+            public ComponentDataArray<PlayerState.CommandSenders.GainedKill> KillSenders;
+            public ComponentDataArray<PlayerState.Component> PlayerState;
         }
 
         [Inject] private EntitiesWithModifiedHealth entitiesWithModifiedHealth;
@@ -26,6 +29,8 @@ namespace Improbable.Gdk.Health
             {
                 var health = entitiesWithModifiedHealth.Health[i];
                 var healthModifiedEventSender = entitiesWithModifiedHealth.HealthModifiedEventSenders[i];
+                var killCommandSender = entitiesWithModifiedHealth.KillSenders[i];
+                var playerState = entitiesWithModifiedHealth.PlayerState[i];
 
                 if (health.Health <= 0)
                 {
@@ -39,7 +44,8 @@ namespace Improbable.Gdk.Health
                     var healthModifiedInfo = new HealthModifiedInfo
                     {
                         Modifier = modifier,
-                        HealthBefore = health.Health
+                        HealthBefore = health.Health,
+                        Owner = modifier.Owner
                     };
 
                     health.Health = Mathf.Clamp(health.Health + modifier.Amount, 0, health.MaxHealth);
@@ -50,6 +56,12 @@ namespace Improbable.Gdk.Health
                     {
                         healthModifiedInfo.Died = true;
                         healthModifiedEventSender.Events.Add(healthModifiedInfo);
+
+                        playerState.Deaths++;
+                        killCommandSender.RequestsToSend.Add(new PlayerState.GainedKill.Request(
+                            new EntityId(modifier.Owner),
+                            new Empty()));
+                        
                         break;
                     }
 
@@ -57,6 +69,12 @@ namespace Improbable.Gdk.Health
                 }
 
                 entitiesWithModifiedHealth.Health[i] = health;
+
+                if (health.Health <= 0)
+                {
+                    entitiesWithModifiedHealth.PlayerState[i] = playerState;
+                    entitiesWithModifiedHealth.KillSenders[i] = killCommandSender;
+                }
             }
         }
     }
