@@ -9,6 +9,9 @@ namespace Fps
         [Require] private SessionWriter sessionWriter;
         [Require] private TimerWriter timerWriter;
 
+        private const float LobbyTime = 60f;
+        private const float CooldownTime = 60f;
+
         private float timer;
 
         private float maxSessionTime;
@@ -22,20 +25,15 @@ namespace Fps
 
         private void Update()
         {
-            if (timer > (maxSessionTime + 90f))
-            {
-                timer = 0f;
-                sessionWriter.SendUpdate(new Session.Update { Status = Status.LOBBY });
-            }
-            else if (timer > (maxSessionTime + 60f) && sessionWriter.Data.Status == Status.STOPPING)
+            if (timer > (maxSessionTime + CooldownTime + LobbyTime) && sessionWriter.Data.Status == Status.STOPPING)
             {
                 sessionWriter.SendUpdate(new Session.Update { Status = Status.STOPPED });
             }
-            else if (timer > (maxSessionTime + 30f) && sessionWriter.Data.Status == Status.RUNNING)
+            else if (timer > (maxSessionTime + LobbyTime) && sessionWriter.Data.Status == Status.RUNNING)
             {
                 sessionWriter.SendUpdate(new Session.Update { Status = Status.STOPPING });
             }
-            else if (timer > 30f && sessionWriter.Data.Status == Status.LOBBY)
+            else if (timer > LobbyTime && sessionWriter.Data.Status == Status.LOBBY)
             {
                 sessionWriter.SendUpdate(new Session.Update { Status = Status.RUNNING });
                 currentSessionTime = 0;

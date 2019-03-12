@@ -14,10 +14,8 @@ namespace Fps
 
         private void OnEnable()
         {
-            gameUITimer = GameObject.FindGameObjectWithTag("Timer").GetComponent<GameUITimer>();
-            gameUITimer.SetMaxTime(timerReader.Data.MaxTimeSeconds);
-            gameUITimer.SynchronizeTime(timerReader.Data.CurrentTimeSeconds);
-
+            // sometimes this is still disabled...
+            InitTimer();
 
             sessionReader.OnStatusUpdate += OnSessionStatusUpdated;
             timerReader.OnCurrentTimeSecondsUpdate += OnCurrentTimeSecondsUpdated;
@@ -28,7 +26,15 @@ namespace Fps
 
         private void OnCurrentTimeSecondsUpdated(uint currentTimeSeconds)
         {
-            gameUITimer.SynchronizeTime(currentTimeSeconds);
+            if (gameUITimer == null)
+            {
+                InitTimer();
+            }
+
+            if (gameUITimer != null)
+            {
+                gameUITimer.SynchronizeTime(currentTimeSeconds);
+            }
         }
 
         private void OnSessionStatusUpdated(Status status)
@@ -37,6 +43,20 @@ namespace Fps
             {
                 ConnectionStateReporter.SetState(ConnectionStateReporter.State.GatherResults);
             }
+        }
+
+        private void InitTimer()
+        {
+            var timerGameObject = GameObject.FindGameObjectWithTag("Timer");
+            if (timerGameObject == null)
+            {
+                Debug.LogWarning("Timer game object not enabled yet...");
+                return;
+            }
+
+            var gameUiTimer = timerGameObject.GetComponent<GameUITimer>();
+            gameUITimer.SetMaxTime(timerReader.Data.MaxTimeSeconds);
+            gameUITimer.SynchronizeTime(timerReader.Data.CurrentTimeSeconds);
         }
     }
 }

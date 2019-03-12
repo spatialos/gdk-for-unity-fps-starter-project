@@ -17,6 +17,8 @@ namespace Fps
     {
         public static EntityTemplate SessionObserver()
         {
+            uint sessionTimeSeconds = 300;
+
             var position = new Position.Snapshot { Coords = new Vector3().ToSpatialCoordinates() };
             var metadata = new Metadata.Snapshot { EntityType = "DeploymentState" };
 
@@ -25,7 +27,7 @@ namespace Fps
             template.AddComponent(metadata, WorkerUtils.UnityGameLogic);
             template.AddComponent(new Persistence.Snapshot(), WorkerUtils.UnityGameLogic);
             template.AddComponent(new Session.Snapshot { Status = Status.LOBBY }, WorkerUtils.UnityGameLogic);
-            template.AddComponent(new Timer.Snapshot { CurrentTimeSeconds = 0, MaxTimeSeconds = 120 }, WorkerUtils.UnityGameLogic);
+            template.AddComponent(new Timer.Snapshot { CurrentTimeSeconds = 0, MaxTimeSeconds = sessionTimeSeconds }, WorkerUtils.UnityGameLogic);
             template.AddComponent(new Deployment.Snapshot(), WorkerUtils.DeploymentManager);
 
             template.SetReadAccess(WorkerUtils.UnityGameLogic, WorkerUtils.DeploymentManager, WorkerUtils.UnityClient, WorkerUtils.AndroidClient, WorkerUtils.iOSClient);
@@ -144,7 +146,7 @@ namespace Fps
             };
 
             var playerName = PlayerLifecycleHelper.DeserializeArguments<string>(args);
-            
+
             var playerStateComponent = new PlayerState.Snapshot
             {
                 Name = playerName,

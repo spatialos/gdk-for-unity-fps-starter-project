@@ -8,16 +8,16 @@ enum Status {
 } 
 
 component Session {
-    id = 20000;
+    id = 1000;
     Status status = 1;
 }
 
 component Deployment {
-    id = 20001;
+    id = 1001;
 }
 
 component Timer {
-    id = 20002;
+    id = 1002;
     uint32 current_time_seconds = 1;
     uint32 max_time_seconds = 2;
 }

@@ -47,7 +47,7 @@ public class SimulatedPlayerWorkerConnector : DefaultWorkerConnector
 
     public void SpawnPlayer(int number)
     {
-        var serializedArgs = PlayerLifecycleHelper.SerializeArguments($"BOT-{number}");
+        var serializedArgs = PlayerLifecycleHelper.SerializeArguments($"Simulated Player {number}");
         Debug.Log(serializedArgs.Length);
         var sendSystem = Worker.World.GetExistingManager<SendCreatePlayerRequestSystem>();
         sendSystem.RequestPlayerCreation(serializedArgs);
