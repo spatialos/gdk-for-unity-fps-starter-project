@@ -51,11 +51,15 @@ namespace Fps
 
         public void OnQuickJoinPressed()
         {
+            quickJoinButton.enabled = false;
+            browseButton.enabled = false;
             ConnectionStateReporter.SetState(ConnectionStateReporter.State.QuickJoin);
         }
 
         public void OnBrowseButtonPressed()
         {
+            quickJoinButton.enabled = false;
+            browseButton.enabled = false;
             frontEndUIController.SwitchToDeploymentListScreen();
         }
     }

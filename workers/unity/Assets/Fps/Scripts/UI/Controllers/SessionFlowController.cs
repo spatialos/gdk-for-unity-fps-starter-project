@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace Fps
     public class SessionFlowController : MonoBehaviour
     {
         public DeploymentListScreenController DeploymentListController;
-        
+
         private ClientWorkerHandler clientWorkerHandler;
         private string authToken;
         private string deployment;
@@ -79,7 +80,7 @@ namespace Fps
                         yield break;
                     }
                 }
-                
+
                 yield return new WaitForSeconds(5);
             }
         }
@@ -105,7 +106,7 @@ namespace Fps
                                 ConnectionStateReporter.SetState(ConnectionStateReporter.State.GameReady);
                                 yield break;
                             }
-                            
+
                             if (tag == "status_stopping" || tag == "status_stopped")
                             {
                                 ConnectionStateReporter.SetState(ConnectionStateReporter.State.None);
@@ -118,19 +119,19 @@ namespace Fps
                 Debug.Log($"deployment name {deployment}");
 
                 Debug.Log($"Found deployment {foundDeployment}");
-                
+
                 if (!foundDeployment)
                 {
                     ConnectionStateReporter.SetState(ConnectionStateReporter.State.None);
                     yield break;
                 }
-                
+
                 yield return new WaitForSeconds(5);
             }
         }
 
         private IEnumerator LookForDeployments()
-        {  
+        {
             var deploymentDatas = new List<DeploymentData>();
             while (deploymentDatas.Count == 0)
             {
@@ -169,6 +170,8 @@ namespace Fps
                 }
             }
 
+            deploymentDatas.Sort((deployment1, deployment2) => String.Compare(deployment1.Name, deployment2.Name, StringComparison.Ordinal));
+
             clientWorkerHandler.CreateClientWorker();
             DeploymentListController.SetDeployments(deploymentDatas.ToArray());
             ConnectionStateReporter.SetState(ConnectionStateReporter.State.DeploymentListAvailable);
@@ -189,7 +192,7 @@ namespace Fps
 
             if (!result.HasValue)
             {
-                ConnectionStateReporter.SetState(ConnectionStateReporter.State.FailedToGetDeploymentList);
+                ConnectionStateReporter.SetState(ConnectionStateReporter.State.FailedToGetDeploymentList, "Failed to retrieve a player identity token.");
                 throw new AuthenticationFailedException("Did not receive a player identity token.");
             }
 
@@ -226,7 +229,7 @@ namespace Fps
 
             if (!result.HasValue)
             {
-                ConnectionStateReporter.SetState(ConnectionStateReporter.State.FailedToGetDeploymentList);
+                ConnectionStateReporter.SetState(ConnectionStateReporter.State.FailedToGetDeploymentList, "Failed to retrieve a login token.");
                 throw new AuthenticationFailedException("Did not receive any login tokens back.");
             }
 

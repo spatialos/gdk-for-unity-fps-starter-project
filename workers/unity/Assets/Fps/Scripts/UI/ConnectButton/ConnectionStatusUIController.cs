@@ -13,17 +13,17 @@ namespace Fps
         public GameObject SuccessSymbol;
         public Text StatusText;
 
-        public string DeploymentListAvailableText;
-        public string GettingDeploymentListText;
-        public string FailedToGetDeploymentListText;
-        public string ConnectionFailedText;
-        public string ConnectedText;
-        public string WaitingForGameStartText;
-        public string SpawningText;
-        public string GameReadyText;
-        public string ConnectingText;
-        public string SpawningFailedText;
-        public string WorkerDisconnectedText;
+        private string DeploymentListAvailableText = "Deployments available";
+        private string GettingDeploymentListText = "Getting deployment list...";
+        private string FailedToGetDeploymentListText = "Failed to get deployment list!";
+        private string ConnectionFailedText = "Failed to join deployment!";
+        private string ConnectedText = "Joined deployment!";
+        private string WaitingForGameStartText = "Waiting for game to start...";
+        private string SpawningText = "Spawning player...";
+        private string GameReadyText = "Press start to play";
+        private string ConnectingText = "Joining deployment...";
+        private string SpawningFailedText = "Failed to spawn player!";
+        private string WorkerDisconnectedText = "Worker was disconnected!";
 
         private void Awake()
         {
@@ -42,11 +42,6 @@ namespace Fps
 
         public void OnConnectionStateChange(ConnectionStateReporter.State state, string information)
         {
-            if (!gameObject.activeInHierarchy)
-            {
-                return;
-            }
-
             switch (state)
             {
                 case ConnectionStateReporter.State.None:

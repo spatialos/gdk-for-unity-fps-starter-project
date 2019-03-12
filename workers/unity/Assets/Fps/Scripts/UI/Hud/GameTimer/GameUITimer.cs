@@ -12,7 +12,7 @@ namespace Fps
         public Color DefaultColor;
         public Color LowTimeColor;
 
-        public int RedSeconds = 60;
+        private int RedSeconds = 60;
 
         public bool CountUp;
 

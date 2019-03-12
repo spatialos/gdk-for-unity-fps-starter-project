@@ -50,11 +50,10 @@ namespace Fps
             var timerGameObject = GameObject.FindGameObjectWithTag("Timer");
             if (timerGameObject == null)
             {
-                Debug.LogWarning("Timer game object not enabled yet...");
                 return;
             }
 
-            var gameUITimer = timerGameObject.GetComponent<GameUITimer>();
+            gameUITimer = timerGameObject.GetComponent<GameUITimer>();
             gameUITimer.SetMaxTime(timerReader.Data.MaxTimeSeconds);
             gameUITimer.SynchronizeTime(timerReader.Data.CurrentTimeSeconds);
         }

@@ -50,6 +50,9 @@ namespace Fps
 
         private void RefreshButtons()
         {
+            gameBegun = ConnectionStateReporter.CurrentState == ConnectionStateReporter.State.GameReady;
+            playerNameInputController.DisplayEnterNameHint = gameBegun;
+            playerNameInputController.UpdateHintText();
             startButton.enabled = gameBegun && nameIsValid;
         }
 
