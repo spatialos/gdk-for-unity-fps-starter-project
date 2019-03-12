@@ -15,7 +15,7 @@ namespace Fps
         public Button BackButton;
         public Table deploymentListTable;
         public FrontEndUIController frontEndUiController;
-        
+
         private Color currentBgColor;
         private const int maxRows = 11; // Includes header
         private int currentlyHighlightedEntry = -1;
@@ -25,6 +25,8 @@ namespace Fps
         {
             JoinButton.onClick.AddListener(OnJoinButtonPressed);
             BackButton.onClick.AddListener(OnBackButtonPressed);
+
+            JoinButton.enabled = false;
 
             ConnectionStateReporter.OnConnectionStateChange += OnConnectionStateChanged;
         }
@@ -118,7 +120,7 @@ namespace Fps
         }
 
         public void SetDeployments(DeploymentData[] deployments)
-        {            
+        {
             deploymentListTable.ClearEntries();
             currentBgColor = BackgroundColor1;
 

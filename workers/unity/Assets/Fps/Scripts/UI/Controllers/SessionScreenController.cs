@@ -42,7 +42,7 @@ namespace Fps
 
         private void RefreshButtons()
         {
-            var enableButtons = ConnectionStateReporter.HaveDeployments;
+            var enableButtons = ConnectionStateReporter.State.DeploymentListAvailable == ConnectionStateReporter.CurrentState;
 
             quickJoinButton.enabled = enableButtons;
             browseButton.enabled = enableButtons;
@@ -51,15 +51,11 @@ namespace Fps
 
         public void OnQuickJoinPressed()
         {
-            quickJoinButton.enabled = false;
-            browseButton.enabled = false;
             ConnectionStateReporter.SetState(ConnectionStateReporter.State.QuickJoin);
         }
 
         public void OnBrowseButtonPressed()
         {
-            quickJoinButton.enabled = false;
-            browseButton.enabled = false;
             frontEndUIController.SwitchToDeploymentListScreen();
         }
     }

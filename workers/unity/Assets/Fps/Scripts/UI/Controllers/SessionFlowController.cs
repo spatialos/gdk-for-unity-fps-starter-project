@@ -45,7 +45,7 @@ namespace Fps
 
         private void OnConnectionStateChange(ConnectionStateReporter.State state, string information)
         {
-            Debug.Log(state);
+            Debug.Log($"{state} - {information}");
             switch (state)
             {
                 case ConnectionStateReporter.State.None:
@@ -74,7 +74,7 @@ namespace Fps
                 var loginTokens = GetDevelopmentLoginTokens(WorkerUtils.UnityClient, pit);
                 foreach (var loginToken in loginTokens)
                 {
-                    if (loginToken.Tags.Contains("status_lobby"))
+                    if (loginToken.Tags.Contains("status_lobby") || loginToken.Tags.Contains("status_running"))
                     {
                         ConnectionStateReporter.SetState(ConnectionStateReporter.State.Connecting, loginToken.DeploymentName);
                         yield break;
@@ -91,7 +91,9 @@ namespace Fps
             {
                 var foundDeployment = false;
                 var pit = GetDevelopmentPlayerIdentityToken(authToken, "unknown player", string.Empty);
+                yield return null;
                 var loginTokens = GetDevelopmentLoginTokens(WorkerUtils.UnityClient, pit);
+                yield return null;
                 foreach (var loginToken in loginTokens)
                 {
                     Debug.Log($"cur depl {loginToken.DeploymentName}");
@@ -126,7 +128,7 @@ namespace Fps
                     yield break;
                 }
 
-                yield return new WaitForSeconds(5);
+                yield return new WaitForSeconds(1);
             }
         }
 
@@ -136,7 +138,9 @@ namespace Fps
             while (deploymentDatas.Count == 0)
             {
                 var pit = GetDevelopmentPlayerIdentityToken(authToken, "unknown player", string.Empty);
+                yield return null;
                 var loginTokens = GetDevelopmentLoginTokens(WorkerUtils.UnityClient, pit);
+                yield return null;
                 foreach (var loginToken in loginTokens)
                 {
                     var playerCount = 0;
@@ -166,7 +170,7 @@ namespace Fps
 
                 if (deploymentDatas.Count == 0)
                 {
-                    yield return new WaitForSeconds(5);
+                    yield return new WaitForSeconds(1);
                 }
             }
 
