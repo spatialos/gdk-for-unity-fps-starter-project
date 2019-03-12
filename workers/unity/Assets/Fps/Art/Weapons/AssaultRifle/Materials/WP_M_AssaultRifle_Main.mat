@@ -5,7 +5,8 @@ Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: WP_M_AssaultRifle_Main
   m_Shader: {fileID: 4800000, guid: ac7762a1006da2649bbd7d57183e90f0, type: 3}
   m_ShaderKeywords: _NORMALMAP _NORMALMAP_TANGENT_SPACE
@@ -159,12 +160,16 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _T_Light:
+        m_Texture: {fileID: 2800000, guid: 19f3db273bec18446bf6c03c74e5af26, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _T_Mask:
-        m_Texture: {fileID: 2800000, guid: 7fbafd119c76fa7488143ab53d26280e, type: 3}
+        m_Texture: {fileID: 2800000, guid: 7ce5d2d13b4ca2145b372885c7c342d4, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _T_Orm:
-        m_Texture: {fileID: 2800000, guid: 26e697d82390cf74e94616641eaa75ca, type: 3}
+        m_Texture: {fileID: 2800000, guid: d5561d74b21c5fa4faa63fabab37f935, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _TangentMap:
@@ -206,7 +211,7 @@ Material:
     m_Floats:
     - _AORemapMax: 1
     - _AORemapMin: 0.35869566
-    - _AO_Power: 3
+    - _AO_Power: 2.5
     - _ATDistance: 1
     - _AlbedoAffectEmissive: 0
     - _AlphaCutoff: 0.5
@@ -247,7 +252,7 @@ Material:
     - _DoubleSidedNormalMode: 1
     - _Drag: 1
     - _DstBlend: 0
-    - _Edge_Highlight: 0.4
+    - _Edge_Highlight: 0.2
     - _EmissiveColorMode: 1
     - _EnableBlendModePreserveSpecularLighting: 1
     - _EnableFogOnTransparent: 1
@@ -276,7 +281,7 @@ Material:
     - _IridescenceThickness: 1
     - _LinkDetailsWithBase: 1
     - _LocalClipDistance: 200
-    - _Main_Light_Brightness: 15
+    - _Main_Light_Brightness: 8
     - _Main_Light_Pow: 4
     - _MaterialID: 1
     - _Metallic: 0.146
@@ -294,6 +299,11 @@ Material:
     - _PreRefractionPass: 0
     - _Primary_Light_Brightness: 1.5
     - _RefractionModel: 0
+    - _Rgh_Pow_Base: 1
+    - _Rgh_Pow_Primary: 1
+    - _Rgh_Pow_Primary_copy: 1
+    - _Rgh_Pow_Secondary: 1
+    - _Rgh_Pow_Tertiary: 1
     - _SSRefractionProjectionModel: 0
     - _Secondary_Light_Brightness: 0
     - _Secondary_Light_Pow: 4
@@ -342,16 +352,17 @@ Material:
     - _EmissiveColor: {r: 0, g: 0, b: 0, a: 1}
     - _InvPrimScale: {r: 1, g: 1, b: 0, a: 0}
     - _IridescenceThicknessRemap: {r: 0, g: 1, b: 0, a: 0}
-    - _Main_Colour: {r: 1, g: 0.7, b: 0, a: 1}
-    - _Main_Light: {r: 1, g: 0.19999996, b: 0.09999997, a: 1}
+    - _Main_Colour: {r: 0.8, g: 0.5690197, b: 0.04000001, a: 1}
+    - _Main_Light: {r: 1, g: 0.3347826, b: 0.25, a: 1}
     - _Primary_Colour_Tint: {r: 0.9, g: 0.6967059, b: 0.09000002, a: 0}
     - _Primary_Light_Colour: {r: 1, g: 0.45748034, b: 0.35000002, a: 1}
-    - _Secondary_Colour: {r: 1, g: 1, b: 1, a: 1}
+    - _Secondary_Colour: {r: 0.8, g: 0.8, b: 0.8, a: 1}
     - _Secondary_Colour_Tint: {r: 1, g: 1, b: 1, a: 0}
     - _Secondary_Light: {r: 0.19999996, g: 0.5, b: 1, a: 1}
     - _Secondary_Light_Colour: {r: 1, g: 0.4491685, b: 0.1372549, a: 0}
     - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
     - _TINT: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - _Tertiary_Colour: {r: 1, g: 1, b: 1, a: 1}
     - _ThicknessRemap: {r: 0, g: 1, b: 0, a: 0}
     - _TransmittanceColor: {r: 1, g: 1, b: 1, a: 1}
     - _UVDetailsMappingMask: {r: 1, g: 0, b: 0, a: 0}

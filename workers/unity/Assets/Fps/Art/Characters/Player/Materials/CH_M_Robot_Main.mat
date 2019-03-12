@@ -5,7 +5,8 @@ Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: CH_M_Robot_Main
   m_Shader: {fileID: 4800000, guid: ac7762a1006da2649bbd7d57183e90f0, type: 3}
   m_ShaderKeywords: _NORMALMAP
@@ -54,12 +55,16 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _T_Light:
+        m_Texture: {fileID: 2800000, guid: ae5e0bea1137cb0478822dbafd990b0f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _T_Mask:
-        m_Texture: {fileID: 2800000, guid: 6c09dd94400846d40a06122e8b936deb, type: 3}
+        m_Texture: {fileID: 2800000, guid: 8ecc6d4a1de26db4ba08539cc72edf83, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _T_Orm:
-        m_Texture: {fileID: 2800000, guid: c7b958f0fcad311458480fe9b600928a, type: 3}
+        m_Texture: {fileID: 2800000, guid: eb21098d8df19a04088667ba93a29528, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Texture_CLR:
@@ -97,6 +102,11 @@ Material:
     - _OverrideClipDistanceToGlobals: 0
     - _Parallax: 0.02
     - _Primary_Light_Brightness: 20
+    - _Rgh_Pow_Base: 1
+    - _Rgh_Pow_Primary: 1
+    - _Rgh_Pow_Primary_copy: 1
+    - _Rgh_Pow_Secondary: 1.5
+    - _Rgh_Pow_Tertiary: 2
     - _Secondary_Light_Brightness: 1
     - _Secondary_Light_Pow: 4
     - _SmoothnessTextureChannel: 0
@@ -113,7 +123,8 @@ Material:
     - _Main_Light: {r: 1, g: 0.19999996, b: 0.09999997, a: 1}
     - _Primary_Colour_Tint: {r: 1, g: 0.7490196, b: 0, a: 0}
     - _Primary_Light_Colour: {r: 1, g: 0, b: 0.25, a: 0}
-    - _Secondary_Colour: {r: 1, g: 1, b: 1, a: 1}
+    - _Secondary_Colour: {r: 0.75, g: 0.75, b: 0.75, a: 1}
     - _Secondary_Colour_Tint: {r: 1, g: 1, b: 1, a: 0}
     - _Secondary_Light: {r: 0.19999996, g: 0.5, b: 1, a: 1}
     - _Secondary_Light_Colour: {r: 0.39999998, g: 0.49913043, b: 1, a: 0}
+    - _Tertiary_Colour: {r: 0.3, g: 0.3, b: 0.3, a: 1}

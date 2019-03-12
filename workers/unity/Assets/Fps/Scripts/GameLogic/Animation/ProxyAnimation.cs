@@ -62,7 +62,19 @@ namespace Fps
 
         private void OnRotation(RotationUpdate rotation)
         {
-            fpsAnimator.SetPitch(rotation.Pitch.ToFloat1k());
+            var pitch = rotation.Pitch.ToFloat1k();
+            if (pitch < -180)
+            {
+                pitch += 360;
+            }
+
+            if (pitch > 180)
+            {
+                pitch -= 360;
+            }
+            
+            // AnimController treats negative pitch as pointing downwards
+            fpsAnimator.SetPitch(-pitch);
         }
 
         private void OnMovement(ServerResponse movement)
