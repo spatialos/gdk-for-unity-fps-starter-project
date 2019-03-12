@@ -846,6 +846,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4648052397860628367, guid: d52364553e6842940944c62b73e5e1b1,
+        type: 3}
+      propertyPath: m_Name
+      value: OnScreenUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 4688935748361665597, guid: d52364553e6842940944c62b73e5e1b1,
+        type: 3}
+      propertyPath: EditorCurrentScreen
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8946224398212592301, guid: d52364553e6842940944c62b73e5e1b1,
+        type: 3}
+      propertyPath: EntriesParentRect
+      value: 
+      objectReference: {fileID: 663023874}
     - target: {fileID: 5238200821785583470, guid: d52364553e6842940944c62b73e5e1b1,
         type: 3}
       propertyPath: deploymentListTable
@@ -856,11 +871,6 @@ PrefabInstance:
       propertyPath: frontEndUiController
       value: 
       objectReference: {fileID: 1310175563}
-    - target: {fileID: 4648052397860628367, guid: d52364553e6842940944c62b73e5e1b1,
-        type: 3}
-      propertyPath: m_Name
-      value: OnScreenUI
-      objectReference: {fileID: 0}
     - target: {fileID: 4871009320061034181, guid: d52364553e6842940944c62b73e5e1b1,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -996,11 +1006,6 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4688935748361665597, guid: d52364553e6842940944c62b73e5e1b1,
-        type: 3}
-      propertyPath: EditorCurrentScreen
-      value: 4
-      objectReference: {fileID: 0}
     - target: {fileID: 4648737916515989303, guid: d52364553e6842940944c62b73e5e1b1,
         type: 3}
       propertyPath: m_IsActive
@@ -1061,11 +1066,6 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 8946224398212592301, guid: d52364553e6842940944c62b73e5e1b1,
-        type: 3}
-      propertyPath: EntriesParentRect
-      value: 
-      objectReference: {fileID: 663023874}
     - target: {fileID: 6537574331130870539, guid: d52364553e6842940944c62b73e5e1b1,
         type: 3}
       propertyPath: m_IsActive
@@ -1130,6 +1130,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Color.a
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4647811023647179863, guid: d52364553e6842940944c62b73e5e1b1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d52364553e6842940944c62b73e5e1b1, type: 3}

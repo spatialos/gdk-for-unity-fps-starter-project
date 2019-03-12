@@ -54,7 +54,7 @@ namespace Fps
                 return;
             }
 
-            var gameUiTimer = timerGameObject.GetComponent<GameUITimer>();
+            var gameUITimer = timerGameObject.GetComponent<GameUITimer>();
             gameUITimer.SetMaxTime(timerReader.Data.MaxTimeSeconds);
             gameUITimer.SynchronizeTime(timerReader.Data.CurrentTimeSeconds);
         }

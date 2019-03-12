@@ -48,14 +48,13 @@ public class SimulatedPlayerWorkerConnector : DefaultWorkerConnector
     public void SpawnPlayer(int number)
     {
         var serializedArgs = PlayerLifecycleHelper.SerializeArguments($"Simulated Player {number}");
-        Debug.Log(serializedArgs.Length);
         var sendSystem = Worker.World.GetExistingManager<SendCreatePlayerRequestSystem>();
         sendSystem.RequestPlayerCreation(serializedArgs);
     }
 
     protected override void HandleWorkerConnectionEstablished()
     {
-        PlayerLifecycleHelper.AddClientSystems(Worker.World);
+        PlayerLifecycleHelper.AddClientSystems(Worker.World, false);
 
         var fallback = new GameObjectCreatorFromMetadata(Worker.WorkerType,
             Worker.Origin, Worker.LogDispatcher);
