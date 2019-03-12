@@ -12,28 +12,38 @@ namespace Improbable.Gdk.Health
         private struct EntitiesWithModifiedHealth
         {
             public readonly int Length;
-            [ReadOnly] public EntityArray Entity;
             public ComponentDataArray<HealthComponent.Component> Health;
-            [ReadOnly] public ComponentDataArray<HealthComponent.CommandRequests.ModifyHealth> ModifyHealthRequests;
-            public ComponentDataArray<HealthComponent.EventSender.HealthModified> HealthModifiedEventSenders;
+            [ReadOnly] public SharedComponentDataArray<HealthComponent.ComponentAuthority> Authority;
+            [ReadOnly] public ComponentDataArray<SpatialEntityId> EntityIds;
+            [ReadOnly] public EntityArray Entity;
         }
 
         [Inject] private EntitiesWithModifiedHealth entitiesWithModifiedHealth;
+        [Inject] private ComponentUpdateSystem updateSystem;
+        [Inject] private CommandSystem commandSystem;
 
         protected override void OnUpdate()
         {
             for (var i = 0; i < entitiesWithModifiedHealth.Length; i++)
             {
+                if (!entitiesWithModifiedHealth.Authority[i].HasAuthority)
+                {
+                    continue;
+                }
+
+                var update = new HealthComponent.Update();
                 var health = entitiesWithModifiedHealth.Health[i];
-                var healthModifiedEventSender = entitiesWithModifiedHealth.HealthModifiedEventSenders[i];
 
                 if (health.Health <= 0)
                 {
                     continue;
                 }
 
-                foreach (var request in entitiesWithModifiedHealth.ModifyHealthRequests[i].Requests)
+                var entityId = entitiesWithModifiedHealth.EntityIds[i].EntityId;
+                var requests = commandSystem.GetRequests<HealthComponent.ModifyHealth.ReceivedRequest>(entityId);
+                for (int j = 0; j < requests.Count; ++j)
                 {
+                    ref readonly var request = ref requests[j];
                     var modifier = request.Payload;
 
                     var healthModifiedInfo = new HealthModifiedInfo
@@ -43,20 +53,22 @@ namespace Improbable.Gdk.Health
                     };
 
                     health.Health = Mathf.Clamp(health.Health + modifier.Amount, 0, health.MaxHealth);
+                    update.Health = health.Health;
                     healthModifiedInfo.HealthAfter = health.Health;
 
 
                     if (health.Health <= 0)
                     {
                         healthModifiedInfo.Died = true;
-                        healthModifiedEventSender.Events.Add(healthModifiedInfo);
+                        updateSystem.SendEvent(new HealthComponent.HealthModified.Event(healthModifiedInfo), entityId);
                         break;
                     }
 
-                    healthModifiedEventSender.Events.Add(healthModifiedInfo);
+                    updateSystem.SendEvent(new HealthComponent.HealthModified.Event(healthModifiedInfo), entityId);
                 }
 
                 entitiesWithModifiedHealth.Health[i] = health;
+                updateSystem.SendUpdate(update, entityId);
             }
         }
     }
