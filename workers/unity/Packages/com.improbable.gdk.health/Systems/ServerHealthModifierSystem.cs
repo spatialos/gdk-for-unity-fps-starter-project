@@ -31,6 +31,7 @@ namespace Improbable.Gdk.Health
                     continue;
                 }
 
+                var update = new HealthComponent.Update();
                 var health = entitiesWithModifiedHealth.Health[i];
 
                 if (health.Health <= 0)
@@ -52,6 +53,7 @@ namespace Improbable.Gdk.Health
                     };
 
                     health.Health = Mathf.Clamp(health.Health + modifier.Amount, 0, health.MaxHealth);
+                    update.Health = health.Health;
                     healthModifiedInfo.HealthAfter = health.Health;
 
 
@@ -66,6 +68,7 @@ namespace Improbable.Gdk.Health
                 }
 
                 entitiesWithModifiedHealth.Health[i] = health;
+                updateSystem.SendUpdate(update, entityId);
             }
         }
     }

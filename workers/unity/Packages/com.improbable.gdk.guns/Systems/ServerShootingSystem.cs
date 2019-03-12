@@ -5,6 +5,7 @@ using Unity.Entities;
 
 namespace Improbable.Gdk.Guns
 {
+    [AlwaysUpdateSystem]
     [UpdateInGroup(typeof(SpatialOSUpdateGroup))]
     public class ServerShootingSystem : ComponentSystem
     {

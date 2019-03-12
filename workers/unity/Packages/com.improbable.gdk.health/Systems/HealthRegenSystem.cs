@@ -94,16 +94,20 @@ namespace Improbable.Gdk.Health
                     continue;
                 }
 
+                var update = new HealthRegenComponent.Update();
                 var regenComponent = takingDamage.HealthRegenComponents[i];
                 var regenData = takingDamage.RegenData[i];
 
                 regenComponent.DamagedRecently = true;
                 regenComponent.RegenCooldownTimer = regenComponent.RegenPauseTime;
+                update.DamagedRecently = new Option<BlittableBool>(true);
+                update.RegenCooldownTimer = regenComponent.RegenPauseTime;
 
                 regenData.DamagedRecentlyTimer = regenComponent.RegenPauseTime;
                 regenData.NextSpatialSyncTimer = regenComponent.CooldownSyncInterval;
 
                 takingDamage.HealthRegenComponents[i] = regenComponent;
+                componentUpdateSystem.SendUpdate(update, takingDamage.EntityIds[i].EntityId);
                 takingDamage.RegenData[i] = regenData;
             }
 
@@ -116,6 +120,7 @@ namespace Improbable.Gdk.Health
                 }
 
                 var healthComponent = toRegen.HealthComponents[i];
+                var update = new HealthRegenComponent.Update();
                 var regenComponent = toRegen.HealthRegenComponents[i];
 
                 var regenData = toRegen.RegenData[i];
@@ -136,6 +141,9 @@ namespace Improbable.Gdk.Health
                         regenData.DamagedRecentlyTimer = 0;
                         regenComponent.DamagedRecently = false;
                         regenComponent.RegenCooldownTimer = 0;
+                        update.DamagedRecently = new Option<BlittableBool>(true);
+                        update.RegenCooldownTimer = 0;
+                        componentUpdateSystem.SendUpdate(update, toRegen.EntityId[i].EntityId);
                         toRegen.HealthRegenComponents[i] = regenComponent;
                     }
                     else
@@ -146,6 +154,8 @@ namespace Improbable.Gdk.Health
                         {
                             regenData.NextSpatialSyncTimer += regenComponent.CooldownSyncInterval;
                             regenComponent.RegenCooldownTimer = regenData.DamagedRecentlyTimer;
+                            update.RegenCooldownTimer = regenData.DamagedRecentlyTimer;
+                            componentUpdateSystem.SendUpdate(update, toRegen.EntityId[i].EntityId);
                             toRegen.HealthRegenComponents[i] = regenComponent;
                         }
                     }
@@ -168,7 +178,7 @@ namespace Improbable.Gdk.Health
                             toRegen.EntityId[i].EntityId,
                             new HealthModifier()
                             {
-                                Amount = regenComponent.RegenAmount - 3
+                                Amount = regenComponent.RegenAmount
                             });
                         commandSystem.SendCommand(modifyHealthRequest, toRegen.Entities[i]);
                     }
