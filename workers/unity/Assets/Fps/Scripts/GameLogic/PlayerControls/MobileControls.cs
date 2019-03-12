@@ -9,7 +9,7 @@ public class MobileControls : MonoBehaviour, IControlProvider
     public float YawMultiplier = 0.15f;
     public float PitchMultiplier = 0.12f;
     public float FiringLookMultiplier = .8f;
-    public float SprintMaxAngle = 30f;
+    public float SprintMaxAngle = 45f;
     public float SprintDistanceThreshold => mobileUI.MaxStickDistance;
 
     // TODO Currently YawDelta/PitchDelta is untested on different devices. Probably needs some more love to resolve
