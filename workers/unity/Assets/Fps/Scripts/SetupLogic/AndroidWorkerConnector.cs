@@ -169,10 +169,10 @@ namespace Fps
                 Worker.LogDispatcher,
                 this);
 
-            LevelInstance.GetComponentsInChildren<TileEnabler>(true, levelTiles);
-            foreach (var tileEnabler in levelTiles)
+            LevelInstance.GetComponentsInChildren<TileEnabler>(true, LevelTiles);
+            foreach (var tileEnabler in LevelTiles)
             {
-                tileEnabler.IsClient = true;
+                tileEnabler.Initialize(true);
             }
 
             connectionController.OnReadyToSpawn();
