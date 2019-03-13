@@ -51,6 +51,7 @@ namespace Improbable.Gdk.Guns
 
         private GunSettings gunSettings;
         private GunSocket gunSocket;
+        private LinkedEntityComponent spatial;
 
         private UnityEngine.Transform GunBarrel => gunSocket.Gun.Barrel != null
             ? gunSocket.Gun.Barrel
@@ -65,6 +66,7 @@ namespace Improbable.Gdk.Guns
         private void OnEnable()
         {
             shooting.OnShotsEvent += ShotFired;
+            spatial = GetComponent<LinkedEntityComponent>();
         }
 
         private void OnDisable()
@@ -80,7 +82,7 @@ namespace Improbable.Gdk.Guns
         private void ShotFired(ShotInfo shotInfo)
         {
             var isAiming = gunState.Data.IsAiming;
-            var hitLocation = shotInfo.HitLocation.ToVector3();
+            var hitLocation = shotInfo.HitLocation.ToVector3() + spatial.Worker.Origin;
             var hitSomething = shotInfo.HitSomething;
 
             PlayRecoil(isAiming);
