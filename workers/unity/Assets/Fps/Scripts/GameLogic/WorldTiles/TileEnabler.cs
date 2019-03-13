@@ -5,7 +5,6 @@ namespace Fps
     public class TileEnabler : MonoBehaviour
     {
         public Transform PlayerTransform;
-        public bool IsClient;
 
         private bool renderersEnabled = true;
 
@@ -18,9 +17,9 @@ namespace Fps
 
         private MeshRenderer meshRenderer;
 
-        private void Start()
+        public void Initialize(bool isClient)
         {
-            if (!IsClient)
+            if (!isClient)
             {
                 Destroy(this);
                 return;

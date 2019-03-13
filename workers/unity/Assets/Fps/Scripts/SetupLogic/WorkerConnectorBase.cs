@@ -59,6 +59,12 @@ namespace Fps
                 Worker.WorkerType,
                 Worker.LogDispatcher,
                 this);
+
+            var levelTiles = LevelInstance.GetComponentsInChildren<TileEnabler>(true);
+            foreach (var tileEnabler in levelTiles)
+            {
+                tileEnabler.Initialize(false);
+            }
         }
     }
 }
