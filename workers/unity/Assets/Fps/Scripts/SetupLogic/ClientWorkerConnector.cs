@@ -64,12 +64,19 @@ namespace Fps
 
         protected override IEnumerator LoadWorld()
         {
-            yield return base.LoadWorld();
+            //yield return base.LoadWorld();
+            yield return MapBuilder.GenerateMap(
+                MapBuilderSettings,
+                transform,
+                Worker.Connection,
+                Worker.WorkerType,
+                Worker.LogDispatcher,
+                this);
 
-            LevelInstance.GetComponentsInChildren<TileEnabler>(true, levelTiles);
-            foreach (var tileEnabler in levelTiles)
+            LevelInstance.GetComponentsInChildren<TileEnabler>(true, LevelTiles);
+            foreach (var tileEnabler in LevelTiles)
             {
-                tileEnabler.IsClient = true;
+                tileEnabler.Initialize(true);
             }
 
             connectionController.OnReadyToSpawn();
