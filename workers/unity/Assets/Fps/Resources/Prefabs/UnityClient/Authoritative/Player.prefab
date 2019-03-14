@@ -135,6 +135,7 @@ GameObject:
   - component: {fileID: 114898509530246980}
   - component: {fileID: 114781168066614706}
   - component: {fileID: 114668275430029928}
+  - component: {fileID: 7462435762749260552}
   m_Layer: 11
   m_Name: Player
   m_TagString: Player
@@ -444,6 +445,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8882a78e7c8b4134d9c24eed88fc7167, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7462435762749260552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1627949407420470}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ff58ef520e11b74f9bb0bd0812a0388, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1889680010243874
 GameObject:
   m_ObjectHideFlags: 0
@@ -656,16 +669,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7451537192968994047, guid: 99c1c836e4262284d9b458f03442a4f6,
-        type: 3}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 9100000, guid: f4ed84bfa2745d546a04e298e1de998e, type: 2}
     - target: {fileID: 6108130638274169511, guid: 99c1c836e4262284d9b458f03442a4f6,
         type: 3}
       propertyPath: gunSocket
       value: 
       objectReference: {fileID: 114801285074366292}
+    - target: {fileID: 7451537192968994047, guid: 99c1c836e4262284d9b458f03442a4f6,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: f4ed84bfa2745d546a04e298e1de998e, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 99c1c836e4262284d9b458f03442a4f6, type: 3}
 --- !u!4 &7450142387778287261 stripped

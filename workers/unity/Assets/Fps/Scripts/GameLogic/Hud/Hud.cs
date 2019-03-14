@@ -72,7 +72,6 @@ namespace Fps
 
             var currentHealth = healthReader.Data.Health / healthReader.Data.MaxHealth;
             SetHealthEffect(currentHealth);
-            SetHealthBar(currentHealth);
         }
 
         private void AimingUpdated(BlittableBool isAiming)
@@ -102,18 +101,9 @@ namespace Fps
             return Mathf.Rad2Deg * Mathf.Atan2(direction.x, direction.z) - transform.eulerAngles.y;
         }
 
-        public void SetHealthBar(float healthFraction)
-        {
-            if (healthBarController != null && healthBarController.isActiveAndEnabled)
-            {
-                healthBarController.SetHealthBar(healthFraction);
-            }
-        }
-
         public void SetHealthEffect(float healthFraction)
         {
             damageVolumeSettings.health.value = healthFraction;
-            SetHealthBar(healthFraction);
         }
 
         private void OnDestroy()

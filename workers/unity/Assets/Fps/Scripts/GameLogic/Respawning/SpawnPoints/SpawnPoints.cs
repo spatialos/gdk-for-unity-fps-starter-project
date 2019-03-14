@@ -35,7 +35,7 @@ namespace Fps
                 return spawnPointList[0];
             }
 
-            if (Random.Range(0, 20) == 0)
+            if (Random.Range(0, 25) == 0)
             {
                 return spawnPointList[0];
             }
