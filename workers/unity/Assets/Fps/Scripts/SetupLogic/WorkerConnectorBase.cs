@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Threading.Tasks;
 using Improbable.Gdk.Core;
 using Improbable.Worker.CInterop;
@@ -11,7 +12,7 @@ namespace Fps
 
         [SerializeField] protected MapBuilderSettings MapBuilderSettings;
 
-        protected GameObject levelInstance;
+        public GameObject LevelInstance;
 
         protected abstract string GetWorkerType();
 
@@ -34,29 +35,30 @@ namespace Fps
 
         protected override void HandleWorkerConnectionEstablished()
         {
-            LoadWorld();
+            StartCoroutine(LoadWorld());
         }
 
         public override void Dispose()
         {
-            if (levelInstance != null)
+            if (LevelInstance != null)
             {
-                Destroy(levelInstance);
-                levelInstance = null;
+                Destroy(LevelInstance);
+                LevelInstance = null;
             }
 
             base.Dispose();
         }
 
         // Get the world size from the config, and use it to generate the correct-sized level
-        protected virtual void LoadWorld()
+        protected virtual IEnumerator LoadWorld()
         {
-            levelInstance = MapBuilder.GenerateMap(
+            yield return MapBuilder.GenerateMap(
                 MapBuilderSettings,
                 transform,
                 Worker.Connection,
                 Worker.WorkerType,
-                Worker.LogDispatcher);
+                Worker.LogDispatcher,
+                this);
         }
     }
 }
