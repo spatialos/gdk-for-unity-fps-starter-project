@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Random = System.Random;
 
 namespace Fps
 {
@@ -10,12 +11,12 @@ namespace Fps
         [SerializeField] private Color displayColor = Color.blue;
         public Color DisplayColor => displayColor;
 
-        public GameObject GetRandomTile()
+        public GameObject GetRandomTile(Random random)
         {
-            var rand = Random.value;
+            var rand = random.NextDouble();
             if (chanceOfEmptyTile == 0f || rand > chanceOfEmptyTile)
             {
-                return tiles[Random.Range(0, tiles.Length)];
+                return tiles[random.Next(0, tiles.Length)];
             }
 
             return null;
