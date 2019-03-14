@@ -39,7 +39,7 @@ namespace Fps
             health.SendUpdate(healthUpdate);
 
             // Move to a spawn point (position and rotation)
-            var (spawnPosition, spawnYaw, spawnPitch) = SpawnPoints.GetRandomSpawnPoint();
+            var (spawnPosition, spawnYaw, spawnPitch) = SpawnPoints.GetRandomSpawnPoint(request.CallerWorkerId.Contains("Simulated"));
             var newLatest = new ServerResponse
             {
                 Position = spawnPosition.ToIntAbsolute(),

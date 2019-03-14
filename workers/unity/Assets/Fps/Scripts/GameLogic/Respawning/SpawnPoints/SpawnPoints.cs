@@ -1,4 +1,5 @@
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Fps
 {
@@ -21,12 +22,22 @@ namespace Fps
         private static SpawnPoint[] spawnPointList;
         [SerializeField] private bool snapsToGround = true;
 
-        public static SpawnPoint GetRandomSpawnPoint()
+        public static SpawnPoint GetRandomSpawnPoint(bool isSimulatedPlayer)
         {
             if (spawnPointList == null || spawnPointList.Length == 0)
             {
                 Debug.LogWarning("No spawn points found - using origin.");
                 return new SpawnPoint();
+            }
+
+            if (!isSimulatedPlayer)
+            {
+                return spawnPointList[0];
+            }
+
+            if (Random.Range(0, 20) == 0)
+            {
+                return spawnPointList[0];
             }
 
             return spawnPointList[Random.Range(0, spawnPointList.Length)];

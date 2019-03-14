@@ -141,7 +141,7 @@ namespace Improbable.Gdk.Health
                         regenData.DamagedRecentlyTimer = 0;
                         regenComponent.DamagedRecently = false;
                         regenComponent.RegenCooldownTimer = 0;
-                        update.DamagedRecently = new Option<BlittableBool>(true);
+                        update.DamagedRecently = new Option<BlittableBool>(false);
                         update.RegenCooldownTimer = 0;
                         componentUpdateSystem.SendUpdate(update, toRegen.EntityId[i].EntityId);
                         toRegen.HealthRegenComponents[i] = regenComponent;

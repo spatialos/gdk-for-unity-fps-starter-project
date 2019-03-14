@@ -49,7 +49,7 @@ namespace Fps
         {
             var client = $"workerId:{workerId}";
 
-            var (spawnPosition, spawnYaw, spawnPitch) = SpawnPoints.GetRandomSpawnPoint();
+            var (spawnPosition, spawnYaw, spawnPitch) = SpawnPoints.GetRandomSpawnPoint(workerId.Contains("Simulated"));
 
             var serverResponse = new ServerResponse
             {
