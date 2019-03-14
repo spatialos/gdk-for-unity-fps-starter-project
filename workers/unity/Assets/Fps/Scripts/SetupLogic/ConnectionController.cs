@@ -16,6 +16,9 @@ namespace Fps
         private Animator connectButton;
         private WorkerConnector clientWorkerConnector;
 
+        private bool isReadyToSpawn;
+        private bool wantsSpawn;
+
         private void Start()
         {
             clientWorkerConnector = gameObject.GetComponent<WorkerConnector>();
@@ -57,6 +60,12 @@ namespace Fps
                     connectButton.SetTrigger("Ready");
                 }
             }
+
+            if (wantsSpawn && isReadyToSpawn)
+            {
+                SpawnPlayer();
+                wantsSpawn = false;
+            }
         }
 
         public void OnFailedToConnect()
@@ -65,6 +74,10 @@ namespace Fps
             connectButton.SetTrigger("FailedToConnect");
         }
 
+        public void OnReadyToSpawn()
+        {
+            isReadyToSpawn = true;
+        }
 
         private void SpawnPlayer()
         {
@@ -77,12 +90,12 @@ namespace Fps
             if (connectButton.GetCurrentAnimatorStateInfo(0).IsName("ReadyState"))
             {
                 connectButton.SetTrigger("Connecting");
-                SpawnPlayer();
+                wantsSpawn = true;
             }
             else if (connectButton.GetCurrentAnimatorStateInfo(0).IsName("FailedToSpawn"))
             {
                 connectButton.SetTrigger("Retry");
-                SpawnPlayer();
+                wantsSpawn = true;
             }
             else if (connectButton.GetCurrentAnimatorStateInfo(0).IsName("FailedToConnect")
                 || connectButton.GetCurrentAnimatorStateInfo(0).IsName("WorkerDisconnected"))
