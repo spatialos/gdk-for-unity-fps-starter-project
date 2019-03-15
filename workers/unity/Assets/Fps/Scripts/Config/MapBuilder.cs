@@ -481,7 +481,7 @@ namespace Fps
                 yield break;
             }
 
-            var levelInstance = worker.LevelInstance;
+            var levelInstance = worker.LevelInstance = new GameObject();
             levelInstance.name = $"FPS-Level_{worldLayerCount}({workerType})";
             levelInstance.transform.position = workerTransform.position;
             levelInstance.transform.rotation = workerTransform.rotation;
