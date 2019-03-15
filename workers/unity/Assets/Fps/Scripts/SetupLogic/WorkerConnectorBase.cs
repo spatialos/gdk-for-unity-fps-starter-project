@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Threading.Tasks;
 using Improbable.Gdk.Core;
@@ -12,7 +13,7 @@ namespace Fps
 
         [SerializeField] protected MapBuilderSettings MapBuilderSettings;
 
-        public GameObject LevelInstance;
+        [NonSerialized] internal GameObject LevelInstance;
 
         protected abstract string GetWorkerType();
 
