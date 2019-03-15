@@ -31,6 +31,7 @@ namespace Fps
         protected override void Start()
         {
             TargetText = TextOptions[0];
+            InitialState();
         }
 
         protected override void OnEnable()

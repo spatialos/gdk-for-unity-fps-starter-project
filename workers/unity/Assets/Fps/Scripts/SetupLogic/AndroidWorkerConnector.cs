@@ -61,6 +61,7 @@ namespace Fps
 #if UNITY_ANDROID && !UNITY_EDITOR
             UseIpAddressFromArguments();
 #endif
+            LevelInstance = GameObject.Find("FPS-Level_Visualisation");
             await AttemptConnect();
         }
 
@@ -140,7 +141,15 @@ namespace Fps
                 new AdvancedEntityPipeline(Worker, AuthPlayer, NonAuthPlayer, fallback),
                 gameObject);
 
-            StartCoroutine(LoadWorld());
+            //StartCoroutine(LoadWorld());
+
+            LevelInstance.GetComponentsInChildren<TileEnabler>(true, LevelTiles);
+            foreach (var tileEnabler in LevelTiles)
+            {
+                tileEnabler.Initialize(true);
+            }
+
+            connectionController.OnReadyToSpawn();
         }
 
         protected override void HandleWorkerConnectionFailure(string errorMessage)
