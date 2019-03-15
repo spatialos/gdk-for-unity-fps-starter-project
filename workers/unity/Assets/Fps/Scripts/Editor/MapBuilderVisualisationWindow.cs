@@ -15,8 +15,6 @@ namespace Fps.Editor
         private MapBuilder mapBuilder;
         private MapBuilderSettings mapBuilderSettings;
 
-        private GameObject tileTypeVolumesPrefab;
-
         private const string MapBuilderMenuItem = "SpatialOS/Map Builder";
         private const int MapBuilderMenuPriority = 52;
 
