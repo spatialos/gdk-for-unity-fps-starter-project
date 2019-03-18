@@ -153,7 +153,7 @@ namespace Fps
             LevelInstance.GetComponentsInChildren<TileEnabler>(true, levelTiles);
             foreach (var tileEnabler in levelTiles)
             {
-                tileEnabler.IsClient = true;
+                tileEnabler.Initialize(true);
             }
 
             connectionController.OnReadyToSpawn();

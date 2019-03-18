@@ -40,6 +40,12 @@ namespace Fps
         protected override IEnumerator LoadWorld()
         {
             yield return base.LoadWorld();
+            
+            var levelTiles = LevelInstance.GetComponentsInChildren<TileEnabler>(true);
+            foreach (var tileEnabler in levelTiles)
+            {
+                tileEnabler.Initialize(false);
+            }
 
             if (DisableRenderers)
             {
