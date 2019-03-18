@@ -1,3 +1,4 @@
+using System.Collections;
 using Improbable.Gdk.Core;
 using UnityEditor;
 using UnityEngine;
@@ -13,8 +14,6 @@ namespace Fps.Editor
 
         private MapBuilder mapBuilder;
         private MapBuilderSettings mapBuilderSettings;
-
-        private GameObject TileTypeVolumesPrefab;
 
         private const string MapBuilderMenuItem = "SpatialOS/Map Builder";
         private const int MapBuilderMenuPriority = 52;
@@ -75,7 +74,7 @@ namespace Fps.Editor
                         ? null
                         : Instantiate(mapBuilderSettings.WorldTileVolumes);
 
-                    mapBuilder.CleanAndBuild(layerCount, seed);
+                    UnwindCoroutine(mapBuilder.CleanAndBuild(layerCount, seed));
 
                     if (volumesPrefab != null)
                     {
@@ -108,6 +107,17 @@ namespace Fps.Editor
         private int GetTotalTilesFromLayers(int layers)
         {
             return Mathf.RoundToInt(Mathf.Pow(layers * 2, 2));
+        }
+
+        private void UnwindCoroutine(IEnumerator enumerator)
+        {
+            while (enumerator.MoveNext())
+            {
+                if (enumerator.Current is IEnumerator nestedEnumerator)
+                {
+                    UnwindCoroutine(nestedEnumerator);
+                }
+            }
         }
     }
 }
