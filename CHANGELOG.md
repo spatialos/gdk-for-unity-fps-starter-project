@@ -22,9 +22,10 @@
 - The four middle tiles of the world are no longer forced to be of certain tile type.
 - World tile prefabs improved.
 	- Now make use of nested prefabs.
-	- Completely new set of default tiles used to populate the world
-- Updated the build configuration asset
+	- Completely new set of default tiles used to populate the world.
+- Updated the build configuration asset.
 - Reduced the amount of health that gets regenerated. 
+- Map generation is now asynchronous.
 
 ### Fixed
 

@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Improbable.Gdk.GameObjectCreation;
@@ -22,20 +23,9 @@ namespace Fps
             connectionController = GetComponent<ConnectionController>();
         }
 
-        protected override async void Start()
-        {
-            Application.targetFrameRate = 60;
-            await AttemptConnect();
-        }
-
         protected override string GetWorkerType()
         {
             return WorkerUtils.UnityClient;
-        }
-
-        public async void Reconnect()
-        {
-            await AttemptConnect();
         }
 
         protected override void HandleWorkerConnectionEstablished()
@@ -61,15 +51,17 @@ namespace Fps
             connectionController.OnFailedToConnect();
         }
 
-        protected override void LoadWorld()
+        protected override IEnumerator LoadWorld()
         {
-            base.LoadWorld();
+            yield return base.LoadWorld();
 
-            levelInstance.GetComponentsInChildren<TileEnabler>(true, levelTiles);
+            LevelInstance.GetComponentsInChildren<TileEnabler>(true, levelTiles);
             foreach (var tileEnabler in levelTiles)
             {
-                tileEnabler.IsClient = true;
+                tileEnabler.Initialize(true);
             }
+
+            connectionController.OnReadyToSpawn();
         }
     }
 }
