@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using Improbable.Gdk.Core;
 using UnityEngine;
 
 #if UNITY_IOS

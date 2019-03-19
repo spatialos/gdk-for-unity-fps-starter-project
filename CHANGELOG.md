@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## `0.2.0` - 2019-03-19
+
 ### Added
 
 - Tweaked the Deployment Launcher window:
@@ -29,7 +31,7 @@
 
 ### Fixed
 
--Fixed a bug where the `SimulatedPlayerCoordinatorWorkerConnector` would throw errors, if you stopped the application while it was spawning more simulated players.
+- Fixed a bug where the `SimulatedPlayerCoordinatorWorkerConnector` would throw errors, if you stopped the application while it was spawning more simulated players.
 
 ## `0.1.5` - 2019-02-21
 
