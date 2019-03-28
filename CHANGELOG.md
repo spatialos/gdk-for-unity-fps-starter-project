@@ -7,6 +7,10 @@
 - Updated the default and cloud snapshots to contain 4 PlayerCreator entities.
 - Updated the `ConnectionController` and `ClientWorkerConnector` to make full use of the updated Player Lifecycle Feature Module.
 
+### Internal
+
+- Fixed package dependencies.
+
 ## `0.2.0` - 2019-03-19
 
 ### Added
