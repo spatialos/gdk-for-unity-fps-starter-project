@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Changed
+
+- Updated the default and cloud snapshots to contain 4 PlayerCreator entities.
+- Updated the `ConnectionController` and `ClientWorkerConnector` to make full use of the updated Player Lifecycle Feature Module.
+
 ## `0.2.0` - 2019-03-19
 
 ### Added
@@ -26,7 +31,7 @@
 	- Now make use of nested prefabs.
 	- Completely new set of default tiles used to populate the world.
 - Updated the build configuration asset.
-- Reduced the amount of health that gets regenerated. 
+- Reduced the amount of health that gets regenerated.
 - Map generation is now asynchronous.
 
 ### Fixed
