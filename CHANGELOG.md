@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Internal
+
+- Fixed package dependencies.
+
 ## `0.2.0` - 2019-03-19
 
 ### Added
