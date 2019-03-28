@@ -1,4 +1,5 @@
 using System.IO;
+using Improbable;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.DeploymentManager;
 using UnityEditor;
@@ -16,8 +17,7 @@ namespace Fps
 
         private static void GenerateSnapshot(Snapshot snapshot)
         {
-            var spawner = FpsEntityTemplates.Spawner();
-            snapshot.AddEntity(spawner);
+            snapshot.AddEntity(FpsEntityTemplates.Spawner(Coordinates.Zero));
         }
 
         [MenuItem("SpatialOS/Generate FPS Snapshot")]

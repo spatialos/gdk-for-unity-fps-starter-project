@@ -1,5 +1,6 @@
 using Improbable;
 using Improbable.Gdk.Core;
+using Improbable.Gdk.PlayerLifecycle;
 using Improbable.Gdk.Subscriptions;
 using Improbable.PlayerLifecycle;
 using Improbable.Worker.CInterop;
@@ -81,8 +82,8 @@ namespace Fps
 
         private void SpawnPlayer()
         {
-            var request = new CreatePlayerRequestType();
-            commandSender.SendCreatePlayerCommand(new EntityId(1), request, OnCreatePlayerResponse);
+            clientWorkerConnector.Worker.World.GetExistingManager<SendCreatePlayerRequestSystem>()
+                .RequestPlayerCreation(callback: OnCreatePlayerResponse);
         }
 
         public void ConnectAction()

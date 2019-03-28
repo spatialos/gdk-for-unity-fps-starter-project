@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Changed
+
+- Updated the `ConnectionController` and `ClientWorkerConnector` to make full use of the updated Player Lifecycle Feature Module.
+
 ### Internal
 
 - Fixed package dependencies.
@@ -30,7 +34,7 @@
 	- Now make use of nested prefabs.
 	- Completely new set of default tiles used to populate the world.
 - Updated the build configuration asset.
-- Reduced the amount of health that gets regenerated. 
+- Reduced the amount of health that gets regenerated.
 - Map generation is now asynchronous.
 
 ### Fixed
