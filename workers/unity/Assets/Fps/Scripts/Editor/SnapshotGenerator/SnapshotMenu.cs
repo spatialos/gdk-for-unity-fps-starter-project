@@ -17,10 +17,7 @@ namespace Fps
 
         private static void GenerateSnapshot(Snapshot snapshot)
         {
-            snapshot.AddEntity(FpsEntityTemplates.Spawner(new Coordinates(100, 0, 100)));
-            snapshot.AddEntity(FpsEntityTemplates.Spawner(new Coordinates(100, 0, -100)));
-            snapshot.AddEntity(FpsEntityTemplates.Spawner(new Coordinates(-100, 0, -100)));
-            snapshot.AddEntity(FpsEntityTemplates.Spawner(new Coordinates(-100, 0, 100)));
+            snapshot.AddEntity(FpsEntityTemplates.Spawner(Coordinates.Zero));
         }
 
         [MenuItem("SpatialOS/Generate FPS Snapshot")]

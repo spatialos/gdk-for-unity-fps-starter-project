@@ -82,9 +82,8 @@ namespace Fps
 
         private void SpawnPlayer()
         {
-            var createPlayerRequestSystem =
-                clientWorkerConnector.Worker.World.GetExistingManager<SendCreatePlayerRequestSystem>();
-            createPlayerRequestSystem.RequestPlayerCreation(callback: OnCreatePlayerResponse);
+            clientWorkerConnector.Worker.World.GetExistingManager<SendCreatePlayerRequestSystem>()
+                .RequestPlayerCreation(callback: OnCreatePlayerResponse);
         }
 
         public void ConnectAction()
