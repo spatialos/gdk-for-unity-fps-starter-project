@@ -13,10 +13,10 @@ namespace Fps
 {
     public static class FpsEntityTemplates
     {
-        public static EntityTemplate Spawner()
+        public static EntityTemplate Spawner(Coordinates spawnerCoordinates)
         {
-            var position = new Position.Snapshot { Coords = new Vector3().ToSpatialCoordinates() };
-            var metadata = new Metadata.Snapshot { EntityType = "PlayerCreator" };
+            var position = new Position.Snapshot(spawnerCoordinates);
+            var metadata = new Metadata.Snapshot("PlayerCreator");
 
             var template = new EntityTemplate();
             template.AddComponent(position, WorkerUtils.UnityGameLogic);
@@ -47,7 +47,7 @@ namespace Fps
 
         public static EntityTemplate Player(string workerId, byte[] args)
         {
-            var client = $"workerId:{workerId}";
+            var client = EntityTemplate.GetWorkerAccessAttribute(workerId);
 
             var (spawnPosition, spawnYaw, spawnPitch) = SpawnPoints.GetRandomSpawnPoint();
 
@@ -96,7 +96,7 @@ namespace Fps
             template.AddComponent(gunStateComponent, client);
             template.AddComponent(healthComponent, WorkerUtils.UnityGameLogic);
             template.AddComponent(healthRegenComponent, WorkerUtils.UnityGameLogic);
-            PlayerLifecycleHelper.AddPlayerLifecycleComponents(template, workerId, client, WorkerUtils.UnityGameLogic);
+            PlayerLifecycleHelper.AddPlayerLifecycleComponents(template, workerId, WorkerUtils.UnityGameLogic);
 
             template.SetReadAccess(WorkerUtils.UnityClient, WorkerUtils.UnityGameLogic, WorkerUtils.AndroidClient, WorkerUtils.iOSClient);
             template.SetComponentWriteAccess(EntityAcl.ComponentId, WorkerUtils.UnityGameLogic);
