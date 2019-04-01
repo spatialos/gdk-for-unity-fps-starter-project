@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Fps;
 using Improbable.Gdk.Core;
@@ -16,13 +17,6 @@ namespace Improbable.Gdk.DeploymentManager
     {
         private const string DeploymentLauncherMenuItem = "SpatialOS/Deployment Launcher";
         private const int DeploymentLauncherPriority = 51;
-
-        private static readonly string DotNetProjectPath =
-            Path.GetFullPath(Path.Combine(Tools.Common.GetPackagePath("com.improbable.gdk.deploymentlauncher"),
-                ".DeploymentLauncher/DeploymentLauncher.csproj"));
-
-        private static readonly string DotNetWorkingDirectory =
-            Path.GetFullPath(Path.Combine(Application.dataPath, ".."));
 
         private static readonly string ProjectRootPath =
             Path.Combine(Application.dataPath, "../../../");
@@ -75,14 +69,34 @@ namespace Improbable.Gdk.DeploymentManager
             private List<DeploymentInfo> deploymentList;
             private int selectedDeployment;
 
-            private Task<bool> runningUploadAssemblyTask;
-            private Task<bool> runningLaunchTask;
-            private Task<bool> runningStopTask;
-            private Task<List<DeploymentInfo>> runningListTask;
+            private DeploymentTasks.WrappedTask<bool> runningUploadAssemblyTask;
+            private DeploymentTasks.WrappedTask<bool> runningLaunchTask;
+            private DeploymentTasks.WrappedTask<bool> runningStopTask;
+            private DeploymentTasks.WrappedTask<List<DeploymentInfo>> runningListTask;
 
             private void OnEnable()
             {
                 deploymentList = new List<DeploymentInfo>();
+
+                AppDomain.CurrentDomain.ProcessExit += CleanUp;
+            }
+
+            private void CleanUp(object sender, EventArgs args)
+            {
+                CleanupTask(runningUploadAssemblyTask);
+                CleanupTask(runningLaunchTask);
+                CleanupTask(runningStopTask);
+                CleanupTask(runningListTask);
+            }
+
+            private void CleanupTask<T>(DeploymentTasks.WrappedTask<T> wrappedTask)
+            {
+                if (wrappedTask != null)
+                {
+                    wrappedTask.CancelSource.Cancel();
+                    wrappedTask.Task.Wait();
+                    wrappedTask.Dispose();
+                }
             }
 
             private void OnGUI()
@@ -237,21 +251,25 @@ namespace Improbable.Gdk.DeploymentManager
 
             private void Update()
             {
-                if (runningUploadAssemblyTask != null && runningUploadAssemblyTask.IsCompleted)
+                if (runningUploadAssemblyTask != null && runningUploadAssemblyTask.Task.IsCompleted)
                 {
+                    runningUploadAssemblyTask.Dispose();
                     runningUploadAssemblyTask = null;
                     Repaint();
                 }
 
-                if (runningLaunchTask != null && runningLaunchTask.IsCompleted)
+                if (runningLaunchTask != null && runningLaunchTask.Task.IsCompleted)
                 {
+                    runningLaunchTask.Dispose();
                     runningLaunchTask = null;
                     Repaint();
+
+                    EditorApplication.UnlockReloadAssemblies();
                 }
 
-                if (runningStopTask != null && runningStopTask.IsCompleted)
+                if (runningStopTask != null && runningStopTask.Task.IsCompleted)
                 {
-                    if (runningStopTask.Result)
+                    if (runningStopTask.Task.Result)
                     {
                         deploymentList.RemoveAt(selectedDeployment);
                         selectedDeployment = 0;
@@ -262,34 +280,31 @@ namespace Improbable.Gdk.DeploymentManager
                             $"Failed to stop deployment {deploymentList[selectedDeployment].Name} with ID {deploymentList[selectedDeployment].Id}.");
                     }
 
+                    runningStopTask.Dispose();
                     runningStopTask = null;
                     Repaint();
                 }
 
-                if (runningListTask != null && runningListTask.IsCompleted)
+                if (runningListTask != null && runningListTask.Task.IsCompleted)
                 {
                     deploymentList.Clear();
-                    if (runningListTask.Result != null)
+                    if (runningListTask.Task.Result != null)
                     {
-                        deploymentList = runningListTask.Result;
+                        deploymentList = runningListTask.Task.Result;
                     }
                     else
                     {
                         Debug.LogError("Failed to refresh deployments list.");
                     }
 
+                    runningListTask.Dispose();
                     runningListTask = null;
                     Repaint();
                 }
             }
 
-            private async Task<bool> TriggerUploadAssemblyAsync()
+            private DeploymentTasks.WrappedTask<bool> TriggerUploadAssemblyAsync()
             {
-                if (!Tools.Common.CheckDependencies())
-                {
-                    return false;
-                }
-
                 var arguments = new string[]
                 {
                     "cloud",
@@ -300,195 +315,74 @@ namespace Improbable.Gdk.DeploymentManager
                     forceUploadAssembly ? "--json_output --force" : "--json_output"
                 };
 
-                var processResult = await RedirectedProcess.Command(Tools.Common.SpatialBinary).WithArgs(arguments)
-                    .RedirectOutputOptions(OutputRedirectBehaviour.RedirectStdOut | OutputRedirectBehaviour.RedirectStdErr | OutputRedirectBehaviour.ProcessSpatialOutput)
-                    .InDirectory(ProjectRootPath)
-                    .RunAsync();
-                if (processResult.ExitCode == 0)
-                {
-                    Debug.Log($"Uploaded assembly {uploadAssemblyName} to project {projectName} successfully.");
-                    return true;
-                }
-
-                Debug.LogError($"Failed to upload assembly {uploadAssemblyName} to project {projectName}.");
-                return false;
+                return DeploymentTasks.TriggerUploadAssemblyAsync(arguments,
+                    () => Debug.Log($"Uploaded assembly {uploadAssemblyName} to project {projectName} successfully."),
+                    () => Debug.LogError($"Failed to upload assembly {uploadAssemblyName} to project {projectName}.")
+                );
             }
 
-            private async Task<bool> TriggerLaunchDeploymentAsync()
+            private DeploymentTasks.WrappedTask<bool> TriggerLaunchDeploymentAsync()
             {
-                try
+                var arguments = new List<string>
                 {
-                    EditorApplication.LockReloadAssemblies();
-                    if (!Tools.Common.CheckDependencies())
-                    {
-                        return false;
-                    }
+                    "create",
+                    projectName,
+                    assemblyName,
+                    deploymentName,
+                    Path.Combine(ProjectRootPath, mainLaunchJson),
+                    Path.Combine(ProjectRootPath, snapshotPath),
+                    deploymentRegionCode.ToString()
+                };
 
-                    var arguments = new List<string>
+                if (simPlayerDeploymentEnabled)
+                {
+                    arguments.AddRange(new List<string>
                     {
-                        "create",
-                        projectName,
-                        assemblyName,
-                        deploymentName,
-                        Path.Combine(ProjectRootPath, mainLaunchJson),
-                        Path.Combine(ProjectRootPath, snapshotPath),
-                        deploymentRegionCode.ToString()
-                    };
+                        simPlayerDeploymentName,
+                        Path.Combine(ProjectRootPath, simPlayerLaunchJson)
+                    });
+                }
+
+                return DeploymentTasks.TriggerLaunchDeploymentAsync(arguments, () =>
+                {
+                    Application.OpenURL(string.Format(ConsoleURLFormat, projectName, deploymentName));
                     if (simPlayerDeploymentEnabled)
                     {
-                        arguments.AddRange(new List<string>
-                        {
-                            simPlayerDeploymentName,
-                            Path.Combine(ProjectRootPath, simPlayerLaunchJson)
-                        });
+                        Application.OpenURL(string.Format(ConsoleURLFormat, projectName, simPlayerDeploymentName));
                     }
-
-                    var processResult = await RedirectedProcess.Command(Tools.Common.DotNetBinary)
-                        .WithArgs(ConstructArguments(arguments))
-                        .RedirectOutputOptions(OutputRedirectBehaviour.RedirectStdOut |
-                            OutputRedirectBehaviour.RedirectStdErr)
-                        .InDirectory(DotNetWorkingDirectory)
-                        .RunAsync();
-
-                    if (processResult.ExitCode == 0)
-                    {
-                        Application.OpenURL(string.Format(ConsoleURLFormat, projectName, deploymentName));
-                        if (simPlayerDeploymentEnabled)
-                        {
-                            Application.OpenURL(string.Format(ConsoleURLFormat, projectName, simPlayerDeploymentName));
-                        }
-                    }
-
-                    return processResult.ExitCode != 0;
-                }
-                finally
-                {
-                    EditorApplication.UnlockReloadAssemblies();
-                }
+                });
             }
 
-            private async Task<bool> TriggerStopDeploymentAsync(DeploymentInfo deployment)
+            private DeploymentTasks.WrappedTask<bool> TriggerStopDeploymentAsync(DeploymentInfo deployment)
             {
-                if (!Tools.Common.CheckDependencies())
-                {
-                    return false;
-                }
-
                 var arguments = new List<string>
                 {
                     "stop",
                     projectName,
                     deployment.Id
                 };
-                var processResult = await RunDeploymentLauncherHelperAsync(arguments, true);
-                if (processResult.ExitCode != 0)
-                {
-                    if (processResult.Stdout.Count > 0 && processResult.Stdout[0] == "<error:unknown-deployment>")
+
+                return DeploymentTasks.TriggerStopDeploymentAsync(arguments,
+                    () => { Debug.Log($"Deployment {deployment.Name} stopped."); },
+                    processResult =>
                     {
-                        Debug.LogError(
-                            $"Unable to stop deployment {deployment.Name}. Has the deployment been stopped already?");
-                    }
-
-                    return false;
-                }
-
-                Debug.Log($"Deployment {deployment.Name} stopped.");
-                return true;
+                        if (processResult.Stdout.Count > 0 && processResult.Stdout[0] == "<error:unknown-deployment>")
+                        {
+                            Debug.LogError(
+                                $"Unable to stop deployment {deployment.Name}. Has the deployment been stopped already?");
+                        }
+                    });
             }
 
-            private async Task<List<DeploymentInfo>> TriggerListDeploymentsAsync()
+            private DeploymentTasks.WrappedTask<List<DeploymentInfo>> TriggerListDeploymentsAsync()
             {
-                if (!Tools.Common.CheckDependencies())
-                {
-                    return null;
-                }
-
                 var arguments = new List<string>
                 {
                     "list",
                     projectName
                 };
-                var processResult = await RunDeploymentLauncherHelperAsync(arguments);
-                if (processResult.ExitCode != 0)
-                {
-                    return null;
-                }
 
-                // Get deployments from output.
-                var deploymentList = new List<DeploymentInfo>();
-                foreach (var line in processResult.Stdout)
-                {
-                    var tokens = line.Split(' ');
-                    if (tokens.Length != 3)
-                    {
-                        continue;
-                    }
-
-                    if (tokens[0] != "<deployment>")
-                    {
-                        continue;
-                    }
-
-                    deploymentList.Add(new DeploymentInfo
-                    {
-                        Id = tokens[1],
-                        Name = tokens[2]
-                    });
-                }
-
-                deploymentList.Sort((item1, item2) => string.Compare(item1.Name, item2.Name, StringComparison.Ordinal));
-
-                return deploymentList;
-            }
-
-            private async Task<RedirectedProcessResult> RunDeploymentLauncherHelperAsync(List<string> args,
-                bool redirectStdout = false)
-            {
-                var outputOptions = OutputRedirectBehaviour.RedirectStdErr;
-                if (redirectStdout)
-                {
-                    outputOptions |= OutputRedirectBehaviour.RedirectStdOut;
-                }
-
-                var processResult = await RedirectedProcess.Command(Tools.Common.DotNetBinary)
-                    .WithArgs(ConstructArguments(args))
-                    .RedirectOutputOptions(outputOptions)
-                    .InDirectory(DotNetWorkingDirectory)
-                    .RunAsync();
-
-                if (processResult.ExitCode == 0)
-                {
-                    return processResult;
-                }
-
-                // Examine the failure reason.
-                var failureReason = processResult.Stdout.Count > 0 ? processResult.Stdout[0] : "";
-                if (failureReason == "<error:unauthenticated>")
-                {
-                    // The reason this task failed is because we are authenticated. Try authenticating.
-                    Debug.Log(
-                        "Failed to connect to the SpatialOS platform due to being unauthenticated. Running `spatial auth login` then retrying the last operation...");
-                    var spatialAuthLoginResult = await RedirectedProcess.Command(Tools.Common.SpatialBinary)
-                        .WithArgs(new string[] { "auth", "login", "--json_output" })
-                        .RedirectOutputOptions(OutputRedirectBehaviour.RedirectStdErr | OutputRedirectBehaviour.ProcessSpatialOutput)
-                        .InDirectory(DotNetWorkingDirectory)
-                        .RunAsync();
-                    if (spatialAuthLoginResult.ExitCode == 0)
-                    {
-                        // Re-run the task.
-                        processResult = await RedirectedProcess.Command(Tools.Common.DotNetBinary)
-                            .WithArgs(ConstructArguments(args))
-                            .RedirectOutputOptions(OutputRedirectBehaviour.RedirectStdErr)
-                            .InDirectory(DotNetWorkingDirectory)
-                            .RunAsync();
-                    }
-                    else
-                    {
-                        Debug.Log("Failed to run `spatial auth login`.");
-                    }
-                }
-
-                return processResult;
+                return DeploymentTasks.TriggerListDeploymentsAsync(arguments);
             }
 
             private static bool ValidateProjectName(string projectName)
@@ -519,19 +413,6 @@ namespace Improbable.Gdk.DeploymentManager
                 }
 
                 return Regex.Match(deploymentName, "^[a-z0-9_]{2,32}$").Success;
-            }
-
-            private static string[] ConstructArguments(List<string> args)
-            {
-                var baseArgs = new List<string>
-                {
-                    "run",
-                    "-p",
-                    $"\"{DotNetProjectPath}\"",
-                    "--",
-                };
-                baseArgs.AddRange(args.Select(arg => $"\"{arg}\""));
-                return baseArgs.ToArray();
             }
 
             private void DrawSpinner(float value, Rect rect)
