@@ -387,32 +387,17 @@ namespace Improbable.Gdk.DeploymentManager
 
             private static bool ValidateProjectName(string projectName)
             {
-                if (string.IsNullOrEmpty(projectName))
-                {
-                    return false;
-                }
-
-                return Regex.Match(projectName, "^[a-z0-9_]{3,32}$").Success;
+                return !string.IsNullOrEmpty(projectName) && Regex.Match(projectName, "^[a-z0-9_]{3,32}$").Success;
             }
 
             private static bool ValidateAssemblyName(string assemblyName)
             {
-                if (string.IsNullOrEmpty(assemblyName))
-                {
-                    return false;
-                }
-
-                return Regex.Match(assemblyName, "^[a-zA-Z0-9_.-]{5,64}$").Success;
+                return !string.IsNullOrEmpty(assemblyName) && Regex.Match(assemblyName, "^[a-zA-Z0-9_.-]{5,64}$").Success;
             }
 
             private static bool ValidateDeploymentName(string deploymentName)
             {
-                if (string.IsNullOrEmpty(deploymentName))
-                {
-                    return false;
-                }
-
-                return Regex.Match(deploymentName, "^[a-z0-9_]{2,32}$").Success;
+                return !string.IsNullOrEmpty(deploymentName) && Regex.Match(deploymentName, "^[a-z0-9_]{2,32}$").Success;
             }
 
             private void DrawSpinner(float value, Rect rect)
