@@ -6,6 +6,10 @@
 
 - Updated the `ConnectionController` and `ClientWorkerConnector` to make full use of the updated Player Lifecycle Feature Module.
 
+### Fixed
+
+- Fixed a bug where closing Unity while the `DeploymentLauncher` was running would orphan the underlying processes.
+
 ### Internal
 
 - Fixed package dependencies.
