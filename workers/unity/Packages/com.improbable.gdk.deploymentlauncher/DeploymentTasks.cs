@@ -16,6 +16,9 @@ namespace Improbable.Gdk.DeploymentManager
             Path.GetFullPath(Path.Combine(Tools.Common.GetPackagePath("com.improbable.gdk.deploymentlauncher"),
                 ".DeploymentLauncher/DeploymentLauncher.csproj"));
 
+        private static TimeSpan DeploymentLauncherTimeout = new TimeSpan(0, 0, 25, 0);
+
+
         public class WrappedTask<TResult> : IDisposable
         {
             public Task<TResult> Task;
@@ -207,7 +210,7 @@ namespace Improbable.Gdk.DeploymentManager
                 .WithArgs(ConstructArguments(args))
                 .RedirectOutputOptions(outputOptions)
                 .InDirectory(workingDirectory)
-                .WithTimeout(25 * 60) // 25 minute timeout
+                .WithTimeout(DeploymentLauncherTimeout)
                 .RunAsync(token);
 
             if (processResult.ExitCode == 0 || token.IsCancellationRequested)
@@ -236,7 +239,7 @@ namespace Improbable.Gdk.DeploymentManager
                         .WithArgs(ConstructArguments(args))
                         .RedirectOutputOptions(OutputRedirectBehaviour.RedirectStdErr)
                         .InDirectory(workingDirectory)
-                        .WithTimeout(60 * 25) // 25 minute timeout
+                        .WithTimeout(DeploymentLauncherTimeout)
                         .RunAsync(token);
                 }
                 else
