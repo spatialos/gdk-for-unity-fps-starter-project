@@ -207,6 +207,7 @@ namespace Improbable.Gdk.DeploymentManager
                 .WithArgs(ConstructArguments(args))
                 .RedirectOutputOptions(outputOptions)
                 .InDirectory(workingDirectory)
+                .WithTimeout(25 * 60) // 25 minute timeout
                 .RunAsync(token);
 
             if (processResult.ExitCode == 0 || token.IsCancellationRequested)
@@ -235,6 +236,7 @@ namespace Improbable.Gdk.DeploymentManager
                         .WithArgs(ConstructArguments(args))
                         .RedirectOutputOptions(OutputRedirectBehaviour.RedirectStdErr)
                         .InDirectory(workingDirectory)
+                        .WithTimeout(60 * 25) // 25 minute timeout
                         .RunAsync(token);
                 }
                 else
