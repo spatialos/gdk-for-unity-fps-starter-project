@@ -19,7 +19,6 @@ namespace Improbable.Gdk.DeploymentManager.Commands
             var source = new CancellationTokenSource();
             var token = source.Token;
 
-
             // TODO: Allow for no snapshot
             var args = new[]
             {

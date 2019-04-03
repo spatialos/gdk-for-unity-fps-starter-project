@@ -91,14 +91,14 @@ namespace Improbable.Gdk.DeploymentManager
         /// <summary>
         ///     The project to upload this assembly to.
         /// </summary>
-        public string ProjectName { get; private set; }
+        public string ProjectName;
 
         /// <summary>
         ///     The name of this assembly.
         /// </summary>
-        public string AssemblyName { get; private set; }
+        public string AssemblyName;
 
-        public AssemblyConfig DeepCopy()
+        internal AssemblyConfig DeepCopy()
         {
             return new AssemblyConfig
             {
