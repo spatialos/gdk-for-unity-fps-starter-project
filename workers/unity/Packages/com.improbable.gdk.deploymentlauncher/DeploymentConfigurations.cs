@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Improbable.Gdk.DeploymentManager
@@ -35,6 +37,17 @@ namespace Improbable.Gdk.DeploymentManager
         public DeploymentRegionCode Region;
 
         /// <summary>
+        ///     Configuration that is specific to simulated player deployments. This will be non-null if this
+        ///     deployment is a simulated player deployment.
+        /// </summary>
+        public SimulatedPlayerDeploymentConfig SimulatedPlayerDeploymentConfig;
+
+        /// <summary>
+        ///     Tags to add to the deployment.
+        /// </summary>
+        public List<string> Tags = new List<string>();
+
+        /// <summary>
         ///     Deep copy this configuration object.
         /// </summary>
         /// <returns>A copy of this <see cref="DeploymentConfig"/> object.</returns>
@@ -47,7 +60,9 @@ namespace Improbable.Gdk.DeploymentManager
                 AssemblyName = string.Copy(AssemblyName),
                 SnapshotPath = string.Copy(SnapshotPath),
                 LaunchJson = string.Copy(LaunchJson),
-                Region = Region
+                Region = Region,
+                SimulatedPlayerDeploymentConfig = SimulatedPlayerDeploymentConfig?.DeepCopy(),
+                Tags = Tags.Select(string.Copy).ToList()
             };
         }
 
@@ -59,6 +74,37 @@ namespace Improbable.Gdk.DeploymentManager
         private bool ValidateNameName()
         {
             return !string.IsNullOrEmpty(Name) && Regex.Match(Name, "^[a-z0-9_]{2,32}$").Success;
+        }
+    }
+
+    /// <summary>
+    ///     Configuration that is specific to simulated player deployments.
+    /// </summary>
+    public class SimulatedPlayerDeploymentConfig
+    {
+        /// <summary>
+        ///     The name of the deployment that the simulated players should connect into.
+        /// </summary>
+        public string TargetDeploymentName;
+
+        /// <summary>
+        ///     The flag prefix for the simulated player coordinator worker flags.
+        /// </summary>
+        public string FlagPrefix;
+
+        /// <summary>
+        ///     The simulated player coordinator worker type.
+        /// </summary>
+        public string WorkerType;
+
+        internal SimulatedPlayerDeploymentConfig DeepCopy()
+        {
+            return new SimulatedPlayerDeploymentConfig
+            {
+                TargetDeploymentName = string.Copy(TargetDeploymentName),
+                FlagPrefix = string.Copy(FlagPrefix),
+                WorkerType = string.Copy(WorkerType)
+            };
         }
     }
 
@@ -84,6 +130,13 @@ namespace Improbable.Gdk.DeploymentManager
         ///     The id of the deployment.
         /// </summary>
         public string Id { get; }
+
+        public DeploymentInfo(string projectName, string name, string id)
+        {
+            ProjectName = projectName;
+            Name = name;
+            Id = id;
+        }
     }
 
     public class AssemblyConfig

@@ -20,7 +20,7 @@ namespace Improbable.Gdk.DeploymentLauncher
             [Option("launch_json_path", Required = true, HelpText = "The path to the launch json file.")]
             public string LaunchJsonPath { get; set; }
 
-            [Option("snapshot", Required = false, HelpText = "The path to the snapshot.")]
+            [Option("snapshot_path", Required = false, HelpText = "The path to the snapshot.")]
             public string SnapshotPath { get; set; }
 
             [Option("region", Required = true, HelpText = "The region to launch the deployment in.")]

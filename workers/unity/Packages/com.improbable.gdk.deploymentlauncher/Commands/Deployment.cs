@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Improbable.Gdk.Core;
 using Improbable.Gdk.Tools;
 
 namespace Improbable.Gdk.DeploymentManager.Commands
@@ -14,36 +15,45 @@ namespace Improbable.Gdk.DeploymentManager.Commands
             Tools.Common.GetPackagePath("com.improbable.gdk.deploymentlauncher"),
             ".DeploymentLauncher/DeploymentLauncher.csproj"));
 
-        public static WrappedTask<bool, DeploymentConfig> LaunchAsync(DeploymentConfig config)
+        public static WrappedTask<Option<Ipc.Error>, DeploymentConfig> LaunchAsync(DeploymentConfig config)
         {
             var source = new CancellationTokenSource();
             var token = source.Token;
 
-            // TODO: Allow for no snapshot
-            var args = new[]
+            var args = new List<string>
             {
-                "create",
-                "--project_name",
-                config.ProjectName,
-                "--assembly_name",
-                config.AssemblyName,
-                "--deployment_name",
-                config.Name,
-                "--launch_json",
-                Path.Combine(Tools.Common.SpatialProjectRootDir, config.LaunchJson),
-                "--snapshot",
-                Path.Combine(Tools.Common.SpatialProjectRootDir, config.SnapshotPath),
-                "--region",
-                config.Region.ToString()
+                config.SimulatedPlayerDeploymentConfig == null ? "create" : "create-sim",
+                $"--project_name={config.ProjectName}",
+                $"--assembly_name={config.AssemblyName}",
+                $"--deployment_name={config.Name}",
+                $"--launch_json=\"{Path.Combine(Tools.Common.SpatialProjectRootDir, config.LaunchJson)}\"",
+                $"--region={config.Region.ToString()}"
             };
+
+            if (!string.IsNullOrEmpty(config.SnapshotPath))
+            {
+                args.Add($"--snapshot=\"{Path.Combine(Tools.Common.SpatialProjectRootDir, config.SnapshotPath)}\"");
+            }
+
+            if (config.Tags.Count > 0)
+            {
+                args.Add($"--tags={string.Join(",", config.Tags)}");
+            }
+
+            if (config.SimulatedPlayerDeploymentConfig != null)
+            {
+                args.Add($"--target_deployment={config.SimulatedPlayerDeploymentConfig.TargetDeploymentName}");
+                args.Add($"--flag_prefix={config.SimulatedPlayerDeploymentConfig.FlagPrefix}");
+                args.Add($"--simulated_coordinator_worker_type={config.SimulatedPlayerDeploymentConfig.WorkerType}");
+            }
 
             var task = RunDeploymentLauncher(args,
                 OutputRedirectBehaviour.RedirectStdErr | OutputRedirectBehaviour.RedirectStdOut, token,
-                result => result.ExitCode == 0);
+                RetrieveIpcError);
 
             task.Start();
 
-            return new WrappedTask<bool, DeploymentConfig>
+            return new WrappedTask<Option<Ipc.Error>, DeploymentConfig>
             {
                 Task = task,
                 CancelSource = source,
@@ -51,7 +61,7 @@ namespace Improbable.Gdk.DeploymentManager.Commands
             };
         }
 
-        public static WrappedTask<bool, DeploymentInfo> StopAsync(DeploymentInfo info)
+        public static WrappedTask<Option<Ipc.Error>, DeploymentInfo> StopAsync(DeploymentInfo info)
         {
             var source = new CancellationTokenSource();
             var token = source.Token;
@@ -68,11 +78,11 @@ namespace Improbable.Gdk.DeploymentManager.Commands
             var task = RunDeploymentLauncher(args,
                 OutputRedirectBehaviour.RedirectStdOut | OutputRedirectBehaviour.RedirectStdErr,
                 token,
-                result => result.ExitCode == 0);
+                RetrieveIpcError);
 
             task.Start();
 
-            return new WrappedTask<bool, DeploymentInfo>
+            return new WrappedTask<Option<Ipc.Error>, DeploymentInfo>
             {
                 Task = task,
                 CancelSource = source,
@@ -80,7 +90,7 @@ namespace Improbable.Gdk.DeploymentManager.Commands
             };
         }
 
-        public static WrappedTask<List<DeploymentInfo>, string> ListAsync(string projectName)
+        public static WrappedTask<(Option<List<DeploymentInfo>>, Option<Ipc.Error>), string> ListAsync(string projectName)
         {
             var source = new CancellationTokenSource();
             var token = source.Token;
@@ -92,13 +102,12 @@ namespace Improbable.Gdk.DeploymentManager.Commands
                 projectName
             };
 
-            // TODO: Handle result.
             var task = RunDeploymentLauncher(args, OutputRedirectBehaviour.RedirectStdErr, token,
-                result => new List<DeploymentInfo>());
+                res => RetrieveDeploymentList(res, projectName));
 
             task.Start();
 
-            return new WrappedTask<List<DeploymentInfo>, string>
+            return new WrappedTask<(Option<List<DeploymentInfo>>, Option<Ipc.Error>), string>
             {
                 Task = task,
                 CancelSource = source,
@@ -106,7 +115,7 @@ namespace Improbable.Gdk.DeploymentManager.Commands
             };
         }
 
-        private static async Task<T> RunDeploymentLauncher<T>(string[] programArgs,
+        private static async Task<T> RunDeploymentLauncher<T>(IEnumerable<string> programArgs,
             OutputRedirectBehaviour redirectBehaviour,
             CancellationToken token,
             Func<RedirectedProcessResult, T> resultHandler)
@@ -123,6 +132,25 @@ namespace Improbable.Gdk.DeploymentManager.Commands
                 .RunAsync(token);
 
             return resultHandler(processResult);
+        }
+
+        private static Option<Ipc.Error> RetrieveIpcError(RedirectedProcessResult result)
+        {
+            return result.ExitCode == 0
+                ? Option<Ipc.Error>.Empty
+                : new Option<Ipc.Error>(Ipc.Error.FromStderr(result.Stderr));
+        }
+
+        private static (Option<List<DeploymentInfo>>, Option<Ipc.Error>) RetrieveDeploymentList(
+            RedirectedProcessResult result, string projectName)
+        {
+            if (result.ExitCode == 0)
+            {
+                return (new Option<List<DeploymentInfo>>(Ipc.GetDeploymentInfo(result.Stdout, projectName)),
+                    Option<Ipc.Error>.Empty);
+            }
+
+            return (Option<List<DeploymentInfo>>.Empty, new Option<Ipc.Error>(Ipc.Error.FromStderr(result.Stderr)));
         }
     }
 }

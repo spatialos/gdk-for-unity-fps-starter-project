@@ -28,7 +28,11 @@ namespace Improbable.Gdk.DeploymentLauncher
 
         public static void WriteDeploymentInfo(IEnumerable<Deployment> deployments)
         {
-            var json = JsonConvert.SerializeObject(deployments.Select(depl => new InternalDeployment(depl)).ToList());
+            var wrapper = new DeploymentListWrapper
+            {
+                Deployments = deployments.Select(depl => new InternalDeployment(depl)).ToList()
+            };
+            var json = JsonConvert.SerializeObject(wrapper);
             Console.WriteLine(json);
         }
 
@@ -54,6 +58,12 @@ namespace Improbable.Gdk.DeploymentLauncher
                 Id = deployment.Id;
                 Name = deployment.Name;
             }
+        }
+
+        // Force Newtonsoft to _not_ serialize the list as the root object.
+        private struct DeploymentListWrapper
+        {
+            public List<InternalDeployment> Deployments;
         }
     }
 }
