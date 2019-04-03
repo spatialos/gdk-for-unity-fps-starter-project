@@ -14,15 +14,15 @@ namespace Improbable.Gdk.DeploymentLauncher.Commands
     {
         public static int CreateDeployment(Options.Create options)
         {
-            return CreateDeployment(options, opts => File.ReadAllText(opts.LaunchJsonPath));
+            return CreateDeploymentInternal(options, opts => File.ReadAllText(opts.LaunchJsonPath));
         }
 
         public static int CreateSimulatedPlayerDeployment(Options.CreateSimulated options)
         {
-            return CreateDeployment(options, opts => ModifySimulatedPlayerLaunchJson(options));
+            return CreateDeploymentInternal(options, opts => ModifySimulatedPlayerLaunchJson(options));
         }
 
-        private static int CreateDeployment<TOptions>(TOptions options, Func<TOptions, string> getLaunchConfigJson)
+        private static int CreateDeploymentInternal<TOptions>(TOptions options, Func<TOptions, string> getLaunchConfigJson)
             where TOptions : Options.Create
         {
             var snapshotServiceClient = SnapshotServiceClient.Create();
