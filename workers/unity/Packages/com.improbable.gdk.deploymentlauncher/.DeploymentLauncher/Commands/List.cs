@@ -1,4 +1,4 @@
-using System;
+using System.Linq;
 using Improbable.SpatialOS.Deployment.V1Alpha1;
 
 namespace Improbable.Gdk.DeploymentLauncher.Commands
@@ -13,14 +13,8 @@ namespace Improbable.Gdk.DeploymentLauncher.Commands
                 ProjectName = options.ProjectName
             });
 
-            foreach (var deployment in listDeploymentsResult)
-            {
-                if (deployment.Status == Deployment.Types.Status.Running)
-                {
-                    // TODO: Write out results properly.
-                    Console.WriteLine($"<deployment> {deployment.Id} {deployment.Name}");
-                }
-            }
+            Ipc.WriteDeploymentInfo(listDeploymentsResult.Where(deployment =>
+                deployment.Status == Deployment.Types.Status.Running));
 
             return 0;
         }

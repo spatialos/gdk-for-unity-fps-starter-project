@@ -26,18 +26,23 @@ namespace Improbable.Gdk.DeploymentLauncher
             [Option("region", Required = true, HelpText = "The region to launch the deployment in.")]
             public string Region { get; set; }
 
-            [Option("tags", Required = false, HelpText = "Tags to add to this deployment. Comma separated", Separator = ',')]
+            [Option("tags", Required = false, HelpText = "Tags to add to this deployment. Comma separated",
+                Separator = ',')]
             public IEnumerable<string> Tags { get; set; }
         }
 
         [Verb("create-sim", HelpText = "Create a simulated player deployment")]
         public class CreateSimulated : Create
         {
-            [Option("target_deployment", Required = true, HelpText = "The deployment to connect the simulated players to.")]
+            [Option("target_deployment", Required = true,
+                HelpText = "The deployment to connect the simulated players to.")]
             public string TargetDeployment { get; set; }
 
-            [Option("flag-prefix", Required = true, HelpText = "The prefix used in setting the worker flags.")]
+            [Option("flag_prefix", Required = true, HelpText = "The prefix used in setting the worker flags.")]
             public string FlagPrefix { get; set; }
+
+            [Option("simulated_coordinator_worker_type", Required = true, HelpText = "The worker type for the simulated player coordinator.")]
+            public string SimulatedCoordinatorWorkerType { get; set; }
         }
 
         [Verb("stop", HelpText = "Stop a running deployment.")]

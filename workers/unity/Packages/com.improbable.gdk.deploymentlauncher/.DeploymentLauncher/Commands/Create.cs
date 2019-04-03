@@ -47,9 +47,8 @@ namespace Improbable.Gdk.DeploymentLauncher.Commands
                     var snapshotId = UploadSnapshot(snapshotServiceClient, options.SnapshotPath, options.ProjectName,
                         options.DeploymentName);
 
-                    if (snapshotId.Length == 0)
+                    if (string.IsNullOrEmpty(snapshotId))
                     {
-                        // TODO: Write out error.
                         return 1;
                     }
 
@@ -73,7 +72,7 @@ namespace Improbable.Gdk.DeploymentLauncher.Commands
             {
                 if (e.Status.StatusCode == Grpc.Core.StatusCode.NotFound)
                 {
-                    // TODO: Write out error.
+                    Ipc.WriteError(Ipc.ErrorCode.NotFound, e.Status.Detail);
                     return 1;
                 }
 
@@ -114,8 +113,7 @@ namespace Improbable.Gdk.DeploymentLauncher.Commands
 
             for (var i = 0; i < launchConfig.workers.Count; ++i)
             {
-                // TODO: Un-hardcode this.
-                if (launchConfig.workers[i].worker_type == "SimulatedPlayerCoordinator")
+                if (launchConfig.workers[i].worker_type == options.SimulatedCoordinatorWorkerType)
                 {
                     launchConfig.workers[i].flags.Add(devAuthTokenIdFlag);
                     launchConfig.workers[i].flags.Add(targetDeploymentFlag);
@@ -128,15 +126,18 @@ namespace Improbable.Gdk.DeploymentLauncher.Commands
         private static string UploadSnapshot(SnapshotServiceClient client, string snapshotPath, string projectName,
             string deploymentName)
         {
-            Console.WriteLine($"Uploading {snapshotPath} to project {projectName}");
-
+            if (!File.Exists(snapshotPath))
+            {
+                Ipc.WriteError(Ipc.ErrorCode.FileNotFound, $"Could not find snapshot file at: {snapshotPath}");
+                return null;
+            }
             // Read snapshot.
             var bytes = File.ReadAllBytes(snapshotPath);
 
             if (bytes.Length == 0)
             {
-                Console.Error.WriteLine($"Unable to load {snapshotPath}. Does the file exist?");
-                return string.Empty;
+                Ipc.WriteError(Ipc.ErrorCode.Other, $"Snapshot file at {snapshotPath} has zero bytes.");
+                return null;
             }
 
             // Create HTTP endpoint to upload to.

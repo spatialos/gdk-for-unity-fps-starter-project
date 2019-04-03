@@ -1,4 +1,3 @@
-using System;
 using Improbable.SpatialOS.Deployment.V1Alpha1;
 
 namespace Improbable.Gdk.DeploymentLauncher.Commands
@@ -21,13 +20,12 @@ namespace Improbable.Gdk.DeploymentLauncher.Commands
             {
                 if (e.Status.StatusCode == Grpc.Core.StatusCode.NotFound)
                 {
-                    // TODO: Write out error properly.
-                    Console.WriteLine("<error:unknown-deployment>");
+                    Ipc.WriteError(Ipc.ErrorCode.NotFound,
+                        $"Could not find deployment with ID {options.DeploymentId} in project {options.ProjectName}");
+                    return 1;
                 }
-                else
-                {
-                    throw;
-                }
+
+                throw;
             }
 
             return 0;
