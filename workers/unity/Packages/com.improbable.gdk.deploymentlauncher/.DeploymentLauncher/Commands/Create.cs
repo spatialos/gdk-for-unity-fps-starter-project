@@ -63,10 +63,16 @@ namespace Improbable.Gdk.DeploymentLauncher.Commands
                     }
                 }
 
-                deploymentServiceClient.CreateDeployment(new CreateDeploymentRequest
+                var deploymentOp = deploymentServiceClient.CreateDeployment(new CreateDeploymentRequest
                 {
                     Deployment = deployment
                 }).PollUntilCompleted();
+
+                if (deploymentOp.Result.Status != Deployment.Types.Status.Running)
+                {
+                    Ipc.WriteError(Ipc.ErrorCode.Other, "Deployment failed to start for an unknown reason.");
+                    return 1;
+                }
             }
             catch (Grpc.Core.RpcException e)
             {
