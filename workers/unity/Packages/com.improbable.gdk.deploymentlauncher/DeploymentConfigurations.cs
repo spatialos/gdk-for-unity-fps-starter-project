@@ -58,7 +58,7 @@ namespace Improbable.Gdk.DeploymentManager
                 Name = string.Copy(Name),
                 ProjectName = string.Copy(ProjectName),
                 AssemblyName = string.Copy(AssemblyName),
-                SnapshotPath = string.Copy(SnapshotPath),
+                SnapshotPath = SnapshotPath == null ? null : string.Copy(SnapshotPath),
                 LaunchJson = string.Copy(LaunchJson),
                 Region = Region,
                 SimulatedPlayerDeploymentConfig = SimulatedPlayerDeploymentConfig?.DeepCopy(),

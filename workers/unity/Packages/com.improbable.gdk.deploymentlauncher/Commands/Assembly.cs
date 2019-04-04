@@ -6,7 +6,7 @@ namespace Improbable.Gdk.DeploymentManager.Commands
 {
     public static class Assembly
     {
-        public static WrappedTask<bool, AssemblyConfig> UploadAsync(AssemblyConfig config,
+        public static WrappedTask<RedirectedProcessResult, AssemblyConfig> UploadAsync(AssemblyConfig config,
             bool force = false)
         {
             var source = new CancellationTokenSource();
@@ -22,19 +22,14 @@ namespace Improbable.Gdk.DeploymentManager.Commands
                 force ? "--json_output --force" : "--json_output"
             };
 
-            var task = Task.Run(async () =>
-            {
-                var processResult = await RedirectedProcess.Command(Tools.Common.SpatialBinary)
-                    .InDirectory(Tools.Common.SpatialProjectRootDir)
-                    .WithArgs(args)
-                    .RedirectOutputOptions(OutputRedirectBehaviour.RedirectStdOut |
-                        OutputRedirectBehaviour.RedirectStdErr | OutputRedirectBehaviour.ProcessSpatialOutput)
-                    .RunAsync(token);
+            var task = Task.Run(async () => await RedirectedProcess.Command(Tools.Common.SpatialBinary)
+                .InDirectory(Tools.Common.SpatialProjectRootDir)
+                .WithArgs(args)
+                .RedirectOutputOptions(OutputRedirectBehaviour.RedirectStdOut |
+                    OutputRedirectBehaviour.RedirectStdErr | OutputRedirectBehaviour.ProcessSpatialOutput)
+                .RunAsync(token));
 
-                return processResult.ExitCode == 0;
-            });
-
-            return new WrappedTask<bool, AssemblyConfig>
+            return new WrappedTask<RedirectedProcessResult, AssemblyConfig>
             {
                 Task = task,
                 CancelSource = source,

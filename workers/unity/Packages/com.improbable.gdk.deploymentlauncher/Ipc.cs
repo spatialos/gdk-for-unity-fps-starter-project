@@ -33,7 +33,7 @@ namespace Improbable.Gdk.DeploymentManager
 
                 return new Error
                 {
-                    Code = (uint) deserialized["Code"],
+                    Code = Convert.ToUInt32(deserialized["Code"]),
                     Message = (string) deserialized["Message"]
                 };
             }
@@ -54,7 +54,7 @@ namespace Improbable.Gdk.DeploymentManager
             {
                 var json = (Dictionary<string, object>) depl;
 
-                return new DeploymentInfo(projectName, (string) json["Id"], (string) json["Name"]);
+                return new DeploymentInfo(projectName, (string) json["Name"], (string) json["Id"]);
             }).ToList();
         }
     }

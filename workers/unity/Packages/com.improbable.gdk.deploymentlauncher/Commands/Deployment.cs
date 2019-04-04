@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Improbable.Gdk.Core;
+using Improbable.Gdk.Core.Collections;
 using Improbable.Gdk.Tools;
 
 namespace Improbable.Gdk.DeploymentManager.Commands
@@ -15,10 +15,12 @@ namespace Improbable.Gdk.DeploymentManager.Commands
             Tools.Common.GetPackagePath("com.improbable.gdk.deploymentlauncher"),
             ".DeploymentLauncher/DeploymentLauncher.csproj"));
 
-        public static WrappedTask<Option<Ipc.Error>, DeploymentConfig> LaunchAsync(DeploymentConfig config)
+        public static WrappedTask<Result<RedirectedProcessResult, Ipc.Error>, DeploymentConfig> LaunchAsync(DeploymentConfig config)
         {
             var source = new CancellationTokenSource();
             var token = source.Token;
+
+            source.CancelAfter(new TimeSpan(0, 25, 0));
 
             var args = new List<string>
             {
@@ -26,13 +28,13 @@ namespace Improbable.Gdk.DeploymentManager.Commands
                 $"--project_name={config.ProjectName}",
                 $"--assembly_name={config.AssemblyName}",
                 $"--deployment_name={config.Name}",
-                $"--launch_json=\"{Path.Combine(Tools.Common.SpatialProjectRootDir, config.LaunchJson)}\"",
+                $"--launch_json_path=\"{Path.Combine(Tools.Common.SpatialProjectRootDir, config.LaunchJson)}\"",
                 $"--region={config.Region.ToString()}"
             };
 
             if (!string.IsNullOrEmpty(config.SnapshotPath))
             {
-                args.Add($"--snapshot=\"{Path.Combine(Tools.Common.SpatialProjectRootDir, config.SnapshotPath)}\"");
+                args.Add($"--snapshot_path=\"{Path.Combine(Tools.Common.SpatialProjectRootDir, config.SnapshotPath)}\"");
             }
 
             if (config.Tags.Count > 0)
@@ -47,24 +49,23 @@ namespace Improbable.Gdk.DeploymentManager.Commands
                 args.Add($"--simulated_coordinator_worker_type={config.SimulatedPlayerDeploymentConfig.WorkerType}");
             }
 
-            var task = RunDeploymentLauncher(args,
-                OutputRedirectBehaviour.RedirectStdErr | OutputRedirectBehaviour.RedirectStdOut, token,
-                RetrieveIpcError);
-
-            task.Start();
-
-            return new WrappedTask<Option<Ipc.Error>, DeploymentConfig>
+            return new WrappedTask<Result<RedirectedProcessResult, Ipc.Error>, DeploymentConfig>
             {
-                Task = task,
+                Task = RunDeploymentLauncher(args,
+                    OutputRedirectBehaviour.None, token,
+                    RetrieveIpcError),
                 CancelSource = source,
                 Context = config.DeepCopy()
             };
         }
 
-        public static WrappedTask<Option<Ipc.Error>, DeploymentInfo> StopAsync(DeploymentInfo info)
+        public static WrappedTask<Result<RedirectedProcessResult, Ipc.Error>, DeploymentInfo> StopAsync(DeploymentInfo info)
         {
             var source = new CancellationTokenSource();
             var token = source.Token;
+
+            source.CancelAfter(new TimeSpan(0, 25, 0));
+
 
             var args = new[]
             {
@@ -75,25 +76,23 @@ namespace Improbable.Gdk.DeploymentManager.Commands
                 info.Id
             };
 
-            var task = RunDeploymentLauncher(args,
-                OutputRedirectBehaviour.RedirectStdOut | OutputRedirectBehaviour.RedirectStdErr,
-                token,
-                RetrieveIpcError);
-
-            task.Start();
-
-            return new WrappedTask<Option<Ipc.Error>, DeploymentInfo>
+            return new WrappedTask<Result<RedirectedProcessResult, Ipc.Error>, DeploymentInfo>
             {
-                Task = task,
+                Task = RunDeploymentLauncher(args,
+                    OutputRedirectBehaviour.RedirectStdOut | OutputRedirectBehaviour.RedirectStdErr,
+                    token,
+                    RetrieveIpcError),
                 CancelSource = source,
                 Context = info
             };
         }
 
-        public static WrappedTask<(Option<List<DeploymentInfo>>, Option<Ipc.Error>), string> ListAsync(string projectName)
+        public static WrappedTask<Result<List<DeploymentInfo>, Ipc.Error>, string> ListAsync(string projectName)
         {
             var source = new CancellationTokenSource();
             var token = source.Token;
+
+            source.CancelAfter(new TimeSpan(0, 25, 0));
 
             var args = new[]
             {
@@ -102,14 +101,10 @@ namespace Improbable.Gdk.DeploymentManager.Commands
                 projectName
             };
 
-            var task = RunDeploymentLauncher(args, OutputRedirectBehaviour.RedirectStdErr, token,
-                res => RetrieveDeploymentList(res, projectName));
-
-            task.Start();
-
-            return new WrappedTask<(Option<List<DeploymentInfo>>, Option<Ipc.Error>), string>
+            return new WrappedTask<Result<List<DeploymentInfo>, Ipc.Error>, string>
             {
-                Task = task,
+                Task = RunDeploymentLauncher(args, OutputRedirectBehaviour.RedirectStdErr, token,
+                    res => RetrieveDeploymentList(res, projectName)),
                 CancelSource = source,
                 Context = projectName
             };
@@ -124,33 +119,31 @@ namespace Improbable.Gdk.DeploymentManager.Commands
                 .Concat(programArgs)
                 .ToArray();
 
-            var processResult = await RedirectedProcess.Command(Tools.Common.DotNetBinary)
-                .InDirectory("") // TODO: Figure out where this should run.
+            var result = await RedirectedProcess.Command(Tools.Common.DotNetBinary)
                 .WithArgs(wrappedArgs)
                 .RedirectOutputOptions(redirectBehaviour)
-                .WithTimeout(new TimeSpan(0, 0, 25, 0))
-                .RunAsync(token);
+                .RunAsync(token)
+                .ConfigureAwait(false);
 
-            return resultHandler(processResult);
+            return resultHandler(result);
         }
 
-        private static Option<Ipc.Error> RetrieveIpcError(RedirectedProcessResult result)
+        private static Result<RedirectedProcessResult, Ipc.Error> RetrieveIpcError(RedirectedProcessResult result)
         {
             return result.ExitCode == 0
-                ? Option<Ipc.Error>.Empty
-                : new Option<Ipc.Error>(Ipc.Error.FromStderr(result.Stderr));
+                ? Result<RedirectedProcessResult, Ipc.Error>.Ok(result)
+                : Result<RedirectedProcessResult, Ipc.Error>.Error(Ipc.Error.FromStderr(result.Stderr));
         }
 
-        private static (Option<List<DeploymentInfo>>, Option<Ipc.Error>) RetrieveDeploymentList(
+        private static Result<List<DeploymentInfo>, Ipc.Error> RetrieveDeploymentList(
             RedirectedProcessResult result, string projectName)
         {
             if (result.ExitCode == 0)
             {
-                return (new Option<List<DeploymentInfo>>(Ipc.GetDeploymentInfo(result.Stdout, projectName)),
-                    Option<Ipc.Error>.Empty);
+                return Result<List<DeploymentInfo>, Ipc.Error>.Ok(Ipc.GetDeploymentInfo(result.Stdout, projectName));
             }
 
-            return (Option<List<DeploymentInfo>>.Empty, new Option<Ipc.Error>(Ipc.Error.FromStderr(result.Stderr)));
+            return Result<List<DeploymentInfo>, Ipc.Error>.Error(Ipc.Error.FromStderr(result.Stderr));
         }
     }
 }
