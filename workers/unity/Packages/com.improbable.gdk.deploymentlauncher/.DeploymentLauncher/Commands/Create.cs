@@ -117,6 +117,9 @@ namespace Improbable.Gdk.DeploymentLauncher.Commands
             };
 
             var launchConfigRaw = File.ReadAllText(options.LaunchJsonPath);
+
+            // Dynamically traverse the JSON object. The '.' operator on the dynamic object corresponds to indexing
+            // into the JSON fields. The alternative would be to write a model of the configuration file.
             dynamic launchConfig = JObject.Parse(launchConfigRaw);
 
             for (var i = 0; i < launchConfig.workers.Count; ++i)
