@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Improbable.Gdk.Tools;
@@ -12,19 +13,24 @@ namespace Improbable.Gdk.DeploymentManager.Commands
             var source = new CancellationTokenSource();
             var token = source.Token;
 
-            var args = new[]
+            var args = new List<string>
             {
                 "cloud",
                 "upload",
                 config.AssemblyName,
                 "--project_name",
                 config.ProjectName,
-                force ? "--json_output --force" : "--json_output"
+                "--json_output"
             };
+
+            if (force)
+            {
+                args.Add("--force");
+            }
 
             var task = Task.Run(async () => await RedirectedProcess.Command(Tools.Common.SpatialBinary)
                 .InDirectory(Tools.Common.SpatialProjectRootDir)
-                .WithArgs(args)
+                .WithArgs(args.ToArray())
                 .RedirectOutputOptions(OutputRedirectBehaviour.RedirectStdOut |
                     OutputRedirectBehaviour.RedirectStdErr | OutputRedirectBehaviour.ProcessSpatialOutput)
                 .RunAsync(token));

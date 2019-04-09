@@ -22,13 +22,13 @@ namespace Improbable.Gdk.DeploymentLauncher.Commands
                 {
                     Ipc.WriteError(Ipc.ErrorCode.NotFound,
                         $"Could not find deployment with ID {options.DeploymentId} in project {options.ProjectName}");
-                    return 1;
+                    return Program.ErrorExitCode;
                 }
 
                 throw;
             }
 
-            return 0;
+            return Program.SuccessExitCode;
         }
     }
 }

@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Improbable.Gdk.Core.Collections;
 using Improbable.Gdk.Tools.MiniJSON;
+using UnityEngine;
 
 namespace Improbable.Gdk.DeploymentManager
 {
@@ -13,49 +15,91 @@ namespace Improbable.Gdk.DeploymentManager
             Unauthenticated = 2,
             NotFound = 3,
             UnknownGrpcError = 4,
-            Other = 5
+            SnapshotUploadFailed = 5,
+            Unknown = 6,
+
+            // Additional error code used by the parsing logic.
+            CannotParseOutput = 7
         }
 
         public class Error
         {
-            public uint Code;
+            public ErrorCode Code;
             public string Message;
 
-            public static Error FromStderr(List<string> stderr)
+            public static Error FromStderr(IReadOnlyList<string> stderr)
             {
-                if (stderr.Count == 0)
+                if (stderr == null || stderr.Count == 0)
                 {
                     throw new ArgumentException("Cannot parse error from empty stderr.");
                 }
 
-                // We expect only the first line to be valid.
-                var deserialized = Json.Deserialize(stderr[0]);
-
-                return new Error
+                try
                 {
-                    Code = Convert.ToUInt32(deserialized["Code"]),
-                    Message = (string) deserialized["Message"]
-                };
+                    // We expect only the first line to be valid.
+                    var deserialized = Json.Deserialize(stderr[0]);
+
+                    return new Error
+                    {
+                        Code = (ErrorCode) deserialized["Code"],
+                        Message = (string) deserialized["Message"]
+                    };
+                }
+                catch (InvalidCastException e)
+                {
+                    return new Error
+                    {
+                        Code = ErrorCode.CannotParseOutput,
+                        Message = $"Parse error: {e.Message}.\nRaw stderr: {string.Join("\n", stderr)}"
+                    };
+                }
+                catch (KeyNotFoundException e)
+                {
+                    return new Error
+                    {
+                        Code = ErrorCode.CannotParseOutput,
+                        Message = $"Parse error: {e.Message}.\nRaw stderr: {string.Join("\n", stderr)}"
+                    };
+                }
             }
         }
 
-        public static List<DeploymentInfo> GetDeploymentInfo(List<string> stdout, string projectName)
+        public static Result<List<DeploymentInfo>, Error> GetDeploymentInfo(IReadOnlyList<string> stdout, string projectName)
         {
             if (stdout.Count == 0)
             {
                 throw new ArgumentException("Cannot parse deployment list from empty stdout.");
             }
 
-            // We expect the first line to have all the JSON.
-            var deserialized = Json.Deserialize(stdout[0]);
-            var deployments = (List<object>) deserialized["Deployments"];
-
-            return deployments.Select(depl =>
+            try
             {
-                var json = (Dictionary<string, object>) depl;
+                // We expect the first line to have all the JSON.
+                var deserialized = Json.Deserialize(stdout[0]);
+                var deployments = (List<object>) deserialized["Deployments"];
 
-                return new DeploymentInfo(projectName, (string) json["Name"], (string) json["Id"]);
-            }).ToList();
+                return Result<List<DeploymentInfo>, Error>.Ok(deployments.Select(depl =>
+                {
+                    var json = (Dictionary<string, object>) depl;
+
+                    return new DeploymentInfo(projectName, (string) json["Name"], (string) json["Id"]);
+                }).ToList());
+            }
+            catch (InvalidCastException e)
+            {
+                return Result<List<DeploymentInfo>, Error>.Error(new Error
+                {
+                    Code = ErrorCode.CannotParseOutput,
+                    Message = $"Parse error: {e.Message}.\nRaw stderr: {string.Join("\n", stdout)}"
+                });
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result<List<DeploymentInfo>, Error>.Error(new Error
+                {
+                    Code = ErrorCode.CannotParseOutput,
+                    Message = $"Parse error: {e.Message}.\nRaw stderr: {string.Join("\n", stdout)}"
+                });
+            }
         }
     }
 }

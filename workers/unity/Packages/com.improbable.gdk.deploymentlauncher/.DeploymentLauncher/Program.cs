@@ -4,6 +4,9 @@ namespace Improbable.Gdk.DeploymentLauncher
 {
     internal class Program
     {
+        public const int SuccessExitCode = 0;
+        public const int ErrorExitCode = 1;
+
         private static int Main(string[] args)
         {
             try
@@ -19,7 +22,7 @@ namespace Improbable.Gdk.DeploymentLauncher
                         (Options.Create createOptions) => Commands.Create.CreateDeployment(createOptions),
                         (Options.Stop stopOptions) => Commands.Stop.StopDeployment(stopOptions),
                         (Options.List listOptions) => Commands.List.ListDeployments(listOptions),
-                        errs => 1
+                        errs => ErrorExitCode
                     );
             }
             catch (Grpc.Core.RpcException e)
@@ -27,16 +30,16 @@ namespace Improbable.Gdk.DeploymentLauncher
                 if (e.Status.StatusCode == Grpc.Core.StatusCode.Unauthenticated)
                 {
                     Ipc.WriteError(Ipc.ErrorCode.Unauthenticated, "");
-                    return 1;
+                    return ErrorExitCode;
                 }
 
                 Ipc.WriteError(Ipc.ErrorCode.UnknownGrpcError, e.ToString());
-                return 1;
+                return ErrorExitCode;
             }
             catch (Google.LongRunning.OperationFailedException e)
             {
                 Ipc.WriteError(Ipc.ErrorCode.UnknownGrpcError, e.ToString());
-                return 1;
+                return ErrorExitCode;
             }
         }
     }

@@ -16,7 +16,7 @@ namespace Improbable.Gdk.DeploymentLauncher.Commands
             Ipc.WriteDeploymentInfo(listDeploymentsResult.Where(deployment =>
                 deployment.Status == Deployment.Types.Status.Running));
 
-            return 0;
+            return Program.SuccessExitCode;
         }
     }
 }

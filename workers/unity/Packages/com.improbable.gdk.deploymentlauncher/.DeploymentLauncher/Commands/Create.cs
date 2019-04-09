@@ -51,7 +51,7 @@ namespace Improbable.Gdk.DeploymentLauncher.Commands
 
                     if (string.IsNullOrEmpty(snapshotId))
                     {
-                        return 1;
+                        return Program.ErrorExitCode;
                     }
 
                     deployment.StartingSnapshotId = snapshotId;
@@ -73,7 +73,7 @@ namespace Improbable.Gdk.DeploymentLauncher.Commands
                 if (deploymentOp.Result.Status != Deployment.Types.Status.Running)
                 {
                     Ipc.WriteError(Ipc.ErrorCode.Unknown, "Deployment failed to start for an unknown reason.");
-                    return 1;
+                    return Program.ErrorExitCode;
                 }
             }
             catch (Grpc.Core.RpcException e)
@@ -81,13 +81,13 @@ namespace Improbable.Gdk.DeploymentLauncher.Commands
                 if (e.Status.StatusCode == Grpc.Core.StatusCode.NotFound)
                 {
                     Ipc.WriteError(Ipc.ErrorCode.NotFound, e.Status.Detail);
-                    return 1;
+                    return Program.ErrorExitCode;
                 }
 
                 throw;
             }
 
-            return 0;
+            return Program.SuccessExitCode;
         }
 
         private static string ModifySimulatedPlayerLaunchJson(Options.CreateSimulated options)

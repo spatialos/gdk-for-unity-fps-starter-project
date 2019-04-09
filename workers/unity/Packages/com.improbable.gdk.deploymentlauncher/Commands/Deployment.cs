@@ -64,8 +64,7 @@ namespace Improbable.Gdk.DeploymentManager.Commands
             var source = new CancellationTokenSource();
             var token = source.Token;
 
-            source.CancelAfter(new TimeSpan(0, 25, 0));
-
+            source.CancelAfter(TimeSpan.FromMinutes(25));
 
             var args = new[]
             {
@@ -140,7 +139,7 @@ namespace Improbable.Gdk.DeploymentManager.Commands
         {
             if (result.ExitCode == 0)
             {
-                return Result<List<DeploymentInfo>, Ipc.Error>.Ok(Ipc.GetDeploymentInfo(result.Stdout, projectName));
+                return Ipc.GetDeploymentInfo(result.Stdout, projectName);
             }
 
             return Result<List<DeploymentInfo>, Ipc.Error>.Error(Ipc.Error.FromStderr(result.Stderr));
