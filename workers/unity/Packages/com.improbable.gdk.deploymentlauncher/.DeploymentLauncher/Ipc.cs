@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 namespace Improbable.Gdk.DeploymentLauncher
 {
     /// <summary>
-    ///     Methods for inter-process communication with the parent process (Unity). ALl via JSON.
+    ///     Methods for inter-process communication with the parent process (Unity). All via JSON.
     /// </summary>
     public static class Ipc
     {
@@ -17,7 +17,8 @@ namespace Improbable.Gdk.DeploymentLauncher
             Unauthenticated = 2,
             NotFound = 3,
             UnknownGrpcError = 4,
-            Other = 5
+            SnapshotUploadFailed = 5,
+            Unknown = 6
         }
 
         public static void WriteError(ErrorCode code, string message)

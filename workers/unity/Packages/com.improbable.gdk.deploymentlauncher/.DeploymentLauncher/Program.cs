@@ -33,6 +33,11 @@ namespace Improbable.Gdk.DeploymentLauncher
                 Ipc.WriteError(Ipc.ErrorCode.UnknownGrpcError, e.ToString());
                 return 1;
             }
+            catch (Google.LongRunning.OperationFailedException e)
+            {
+                Ipc.WriteError(Ipc.ErrorCode.UnknownGrpcError, e.ToString());
+                return 1;
+            }
         }
     }
 }

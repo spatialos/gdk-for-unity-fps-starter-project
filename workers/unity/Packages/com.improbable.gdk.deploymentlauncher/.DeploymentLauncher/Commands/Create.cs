@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 using System.Net;
+using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using Google.Protobuf.WellKnownTypes;
 using Improbable.SpatialOS.Deployment.V1Alpha1;
@@ -19,7 +21,7 @@ namespace Improbable.Gdk.DeploymentLauncher.Commands
 
         public static int CreateSimulatedPlayerDeployment(Options.CreateSimulated options)
         {
-            return CreateDeploymentInternal(options, opts => ModifySimulatedPlayerLaunchJson(options));
+            return CreateDeploymentInternal(options, ModifySimulatedPlayerLaunchJson);
         }
 
         private static int CreateDeploymentInternal<TOptions>(TOptions options, Func<TOptions, string> getLaunchConfigJson)
@@ -70,7 +72,7 @@ namespace Improbable.Gdk.DeploymentLauncher.Commands
 
                 if (deploymentOp.Result.Status != Deployment.Types.Status.Running)
                 {
-                    Ipc.WriteError(Ipc.ErrorCode.Other, "Deployment failed to start for an unknown reason.");
+                    Ipc.WriteError(Ipc.ErrorCode.Unknown, "Deployment failed to start for an unknown reason.");
                     return 1;
                 }
             }
@@ -97,7 +99,7 @@ namespace Improbable.Gdk.DeploymentLauncher.Commands
                 new CreateDevelopmentAuthenticationTokenRequest
                 {
                     Description = "DAT for sim worker deployment.",
-                    Lifetime = Duration.FromTimeSpan(new TimeSpan(7, 0, 0, 0)),
+                    Lifetime = Duration.FromTimeSpan(TimeSpan.FromDays(7)),
                     ProjectName = options.ProjectName
                 });
 
@@ -142,7 +144,7 @@ namespace Improbable.Gdk.DeploymentLauncher.Commands
 
             if (bytes.Length == 0)
             {
-                Ipc.WriteError(Ipc.ErrorCode.Other, $"Snapshot file at {snapshotPath} has zero bytes.");
+                Ipc.WriteError(Ipc.ErrorCode.Unknown, $"Snapshot file at {snapshotPath} has zero bytes.");
                 return null;
             }
 
@@ -163,19 +165,28 @@ namespace Improbable.Gdk.DeploymentLauncher.Commands
                 client.UploadSnapshot(new UploadSnapshotRequest { Snapshot = snapshotToUpload });
             snapshotToUpload = uploadSnapshotResponse.Snapshot;
 
-            // Upload content.
-            var httpRequest = WebRequest.Create(uploadSnapshotResponse.UploadUrl) as HttpWebRequest;
-            httpRequest.Method = "PUT";
-            httpRequest.ContentLength = snapshotToUpload.Size;
-            httpRequest.Headers.Set("Content-MD5", snapshotToUpload.Checksum);
-
-            using (var dataStream = httpRequest.GetRequestStream())
+            using (var httpClient = new HttpClient())
             {
-                dataStream.Write(bytes, 0, bytes.Length);
-            }
+                try
+                {
+                    var content = new ByteArrayContent(bytes);
+                    content.Headers.Add("Content-MD5", snapshotToUpload.Checksum);
 
-            // Block until we have a response.
-            httpRequest.GetResponse();
+                    using (var response = httpClient.PutAsync(uploadSnapshotResponse.UploadUrl, content).Result)
+                    {
+                        if (response.StatusCode != HttpStatusCode.OK)
+                        {
+                            Ipc.WriteError(Ipc.ErrorCode.SnapshotUploadFailed, $"Snapshot upload returned non-OK error code: {response.StatusCode}");
+                            return null;
+                        }
+                    }
+                }
+                catch (HttpRequestException e)
+                {
+                    Ipc.WriteError(Ipc.ErrorCode.SnapshotUploadFailed, $"Failed to upload snapshot with following exception: {e.Message}");
+                    return null;
+                }
+            }
 
             // Confirm that the snapshot was uploaded successfully.
             var confirmUploadResponse = client.ConfirmUpload(new ConfirmUploadRequest
