@@ -38,6 +38,12 @@ namespace Improbable.Gdk.DeploymentLauncher
             }
             catch (Google.LongRunning.OperationFailedException e)
             {
+                if (e.Status.Code == (int) Google.Rpc.Code.Cancelled)
+                {
+                    Ipc.WriteError(Ipc.ErrorCode.OperationCancelled, e.Message);
+                    return ErrorExitCode;
+                }
+
                 Ipc.WriteError(Ipc.ErrorCode.UnknownGrpcError, e.ToString());
                 return ErrorExitCode;
             }

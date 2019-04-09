@@ -24,7 +24,7 @@ namespace Improbable.Gdk.DeploymentLauncher
             public string SnapshotPath { get; set; }
 
             [Option("region", Required = true, HelpText = "The region to launch the deployment in.")]
-            public string Region { get; set; }
+            public DeploymentRegionCode Region { get; set; }
 
             [Option("tags", Required = false, HelpText = "Tags to add to this deployment. Comma separated",
                 Separator = ',')]
@@ -60,6 +60,12 @@ namespace Improbable.Gdk.DeploymentLauncher
         {
             [Option("project_name", Required = true, HelpText = "The SpatialOS project name")]
             public string ProjectName { get; set; }
+        }
+
+        public enum DeploymentRegionCode
+        {
+            US,
+            EU
         }
     }
 }

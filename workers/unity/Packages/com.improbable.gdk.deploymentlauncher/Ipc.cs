@@ -16,10 +16,11 @@ namespace Improbable.Gdk.DeploymentManager
             NotFound = 3,
             UnknownGrpcError = 4,
             SnapshotUploadFailed = 5,
-            Unknown = 6,
+            OperationCancelled = 6,
+            Unknown = 7,
 
             // Additional error code used by the parsing logic.
-            CannotParseOutput = 7
+            CannotParseOutput = 8
         }
 
         public class Error
@@ -41,7 +42,7 @@ namespace Improbable.Gdk.DeploymentManager
 
                     return new Error
                     {
-                        Code = (ErrorCode) deserialized["Code"],
+                        Code = (ErrorCode) Convert.ToUInt32(deserialized["Code"]),
                         Message = (string) deserialized["Message"]
                     };
                 }

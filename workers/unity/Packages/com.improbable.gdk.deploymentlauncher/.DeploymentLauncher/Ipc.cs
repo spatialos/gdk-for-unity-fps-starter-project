@@ -18,7 +18,8 @@ namespace Improbable.Gdk.DeploymentLauncher
             NotFound = 3,
             UnknownGrpcError = 4,
             SnapshotUploadFailed = 5,
-            Unknown = 6
+            OperationCancelled = 6,
+            Unknown = 7
         }
 
         public static void WriteError(ErrorCode code, string message)

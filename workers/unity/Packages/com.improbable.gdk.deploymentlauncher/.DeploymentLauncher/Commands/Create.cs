@@ -41,7 +41,7 @@ namespace Improbable.Gdk.DeploymentLauncher.Commands
                     },
                     Name = options.DeploymentName,
                     ProjectName = options.ProjectName,
-                    RegionCode = options.Region
+                    RegionCode = options.Region.ToString()
                 };
 
                 if (options.SnapshotPath != null)
