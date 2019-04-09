@@ -55,11 +55,11 @@ namespace Improbable.Gdk.DeploymentManager
         {
             return new DeploymentConfig
             {
-                Name = string.Copy(Name),
-                ProjectName = string.Copy(ProjectName),
-                AssemblyName = string.Copy(AssemblyName),
-                SnapshotPath = SnapshotPath == null ? null : string.Copy(SnapshotPath),
-                LaunchJson = string.Copy(LaunchJson),
+                Name = Name,
+                ProjectName = ProjectName,
+                AssemblyName = AssemblyName,
+                SnapshotPath = SnapshotPath,
+                LaunchJson = LaunchJson,
                 Region = Region,
                 SimulatedPlayerDeploymentConfig = SimulatedPlayerDeploymentConfig?.DeepCopy(),
                 Tags = Tags.Select(string.Copy).ToList()
@@ -101,9 +101,9 @@ namespace Improbable.Gdk.DeploymentManager
         {
             return new SimulatedPlayerDeploymentConfig
             {
-                TargetDeploymentName = string.Copy(TargetDeploymentName),
-                FlagPrefix = string.Copy(FlagPrefix),
-                WorkerType = string.Copy(WorkerType)
+                TargetDeploymentName = TargetDeploymentName,
+                FlagPrefix = FlagPrefix,
+                WorkerType = WorkerType
             };
         }
     }
@@ -155,8 +155,8 @@ namespace Improbable.Gdk.DeploymentManager
         {
             return new AssemblyConfig
             {
-                ProjectName = string.Copy(ProjectName),
-                AssemblyName = string.Copy(AssemblyName)
+                ProjectName = ProjectName,
+                AssemblyName = AssemblyName
             };
         }
     }
