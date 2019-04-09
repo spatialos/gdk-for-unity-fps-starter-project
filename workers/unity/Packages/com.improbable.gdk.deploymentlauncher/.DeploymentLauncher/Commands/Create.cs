@@ -139,9 +139,10 @@ namespace Improbable.Gdk.DeploymentLauncher.Commands
         {
             if (!File.Exists(snapshotPath))
             {
-                Ipc.WriteError(Ipc.ErrorCode.FileNotFound, $"Could not find snapshot file at: {snapshotPath}");
+                Ipc.WriteError(Ipc.ErrorCode.NotFound, $"Could not find snapshot file at: {snapshotPath}");
                 return null;
             }
+
             // Read snapshot.
             var bytes = File.ReadAllBytes(snapshotPath);
 

@@ -20,7 +20,7 @@ namespace Improbable.Gdk.DeploymentManager.Commands
             var source = new CancellationTokenSource();
             var token = source.Token;
 
-            source.CancelAfter(new TimeSpan(0, 25, 0));
+            source.CancelAfter(TimeSpan.FromMinutes(25));
 
             var args = new List<string>
             {
@@ -91,7 +91,7 @@ namespace Improbable.Gdk.DeploymentManager.Commands
             var source = new CancellationTokenSource();
             var token = source.Token;
 
-            source.CancelAfter(new TimeSpan(0, 25, 0));
+            source.CancelAfter(TimeSpan.FromMinutes(25));
 
             var args = new[]
             {

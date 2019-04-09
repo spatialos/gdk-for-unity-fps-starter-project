@@ -11,16 +11,15 @@ namespace Improbable.Gdk.DeploymentManager
     {
         public enum ErrorCode : uint
         {
-            FileNotFound = 1,
-            Unauthenticated = 2,
-            NotFound = 3,
-            UnknownGrpcError = 4,
-            SnapshotUploadFailed = 5,
-            OperationCancelled = 6,
-            Unknown = 7,
+            Unauthenticated = 1,
+            NotFound = 2,
+            UnknownGrpcError = 3,
+            SnapshotUploadFailed = 4,
+            OperationCancelled = 5,
+            Unknown = 6,
 
             // Additional error code used by the parsing logic.
-            CannotParseOutput = 8
+            CannotParseOutput = 7
         }
 
         public class Error
