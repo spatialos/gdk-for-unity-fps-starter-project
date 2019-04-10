@@ -9,7 +9,6 @@ namespace Fps
         private static ClientWorkerHandler Instance;
 
         [SerializeField] private GameObject clientWorkerPrefab;
-        [SerializeField] private GameObject canvasCameraObj;
 
         [SerializeField] private ScreenUIController screenUIController;
 
@@ -52,7 +51,7 @@ namespace Fps
             workerConnector = currentClientWorker.GetComponent<WorkerConnector>();
             tileProvider = workerConnector as ITileProvider;
             connectionController = currentClientWorker.GetComponent<ConnectionController>();
-            connectionController.InformOfUI(canvasCameraObj, screenUIController);
+            connectionController.InformOfUI(screenUIController);
         }
 
         private void DisconnectCheck()

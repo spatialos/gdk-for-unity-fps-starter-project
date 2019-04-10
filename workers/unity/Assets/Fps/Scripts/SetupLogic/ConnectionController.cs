@@ -12,7 +12,6 @@ namespace Fps
     {
         [Require] private PlayerCreatorCommandSender commandSender;
 
-        private GameObject canvasCameraObj;
         private ScreenUIController screenUIController;
         private Animator connectButton;
         private WorkerConnector clientWorkerConnector;
@@ -26,9 +25,8 @@ namespace Fps
             connectButton = screenUIController.ConnectScreen.GetComponentInChildren<Animator>();
         }
 
-        public void InformOfUI(GameObject canvasCameraObj, ScreenUIController screenUIController)
+        public void InformOfUI(ScreenUIController screenUIController)
         {
-            this.canvasCameraObj = canvasCameraObj;
             this.screenUIController = screenUIController;
         }
 
@@ -36,7 +34,6 @@ namespace Fps
         {
             if (obj.StatusCode == StatusCode.Success)
             {
-                canvasCameraObj.SetActive(false);
                 screenUIController.ConnectScreen.SetActive(false);
                 screenUIController.InGameHud.SetActive(true);
             }
