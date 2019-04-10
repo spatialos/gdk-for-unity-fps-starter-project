@@ -64,8 +64,8 @@ namespace Fps
 
             if (wantsSpawn && isReadyToSpawn)
             {
-                SpawnPlayer();
                 wantsSpawn = false;
+                SpawnPlayer();
             }
         }
 
