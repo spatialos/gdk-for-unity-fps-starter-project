@@ -5,7 +5,7 @@
 ### Changed
 
 - Updated the `ConnectionController` and `ClientWorkerConnector` to make full use of the updated Player Lifecycle Feature Module.
-- Reactive Components are no longer used. They have been disabled through the use of the `DISABLE_REACTIVE_COMPONENTS` define symbol.
+- Reactive Components are no longer used. They have been disabled by adding the `DISABLE_REACTIVE_COMPONENTS` define symbol.
 
 ### Internal
 

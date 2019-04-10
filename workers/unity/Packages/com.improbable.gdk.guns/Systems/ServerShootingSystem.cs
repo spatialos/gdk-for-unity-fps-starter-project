@@ -29,7 +29,7 @@ namespace Improbable.Gdk.Guns
             {
                 ref readonly var shotEvent = ref events[i];
                 var shotInfo = shotEvent.Event.Payload;
-                if (!ValidateShot(shotInfo))
+                if (!shotInfo.HitSomething || shotInfo.EntityId <= 0)
                 {
                     continue;
                 }
@@ -55,11 +55,6 @@ namespace Improbable.Gdk.Guns
 
                 commandSystem.SendCommand(modifyHealthRequest);
             }
-        }
-
-        private bool ValidateShot(ShotInfo shot)
-        {
-            return shot.HitSomething && shot.EntityId > 0;
         }
     }
 }

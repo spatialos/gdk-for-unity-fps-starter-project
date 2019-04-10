@@ -24,6 +24,11 @@ namespace Improbable.Gdk.Health
         protected override void OnUpdate()
         {
             var requests = commandSystem.GetRequests<HealthComponent.ModifyHealth.ReceivedRequest>();
+            if (requests.Count == 0)
+            {
+                return;
+            }
+
             var healthComponentData = GetComponentDataFromEntity<HealthComponent.Component>();
             for (var i = 0; i < requests.Count; i++)
             {

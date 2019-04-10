@@ -28,7 +28,8 @@ namespace Improbable.Gdk.Health
             componentUpdateSystem = World.GetExistingManager<ComponentUpdateSystem>();
             commandSystem = World.GetExistingManager<CommandSystem>();
 
-            initGroup = GetComponentGroup(ComponentType.ReadOnly<HealthRegenComponent.Component>(),
+            initGroup = GetComponentGroup(
+                ComponentType.ReadOnly<HealthRegenComponent.Component>(),
                 ComponentType.Subtractive<HealthRegenData>(),
                 ComponentType.ReadOnly<HealthComponent.ComponentAuthority>()
             );
@@ -36,7 +37,8 @@ namespace Improbable.Gdk.Health
 
             regenGroup = GetComponentGroup(
                 ComponentType.Create<HealthRegenComponent.Component>(),
-                ComponentType.Create<HealthRegenData>(), ComponentType.ReadOnly<HealthComponent.Component>(),
+                ComponentType.Create<HealthRegenData>(),
+                ComponentType.ReadOnly<HealthComponent.Component>(),
                 ComponentType.ReadOnly<SpatialEntityId>(),
                 ComponentType.ReadOnly<HealthComponent.ComponentAuthority>()
             );
