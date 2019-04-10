@@ -1,6 +1,5 @@
 using Improbable.Gdk.Core;
 using Improbable.Gdk.Health;
-using Unity.Collections;
 using Unity.Entities;
 
 namespace Improbable.Gdk.Guns
@@ -8,58 +7,54 @@ namespace Improbable.Gdk.Guns
     [UpdateInGroup(typeof(SpatialOSUpdateGroup))]
     public class ServerShootingSystem : ComponentSystem
     {
-        private struct PlayersShooting
-        {
-            public readonly int Length;
-            public ComponentDataArray<HealthComponent.CommandSenders.ModifyHealth> ModifyHealthCommandSenders;
-            [ReadOnly] public ComponentDataArray<SpatialEntityId> EntityId;
-            [ReadOnly] public ComponentDataArray<ShootingComponent.ReceivedEvents.Shots> Shots;
-            [ReadOnly] public ComponentDataArray<GunComponent.Component> Gun;
-        }
+        private WorkerSystem workerSystem;
+        private CommandSystem commandSystem;
+        private ComponentUpdateSystem componentUpdateSystem;
 
-        [Inject] private PlayersShooting playersShooting;
+        protected override void OnCreateManager()
+        {
+            base.OnCreateManager();
+
+            workerSystem = World.GetExistingManager<WorkerSystem>();
+            commandSystem = World.GetExistingManager<CommandSystem>();
+            componentUpdateSystem = World.GetExistingManager<ComponentUpdateSystem>();
+        }
 
         protected override void OnUpdate()
         {
-            for (var i = 0; i < playersShooting.Length; i++)
+            var events = componentUpdateSystem.GetEventsReceived<ShootingComponent.Shots.Event>();
+            var gunDataForEntity = GetComponentDataFromEntity<GunComponent.Component>();
+
+            for (var i = 0; i < events.Count; ++i)
             {
-                var commandSender = playersShooting.ModifyHealthCommandSenders[i];
-                var commandSent = false;
-                var gunId = playersShooting.Gun[i].GunId;
-                var gunSettings = GunDictionary.Get(gunId);
-                var damage = gunSettings.ShotDamage;
-
-                foreach (var shot in playersShooting.Shots[i].Events)
+                ref readonly var shotEvent = ref events[i];
+                var shotInfo = shotEvent.Event.Payload;
+                if (!shotInfo.HitSomething || shotInfo.EntityId <= 0)
                 {
-                    var shotInfo = shot;
-                    if (!ValidateShot(shotInfo))
+                    continue;
+                }
+
+                var shooterSpatialID = new EntityId(shotInfo.EntityId);
+                if (!workerSystem.TryGetEntity(shooterSpatialID, out var shooterEntity))
+                {
+                    continue;
+                }
+
+                var gunComponent = gunDataForEntity[shooterEntity];
+                var damage = GunDictionary.Get(gunComponent.GunId).ShotDamage;
+
+                var modifyHealthRequest = new HealthComponent.ModifyHealth.Request(
+                    new EntityId(shotInfo.EntityId),
+                    new HealthModifier()
                     {
-                        continue;
+                        Amount = -damage,
+                        Origin = shotInfo.HitOrigin,
+                        AppliedLocation = shotInfo.HitLocation
                     }
+                );
 
-                    // Send command to entity being shot.
-                    var modifyHealthRequest = new HealthComponent.ModifyHealth.Request(
-                        new EntityId(shotInfo.EntityId),
-                        new HealthModifier()
-                        {
-                            Amount = -damage,
-                            Origin = shotInfo.HitOrigin,
-                            AppliedLocation = shotInfo.HitLocation
-                        });
-                    commandSender.RequestsToSend.Add(modifyHealthRequest);
-                    commandSent = true;
-                }
-
-                if (commandSent)
-                {
-                    playersShooting.ModifyHealthCommandSenders[i] = commandSender;
-                }
+                commandSystem.SendCommand(modifyHealthRequest);
             }
-        }
-
-        private bool ValidateShot(ShotInfo shot)
-        {
-            return shot.HitSomething && shot.EntityId > 0;
         }
     }
 }
