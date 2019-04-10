@@ -10,6 +10,8 @@
 ### Internal
 
 - Fixed package dependencies.
+- Disable TileEnabler functionality. Replaced by sane camera clipping.
+- Removed extra camera that renders nothing.
 
 ## `0.2.0` - 2019-03-19
 
