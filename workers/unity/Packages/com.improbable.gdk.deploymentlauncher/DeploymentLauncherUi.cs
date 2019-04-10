@@ -206,7 +206,7 @@ namespace Improbable.Gdk.DeploymentManager
             }
 
             dest.SnapshotPath = EditorGUILayout.TextField("Snapshot Path", source.SnapshotPath);
-            dest.LaunchJson = EditorGUILayout.TextField("Launch Configuration", source.LaunchJson);
+            dest.LaunchJson = EditorGUILayout.TextField("Launch Config", source.LaunchJson);
             dest.Region = (DeploymentRegionCode) EditorGUILayout.EnumPopup("Region", source.Region);
 
 
@@ -216,7 +216,7 @@ namespace Improbable.Gdk.DeploymentManager
             {
                 for (int i = 0; i < dest.Tags.Count; i++)
                 {
-                    dest.Tags[i] = EditorGUILayout.TextField($"Tag #{i}", dest.Tags[i]);
+                    dest.Tags[i] = EditorGUILayout.TextField($"Tag #{i + 1}", dest.Tags[i]);
                 }
 
                 dest.Tags.Add(EditorGUILayout.TextField($"Tag #{dest.Tags.Count + 1}", ""));
