@@ -3,8 +3,10 @@ using System.Collections;
 using Fps;
 using UnityEngine;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 using Improbable.Gdk.Core;
+using Improbable.Gdk.PlayerLifecycle;
 using Improbable.Worker.CInterop;
 using Random = UnityEngine.Random;
 
@@ -47,11 +49,15 @@ public class SimulatedPlayerCoordinatorWorkerConnector : WorkerConnectorBase
 
         if (SimulatedPlayerWorkerConnector != null)
         {
-            while (Application.isPlaying && simulatedPlayerConnectors.Count < DefaultSimulatedPlayerCount)
+            var simPlayerCount = Random.Range(DefaultSimulatedPlayerCount / 2, DefaultSimulatedPlayerCount + 1);
+            while (Application.isPlaying && simulatedPlayerConnectors.Count < simPlayerCount)
             {
                 var simulatedPlayer = Instantiate(SimulatedPlayerWorkerConnector, transform.position, transform.rotation);
-                await simulatedPlayer.GetComponent<SimulatedPlayerWorkerConnector>()
-                    .ConnectSimulatedPlayer(Worker.LogDispatcher, SimulatedPlayerDevAuthTokenId, SimulatedPlayerTargetDeployment);
+                var simulatedPlayerConnector = simulatedPlayer.GetComponent<SimulatedPlayerWorkerConnector>();
+                await simulatedPlayerConnector
+                    .ConnectSimulatedPlayer(Worker.LogDispatcher, SimulatedPlayerDevAuthTokenId, SimulatedPlayerTargetDeployment, simulatedPlayerConnectors.Count);
+                simulatedPlayerConnector.SpawnPlayer(simulatedPlayerConnectors.Count);
+
                 simulatedPlayerConnectors.Add(simulatedPlayer);
                 await Task.Delay(TimeSpan.FromSeconds(
                     Random.Range(DefaultSimulatedPlayerCreationInterval, 1.25f * DefaultSimulatedPlayerCreationInterval)));
@@ -83,9 +89,13 @@ public class SimulatedPlayerCoordinatorWorkerConnector : WorkerConnectorBase
                     yield return new WaitForSeconds(
                         Random.Range(DefaultSimulatedPlayerCreationInterval, 1.25f * DefaultSimulatedPlayerCreationInterval));
                     var simulatedPlayer = Instantiate(SimulatedPlayerWorkerConnector, transform.position, transform.rotation);
-                    var task = simulatedPlayer.GetComponent<SimulatedPlayerWorkerConnector>()
-                        .ConnectSimulatedPlayer(Worker.LogDispatcher, SimulatedPlayerDevAuthTokenId, SimulatedPlayerTargetDeployment);
+                    var simulatedPlayerConnector = simulatedPlayer.GetComponent<SimulatedPlayerWorkerConnector>();
+
+                    var task = simulatedPlayerConnector.ConnectSimulatedPlayer(Worker.LogDispatcher, SimulatedPlayerDevAuthTokenId,
+                        SimulatedPlayerTargetDeployment, simulatedPlayerConnectors.Count);
                     yield return new WaitUntil(() => task.IsCompleted);
+                    simulatedPlayerConnector.SpawnPlayer(simulatedPlayerConnectors.Count);
+
                     simulatedPlayerConnectors.Add(simulatedPlayer);
                 }
 

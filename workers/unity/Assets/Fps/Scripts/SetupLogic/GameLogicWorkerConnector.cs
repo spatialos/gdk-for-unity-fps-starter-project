@@ -5,12 +5,19 @@ using Improbable.Gdk.Subscriptions;
 using Improbable.Gdk.Guns;
 using Improbable.Gdk.Health;
 using Improbable.Gdk.PlayerLifecycle;
+using Improbable.Gdk.Session;
 
 namespace Fps
 {
     public class GameLogicWorkerConnector : WorkerConnectorBase
     {
         public bool DisableRenderers = true;
+
+        protected override async void Start()
+        {
+            base.Start();
+            await AttemptConnect();
+        }
 
         protected override string GetWorkerType()
         {
@@ -27,6 +34,9 @@ namespace Fps
             // Shooting
             world.GetOrCreateManager<ServerShootingSystem>();
 
+            // Session
+            world.GetOrCreateManager<PlayerStateServerSystem>();
+
             // Metrics
             world.GetOrCreateManager<MetricSendSystem>();
 
@@ -40,12 +50,6 @@ namespace Fps
         protected override IEnumerator LoadWorld()
         {
             yield return base.LoadWorld();
-            
-            var levelTiles = LevelInstance.GetComponentsInChildren<TileEnabler>(true);
-            foreach (var tileEnabler in levelTiles)
-            {
-                tileEnabler.Initialize(false);
-            }
 
             if (DisableRenderers)
             {

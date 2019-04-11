@@ -1,26 +1,41 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
+using Improbable.Gdk.Core;
 using UnityEngine;
 using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.Subscriptions;
 using Improbable.Gdk.PlayerLifecycle;
+using Improbable.PlayerLifecycle;
+using Improbable.Worker.CInterop;
+using Improbable.Worker.CInterop.Alpha;
+using LocatorParameters = Improbable.Worker.CInterop.Alpha.LocatorParameters;
 
 namespace Fps
 {
-    [RequireComponent(typeof(ConnectionController))]
-    public class ClientWorkerConnector : WorkerConnectorBase, ITileProvider
+    public class ClientWorkerConnector : WorkerConnectorBase
     {
-        private const string AuthPlayer = "Prefabs/UnityClient/Authoritative/Player";
-        private const string NonAuthPlayer = "Prefabs/UnityClient/NonAuthoritative/Player";
+        public string Deployment { get; private set; }
 
-        private List<TileEnabler> levelTiles = new List<TileEnabler>();
-        public List<TileEnabler> LevelTiles => levelTiles;
+        private string playerName;
+        private bool isReadyToSpawn;
+        private bool wantsSpawn;
+        private bool useSessionFlow;
+        private Action<PlayerCreator.CreatePlayer.ReceivedResponse> onPlayerResponse;
 
-        private ConnectionController connectionController;
-
-        private void Awake()
+        public async void Connect(string deployment, bool useSessionFlow)
         {
-            connectionController = GetComponent<ConnectionController>();
+            this.useSessionFlow = useSessionFlow;
+            Deployment = deployment;
+            await AttemptConnect();
+        }
+
+        public void SpawnPlayerAction(string playerName, Action<PlayerCreator.CreatePlayer.ReceivedResponse> onPlayerResponse)
+        {
+            this.onPlayerResponse = onPlayerResponse;
+            this.playerName = playerName;
+            wantsSpawn = true;
         }
 
         protected override string GetWorkerType()
@@ -28,11 +43,56 @@ namespace Fps
             return WorkerUtils.UnityClient;
         }
 
+        protected virtual string GetAuthPlayerPrefabPath()
+        {
+            return "Prefabs/UnityClient/Authoritative/Player";
+        }
+
+        protected virtual string GetNonAuthPlayerPrefabPath()
+        {
+            return "Prefabs/UnityClient/NonAuthoritative/Player";
+        }
+
+        protected override string SelectLoginToken(List<LoginTokenDetails> loginTokens)
+        {
+            if (string.IsNullOrEmpty(Deployment))
+            {
+                foreach (var loginToken in loginTokens)
+                {
+                    if (loginToken.Tags.Contains("state_lobby") || loginToken.Tags.Contains("state_running"))
+                    {
+                        return loginToken.LoginToken;
+                    }
+                }
+            }
+
+            foreach (var loginToken in loginTokens)
+            {
+                if (loginToken.DeploymentName == Deployment)
+                {
+                    return loginToken.LoginToken;
+                }
+            }
+
+            throw new ArgumentException("Was not able to connect to chosen deployment. Going back to beginning");
+        }
+
+        protected override ConnectionService GetConnectionService()
+        {
+            if (useSessionFlow)
+            {
+                LoadDevAuthToken();
+                return ConnectionService.AlphaLocator;
+            }
+
+            return base.GetConnectionService();
+        }
+
         protected override void HandleWorkerConnectionEstablished()
         {
             var world = Worker.World;
 
-            PlayerLifecycleHelper.AddClientSystems(world, autoRequestPlayerCreation: false);
+            PlayerLifecycleHelper.AddClientSystems(world, false);
             PlayerLifecycleConfig.MaxPlayerCreationRetries = 0;
 
             var fallback = new GameObjectCreatorFromMetadata(Worker.WorkerType, Worker.Origin, Worker.LogDispatcher);
@@ -40,28 +100,39 @@ namespace Fps
             // Set the Worker gameObject to the ClientWorker so it can access PlayerCreater reader/writers
             GameObjectCreationHelper.EnableStandardGameObjectCreation(
                 world,
-                new AdvancedEntityPipeline(Worker, AuthPlayer, NonAuthPlayer, fallback),
+                new AdvancedEntityPipeline(Worker, GetAuthPlayerPrefabPath(), GetNonAuthPlayerPrefabPath(), fallback),
                 gameObject);
+            world.GetOrCreateManager<TrackPlayerSystem>();
 
             base.HandleWorkerConnectionEstablished();
         }
 
         protected override void HandleWorkerConnectionFailure(string errorMessage)
         {
-            connectionController.OnFailedToConnect();
+            Debug.LogWarning($"Connection failed: {errorMessage}");
+            Destroy(gameObject);
         }
 
         protected override IEnumerator LoadWorld()
         {
             yield return base.LoadWorld();
+            isReadyToSpawn = true;
+        }
 
-            LevelInstance.GetComponentsInChildren<TileEnabler>(true, levelTiles);
-            foreach (var tileEnabler in levelTiles)
+        private void Update()
+        {
+            if (wantsSpawn && isReadyToSpawn)
             {
-                tileEnabler.Initialize(true);
+                wantsSpawn = false;
+                SendRequest();
             }
+        }
 
-            connectionController.OnReadyToSpawn();
+        private void SendRequest()
+        {
+            var serializedArgs = Encoding.ASCII.GetBytes(playerName);
+            Worker.World.GetExistingManager<SendCreatePlayerRequestSystem>()
+                .RequestPlayerCreation(serializedArgs, onPlayerResponse);
         }
     }
 }

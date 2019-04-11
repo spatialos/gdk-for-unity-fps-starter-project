@@ -1,4 +1,5 @@
 using UnityEngine;
+
 #if UNITY_ANDROID
 using Improbable.Gdk.Core;
 using Improbable.Gdk.Mobile;
@@ -7,45 +8,17 @@ using Improbable.Gdk.Mobile.Android;
 
 namespace Fps
 {
-    public class AndroidWorkerConnector : MobileWorkerConnectorBase, ITileProvider
+    public class AndroidWorkerConnector : MobileWorkerConnector
     {
-        protected override async void Start()
-        {
-            Application.targetFrameRate = TargetFrameRate;
-#if UNITY_ANDROID && !UNITY_EDITOR
-            UseIpAddressFromArguments();
-#endif
-            await AttemptConnect();
-        }
-
         protected override string GetWorkerType()
         {
             return WorkerUtils.AndroidClient;
         }
 
-#if UNITY_ANDROID && !UNITY_EDITOR
-        public void UseIpAddressFromArguments()
-        {
-            IpAddress = GetReceptionistHostFromArguments();
-
-            if (string.IsNullOrEmpty(IpAddress))
-            {
-                IpAddress = "127.0.0.1";
-            }
-        }
-
-        private string GetReceptionistHostFromArguments()
-        {
-            var arguments = LaunchArguments.GetArguments();
-            var hostIp =
-                CommandLineUtility.GetCommandLineValue(arguments, RuntimeConfigNames.ReceptionistHost, string.Empty);
-            return hostIp;
-        }
-#endif
-
         protected override string GetHostIp()
         {
 #if UNITY_ANDROID
+            UseIpAddressFromArguments();
             if (!string.IsNullOrEmpty(IpAddress))
             {
                 return IpAddress;
@@ -60,6 +33,20 @@ namespace Fps
 #else
             throw new System.PlatformNotSupportedException(
                 $"{nameof(AndroidWorkerConnector)} can only be used for the Android platform. Please check your build settings.");
+#endif
+        }
+
+        private void UseIpAddressFromArguments()
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            var arguments = LaunchArguments.GetArguments();
+            IpAddress =
+                CommandLineUtility.GetCommandLineValue(arguments, RuntimeConfigNames.ReceptionistHost, string.Empty);
+
+            if (string.IsNullOrEmpty(IpAddress))
+            {
+                IpAddress = "127.0.0.1";
+            }
 #endif
         }
     }

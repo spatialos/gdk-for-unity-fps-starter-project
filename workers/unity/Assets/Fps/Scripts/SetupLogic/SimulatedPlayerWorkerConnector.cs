@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Fps;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectCreation;
-using Improbable.Gdk.Subscriptions;
 using Improbable.Gdk.PlayerLifecycle;
+using Improbable.PlayerLifecycle;
 using Improbable.Worker.CInterop.Alpha;
 using UnityEngine;
 
@@ -22,7 +23,7 @@ public class SimulatedPlayerWorkerConnector : DefaultWorkerConnector
     private string simulatedPlayerTargetDeployment;
 
     public async Task ConnectSimulatedPlayer(ILogDispatcher logDispatcher, string simulatedPlayerDevAuthTokenId,
-        string simulatedPlayerTargetDeployment)
+        string simulatedPlayerTargetDeployment, int number)
     {
         simulatedCoordinatorLogDispatcher = logDispatcher;
 
@@ -45,9 +46,16 @@ public class SimulatedPlayerWorkerConnector : DefaultWorkerConnector
         await Connect(WorkerUtils.UnityClient, new ForwardingDispatcher());
     }
 
+    public void SpawnPlayer(int number)
+    {
+        var serializedArgs = Encoding.ASCII.GetBytes($"Simulated Player {number}");
+        var sendSystem = Worker.World.GetExistingManager<SendCreatePlayerRequestSystem>();
+        sendSystem.RequestPlayerCreation(serializedArgs);
+    }
+
     protected override void HandleWorkerConnectionEstablished()
     {
-        PlayerLifecycleHelper.AddClientSystems(Worker.World);
+        PlayerLifecycleHelper.AddClientSystems(Worker.World, false);
 
         var fallback = new GameObjectCreatorFromMetadata(Worker.WorkerType,
             Worker.Origin, Worker.LogDispatcher);
