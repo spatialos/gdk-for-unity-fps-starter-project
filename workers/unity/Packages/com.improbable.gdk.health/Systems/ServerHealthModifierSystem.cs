@@ -1,4 +1,6 @@
+using Improbable.Common;
 using Improbable.Gdk.Core;
+using Improbable.Gdk.Session;
 using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
@@ -30,6 +32,7 @@ namespace Improbable.Gdk.Health
             }
 
             var healthComponentData = GetComponentDataFromEntity<HealthComponent.Component>();
+            var playerStateData = GetComponentDataFromEntity<PlayerState.Component>();
             for (var i = 0; i < requests.Count; i++)
             {
                 ref readonly var request = ref requests[i];
@@ -40,6 +43,7 @@ namespace Improbable.Gdk.Health
                 }
 
                 var health = healthComponentData[entity];
+                var playerState = playerStateData[entity];
 
                 // Skip if already dead
                 if (health.Health <= 0)
@@ -60,6 +64,14 @@ namespace Improbable.Gdk.Health
                 if (health.Health <= 0)
                 {
                     healthModifiedInfo.Died = true;
+
+                    playerState.Deaths++;
+                    playerStateData[entity] = playerState;
+
+                    commandSystem.SendCommand(new PlayerState.GainedKill.Request(
+                        new EntityId(modifier.Owner),
+                        new Empty())
+                    );
                 }
 
                 componentUpdateSystem.SendEvent(new HealthComponent.HealthModified.Event(healthModifiedInfo), entityId);
