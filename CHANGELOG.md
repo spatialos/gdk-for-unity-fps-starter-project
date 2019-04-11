@@ -10,8 +10,8 @@
 ### Internal
 
 - Fixed package dependencies.
-- Replaced `TileEnabler` functionality with sane camera clipping.
-- Removed extra camera that renders nothing.
+- Fix camera clipping.
+- Removed unused camera.
 
 ## `0.2.0` - 2019-03-19
 
