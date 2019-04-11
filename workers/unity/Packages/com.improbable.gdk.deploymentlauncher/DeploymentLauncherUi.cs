@@ -157,7 +157,7 @@ namespace Improbable.Gdk.DeploymentManager
             var foldoutState = GetStateObject<bool>(config.Deployment.Name.GetHashCode());
             var copy = config.DeepCopy();
 
-            var errors = copy.GetErrors().ToList();
+            var errors = copy.GetErrors();
 
             using (var check = new EditorGUI.ChangeCheckScope())
             {
@@ -169,7 +169,7 @@ namespace Improbable.Gdk.DeploymentManager
 
                     using (new EditorGUIUtility.IconSizeScope(SmallIconSize))
                     {
-                        if (errors.Count != 0)
+                        if (errors.Any())
                         {
                             GUILayout.Label(new GUIContent(EditorGUIUtility.IconContent(BuiltInErrorIcon))
                             {
@@ -242,9 +242,9 @@ namespace Improbable.Gdk.DeploymentManager
                     }
                 }
 
-                if (errors.Count > 0)
+                if (errors.Any())
                 {
-                    EditorGUILayout.HelpBox($"This deployment configuration has the following errors:\n  - {string.Join("\n  - ", errors)}", MessageType.Error);
+                    EditorGUILayout.HelpBox($"This deployment configuration has the following errors:\n\n{errors.FormatErrors()}", MessageType.Error);
                 }
 
                 if (check.changed)

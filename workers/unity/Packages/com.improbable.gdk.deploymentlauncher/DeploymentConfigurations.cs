@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using Improbable.Gdk.Tools.MiniJSON;
 using UnityEditor;
@@ -12,6 +13,33 @@ namespace Improbable.Gdk.DeploymentManager
     [Serializable]
     public class DeploymentConfig
     {
+        public class Errors
+        {
+            public readonly Dictionary<string, List<string>> DeplErrors = new Dictionary<string, List<string>>();
+
+            public bool Any()
+            {
+                return DeplErrors.Any(pair => pair.Value.Count != 0);
+            }
+
+            public string FormatErrors()
+            {
+                var sb = new StringBuilder();
+
+                foreach (var pair in DeplErrors)
+                {
+                    var deplName = pair.Key;
+
+                    foreach (var error in pair.Value)
+                    {
+                        sb.AppendLine($" - {deplName}: {error}");
+                    }
+                }
+
+                return sb.ToString();
+            }
+        }
+
         /// <summary>
         ///     The name of the assembly to use in the deployment.
         /// </summary>
@@ -34,25 +62,24 @@ namespace Improbable.Gdk.DeploymentManager
             SimulatedPlayerDeploymentConfig = new List<SimulatedPlayerDeploymentConfig>();
         }
 
-        public IEnumerable<string> GetErrors()
+        public Errors GetErrors()
         {
-            if (!ValidateAssembly())
+            var errors = new Errors();
+
+            errors.DeplErrors.Add(Deployment.Name, Deployment.GetErrors().ToList());
+
+            if (!ValidateAssembly(out var message))
             {
-                yield return $"Assembly name \"{AssemblyName}\" is invalid. Must follow the regex: ^[a-zA-Z0-9_.-]{{5,64}}";
+                errors.DeplErrors[Deployment.Name].Add(message);
             }
 
-            if (!Deployment.ValidateName())
-            {
-                yield return $"Deployment name \"{Deployment.Name}\" invalid. Must follow the regex: ^[a-z0-9_]{{2,32}}$";
-            }
 
             foreach (var simPlayerDepl in SimulatedPlayerDeploymentConfig)
             {
-                if (!simPlayerDepl.ValidateName())
-                {
-                    yield return $"Deployment name \"{Deployment.Name}\" invalid. Must follow the regex: ^[a-z0-9_]{{2,32}}$";
-                }
+                errors.DeplErrors.Add(simPlayerDepl.Name, simPlayerDepl.GetErrors().ToList());
             }
+
+            return errors;
         }
 
         /// <summary>
@@ -69,9 +96,23 @@ namespace Improbable.Gdk.DeploymentManager
             };
         }
 
-        private bool ValidateAssembly()
+        private bool ValidateAssembly(out string message)
         {
-            return !string.IsNullOrEmpty(AssemblyName) && Regex.Match(AssemblyName, "^[a-zA-Z0-9_.-]{5,64}$").Success;
+            if (string.IsNullOrEmpty(AssemblyName))
+            {
+                message = "Assembly Name cannot be empty.";
+                return false;
+            }
+
+
+            if (!Regex.Match(AssemblyName, "^[a-zA-Z0-9_.-]{5,64}$").Success)
+            {
+                message = $"Assembly Name \"{AssemblyName}\" is invalid. Must conform to the regex: ^[a-zA-Z0-9_.-]{{5,64}}";
+                return false;
+            }
+
+            message = null;
+            return true;
         }
     }
 
@@ -169,9 +210,108 @@ namespace Improbable.Gdk.DeploymentManager
             };
         }
 
-        internal bool ValidateName()
+        internal IEnumerable<string> GetErrors()
         {
-            return !string.IsNullOrEmpty(Name) && Regex.Match(Name, "^[a-z0-9_]{2,32}$").Success;
+            {
+                if (!ValidateName(out var message))
+                {
+                    yield return message;
+                }
+            }
+
+            {
+                if (!ValidateLaunchJson(out var message))
+                {
+                    yield return message;
+                }
+            }
+
+            {
+                if (!ValidateSnapshotPath(out var message))
+                {
+                    yield return message;
+                }
+            }
+
+            {
+                foreach (var tag in Tags)
+                {
+                    if (!ValidateTag(tag, out var message))
+                    {
+                        yield return message;
+                    }
+                }
+            }
+        }
+
+        private bool ValidateName(out string message)
+        {
+            if (string.IsNullOrEmpty(Name))
+            {
+                message = "Deployment Name cannot be empty.";
+                return false;
+            }
+
+            if (!Regex.Match(Name, "^[a-z0-9_]{2,32}$").Success)
+            {
+                message = $"Deployment Name \"{Name}\" invalid. Must conform to the regex: ^[a-z0-9_]{{2,32}}$";
+                return false;
+            }
+
+            message = null;
+            return true;
+        }
+
+        private bool ValidateLaunchJson(out string message)
+        {
+            if (string.IsNullOrEmpty(LaunchJson))
+            {
+                message = "Launch Config cannot be empty";
+                return false;
+            }
+
+            var filePath = Path.Combine(Tools.Common.SpatialProjectRootDir, LaunchJson);
+
+            if (!File.Exists(filePath))
+            {
+                message = $"Launch Config file at {filePath} cannot be found.";
+                return false;
+            }
+
+            message = null;
+            return true;
+        }
+
+        private bool ValidateSnapshotPath(out string message)
+        {
+            if (string.IsNullOrEmpty(SnapshotPath))
+            {
+                message = null;
+                return true;
+            }
+
+            var filePath = Path.Combine(Tools.Common.SpatialProjectRootDir, SnapshotPath);
+
+            if (!File.Exists(filePath))
+            {
+                message = $"Snapshot file at {filePath} cannot be found.";
+                return false;
+            }
+
+            message = null;
+            return true;
+        }
+
+        private bool ValidateTag(string tag, out string message)
+        {
+            if (!Regex.IsMatch(tag, "^[A-Za-z0-9][A-Za-z0-9_]{2,32}$"))
+            {
+                message = $"Tag \"{tag}\" invalid. Must conform to the regex: ^[A-Za-z0-9][A-Za-z0-9_]{{2,32}}$";
+                return false;
+            }
+
+            message = null;
+            return true;
         }
     }
 
