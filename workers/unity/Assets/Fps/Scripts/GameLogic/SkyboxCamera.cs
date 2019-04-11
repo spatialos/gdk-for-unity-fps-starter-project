@@ -1,24 +1,27 @@
 ﻿using UnityEngine;
 
-public class SkyboxCamera : MonoBehaviour
+namespace Fps
 {
-    private Camera myCamera;
-
-    private void Awake()
+    public class SkyboxCamera : MonoBehaviour
     {
-        myCamera = GetComponent<Camera>();
-    }
+        private Camera myCamera;
 
-    // Update is called once per frame
-    void LateUpdate()
-    {
-        var playerCamera = Camera.main;
-        if (playerCamera == null)
+        private void Awake()
         {
-            return;
+            myCamera = GetComponent<Camera>();
         }
 
-        myCamera.transform.rotation = playerCamera.transform.rotation;
-        myCamera.fieldOfView = playerCamera.fieldOfView;
+        // Update is called once per frame
+        private void LateUpdate()
+        {
+            var playerCamera = Camera.main;
+            if (playerCamera == null)
+            {
+                return;
+            }
+
+            myCamera.transform.rotation = playerCamera.transform.rotation;
+            myCamera.fieldOfView = playerCamera.fieldOfView;
+        }
     }
 }

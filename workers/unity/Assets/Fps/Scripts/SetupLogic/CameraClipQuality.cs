@@ -1,14 +1,16 @@
-﻿using Fps;
-using UnityEngine;
+﻿using UnityEngine;
 
-[RequireComponent(typeof(Camera))]
-public class CameraClipQuality : MonoBehaviour
+namespace Fps
 {
-    [SerializeField] private float checkoutBias = 10.0f;
-
-    void Awake()
+    [RequireComponent(typeof(Camera))]
+    public class CameraClipQuality : MonoBehaviour
     {
-        var camera = GetComponent<Camera>();
-        camera.farClipPlane = MapQualitySettings.CheckoutDistance + checkoutBias;
+        [SerializeField] private float checkoutBias = 10.0f;
+
+        private void Awake()
+        {
+            var camera = GetComponent<Camera>();
+            camera.farClipPlane = MapQualitySettings.CheckoutDistance + checkoutBias;
+        }
     }
 }
