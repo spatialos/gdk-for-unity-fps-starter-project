@@ -186,7 +186,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4024951306346854}
-  - component: {fileID: 114903395132495914}
   - component: {fileID: 5661524383527873907}
   m_Layer: 0
   m_Name: Tile_Park_A
@@ -261,20 +260,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114903395132495914
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1792145740115774}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 834cfda29cc04cfca5066eec0a4f98d6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PlayerTransform: {fileID: 0}
-  IsClient: 0
 --- !u!114 &5661524383527873907
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -287,7 +272,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0acc01bb717a0db49aaafaa4d2b8bdbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TileSize: 32
+  InnerTileSize: 32
   ConnectorLength: 8
   ConnectorDepth: 4
   Color: {r: 0.2, g: 0.7, b: 0.2, a: 0.4}
@@ -10111,11 +10096,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4024951306346854}
     m_Modifications:
-    - target: {fileID: 727688637455664649, guid: 15e7f133031e3cb438a9b8ad197a1666,
-        type: 3}
-      propertyPath: m_Name
-      value: Tree_Large
-      objectReference: {fileID: 0}
     - target: {fileID: 3735840520979517904, guid: 15e7f133031e3cb438a9b8ad197a1666,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -10170,6 +10150,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 727688637455664649, guid: 15e7f133031e3cb438a9b8ad197a1666,
+        type: 3}
+      propertyPath: m_Name
+      value: Tree_Large
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 15e7f133031e3cb438a9b8ad197a1666, type: 3}
