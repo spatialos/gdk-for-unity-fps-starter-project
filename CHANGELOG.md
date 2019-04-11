@@ -10,7 +10,7 @@
 ### Internal
 
 - Fixed package dependencies.
-- Fix camera clipping.
+- Fixed camera clipping.
 - Removed unused camera.
 
 ## `0.2.0` - 2019-03-19
