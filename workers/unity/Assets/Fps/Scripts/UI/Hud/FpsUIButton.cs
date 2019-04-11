@@ -4,13 +4,16 @@ using UnityEngine.UI;
 
 namespace Fps
 {
-    public class FpsUIButton : Button, IPointerDownHandler
+    public class FpsUIButton : Button
     {
         public Image TargetFrame;
         public Image TargetText;
         public Image TargetFill;
 
         public Image[] TextOptions = new Image[2];
+
+        // Define visual style of button.
+        public bool DarkTheme;
 
         // Initialise colour values.
         private readonly Color32 lightFill = Color.white;
@@ -24,10 +27,14 @@ namespace Fps
         private readonly Color32 disabledFill = new Color32(255, 255, 255, 100);
         private readonly Color32 disabledText = new Color32(69, 71, 71, 100);
 
-        // Define visual style of button.
-        public bool DarkTheme;
+        private bool pointerInButton;
 
         // Use this for initialization
+        protected override void Awake()
+        {
+            OnDisable(); // Ensure initial state is greyed out if gameObject becomes visible but button is disabled
+        }
+
         protected override void Start()
         {
             TargetText = TextOptions[0];
@@ -35,12 +42,22 @@ namespace Fps
 
         protected override void OnEnable()
         {
-            InitialState();
+            if (pointerInButton)
+            {
+                HoverState();
+            }
+            else
+            {
+                NeutralState();
+            }
+
             base.OnEnable();
         }
 
         protected override void OnDisable()
         {
+            pointerInButton = false;
+
             if (TargetFill != null)
             {
                 TargetFill.color = disabledFill;
@@ -107,6 +124,7 @@ namespace Fps
 
         public override void OnPointerExit(PointerEventData eventData)
         {
+            pointerInButton = false;
             if (interactable)
             {
                 NeutralState();
@@ -115,21 +133,10 @@ namespace Fps
 
         public override void OnPointerEnter(PointerEventData eventData)
         {
+            pointerInButton = true;
             if (interactable)
             {
                 HoverState();
-            }
-        }
-
-        private void InitialState()
-        {
-            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
-            {
-                HoverState();
-            }
-            else
-            {
-                NeutralState();
             }
         }
 
@@ -173,8 +180,15 @@ namespace Fps
 
         private void HoverState()
         {
-            TargetFill.color = hoverFill;
-            TargetText.color = lightText;
+            if (TargetFill != null)
+            {
+                TargetFill.color = hoverFill;
+            }
+
+            if (TargetText != null)
+            {
+                TargetText.color = lightText;
+            }
         }
 
         // Used by animation events to change the visible text element on button.
