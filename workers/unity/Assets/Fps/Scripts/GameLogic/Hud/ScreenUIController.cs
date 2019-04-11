@@ -11,7 +11,6 @@ namespace Fps
         public GameObject RespawnScreen;
         public GameObject EscapeScreen;
         public GameObject Reticle;
-        public GameObject UICamera;
         private Animator connectAnimator;
         private bool isPlayerAiming;
 
@@ -56,7 +55,6 @@ namespace Fps
         public void ShowConnectScreen()
         {
             ConnectScreen.SetActive(true);
-            UICamera.SetActive(true);
 
             InGameHud.SetActive(false);
             RespawnScreen.SetActive(false);
