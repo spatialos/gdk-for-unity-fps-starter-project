@@ -26,7 +26,7 @@ namespace Improbable.Gdk.DeploymentManager.Commands
 
             var args = new List<string>
             {
-                isSimulatedPlayerDeployment ? "create" : "create-sim",
+                isSimulatedPlayerDeployment ? "create-sim" : "create",
                 $"--project_name={projectName}",
                 $"--assembly_name={assemblyName}",
                 $"--deployment_name={config.Name}",

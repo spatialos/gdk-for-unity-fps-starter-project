@@ -2,8 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
+using Improbable.Gdk.Core.Collections;
+using Improbable.Gdk.DeploymentManager.Commands;
+using Improbable.Gdk.Tools;
 using Improbable.Gdk.Tools.MiniJSON;
 using UnityEditor;
+using UnityEditor.U2D;
 using UnityEngine;
 
 namespace Improbable.Gdk.DeploymentManager
@@ -12,7 +17,6 @@ namespace Improbable.Gdk.DeploymentManager
     {
         internal const string BuiltInErrorIcon = "console.erroricon.sml";
         internal const string BuiltInRefreshIcon = "Refresh";
-        internal const string BuiltInTrashIcon = "TreeEditor.Trash";
 
         [MenuItem("SpatialOS/Deployment Launcher", false, 51)]
         private static void LaunchDeploymentMenu()
@@ -27,18 +31,57 @@ namespace Improbable.Gdk.DeploymentManager
         private DeploymentLauncherConfig launcherConfig;
 
         private static readonly Vector2 SmallIconSize = new Vector2(12, 12);
-
+        private Material spinnerMaterial;
 
         private readonly Dictionary<int, object> localState = new Dictionary<int, object>();
         private Vector2 scrollPos;
         private string projectName;
-        private string[] snapshots;
+        private TaskManager manager;
+
+        private int selectedDeploymentIndex;
 
         private void OnEnable()
         {
             launcherConfig = DeploymentLauncherConfig.GetInstance();
             projectName = GetProjectName();
-            snapshots = GetSnapshots();
+            spinnerMaterial = new Material(Shader.Find("UI/Default"));
+            manager = new TaskManager();
+        }
+
+        private void Update()
+        {
+            manager.Update();
+
+            foreach (var result in manager.UploadTaskResults)
+            {
+                if (result.Task.Result.ExitCode != 0)
+                {
+                    Debug.LogError($"Upload of {result.Context.AssemblyName} failed.");
+                }
+                else
+                {
+                    Debug.Log($"Upload of {result.Context.AssemblyName} succeeded.");
+                }
+            }
+
+            manager.UploadTaskResults.Clear();
+
+            foreach (var result in manager.LaunchTaskResults)
+            {
+                var actualResult = result.Task.Result;
+                if (actualResult.IsOkay)
+                {
+                    var context = result.Context;
+                    Application.OpenURL($"https://console.improbable.io/projects/{projectName}/deployments/{context.Name}/overview");
+                }
+                else
+                {
+                    var error = actualResult.UnwrapError();
+                    Debug.LogError($"Launch of {result.Context.Name} failed. Code: {error.Code} Message:{error.Message}");
+                }
+            }
+
+            manager.LaunchTaskResults.Clear();
         }
 
         private void OnGUI()
@@ -56,14 +99,17 @@ namespace Improbable.Gdk.DeploymentManager
 
                     var buttonIcon = new GUIContent(EditorGUIUtility.IconContent(BuiltInRefreshIcon))
                     {
-                        tooltip = "Refresh your project name.."
+                        tooltip = "Refresh your project name."
                     };
 
                     GUILayout.Space(EditorGUIUtility.currentViewWidth * 0.6f);
 
-                    if (GUILayout.Button(buttonIcon, EditorStyles.miniButton))
+                    using (new EditorGUI.DisabledScope(manager.IsLaunching || manager.IsUploading))
                     {
-                        projectName = GetProjectName();
+                        if (GUILayout.Button(buttonIcon, EditorStyles.miniButton))
+                        {
+                            projectName = GetProjectName();
+                        }
                     }
                 }
 
@@ -105,7 +151,43 @@ namespace Improbable.Gdk.DeploymentManager
                     }
                 }
 
+                using (new GUILayout.HorizontalScope())
+                {
+                    //GUILayout.FlexibleSpace();
+
+                    selectedDeploymentIndex = EditorGUILayout.Popup("Deployment", selectedDeploymentIndex,
+                        launcherConfig.DeploymentConfigs.Select(config => config.Deployment.Name).ToArray());
+
+                    var isValid = selectedDeploymentIndex >= 0 &&
+                        selectedDeploymentIndex < launcherConfig.DeploymentConfigs.Count;
+
+                    var hasErrors = isValid && launcherConfig.DeploymentConfigs[selectedDeploymentIndex].GetErrors().Any();
+
+                    using (new EditorGUI.DisabledScope(!isValid || hasErrors || manager.IsLaunching))
+                    {
+                        if (GUILayout.Button("Launch deployment"))
+                        {
+                            var deplConfig = launcherConfig.DeploymentConfigs[selectedDeploymentIndex];
+
+                            manager.Launch(projectName, deplConfig.AssemblyName, deplConfig.Deployment);
+
+                            foreach (var simPlayerDepl in deplConfig.SimulatedPlayerDeploymentConfig)
+                            {
+                                manager.Launch(projectName, deplConfig.AssemblyName, simPlayerDepl);
+                            }
+                        }
+                    }
+                }
+
                 scrollPos = scrollView.scrollPosition;
+
+                if (manager.IsUploading || manager.IsLaunching)
+                {
+                    EditorGUILayout.HelpBox(manager.GetStatusMessage(), MessageType.Info);
+                    var rect = EditorGUILayout.GetControlRect(false, 20);
+                    DrawSpinner(Time.realtimeSinceStartup * 10, rect);
+                    Repaint();
+                }
             }
 
             AssetDatabase.SaveAssets();
@@ -141,8 +223,12 @@ namespace Improbable.Gdk.DeploymentManager
                         }
                     }
 
-                    if (GUILayout.Button("Upload Assembly"))
+                    using (new EditorGUI.DisabledScope(manager.IsUploading))
                     {
+                        if (GUILayout.Button("Upload Assembly"))
+                        {
+                            manager.Upload(projectName, config);
+                        }
                     }
                 }
             }
@@ -316,6 +402,8 @@ namespace Improbable.Gdk.DeploymentManager
                     if (foldoutState)
                     {
                         RenderBaseDeploymentConfig(config, copy);
+                        copy.FlagPrefix = EditorGUILayout.TextField("Flag Prefix", config.FlagPrefix);
+                        copy.WorkerType = EditorGUILayout.TextField("Worker Type", config.WorkerType);
                     }
                 }
 
@@ -378,9 +466,104 @@ namespace Improbable.Gdk.DeploymentManager
             return projectName;
         }
 
-        private string[] GetSnapshots()
+        private void DrawSpinner(float value, Rect rect)
         {
-            return Directory.GetFiles(Tools.Common.SpatialProjectRootDir, "*.snapshot", SearchOption.AllDirectories);
+            // There are 11 frames in the spinner animation, 0 till 11.
+            var imageId = Mathf.RoundToInt(value) % 12;
+            var icon = EditorGUIUtility.IconContent($"d_WaitSpin{imageId:D2}");
+            EditorGUI.DrawPreviewTexture(rect, icon.image, spinnerMaterial, ScaleMode.ScaleToFit, 1);
+        }
+
+        private class TaskManager
+        {
+            public bool IsUploading { get; private set; }
+            public bool IsLaunching { get; private set; }
+
+            public readonly List<WrappedTask<RedirectedProcessResult, AssemblyConfig>> UploadTaskResults = new List<WrappedTask<RedirectedProcessResult, AssemblyConfig>>();
+            public readonly List<WrappedTask<Result<RedirectedProcessResult, Ipc.Error>, BaseDeploymentConfig>> LaunchTaskResults = new List<WrappedTask<Result<RedirectedProcessResult, Ipc.Error>, BaseDeploymentConfig>>();
+
+            private WrappedTask<RedirectedProcessResult, AssemblyConfig> uploadTask;
+            private WrappedTask<Result<RedirectedProcessResult, Ipc.Error>, BaseDeploymentConfig> launchTask;
+            private WrappedTask<Result<RedirectedProcessResult, Ipc.Error>, DeploymentInfo> stopTask;
+            private WrappedTask<Result<List<DeploymentInfo>, Ipc.Error>, string> listTask;
+
+            private Queue<(string, string, BaseDeploymentConfig)> queuedLaunches = new Queue<(string, string, BaseDeploymentConfig)>();
+
+            public void Upload(string projectName, AssemblyConfig config)
+            {
+                EditorApplication.LockReloadAssemblies();
+                IsUploading = true;
+                uploadTask = Assembly.UploadAsync(projectName, config);
+            }
+
+            public void Launch(string projectName, string assemblyName, BaseDeploymentConfig config)
+            {
+                if (IsLaunching)
+                {
+                    queuedLaunches.Enqueue((projectName, assemblyName, config));
+                    return;
+                }
+
+                EditorApplication.LockReloadAssemblies();
+                IsLaunching = true;
+                launchTask = Deployment.LaunchAsync(projectName, assemblyName, config);
+            }
+
+            public void Update()
+            {
+                if (uploadTask != null)
+                {
+                    if (uploadTask.Task.IsCompleted && IsUploading)
+                    {
+                        IsUploading = false;
+                        EditorApplication.UnlockReloadAssemblies();
+                        UploadTaskResults.Add(uploadTask);
+                        uploadTask = null;
+                    }
+                }
+
+                if (launchTask != null)
+                {
+                    if (launchTask.Task.IsCompleted && IsLaunching)
+                    {
+                        LaunchTaskResults.Add(launchTask);
+
+                        if (queuedLaunches.Count > 0)
+                        {
+                            var (projectName, assemblyName, config) = queuedLaunches.Dequeue();
+                            launchTask = Deployment.LaunchAsync(projectName, assemblyName, config);
+                        }
+                        else
+                        {
+                            launchTask = null;
+                            IsLaunching = false;
+                            EditorApplication.UnlockReloadAssemblies();
+                        }
+                    }
+                }
+            }
+
+            public string GetStatusMessage()
+            {
+                var sb = new StringBuilder();
+
+                if (IsUploading)
+                {
+                    sb.AppendLine($"Uploading assembly \"{uploadTask.Context.AssemblyName}\".");
+                }
+
+                if (IsLaunching)
+                {
+                    sb.AppendLine($"Launching deployment \"{launchTask.Context.Name}\".");
+                }
+
+                if (IsLaunching || IsUploading)
+                {
+                    sb.Append("Assembly reloading locked.");
+                }
+
+                return sb.ToString();
+            }
         }
     }
 }

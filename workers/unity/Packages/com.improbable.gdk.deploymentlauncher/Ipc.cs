@@ -39,6 +39,15 @@ namespace Improbable.Gdk.DeploymentManager
                     // We expect only the first line to be valid.
                     var deserialized = Json.Deserialize(stderr[0]);
 
+                    if (deserialized == null)
+                    {
+                        return new Error
+                        {
+                            Code = ErrorCode.CannotParseOutput,
+                            Message = $"Parse error. Deserialize returned null. Raw stderr: {string.Join("\n", stderr)}"
+                        };
+                    }
+
                     return new Error
                     {
                         Code = (ErrorCode) Convert.ToUInt32(deserialized["Code"]),
