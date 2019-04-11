@@ -49,6 +49,7 @@ namespace Fps
         private Coroutine requestingRespawnCoroutine;
 
         private IControlProvider controller;
+        private InGameUIController inGameController;
 
         private void Awake()
         {
@@ -58,6 +59,8 @@ namespace Fps
             fpsAnimator = GetComponent<FpsAnimator>();
             currentGun = GetComponent<GunManager>();
             controller = GetComponent<IControlProvider>();
+
+            inGameController = GameObject.FindGameObjectWithTag("OnScreenUI")?.GetComponentInChildren<InGameUIController>(true);
         }
 
         private void OnEnable()
@@ -72,11 +75,11 @@ namespace Fps
         {
             if (controller.MenuPressed)
             {
-                ClientWorkerHandler.ScreenUIController.TryOpenSettingsMenu();
+                inGameController.TryOpenSettingsMenu();
             }
 
             // Don't allow controls if in the menu.
-            if (ScreenUIController.InEscapeMenu)
+            if (InGameUIController.InEscapeMenu)
             {
                 // Still apply physics.
                 movement.ApplyMovement(Vector3.zero, transform.rotation, MovementSpeed.Run, false);
