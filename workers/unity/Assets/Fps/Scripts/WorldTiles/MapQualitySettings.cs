@@ -91,7 +91,7 @@ namespace Fps
             {
                 return dpiScalarCache;
             }
-            
+
             var activeQualityLevelName = QualitySettings.names[QualitySettings.GetQualityLevel()];
 
             foreach (var setting in Settings)
@@ -119,12 +119,6 @@ namespace Fps
             QualitySettings.resolutionScalingFixedDPIFactor = GetDPIScalar();
             var checkoutDistance = GetCheckoutDistance();
             Shader.SetGlobalFloat("_GlobalClipDistance", checkoutDistance);
-
-            var tiles = FindObjectsOfType<TileEnabler>();
-            foreach (var tile in tiles)
-            {
-                tile.CheckoutDistance = checkoutDistance;
-            }
         }
 
 #if UNITY_EDITOR
