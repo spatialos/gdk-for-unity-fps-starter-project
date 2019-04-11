@@ -2,6 +2,7 @@
 
 namespace Fps
 {
+    [RequireComponent(typeof(Camera))]
     public class SkyboxCamera : MonoBehaviour
     {
         private Camera myCamera;
