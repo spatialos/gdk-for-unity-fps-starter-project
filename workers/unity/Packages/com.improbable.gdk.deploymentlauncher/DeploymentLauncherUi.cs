@@ -26,6 +26,9 @@ namespace Improbable.Gdk.DeploymentManager
 
         private DeploymentLauncherConfig launcherConfig;
 
+        private static readonly Vector2 SmallIconSize = new Vector2(12, 12);
+
+
         private readonly Dictionary<int, object> localState = new Dictionary<int, object>();
         private Vector2 scrollPos;
         private string projectName;
@@ -96,6 +99,8 @@ namespace Improbable.Gdk.DeploymentManager
                             AssemblyName = launcherConfig.AssemblyConfig.AssemblyName
                         };
 
+                        deploymentConfig.Deployment.Name = $"deployment_{launcherConfig.DeploymentConfigs.Count}";
+
                         launcherConfig.DeploymentConfigs.Add(deploymentConfig);
                     }
                 }
@@ -125,9 +130,7 @@ namespace Improbable.Gdk.DeploymentManager
 
                     if (GUILayout.Button("Generate assembly name"))
                     {
-                        var time = DateTime.Now;
-                        var timeString = time.ToString("yyMMdd_hhmmss");
-                        copy.AssemblyName = timeString;
+                        copy.AssemblyName = $"{projectName}_{DateTime.Now.ToString("MMdd_hhmm")}";
                     }
 
                     if (GUILayout.Button("Copy assembly to deployments"))
@@ -164,20 +167,23 @@ namespace Improbable.Gdk.DeploymentManager
 
                     GUILayout.FlexibleSpace();
 
-                    if (errors.Count != 0)
+                    using (new EditorGUIUtility.IconSizeScope(SmallIconSize))
                     {
-                        GUILayout.Label(new GUIContent(EditorGUIUtility.IconContent(BuiltInErrorIcon))
+                        if (errors.Count != 0)
                         {
-                            tooltip = "One or more errors in deployment configuration."
-                        });
-                    }
+                            GUILayout.Label(new GUIContent(EditorGUIUtility.IconContent(BuiltInErrorIcon))
+                            {
+                                tooltip = "One or more errors in deployment configuration."
+                            });
+                        }
 
-                    var buttonContent = new GUIContent(string.Empty, "Remove deployment configuration");
-                    buttonContent.image = EditorGUIUtility.IconContent("Toolbar Minus").image;
+                        var buttonContent = new GUIContent(string.Empty, "Remove deployment configuration");
+                        buttonContent.image = EditorGUIUtility.IconContent("Toolbar Minus").image;
 
-                    if (GUILayout.Button(buttonContent, EditorStyles.miniButton))
-                    {
-                        return (true, null);
+                        if (GUILayout.Button(buttonContent, EditorStyles.miniButton))
+                        {
+                            return (true, null);
+                        }
                     }
                 }
 
@@ -218,8 +224,6 @@ namespace Improbable.Gdk.DeploymentManager
                         }
                     }
                 }
-
-                GUILayout.Space(15);
 
                 using (new EditorGUILayout.HorizontalScope())
                 {
@@ -294,12 +298,15 @@ namespace Improbable.Gdk.DeploymentManager
 
                     GUILayout.FlexibleSpace();
 
-                    var buttonContent = new GUIContent(string.Empty, "Remove deployment configuration");
-                    buttonContent.image = EditorGUIUtility.IconContent(BuiltInTrashIcon).image;
-
-                    if (GUILayout.Button(buttonContent, EditorStyles.miniButton))
+                    using (new EditorGUIUtility.IconSizeScope(SmallIconSize))
                     {
-                        return (true, null);
+                        var buttonContent = new GUIContent(string.Empty, "Remove simulated player deployment");
+                        buttonContent.image = EditorGUIUtility.IconContent("Toolbar Minus").image;
+
+                        if (GUILayout.Button(buttonContent, EditorStyles.miniButton))
+                        {
+                            return (true, null);
+                        }
                     }
                 }
 

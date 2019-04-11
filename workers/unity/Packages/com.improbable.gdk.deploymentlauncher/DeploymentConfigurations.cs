@@ -13,11 +13,6 @@ namespace Improbable.Gdk.DeploymentManager
     public class DeploymentConfig
     {
         /// <summary>
-        ///     The name of the SpatialOS project to launch in.
-        /// </summary>
-        public string ProjectName;
-
-        /// <summary>
         ///     The name of the assembly to use in the deployment.
         /// </summary>
         public string AssemblyName;
@@ -34,7 +29,6 @@ namespace Improbable.Gdk.DeploymentManager
 
         public DeploymentConfig()
         {
-            ProjectName = "";
             AssemblyName = "";
             Deployment = new BaseDeploymentConfig();
             SimulatedPlayerDeploymentConfig = new List<SimulatedPlayerDeploymentConfig>();
@@ -69,7 +63,6 @@ namespace Improbable.Gdk.DeploymentManager
         {
             return new DeploymentConfig
             {
-                ProjectName = ProjectName,
                 AssemblyName = AssemblyName,
                 Deployment = Deployment.DeepCopy(),
                 SimulatedPlayerDeploymentConfig = SimulatedPlayerDeploymentConfig.Select(config => config.DeepCopy()).ToList(),
@@ -217,11 +210,6 @@ namespace Improbable.Gdk.DeploymentManager
     public class AssemblyConfig
     {
         /// <summary>
-        ///     The project to upload this assembly to.
-        /// </summary>
-        public string ProjectName;
-
-        /// <summary>
         ///     The name of this assembly.
         /// </summary>
         public string AssemblyName;
@@ -232,7 +220,6 @@ namespace Improbable.Gdk.DeploymentManager
         {
             return new AssemblyConfig
             {
-                ProjectName = ProjectName,
                 AssemblyName = AssemblyName,
                 ShouldForceUpload = ShouldForceUpload
             };
