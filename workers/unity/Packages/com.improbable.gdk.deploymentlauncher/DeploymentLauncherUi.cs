@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using Improbable.Gdk.Tools.MiniJSON;
 using UnityEditor;
 using UnityEngine;
 
@@ -8,7 +11,7 @@ namespace Improbable.Gdk.DeploymentManager
     internal class DeploymentLauncherUi : EditorWindow
     {
         internal const string BuiltInErrorIcon = "console.erroricon.sml";
-        internal const string BuiltInWarningIcon = "console.warnicon.sml";
+        internal const string BuiltInRefreshIcon = "Refresh";
         internal const string BuiltInTrashIcon = "TreeEditor.Trash";
 
         [MenuItem("SpatialOS/Deployment Launcher", false, 51)]
@@ -24,10 +27,15 @@ namespace Improbable.Gdk.DeploymentManager
         private DeploymentLauncherConfig launcherConfig;
 
         private readonly Dictionary<int, object> localState = new Dictionary<int, object>();
+        private Vector2 scrollPos;
+        private string projectName;
+        private string[] snapshots;
 
         private void OnEnable()
         {
             launcherConfig = DeploymentLauncherConfig.GetInstance();
+            projectName = GetProjectName();
+            snapshots = GetSnapshots();
         }
 
         private void OnGUI()
@@ -37,33 +45,62 @@ namespace Improbable.Gdk.DeploymentManager
                 GUILayout.Label($"Could not find a {nameof(DeploymentLauncherConfig)} instance.\nPlease create one via the Assets > Create > SpatialOS menu.");
             }
 
-            launcherConfig.AssemblyConfig = DrawAssemblyConfig(launcherConfig.AssemblyConfig);
-
-            GUILayout.Label("Deployment Configurations", EditorStyles.boldLabel);
-
-            for (var index = 0; index < launcherConfig.DeploymentConfigs.Count; index++)
+            using (var scrollView = new EditorGUILayout.ScrollViewScope(scrollPos))
             {
-                var deplConfig = launcherConfig.DeploymentConfigs[index];
-                var (shouldRemove, updated) = DrawDeploymentConfig(deplConfig);
-                if (shouldRemove)
+                using (new EditorGUILayout.HorizontalScope())
                 {
-                    launcherConfig.DeploymentConfigs.RemoveAt(index);
-                    index--;
-                }
-                else
-                {
-                    launcherConfig.DeploymentConfigs[index] = updated;
-                }
-            }
+                    EditorGUILayout.LabelField("Project Name", projectName);
 
-            using (new GUILayout.HorizontalScope())
-            {
-                GUILayout.FlexibleSpace();
+                    var buttonIcon = new GUIContent(EditorGUIUtility.IconContent(BuiltInRefreshIcon))
+                    {
+                        tooltip = "Refresh your project name.."
+                    };
 
-                if (GUILayout.Button("Add new deployment configuration"))
-                {
-                    launcherConfig.DeploymentConfigs.Add(new DeploymentConfig());
+                    GUILayout.Space(EditorGUIUtility.currentViewWidth * 0.6f);
+
+                    if (GUILayout.Button(buttonIcon, EditorStyles.miniButton))
+                    {
+                        projectName = GetProjectName();
+                    }
                 }
+
+                DrawHorizontalLine(5);
+
+                launcherConfig.AssemblyConfig = DrawAssemblyConfig(launcherConfig.AssemblyConfig);
+
+                GUILayout.Label("Deployment Configurations", EditorStyles.boldLabel);
+
+                for (var index = 0; index < launcherConfig.DeploymentConfigs.Count; index++)
+                {
+                    var deplConfig = launcherConfig.DeploymentConfigs[index];
+                    var (shouldRemove, updated) = DrawDeploymentConfig(deplConfig);
+                    if (shouldRemove)
+                    {
+                        launcherConfig.DeploymentConfigs.RemoveAt(index);
+                        index--;
+                    }
+                    else
+                    {
+                        launcherConfig.DeploymentConfigs[index] = updated;
+                    }
+                }
+
+                using (new GUILayout.HorizontalScope())
+                {
+                    GUILayout.FlexibleSpace();
+
+                    if (GUILayout.Button("Add new deployment configuration"))
+                    {
+                        var deploymentConfig = new DeploymentConfig
+                        {
+                            AssemblyName = launcherConfig.AssemblyConfig.AssemblyName
+                        };
+
+                        launcherConfig.DeploymentConfigs.Add(deploymentConfig);
+                    }
+                }
+
+                scrollPos = scrollView.scrollPosition;
             }
 
             AssetDatabase.SaveAssets();
@@ -72,19 +109,34 @@ namespace Improbable.Gdk.DeploymentManager
         private AssemblyConfig DrawAssemblyConfig(AssemblyConfig config)
         {
             GUILayout.Label("Assembly Upload", EditorStyles.boldLabel);
-            DrawHorizontalLine(5);
 
             var copy = config.DeepCopy();
 
             using (new EditorGUILayout.VerticalScope())
             {
                 copy.AssemblyName = EditorGUILayout.TextField("Assembly Name", config.AssemblyName);
+                copy.ShouldForceUpload = EditorGUILayout.Toggle("Force Upload", config.ShouldForceUpload);
 
                 GUILayout.Space(EditorGUIUtility.standardVerticalSpacing);
 
                 using (new EditorGUILayout.HorizontalScope())
                 {
                     GUILayout.FlexibleSpace();
+
+                    if (GUILayout.Button("Generate assembly name"))
+                    {
+                        var time = DateTime.Now;
+                        var timeString = time.ToString("yyMMdd_hhmmss");
+                        copy.AssemblyName = timeString;
+                    }
+
+                    if (GUILayout.Button("Copy assembly to deployments"))
+                    {
+                        foreach (var deplConfig in launcherConfig.DeploymentConfigs)
+                        {
+                            deplConfig.AssemblyName = launcherConfig.AssemblyConfig.AssemblyName;
+                        }
+                    }
 
                     if (GUILayout.Button("Upload Assembly"))
                     {
@@ -102,7 +154,6 @@ namespace Improbable.Gdk.DeploymentManager
             var foldoutState = GetStateObject<bool>(config.Deployment.Name.GetHashCode());
             var copy = config.DeepCopy();
 
-            // TODO: Render errors.
             var errors = copy.GetErrors().ToList();
 
             using (var check = new EditorGUI.ChangeCheckScope())
@@ -185,6 +236,11 @@ namespace Improbable.Gdk.DeploymentManager
                             copy.SimulatedPlayerDeploymentConfig.Add(newSimPlayerDepl);
                         }
                     }
+                }
+
+                if (errors.Count > 0)
+                {
+                    EditorGUILayout.HelpBox($"This deployment configuration has the following errors:\n  - {string.Join("\n  - ", errors)}", MessageType.Error);
                 }
 
                 if (check.changed)
@@ -303,7 +359,21 @@ namespace Improbable.Gdk.DeploymentManager
 
         private void SetStateObject<T>(int hash, T obj)
         {
-            localState[hash] = (object) obj;
+            localState[hash] = obj;
+        }
+
+        private string GetProjectName()
+        {
+            var spatialJsonFile = Path.Combine(Tools.Common.SpatialProjectRootDir, "spatialos.json");
+
+            projectName = (string) Json.Deserialize(File.ReadAllText(spatialJsonFile))["name"];
+
+            return projectName;
+        }
+
+        private string[] GetSnapshots()
+        {
+            return Directory.GetFiles(Tools.Common.SpatialProjectRootDir, "*.snapshot", SearchOption.AllDirectories);
         }
     }
 }

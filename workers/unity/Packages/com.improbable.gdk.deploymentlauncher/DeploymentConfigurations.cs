@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Improbable.Gdk.Tools.MiniJSON;
 using UnityEditor;
 using UnityEngine;
 
@@ -42,19 +44,19 @@ namespace Improbable.Gdk.DeploymentManager
         {
             if (!ValidateAssembly())
             {
-                yield return $"Assembly name {AssemblyName} invalid. Must follow the regex: ^[a-zA-Z0-9_.-]{{5,64}}";
+                yield return $"Assembly name \"{AssemblyName}\" is invalid. Must follow the regex: ^[a-zA-Z0-9_.-]{{5,64}}";
             }
 
             if (!Deployment.ValidateName())
             {
-                yield return $"Deployment name {Deployment.Name} invalid. Must follow the regex: ^[a-z0-9_]{{2,32}}$";
+                yield return $"Deployment name \"{Deployment.Name}\" invalid. Must follow the regex: ^[a-z0-9_]{{2,32}}$";
             }
 
             foreach (var simPlayerDepl in SimulatedPlayerDeploymentConfig)
             {
                 if (!simPlayerDepl.ValidateName())
                 {
-                    yield return $"Deployment name {Deployment.Name} invalid. Must follow the regex: ^[a-z0-9_]{{2,32}}$";
+                    yield return $"Deployment name \"{Deployment.Name}\" invalid. Must follow the regex: ^[a-z0-9_]{{2,32}}$";
                 }
             }
         }
@@ -224,12 +226,15 @@ namespace Improbable.Gdk.DeploymentManager
         /// </summary>
         public string AssemblyName;
 
+        public bool ShouldForceUpload;
+
         internal AssemblyConfig DeepCopy()
         {
             return new AssemblyConfig
             {
                 ProjectName = ProjectName,
-                AssemblyName = AssemblyName
+                AssemblyName = AssemblyName,
+                ShouldForceUpload = ShouldForceUpload
             };
         }
     }
