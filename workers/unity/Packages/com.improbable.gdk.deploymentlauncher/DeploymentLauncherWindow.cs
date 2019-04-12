@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Improbable.Gdk.Core.Collections;
+using Improbable.Gdk.Core.Editor;
 using Improbable.Gdk.DeploymentManager.Commands;
 using Improbable.Gdk.Tools;
 using Improbable.Gdk.Tools.MiniJSON;
@@ -33,10 +34,10 @@ namespace Improbable.Gdk.DeploymentManager
         private static readonly Vector2 SmallIconSize = new Vector2(12, 12);
         private Material spinnerMaterial;
 
-        private readonly Dictionary<int, object> localState = new Dictionary<int, object>();
         private Vector2 scrollPos;
         private string projectName;
         private TaskManager manager;
+        private UiStateManager stateManager = new UiStateManager();
 
         private int selectedDeploymentIndex;
 
@@ -252,7 +253,7 @@ namespace Improbable.Gdk.DeploymentManager
 
         private (bool, DeploymentConfig) DrawDeploymentConfig(DeploymentConfig config)
         {
-            var foldoutState = GetStateObject<bool>(config.Deployment.Name.GetHashCode());
+            var foldoutState = stateManager.GetStateObject<bool>(config.Deployment.Name.GetHashCode());
             var copy = config.DeepCopy();
 
             var errors = copy.GetErrors();
@@ -347,7 +348,7 @@ namespace Improbable.Gdk.DeploymentManager
 
                 if (check.changed)
                 {
-                    SetStateObject(copy.Deployment.Name.GetHashCode(), foldoutState);
+                    stateManager.SetStateObject(copy.Deployment.Name.GetHashCode(), foldoutState);
                 }
             }
 
@@ -386,7 +387,7 @@ namespace Improbable.Gdk.DeploymentManager
         private (bool, SimulatedPlayerDeploymentConfig) DrawSimulatedConfig(int index, SimulatedPlayerDeploymentConfig config)
         {
             var copy = config.DeepCopy();
-            var foldoutState = GetStateObject<bool>(config.Name.GetHashCode());
+            var foldoutState = stateManager.GetStateObject<bool>(config.Name.GetHashCode());
 
             using (var check = new EditorGUI.ChangeCheckScope())
             {
@@ -421,7 +422,7 @@ namespace Improbable.Gdk.DeploymentManager
 
                 if (check.changed)
                 {
-                    SetStateObject(copy.Name.GetHashCode(), foldoutState);
+                    stateManager.SetStateObject(copy.Name.GetHashCode(), foldoutState);
                 }
             }
 
@@ -433,12 +434,12 @@ namespace Improbable.Gdk.DeploymentManager
             for (var i = 0; i < config.SimulatedPlayerDeploymentConfig.Count; i++)
             {
                 var previousFoldoutState =
-                    GetStateObject<bool>(config.SimulatedPlayerDeploymentConfig[i].Name.GetHashCode());
+                    stateManager.GetStateObject<bool>(config.SimulatedPlayerDeploymentConfig[i].Name.GetHashCode());
 
                 config.SimulatedPlayerDeploymentConfig[i].Name = $"{config.Deployment.Name}_sim{i + 1}";
                 config.SimulatedPlayerDeploymentConfig[i].TargetDeploymentName = config.Deployment.Name;
 
-                SetStateObject(config.SimulatedPlayerDeploymentConfig[i].Name.GetHashCode(), previousFoldoutState);
+                stateManager.SetStateObject(config.SimulatedPlayerDeploymentConfig[i].Name.GetHashCode(), previousFoldoutState);
             }
         }
 
@@ -451,22 +452,6 @@ namespace Improbable.Gdk.DeploymentManager
             }
 
             GUILayout.Space(rect.height);
-        }
-
-        private T GetStateObject<T>(int hash) where T : new()
-        {
-            if (!localState.TryGetValue(hash, out var value))
-            {
-                value = new T();
-                localState.Add(hash, value);
-            }
-
-            return (T) value;
-        }
-
-        private void SetStateObject<T>(int hash, T obj)
-        {
-            localState[hash] = obj;
         }
 
         private string GetProjectName()
