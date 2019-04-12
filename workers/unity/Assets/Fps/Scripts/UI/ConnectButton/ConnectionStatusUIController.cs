@@ -16,14 +16,11 @@ namespace Fps
         private const string DeploymentListAvailableText = "Deployments available";
         private const string GettingDeploymentListText = "Getting deployment list...";
         private const string FailedToGetDeploymentListText = "Failed to get deployment list!";
-        private const string ConnectionFailedText = "Failed to join deployment!";
-        private const string ConnectedText = "Joined deployment!";
         private const string WaitingForGameStartText = "Waiting for game to start...";
         private const string SpawningText = "Spawning player...";
         private const string GameReadyText = "Press start to play";
         private const string ConnectingText = "Joining deployment...";
         private const string SpawningFailedText = "Failed to spawn player!";
-        private const string WorkerDisconnectedText = "Worker was disconnected!";
 
         public void ShowGetDeploymentListText()
         {
@@ -49,12 +46,6 @@ namespace Fps
             SetSymbol(SpinnerSymbol);
         }
 
-        public void ShowConnectionFailedText(string error)
-        {
-            StatusText.text = $"{ConnectionFailedText}\nError: {error}";
-            SetSymbol(ErrorSymbol);
-        }
-
         public void ShowWaitForGameText()
         {
             StatusText.text = WaitingForGameStartText;
@@ -75,12 +66,6 @@ namespace Fps
         public void ShowSpawningFailedText(string error)
         {
             StatusText.text = $"{SpawningFailedText}\nError: {error}";
-            SetSymbol(ErrorSymbol);
-        }
-
-        public void ShowWorkerDisconnectedText()
-        {
-            StatusText.text = WorkerDisconnectedText;
             SetSymbol(ErrorSymbol);
         }
 

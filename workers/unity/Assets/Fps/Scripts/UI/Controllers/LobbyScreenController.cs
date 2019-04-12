@@ -1,38 +1,57 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 namespace Fps
 {
     public class LobbyScreenController : MonoBehaviour
     {
+        public InputField inputField;
         public ConnectionStatusUIController ConnectionStatusUIController;
         public FpsUIButton startButton;
         public FpsUIButton cancelButton;
-        public PlayerNameInputController playerNameInputController;
+        public Text HintText;
+
+
+        private readonly Color HintTextColor = new Color(1f, .4f, .4f);
+
+        public void UpdateHintText(bool hasGameBegun)
+        {
+            var nameLength = inputField.text.Trim().Length;
+
+            if (nameLength == 0 && !hasGameBegun)
+            {
+                HintText.text = "You must enter a name to play";
+            }
+            else if (nameLength < 3)
+            {
+                HintText.text = "Minimum 3 characters required";
+            }
+            else
+            {
+                HintText.text = string.Empty;
+            }
+        }
 
         public string GetPlayerName()
         {
-            return playerNameInputController.GetPlayerName();
+            return inputField.text;
+        }
+
+        public bool isValidName()
+        {
+            return inputField.text.Length >= 3;
         }
 
         private void Awake()
         {
-            playerNameInputController.OnNameChanged += OnNameUpdated;
+            HintText.text = string.Empty;
+            HintText.color = HintTextColor;
         }
 
         private void OnEnable()
         {
-            RefreshButtons(true);
-        }
-
-        private void OnNameUpdated(bool isValid)
-        {
-            RefreshButtons(isValid);
-        }
-
-        private void RefreshButtons(bool isValid)
-        {
-            playerNameInputController.DisplayEnterNameHint = isValid;
-            playerNameInputController.UpdateHintText();
+            inputField.Select();
+            inputField.ActivateInputField();
         }
     }
 }

@@ -8,8 +8,6 @@ namespace Fps
     {
         private readonly LobbyScreenController lobbyScreenController;
 
-        private bool hasValidName;
-
         public WaitForGameState(ScreenUIController controller, ConnectionStateMachine owner) : base(controller, owner)
         {
             lobbyScreenController = controller.FrontEndController.LobbyScreenController;
@@ -17,12 +15,9 @@ namespace Fps
 
         public override void StartState()
         {
-            Controller.FrontEndController.LobbyScreenController.playerNameInputController.OnNameChanged += OnNameUpdated;
             lobbyScreenController.startButton.onClick.AddListener(StartSession);
             lobbyScreenController.cancelButton.onClick.AddListener(CancelSession);
             lobbyScreenController.ConnectionStatusUIController.ShowWaitForGameText();
-
-            hasValidName = Controller.FrontEndController.LobbyScreenController.playerNameInputController.NameIsValid;
         }
 
         public override void ExitState()
@@ -42,7 +37,9 @@ namespace Fps
                     Owner.SetState(nextState);
                     break;
                 case Status.RUNNING:
-                    lobbyScreenController.startButton.enabled = status == Status.RUNNING && hasValidName;
+                    lobbyScreenController.UpdateHintText(true);
+                    var isValid = lobbyScreenController.isValidName();
+                    lobbyScreenController.startButton.enabled = status == Status.RUNNING && isValid;
                     lobbyScreenController.ConnectionStatusUIController.ShowGameReadyText();
                     break;
                 case Status.STOPPING:
@@ -53,11 +50,6 @@ namespace Fps
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-        }
-
-        private void OnNameUpdated(bool isValid)
-        {
-            hasValidName = isValid;
         }
 
         private void StartSession()
