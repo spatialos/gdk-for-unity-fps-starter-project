@@ -152,7 +152,7 @@ namespace Improbable.Gdk.DeploymentManager
                 SnapshotPath = SnapshotPath,
                 LaunchJson = LaunchJson,
                 Region = Region,
-                Tags = Tags.Select(string.Copy).ToList(),
+                Tags = Tags.ToList(),
 
                 TargetDeploymentName = TargetDeploymentName,
                 FlagPrefix = FlagPrefix,

@@ -13,7 +13,7 @@ using UnityEngine;
 
 namespace Improbable.Gdk.DeploymentManager
 {
-    internal class DeploymentLauncherUi : EditorWindow
+    internal class DeploymentLauncherWindow : EditorWindow
     {
         internal const string BuiltInErrorIcon = "console.erroricon.sml";
         internal const string BuiltInRefreshIcon = "Refresh";
@@ -22,7 +22,7 @@ namespace Improbable.Gdk.DeploymentManager
         private static void LaunchDeploymentMenu()
         {
             var inspectorWindowType = typeof(EditorWindow).Assembly.GetType("UnityEditor.InspectorWindow");
-            var deploymentWindow = GetWindow<DeploymentLauncherUi>(inspectorWindowType);
+            var deploymentWindow = GetWindow<DeploymentLauncherWindow>(inspectorWindowType);
             deploymentWindow.titleContent.text = "Deployment Launcher";
             deploymentWindow.titleContent.tooltip = "A tab for managing your SpatialOS deployments.";
             deploymentWindow.Show();
