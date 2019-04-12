@@ -4,18 +4,15 @@ namespace Fps
 {
     public class ResultsState : SessionState
     {
-        private ClientWorkerConnector connector;
-
-        public ResultsState(ClientWorkerConnector connector, ScreenUIController controller, ConnectionStateMachine owner) : base(controller, owner)
+        public ResultsState(ScreenUIController controller, ConnectionStateMachine owner) : base(controller, owner)
         {
-            this.connector = connector;
         }
 
         public override void StartState()
         {
             Controller.FrontEndController.ResultsScreenController.DoneButton.onClick.AddListener(Restart);
 
-            var trackPlayerSystem = connector.Worker.World.GetExistingManager<TrackPlayerSystem>();
+            var trackPlayerSystem = Owner.ClientConnector.Worker.World.GetExistingManager<TrackPlayerSystem>();
             var playerName = trackPlayerSystem.PlayerName;
             var results = trackPlayerSystem.PlayerResults;
             // get player rank
@@ -38,8 +35,7 @@ namespace Fps
             // show results screen
             Controller.ShowFrontEnd();
             Controller.FrontEndController.SwitchToResultsScreen();
-            UnityObjectDestroyer.Destroy(connector.gameObject);
-            connector = null;
+            Owner.DestroyClientWorker();
         }
 
         public override void ExitState()
@@ -54,7 +50,7 @@ namespace Fps
 
         private void Restart()
         {
-            Owner.SetState(new InitState(Controller, Owner));
+            Owner.SetState(Owner.StartState);
         }
     }
 }

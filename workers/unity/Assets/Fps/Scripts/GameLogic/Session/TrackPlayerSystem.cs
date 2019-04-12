@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Diagnostics;
+using Improbable.Gdk.Movement;
 using Improbable.Gdk.Session;
 using Unity.Entities;
 
@@ -18,13 +20,12 @@ namespace Fps
         protected override void OnCreateManager()
         {
             base.OnCreateManager();
-            Enabled = false;
 
             ownPlayerGroup = GetComponentGroup(
                 ComponentType.ReadOnly<PlayerState.Component>(),
-                ComponentType.ReadOnly<PlayerState.ComponentAuthority>()
+                ComponentType.ReadOnly<ClientMovement.ComponentAuthority>()
             );
-            ownPlayerGroup.SetFilter(PlayerState.ComponentAuthority.Authoritative);
+            ownPlayerGroup.SetFilter(ClientMovement.ComponentAuthority.Authoritative);
 
             playersGroup = GetComponentGroup(ComponentType.ReadOnly<PlayerState.Component>());
             sessionGroup = GetComponentGroup(ComponentType.ReadOnly<Session.Component>());
@@ -36,16 +37,20 @@ namespace Fps
             {
                 SessionStatus = null;
             }
-
-            SessionStatus = sessionGroup.GetComponentDataArray<Session.Component>()[0].Status;
+            else
+            {
+                SessionStatus = sessionGroup.GetComponentDataArray<Session.Component>()[0].Status;
+            }
 
             var playerStateData = ownPlayerGroup.GetComponentDataArray<PlayerState.Component>();
             if (playerStateData.Length == 0)
             {
                 PlayerName = null;
             }
-
-            PlayerName = playerStateData[0].Name;
+            else
+            {
+                PlayerName = playerStateData[0].Name;
+            }
 
             var results = new List<ResultsData>();
             var playerStates = playersGroup.GetComponentDataArray<PlayerState.Component>();

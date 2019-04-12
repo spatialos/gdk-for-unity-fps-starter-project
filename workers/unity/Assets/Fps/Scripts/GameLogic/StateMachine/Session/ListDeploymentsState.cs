@@ -37,7 +37,7 @@ namespace Fps
 
         private void Back()
         {
-            Owner.SetState(new InitState(Controller, Owner));
+            Owner.SetState(Owner.StartState);
         }
     }
 }
