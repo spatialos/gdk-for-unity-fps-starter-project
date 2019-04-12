@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0c2130db3ddb1a438fa2942db976122, type: 3}
+  m_Name: DeploymentLauncherConfig
+  m_EditorClassIdentifier: 
+  AssemblyConfig:
+    AssemblyName: unity_gdk_0412_1112
+    ShouldForceUpload: 1
+  DeploymentConfigs:
+  - AssemblyName: unity_gdk_0412_1112
+    Deployment:
+      Name: test_depl_2
+      SnapshotPath: snapshots/cloud.snapshot
+      LaunchJson: cloud_launch_large.json
+      Region: 1
+      Tags:
+      - dev_login
+    SimulatedPlayerDeploymentConfig:
+    - Name: test_depl_2_sim1
+      SnapshotPath: 
+      LaunchJson: cloud_launch_large_sim_players.json
+      Region: 1
+      Tags: []
+      TargetDeploymentName: test_depl_2
+      FlagPrefix: fps
+      WorkerType: SimulatedPlayerCoordinator
+    - Name: test_depl_2_sim2
+      SnapshotPath: 
+      LaunchJson: cloud_launch_large_sim_players.json
+      Region: 1
+      Tags: []
+      TargetDeploymentName: test_depl_2
+      FlagPrefix: fps
+      WorkerType: SimulatedPlayerCoordinator
