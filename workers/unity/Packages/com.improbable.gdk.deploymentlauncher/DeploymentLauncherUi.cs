@@ -88,10 +88,18 @@ namespace Improbable.Gdk.DeploymentManager
         {
             if (launcherConfig == null)
             {
-                GUILayout.Label($"Could not find a {nameof(DeploymentLauncherConfig)} instance.\nPlease create one via the Assets > Create > SpatialOS menu.");
+                EditorGUILayout.HelpBox($"Could not find a {nameof(DeploymentLauncherConfig)} instance.\nPlease create one via the Assets > Create > SpatialOS menu.", MessageType.Info);
+                return;
+            }
+
+            if (projectName == null)
+            {
+                EditorGUILayout.HelpBox("Could not parse your SpatialOS project name. See the Console for more details", MessageType.Error);
+                return;
             }
 
             using (var scrollView = new EditorGUILayout.ScrollViewScope(scrollPos))
+            using (var check = new EditorGUI.ChangeCheckScope())
             {
                 using (new EditorGUILayout.HorizontalScope())
                 {
@@ -181,6 +189,12 @@ namespace Improbable.Gdk.DeploymentManager
 
                 scrollPos = scrollView.scrollPosition;
 
+                if (check.changed)
+                {
+                    EditorUtility.SetDirty(launcherConfig);
+                    AssetDatabase.SaveAssets();
+                }
+
                 if (manager.IsUploading || manager.IsLaunching)
                 {
                     EditorGUILayout.HelpBox(manager.GetStatusMessage(), MessageType.Info);
@@ -189,8 +203,6 @@ namespace Improbable.Gdk.DeploymentManager
                     Repaint();
                 }
             }
-
-            AssetDatabase.SaveAssets();
         }
 
         private AssemblyConfig DrawAssemblyConfig(AssemblyConfig config)
@@ -215,7 +227,7 @@ namespace Improbable.Gdk.DeploymentManager
                         copy.AssemblyName = $"{projectName}_{DateTime.Now.ToString("MMdd_hhmm")}";
                     }
 
-                    if (GUILayout.Button("Copy assembly to deployments"))
+                    if (GUILayout.Button("Assign assembly name to deployments"))
                     {
                         foreach (var deplConfig in launcherConfig.DeploymentConfigs)
                         {
@@ -461,9 +473,28 @@ namespace Improbable.Gdk.DeploymentManager
         {
             var spatialJsonFile = Path.Combine(Tools.Common.SpatialProjectRootDir, "spatialos.json");
 
-            projectName = (string) Json.Deserialize(File.ReadAllText(spatialJsonFile))["name"];
+            if (!File.Exists(spatialJsonFile))
+            {
+                Debug.LogError($"Could not find a spatialos.json file located at: {spatialJsonFile}");
+                return null;
+            }
 
-            return projectName;
+            var data = Json.Deserialize(File.ReadAllText(spatialJsonFile));
+
+            if (data == null)
+            {
+                Debug.LogError($"Could not parse spatialos.json file located at: {spatialJsonFile}");
+            }
+
+            try
+            {
+                return (string) data["name"];
+            }
+            catch (KeyNotFoundException e)
+            {
+                Debug.LogError($"Could not find a \"name\" field in {spatialJsonFile}.\n Raw exception: {e.Message}");
+                return null;
+            }
         }
 
         private void DrawSpinner(float value, Rect rect)
@@ -511,34 +542,28 @@ namespace Improbable.Gdk.DeploymentManager
 
             public void Update()
             {
-                if (uploadTask != null)
+                if (uploadTask?.Task.IsCompleted == true && IsUploading)
                 {
-                    if (uploadTask.Task.IsCompleted && IsUploading)
-                    {
-                        IsUploading = false;
-                        EditorApplication.UnlockReloadAssemblies();
-                        UploadTaskResults.Add(uploadTask);
-                        uploadTask = null;
-                    }
+                    IsUploading = false;
+                    EditorApplication.UnlockReloadAssemblies();
+                    UploadTaskResults.Add(uploadTask);
+                    uploadTask = null;
                 }
 
-                if (launchTask != null)
+                if (launchTask?.Task.IsCompleted == true && IsLaunching)
                 {
-                    if (launchTask.Task.IsCompleted && IsLaunching)
-                    {
-                        LaunchTaskResults.Add(launchTask);
+                    LaunchTaskResults.Add(launchTask);
 
-                        if (queuedLaunches.Count > 0)
-                        {
-                            var (projectName, assemblyName, config) = queuedLaunches.Dequeue();
-                            launchTask = Deployment.LaunchAsync(projectName, assemblyName, config);
-                        }
-                        else
-                        {
-                            launchTask = null;
-                            IsLaunching = false;
-                            EditorApplication.UnlockReloadAssemblies();
-                        }
+                    if (queuedLaunches.Count > 0)
+                    {
+                        var (projectName, assemblyName, config) = queuedLaunches.Dequeue();
+                        launchTask = Deployment.LaunchAsync(projectName, assemblyName, config);
+                    }
+                    else
+                    {
+                        launchTask = null;
+                        IsLaunching = false;
+                        EditorApplication.UnlockReloadAssemblies();
                     }
                 }
             }

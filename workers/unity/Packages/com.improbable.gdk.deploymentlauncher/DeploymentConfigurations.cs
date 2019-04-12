@@ -57,7 +57,7 @@ namespace Improbable.Gdk.DeploymentManager
 
         public DeploymentConfig()
         {
-            AssemblyName = "";
+            AssemblyName = string.Empty;
             Deployment = new BaseDeploymentConfig();
             SimulatedPlayerDeploymentConfig = new List<SimulatedPlayerDeploymentConfig>();
         }
@@ -139,9 +139,9 @@ namespace Improbable.Gdk.DeploymentManager
 
         public SimulatedPlayerDeploymentConfig()
         {
-            TargetDeploymentName = "";
-            FlagPrefix = "";
-            WorkerType = "";
+            TargetDeploymentName = string.Empty;
+            FlagPrefix = string.Empty;
+            WorkerType = string.Empty;
         }
 
         internal new SimulatedPlayerDeploymentConfig DeepCopy()
@@ -191,9 +191,9 @@ namespace Improbable.Gdk.DeploymentManager
 
         public BaseDeploymentConfig()
         {
-            Name = "";
-            SnapshotPath = "";
-            LaunchJson = "";
+            Name = string.Empty;
+            SnapshotPath = string.Empty;
+            LaunchJson = string.Empty;
             Region = DeploymentRegionCode.EU;
             Tags = new List<string>();
         }
