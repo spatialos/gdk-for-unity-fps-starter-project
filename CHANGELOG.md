@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## `0.2.1` - 2019-04-15
+
 ### Changed
 
 - Updated the `ConnectionController` and `ClientWorkerConnector` to make full use of the updated Player Lifecycle Feature Module.
