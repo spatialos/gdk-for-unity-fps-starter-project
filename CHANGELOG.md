@@ -8,6 +8,8 @@
 
 - Updated the `ConnectionController` and `ClientWorkerConnector` to make full use of the updated Player Lifecycle Feature Module.
 - Reactive Components are no longer used. They have been disabled by adding the `DISABLE_REACTIVE_COMPONENTS` define symbol.
+- Updated to Unity version `2018.3.11`.
+- Updated to use the GDK for Unity version `0.2.1`.
 
 ### Internal
 
