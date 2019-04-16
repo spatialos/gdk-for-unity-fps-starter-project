@@ -12,7 +12,7 @@ namespace Fps
 
         public PrepareDeploymentsListState(UIManager manager, ConnectionStateMachine owner) : base(manager, owner)
         {
-            startScreenManager = manager.FrontEndController.startScreenManager;
+            startScreenManager = manager.ScreenManager.StartScreenManager;
         }
 
         public override void StartState()
@@ -87,7 +87,7 @@ namespace Fps
 
             deploymentDatas.Sort((deployment1, deployment2) =>
                 String.Compare(deployment1.Name, deployment2.Name, StringComparison.Ordinal));
-            Manager.FrontEndController.deploymentListScreenManager.SetDeployments(deploymentDatas.ToArray());
+            Manager.ScreenManager.DeploymentListScreenManager.SetDeployments(deploymentDatas.ToArray());
 
             if (!hasAvailableDeployment)
             {

@@ -10,7 +10,7 @@ namespace Fps
 
         public override void StartState()
         {
-            Manager.FrontEndController.resultsScreenManager.DoneButton.onClick.AddListener(Restart);
+            Manager.ScreenManager.ResultsScreenManager.DoneButton.onClick.AddListener(Restart);
 
             var trackPlayerSystem = Owner.ClientConnector.Worker.World.GetExistingManager<TrackPlayerSystem>();
             var playerName = trackPlayerSystem.PlayerName;
@@ -30,18 +30,18 @@ namespace Fps
                 }
             }
 
-            Manager.FrontEndController.resultsScreenManager.SetResults(results.ToArray(), playerRank);
+            Manager.ScreenManager.ResultsScreenManager.SetResults(results.ToArray(), playerRank);
 
             // show results screen
             Manager.ShowFrontEnd();
-            Manager.FrontEndController.SwitchToResultsScreen();
+            Manager.ScreenManager.SwitchToResultsScreen();
             Owner.DestroyClientWorker();
         }
 
         public override void ExitState()
         {
-            Manager.FrontEndController.resultsScreenManager.DoneButton.onClick.RemoveListener(Restart);
-            Manager.FrontEndController.SwitchToSessionScreen();
+            Manager.ScreenManager.ResultsScreenManager.DoneButton.onClick.RemoveListener(Restart);
+            Manager.ScreenManager.SwitchToSessionScreen();
         }
 
         public override void Tick()

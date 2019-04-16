@@ -4,13 +4,13 @@ namespace Fps
 {
     public class UIManager : MonoBehaviour
     {
-        public ScreenManager FrontEndController;
-        public InGameScreenManager inGameManager;
+        public ScreenManager ScreenManager;
+        public InGameScreenManager InGameManager;
 
         private void Awake()
         {
-            FrontEndController.gameObject.SetActive(false);
-            inGameManager.gameObject.SetActive(false);
+            ScreenManager.gameObject.SetActive(false);
+            InGameManager.gameObject.SetActive(false);
         }
 
         private void Start()
@@ -20,16 +20,16 @@ namespace Fps
 
         public void ShowGameView()
         {
-            FrontEndController.gameObject.SetActive(false);
-            inGameManager.gameObject.SetActive(true);
+            ScreenManager.gameObject.SetActive(false);
+            InGameManager.gameObject.SetActive(true);
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
         }
 
         public void ShowFrontEnd()
         {
-            inGameManager.gameObject.SetActive(false);
-            FrontEndController.gameObject.SetActive(true);
+            InGameManager.gameObject.SetActive(false);
+            ScreenManager.gameObject.SetActive(true);
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
         }

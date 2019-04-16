@@ -7,7 +7,7 @@ namespace Fps
         public ListDeploymentsState(UIManager manager, ConnectionStateMachine owner) : base(manager,
             owner)
         {
-            deploymentListScreenManager = manager.FrontEndController.deploymentListScreenManager;
+            deploymentListScreenManager = manager.ScreenManager.DeploymentListScreenManager;
         }
 
         public override void StartState()
@@ -15,7 +15,7 @@ namespace Fps
             deploymentListScreenManager.ShowDeploymentListAvailableText();
             deploymentListScreenManager.JoinButton.onClick.AddListener(Connect);
             deploymentListScreenManager.BackButton.onClick.AddListener(Back);
-            Manager.FrontEndController.SwitchToDeploymentListScreen();
+            Manager.ScreenManager.SwitchToDeploymentListScreen();
         }
 
         public override void ExitState()

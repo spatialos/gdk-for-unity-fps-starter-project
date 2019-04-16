@@ -6,16 +6,15 @@ namespace Fps
 {
     public class ResultsScreenManager : MonoBehaviour
     {
-        [SerializeField] private GameObject rankDivider;
-        public Button DoneButton;
-
         public Color BackgroundStripColor1;
         public Color BackgroundStripColor2;
         public Color LocalPlayerBackgroundColor;
         public Color LocalPlayerTextColor;
         public Color DefaultTextColor;
         public Table ResultsTable;
+        public Button DoneButton;
 
+        [SerializeField] private GameObject rankDivider;
         private const int MaxVisibleRowCount = 12; // Includes header
         private Color currentBgColor;
 

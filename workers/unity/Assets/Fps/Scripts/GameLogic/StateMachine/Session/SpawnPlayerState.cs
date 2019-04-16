@@ -10,15 +10,15 @@ namespace Fps
 
         public SpawnPlayerState(UIManager manager, ConnectionStateMachine owner) : base(manager, owner)
         {
-            lobbyScreenManager = manager.FrontEndController.lobbyScreenManager;
+            lobbyScreenManager = manager.ScreenManager.LobbyScreenManager;
         }
 
         public override void StartState()
         {
             lobbyScreenManager.ShowSpawningText();
-            lobbyScreenManager.startButton.enabled = false;
+            lobbyScreenManager.StartButton.enabled = false;
 
-            Owner.ClientConnector.SpawnPlayerAction(Manager.FrontEndController.lobbyScreenManager.GetPlayerName(), CreatedPlayer);
+            Owner.ClientConnector.SpawnPlayerAction(Manager.ScreenManager.LobbyScreenManager.GetPlayerName(), CreatedPlayer);
         }
 
         public override void ExitState()
@@ -38,7 +38,7 @@ namespace Fps
             }
             else
             {
-                Manager.FrontEndController.lobbyScreenManager.ShowSpawningFailedText(response.Message);
+                Manager.ScreenManager.LobbyScreenManager.ShowSpawningFailedText(response.Message);
                 Owner.DestroyClientWorker();
                 Owner.SetState(Owner.StartState);
             }

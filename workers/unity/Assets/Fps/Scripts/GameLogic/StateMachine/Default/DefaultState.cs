@@ -15,7 +15,7 @@ namespace Fps
         protected DefaultState(UIManager manager, ConnectionStateMachine owner)
         {
             Manager = manager;
-            DefaultConnectScreenManager = manager.FrontEndController.defaultConnectScreenManager;
+            DefaultConnectScreenManager = manager.ScreenManager.DefaultConnectScreenManager;
             Owner = owner;
 
             Animator = DefaultConnectScreenManager.GetComponentInChildren<Animator>(true);

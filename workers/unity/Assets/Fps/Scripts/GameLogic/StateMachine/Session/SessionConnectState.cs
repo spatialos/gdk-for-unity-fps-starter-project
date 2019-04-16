@@ -23,10 +23,10 @@ namespace Fps
                 Owner.SetState(Owner.StartState);
             }
 
-            Manager.FrontEndController.SwitchToLobbyScreen();
+            Manager.ScreenManager.SwitchToLobbyScreen();
 
-            Manager.FrontEndController.lobbyScreenManager.ShowConnectingText();
-            Manager.FrontEndController.lobbyScreenManager.startButton.enabled = false;
+            Manager.ScreenManager.LobbyScreenManager.ShowConnectingText();
+            Manager.ScreenManager.LobbyScreenManager.StartButton.enabled = false;
 
             Owner.CreateClientWorker();
             Owner.ClientConnector.Connect(deployment, true);

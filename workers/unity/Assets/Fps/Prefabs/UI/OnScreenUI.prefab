@@ -473,14 +473,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b5861719a96cc24eaf1712de7ce8a6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rankDivider: {fileID: 6022448721467210215}
-  DoneButton: {fileID: 4691880619284344853}
   BackgroundStripColor1: {r: 0.27058825, g: 0.27450982, b: 0.27450982, a: 1}
   BackgroundStripColor2: {r: 0.29803923, g: 0.30588236, b: 0.30588236, a: 1}
   LocalPlayerBackgroundColor: {r: 1, g: 0.74509805, b: 0.18039216, a: 1}
   LocalPlayerTextColor: {r: 0, g: 0, b: 0, a: 1}
   DefaultTextColor: {r: 1, g: 1, b: 1, a: 1}
   ResultsTable: {fileID: 8922192468513325244}
+  DoneButton: {fileID: 4691880619284344853}
+  rankDivider: {fileID: 6022448721467210215}
 --- !u!1 &2038017693258985510
 GameObject:
   m_ObjectHideFlags: 0
@@ -3264,8 +3264,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c29c8b12a7d111e45a7d87d2753e91ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FrontEndController: {fileID: 4688935748361665597}
-  inGameManager: {fileID: 4691794100116067353}
+  ScreenManager: {fileID: 4688935748361665597}
+  InGameManager: {fileID: 4691794100116067353}
 --- !u!1 &4648059129233563117
 GameObject:
   m_ObjectHideFlags: 0
@@ -6930,7 +6930,7 @@ MonoBehaviour:
   DefaultTextColor: {r: 1, g: 1, b: 1, a: 1}
   JoinButton: {fileID: 4691843582524963159}
   BackButton: {fileID: 4688574696080362841}
-  deploymentListTable: {fileID: 8946224398212592301}
+  DeploymentListTable: {fileID: 8946224398212592301}
 --- !u!1 &4648442307814191113
 GameObject:
   m_ObjectHideFlags: 0
@@ -8055,12 +8055,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   QuitButton: {fileID: 4688799787672040641}
   FrontEndCamera: {fileID: 4648286127619651879}
-  defaultConnectScreenManager: {fileID: 4689077752758408411}
-  startScreenManager: {fileID: 4691667897783103137}
-  deploymentListScreenManager: {fileID: 5238200821785583470}
-  resultsScreenManager: {fileID: 725924505858706367}
-  lobbyScreenManager: {fileID: 6226586559247578706}
-  EditorCurrentScreen: 1
+  DefaultConnectScreenManager: {fileID: 4689077752758408411}
+  StartScreenManager: {fileID: 4691667897783103137}
+  DeploymentListScreenManager: {fileID: 5238200821785583470}
+  ResultsScreenManager: {fileID: 725924505858706367}
+  LobbyScreenManager: {fileID: 6226586559247578706}
 --- !u!1 &4648741441122516389
 GameObject:
   m_ObjectHideFlags: 0
@@ -9564,9 +9563,9 @@ MonoBehaviour:
   ErrorSymbol: {fileID: 5810784271963424602}
   SuccessSymbol: {fileID: 1972122361905545732}
   StatusText: {fileID: 5596871506530630243}
-  inputField: {fileID: 4207803129442985092}
-  startButton: {fileID: 5662797846398975310}
-  cancelButton: {fileID: 6153418672396196591}
+  InputField: {fileID: 4207803129442985092}
+  StartButton: {fileID: 5662797846398975310}
+  CancelButton: {fileID: 6153418672396196591}
   HintText: {fileID: 4207686839533589912}
 --- !u!1 &6660112930443668427
 GameObject:
@@ -12199,11 +12198,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1507455121744911072}
     m_Modifications:
-    - target: {fileID: 6150022445472934655, guid: e00f8d977de99dc42bb7bc58653e0f88,
-        type: 3}
-      propertyPath: m_Name
-      value: PlayerNameInput
-      objectReference: {fileID: 0}
     - target: {fileID: 6215969143831722139, guid: e00f8d977de99dc42bb7bc58653e0f88,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -12309,15 +12303,25 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 6215783425813025637, guid: e00f8d977de99dc42bb7bc58653e0f88,
+    - target: {fileID: 1824253528298564639, guid: e00f8d977de99dc42bb7bc58653e0f88,
         type: 3}
-      propertyPath: m_RootOrder
+      propertyPath: HintText
+      value: 
+      objectReference: {fileID: 4207686839533589912}
+    - target: {fileID: 1824253528298564639, guid: e00f8d977de99dc42bb7bc58653e0f88,
+        type: 3}
+      propertyPath: inputField
+      value: 
+      objectReference: {fileID: 4207803129442985092}
+    - target: {fileID: 1824253528298564639, guid: e00f8d977de99dc42bb7bc58653e0f88,
+        type: 3}
+      propertyPath: AllowEdit
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 6215369955861792895, guid: e00f8d977de99dc42bb7bc58653e0f88,
+    - target: {fileID: 6150022445472934655, guid: e00f8d977de99dc42bb7bc58653e0f88,
         type: 3}
-      propertyPath: m_RootOrder
-      value: 2
+      propertyPath: m_Name
+      value: PlayerNameInput
       objectReference: {fileID: 0}
     - target: {fileID: 6109936001690209001, guid: e00f8d977de99dc42bb7bc58653e0f88,
         type: 3}
@@ -12334,19 +12338,14 @@ PrefabInstance:
       propertyPath: m_Placeholder
       value: 
       objectReference: {fileID: 4207553164898343818}
-    - target: {fileID: 1824253528298564639, guid: e00f8d977de99dc42bb7bc58653e0f88,
+    - target: {fileID: 6215369955861792895, guid: e00f8d977de99dc42bb7bc58653e0f88,
         type: 3}
-      propertyPath: HintText
-      value: 
-      objectReference: {fileID: 4207686839533589912}
-    - target: {fileID: 1824253528298564639, guid: e00f8d977de99dc42bb7bc58653e0f88,
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6215783425813025637, guid: e00f8d977de99dc42bb7bc58653e0f88,
         type: 3}
-      propertyPath: inputField
-      value: 
-      objectReference: {fileID: 4207803129442985092}
-    - target: {fileID: 1824253528298564639, guid: e00f8d977de99dc42bb7bc58653e0f88,
-        type: 3}
-      propertyPath: AllowEdit
+      propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
@@ -12560,31 +12559,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: ResultsTableEntry
       objectReference: {fileID: 0}
-    - target: {fileID: 8104983922144875102, guid: 8d31458134c329e478c989fa7d7024ae,
-        type: 3}
-      propertyPath: RankText
-      value: 
-      objectReference: {fileID: 8978595673343439795}
-    - target: {fileID: 8104983922144875102, guid: 8d31458134c329e478c989fa7d7024ae,
-        type: 3}
-      propertyPath: PlayerNameText
-      value: 
-      objectReference: {fileID: 6092086350493039270}
-    - target: {fileID: 8104983922144875102, guid: 8d31458134c329e478c989fa7d7024ae,
-        type: 3}
-      propertyPath: KillsText
-      value: 
-      objectReference: {fileID: 6532235466073477695}
-    - target: {fileID: 8104983922144875102, guid: 8d31458134c329e478c989fa7d7024ae,
-        type: 3}
-      propertyPath: DeathsText
-      value: 
-      objectReference: {fileID: 938384136395632763}
-    - target: {fileID: 8104983922144875102, guid: 8d31458134c329e478c989fa7d7024ae,
-        type: 3}
-      propertyPath: KDText
-      value: 
-      objectReference: {fileID: 7772602443355430554}
     - target: {fileID: 6913232046085255848, guid: 8d31458134c329e478c989fa7d7024ae,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -12690,6 +12664,31 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8104983922144875102, guid: 8d31458134c329e478c989fa7d7024ae,
+        type: 3}
+      propertyPath: RankText
+      value: 
+      objectReference: {fileID: 8978595673343439795}
+    - target: {fileID: 8104983922144875102, guid: 8d31458134c329e478c989fa7d7024ae,
+        type: 3}
+      propertyPath: PlayerNameText
+      value: 
+      objectReference: {fileID: 6092086350493039270}
+    - target: {fileID: 8104983922144875102, guid: 8d31458134c329e478c989fa7d7024ae,
+        type: 3}
+      propertyPath: KillsText
+      value: 
+      objectReference: {fileID: 6532235466073477695}
+    - target: {fileID: 8104983922144875102, guid: 8d31458134c329e478c989fa7d7024ae,
+        type: 3}
+      propertyPath: DeathsText
+      value: 
+      objectReference: {fileID: 938384136395632763}
+    - target: {fileID: 8104983922144875102, guid: 8d31458134c329e478c989fa7d7024ae,
+        type: 3}
+      propertyPath: KDText
+      value: 
+      objectReference: {fileID: 7772602443355430554}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8d31458134c329e478c989fa7d7024ae, type: 3}
 --- !u!224 &2938302382557009463 stripped

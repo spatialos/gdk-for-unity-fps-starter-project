@@ -13,7 +13,7 @@ namespace Fps
         public Color DefaultTextColor;
         public Button JoinButton;
         public Button BackButton;
-        public Table deploymentListTable;
+        public Table DeploymentListTable;
 
         public DeploymentData[] DeploymentList { get; private set; }
 
@@ -57,7 +57,7 @@ namespace Fps
             }
 
             currentlyHighlightedEntry = -1;
-            deploymentListTable.ClearEntries();
+            DeploymentListTable.ClearEntries();
             currentBgColor = BackgroundColor1;
 
             for (var i = 0; i < Mathf.Min(maxRows - 1, deployments.Length); i++)
@@ -148,7 +148,7 @@ namespace Fps
 
         private void AddDeploymentToTable(DeploymentData deployment, int index)
         {
-            var entry = (DeploymentTableEntry) deploymentListTable.AddEntry();
+            var entry = (DeploymentTableEntry) DeploymentListTable.AddEntry();
             var entryButton = entry.GetComponent<Button>();
             entryButton.onClick.AddListener(() => SelectEntry(index));
             entry.SetData(deployment);
@@ -163,7 +163,7 @@ namespace Fps
                 UnhighlightEntry(currentlyHighlightedEntry);
             }
 
-            var entry = deploymentListTable.GetEntry(index);
+            var entry = DeploymentListTable.GetEntry(index);
             entry.Background.color = HighlightedColor;
             entry.SetAllTextVisuals(HighlightedTextColor, DeploymentList[index].IsAvailable);
 
@@ -173,7 +173,7 @@ namespace Fps
 
         private void UnhighlightEntry(int index)
         {
-            var entry = deploymentListTable.GetEntry(index);
+            var entry = DeploymentListTable.GetEntry(index);
             entry.Background.color = index % 2 == 0 ? BackgroundColor1 : BackgroundColor2;
             entry.SetAllTextVisuals(DeploymentList[index].IsAvailable ? DefaultTextColor : UnavailableTextColor, false);
         }

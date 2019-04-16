@@ -7,65 +7,49 @@ namespace Fps
 {
     public class ScreenManager : MonoBehaviour
     {
-        private enum ScreenType
-        {
-            None,
-            DefaultConnect,
-            SessionScreen,
-            DeploymentList,
-            Lobby,
-            Results
-        }
-
         [Header("General")] public Button QuitButton;
         [SerializeField] public GameObject FrontEndCamera;
 
-        [Header("Screens")] public DefaultConnectScreenManager defaultConnectScreenManager;
-        public StartScreenManager startScreenManager;
-        public DeploymentListScreenManager deploymentListScreenManager;
-        public ResultsScreenManager resultsScreenManager;
-        public LobbyScreenManager lobbyScreenManager;
+        [Header("Screens")] public DefaultConnectScreenManager DefaultConnectScreenManager;
+        public StartScreenManager StartScreenManager;
+        public DeploymentListScreenManager DeploymentListScreenManager;
+        public ResultsScreenManager ResultsScreenManager;
+        public LobbyScreenManager LobbyScreenManager;
 
-        private ScreenType currentScreen = ScreenType.None;
-
-        [SerializeField] private ScreenType EditorCurrentScreen;
+        private Component currentScreenManager;
 
         public void SwitchToDeploymentListScreen()
         {
-            SetScreenTo(ScreenType.DeploymentList);
+            SetScreenTo(DeploymentListScreenManager);
         }
 
         public void SwitchToSessionScreen()
         {
-            SetScreenTo(ScreenType.SessionScreen);
+            SetScreenTo(StartScreenManager);
         }
 
         public void SwitchToResultsScreen()
         {
-            SetScreenTo(ScreenType.Results);
+            SetScreenTo(ResultsScreenManager);
         }
 
         public void SwitchToLobbyScreen()
         {
-            SetScreenTo(ScreenType.Lobby);
+            SetScreenTo(LobbyScreenManager);
         }
 
         public void SwitchToDefaultConnectScreen()
         {
-            SetScreenTo(ScreenType.DefaultConnect);
-        }
-
-        private void OnValidate()
-        {
-            EditorSwitchScreens();
+            SetScreenTo(DefaultConnectScreenManager);
         }
 
         private void Awake()
         {
-            defaultConnectScreenManager.gameObject.SetActive(false);
-            startScreenManager.gameObject.SetActive(false);
-            deploymentListScreenManager.gameObject.SetActive(false);
-            resultsScreenManager.gameObject.SetActive(false);
+            DefaultConnectScreenManager.gameObject.SetActive(false);
+            StartScreenManager.gameObject.SetActive(false);
+            DeploymentListScreenManager.gameObject.SetActive(false);
+            LobbyScreenManager.gameObject.SetActive(false);
+            ResultsScreenManager.gameObject.SetActive(false);
             QuitButton.onClick.AddListener(UIManager.Quit);
         }
 
@@ -81,65 +65,15 @@ namespace Fps
             FrontEndCamera.SetActive(false);
         }
 
-        private void SetScreenTo(ScreenType screenType)
+        private void SetScreenTo(Component screenManager)
         {
-            var currentController = GetControllerFromScreen(currentScreen);
-            if (currentController != null)
+            if (currentScreenManager != null)
             {
-                currentController.gameObject.SetActive(false);
+                currentScreenManager.gameObject.SetActive(false);
             }
 
-            currentScreen = screenType;
-            currentController = GetControllerFromScreen(currentScreen);
-            currentController.gameObject.SetActive(true);
-        }
-
-        private Component GetControllerFromScreen(ScreenType screenType)
-        {
-            switch (screenType)
-            {
-                case ScreenType.None:
-                    return null;
-                case ScreenType.DefaultConnect:
-                    return defaultConnectScreenManager;
-                case ScreenType.SessionScreen:
-                    return startScreenManager;
-                case ScreenType.DeploymentList:
-                    return deploymentListScreenManager;
-                case ScreenType.Results:
-                    return resultsScreenManager;
-                case ScreenType.Lobby:
-                    return lobbyScreenManager;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(screenType), screenType, null);
-            }
-        }
-
-        /// <summary>
-        ///     Utility for controlling visible screen in editor using TestScreenType dropdown.
-        /// </summary>
-        private void EditorSwitchScreens()
-        {
-#if UNITY_EDITOR
-            if (!gameObject.scene.isLoaded)
-            {
-                return;
-            }
-
-            if (UnityEditor.Experimental.SceneManagement.PrefabStageUtility.GetCurrentPrefabStage() != null
-                && UnityEditor.Experimental.SceneManagement.PrefabStageUtility.GetPrefabStage(gameObject) == null)
-            {
-                // Don't switch screens as this is not the prefab being edited in the stage
-                return;
-            }
-
-            if (EditorCurrentScreen == currentScreen)
-            {
-                return;
-            }
-
-            SetScreenTo(EditorCurrentScreen);
-#endif
+            currentScreenManager = screenManager;
+            currentScreenManager.gameObject.SetActive(true);
         }
     }
 }

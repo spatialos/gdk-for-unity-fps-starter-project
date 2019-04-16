@@ -172,6 +172,18 @@ MonoBehaviour:
   m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &489397958 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4691667897783103137, guid: d52364553e6842940944c62b73e5e1b1,
+    type: 3}
+  m_PrefabInstance: {fileID: 1769080386}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab00513f5aa881844ac01e3ef40ff53b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &663023874 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8394282429649562039, guid: d52364553e6842940944c62b73e5e1b1,
@@ -188,6 +200,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c29c8b12a7d111e45a7d87d2753e91ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1217426670 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4689077752758408411, guid: d52364553e6842940944c62b73e5e1b1,
+    type: 3}
+  m_PrefabInstance: {fileID: 1769080386}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 222f38ce5ef8017448162fffa66b4d2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1231188424
@@ -226,7 +250,7 @@ MonoBehaviour:
   ClientConnector: {fileID: 0}
   clientWorkerConnectorPrefab: {fileID: 1638104666241782, guid: 075c14fd6c4ad514581b6aaabc0711bb,
     type: 3}
-  screenUIController: {fileID: 848779487}
+  uiManager: {fileID: 848779487}
 --- !u!4 &1231188426
 Transform:
   m_ObjectHideFlags: 0
@@ -241,6 +265,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1241180450 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5238200821785583470, guid: d52364553e6842940944c62b73e5e1b1,
+    type: 3}
+  m_PrefabInstance: {fileID: 1769080386}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cc898fb93634574a9485403c278d570, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1310175563 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4688935748361665597, guid: d52364553e6842940944c62b73e5e1b1,
@@ -334,18 +370,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbae37dc2bd5b394684387d32c0eb680, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1657672501 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4490809156792301155, guid: d52364553e6842940944c62b73e5e1b1,
-    type: 3}
-  m_PrefabInstance: {fileID: 1769080386}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 49cc0f9798257ef44a011cd0671ef60f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1769080386
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -363,6 +387,21 @@ PrefabInstance:
       propertyPath: EditorCurrentScreen
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4688935748361665597, guid: d52364553e6842940944c62b73e5e1b1,
+        type: 3}
+      propertyPath: DefaultConnectScreenManager
+      value: 
+      objectReference: {fileID: 1217426670}
+    - target: {fileID: 4688935748361665597, guid: d52364553e6842940944c62b73e5e1b1,
+        type: 3}
+      propertyPath: StartScreenManager
+      value: 
+      objectReference: {fileID: 489397958}
+    - target: {fileID: 4688935748361665597, guid: d52364553e6842940944c62b73e5e1b1,
+        type: 3}
+      propertyPath: DeploymentListScreenManager
+      value: 
+      objectReference: {fileID: 1241180450}
     - target: {fileID: 8946224398212592301, guid: d52364553e6842940944c62b73e5e1b1,
         type: 3}
       propertyPath: EntriesParentRect
@@ -507,7 +546,7 @@ PrefabInstance:
         type: 3}
       propertyPath: ConnectionStatusUIController
       value: 
-      objectReference: {fileID: 1657672501}
+      objectReference: {fileID: 0}
     - target: {fileID: 4647811023647179863, guid: d52364553e6842940944c62b73e5e1b1,
         type: 3}
       propertyPath: m_IsActive

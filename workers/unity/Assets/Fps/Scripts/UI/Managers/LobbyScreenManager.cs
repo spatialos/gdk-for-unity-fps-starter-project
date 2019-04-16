@@ -5,9 +5,9 @@ namespace Fps
 {
     public class LobbyScreenManager : ConnectionStatusManager
     {
-        public InputField inputField;
-        public FpsUIButton startButton;
-        public FpsUIButton cancelButton;
+        public InputField InputField;
+        public FpsUIButton StartButton;
+        public FpsUIButton CancelButton;
         public Text HintText;
 
 
@@ -15,7 +15,7 @@ namespace Fps
 
         public void UpdateHintText(bool hasGameBegun)
         {
-            var nameLength = inputField.text.Trim().Length;
+            var nameLength = InputField.text.Trim().Length;
 
             if (nameLength == 0 && !hasGameBegun)
             {
@@ -33,12 +33,12 @@ namespace Fps
 
         public string GetPlayerName()
         {
-            return inputField.text;
+            return InputField.text;
         }
 
         public bool IsValidName()
         {
-            return inputField.text.Length >= 3;
+            return InputField.text.Length >= 3;
         }
 
         private void Awake()
@@ -49,8 +49,8 @@ namespace Fps
 
         private void OnEnable()
         {
-            inputField.Select();
-            inputField.ActivateInputField();
+            InputField.Select();
+            InputField.ActivateInputField();
         }
     }
 }

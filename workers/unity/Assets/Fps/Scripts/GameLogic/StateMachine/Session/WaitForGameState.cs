@@ -10,20 +10,20 @@ namespace Fps
 
         public WaitForGameState(UIManager manager, ConnectionStateMachine owner) : base(manager, owner)
         {
-            lobbyScreenManager = manager.FrontEndController.lobbyScreenManager;
+            lobbyScreenManager = manager.ScreenManager.LobbyScreenManager;
         }
 
         public override void StartState()
         {
-            lobbyScreenManager.startButton.onClick.AddListener(StartSession);
-            lobbyScreenManager.cancelButton.onClick.AddListener(CancelSession);
+            lobbyScreenManager.StartButton.onClick.AddListener(StartSession);
+            lobbyScreenManager.CancelButton.onClick.AddListener(CancelSession);
             lobbyScreenManager.ShowWaitForGameText();
         }
 
         public override void ExitState()
         {
-            lobbyScreenManager.startButton.onClick.RemoveListener(StartSession);
-            lobbyScreenManager.cancelButton.onClick.RemoveListener(CancelSession);
+            lobbyScreenManager.StartButton.onClick.RemoveListener(StartSession);
+            lobbyScreenManager.CancelButton.onClick.RemoveListener(CancelSession);
         }
 
         public override void Tick()
@@ -39,7 +39,7 @@ namespace Fps
                 case Status.RUNNING:
                     lobbyScreenManager.UpdateHintText(true);
                     var isValid = lobbyScreenManager.IsValidName();
-                    lobbyScreenManager.startButton.enabled = status == Status.RUNNING && isValid;
+                    lobbyScreenManager.StartButton.enabled = status == Status.RUNNING && isValid;
                     lobbyScreenManager.ShowGameReadyText();
                     break;
                 case Status.STOPPING:

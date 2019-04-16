@@ -20,8 +20,8 @@ namespace Fps
 
         protected void ShowErrorMessage(string errorMessage)
         {
-            Manager.FrontEndController.startScreenManager.ShowFailedToGetDeploymentsText(errorMessage);
-            Manager.FrontEndController.lobbyScreenManager.ShowFailedToGetDeploymentsText(errorMessage);
+            Manager.ScreenManager.StartScreenManager.ShowFailedToGetDeploymentsText(errorMessage);
+            Manager.ScreenManager.LobbyScreenManager.ShowFailedToGetDeploymentsText(errorMessage);
         }
     }
 }
