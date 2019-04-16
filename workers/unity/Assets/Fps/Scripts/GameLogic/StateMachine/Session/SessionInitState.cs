@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Resources;
-using Improbable.Worker.CInterop.Alpha;
 using UnityEngine;
 
 namespace Fps
@@ -34,7 +29,7 @@ namespace Fps
             else
             {
                 throw new MissingManifestResourceException(
-                    "Unable to find DevAuthToken.txt inside the Resources folder. Ensure to generate one.");
+                    "Unable to find DevAuthToken.txt inside your Resources folder. Ensure to generate one.");
             }
 
             Manager.ScreenManager.StartScreenManager.ShowGetDeploymentListText();

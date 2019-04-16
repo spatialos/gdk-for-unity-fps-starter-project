@@ -1,12 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using Improbable.Gdk.Core;
-using Improbable.Gdk.Subscriptions;
-using Improbable.Worker.CInterop;
 using Improbable.Worker.CInterop.Alpha;
-using JetBrains.Annotations;
-using Unity.Entities;
 using UnityEngine;
 
 namespace Fps
@@ -72,7 +66,7 @@ namespace Fps
                 currentState.StartState();
             }
 
-            currentState?.Tick();
+            currentState.Tick();
         }
 
         public void CreateClientWorker()

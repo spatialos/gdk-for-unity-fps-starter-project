@@ -1,10 +1,3 @@
-using System.Collections.Generic;
-using System.Resources;
-using Improbable.Gdk.Core;
-using Improbable.Worker.CInterop;
-using Improbable.Worker.CInterop.Alpha;
-using UnityEngine;
-
 namespace Fps
 {
     public abstract class SessionState : State

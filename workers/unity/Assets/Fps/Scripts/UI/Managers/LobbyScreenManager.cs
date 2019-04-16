@@ -5,52 +5,52 @@ namespace Fps
 {
     public class LobbyScreenManager : ConnectionStatusManager
     {
-        public InputField InputField;
         public FpsUIButton StartButton;
         public FpsUIButton CancelButton;
-        public Text HintText;
 
+        [SerializeField] private Text hintText;
+        [SerializeField] private InputField inputField;
 
         private readonly Color HintTextColor = new Color(1f, .4f, .4f);
 
         public void UpdateHintText(bool hasGameBegun)
         {
-            var nameLength = InputField.text.Trim().Length;
+            var nameLength = inputField.text.Trim().Length;
 
             if (nameLength == 0 && !hasGameBegun)
             {
-                HintText.text = "You must enter a name to play";
+                hintText.text = "You must enter a name to play";
             }
             else if (nameLength < 3)
             {
-                HintText.text = "Minimum 3 characters required";
+                hintText.text = "Minimum 3 characters required";
             }
             else
             {
-                HintText.text = string.Empty;
+                hintText.text = string.Empty;
             }
         }
 
         public string GetPlayerName()
         {
-            return InputField.text;
+            return inputField.text;
         }
 
         public bool IsValidName()
         {
-            return InputField.text.Length >= 3;
+            return inputField.text.Length >= 3;
         }
 
         private void Awake()
         {
-            HintText.text = string.Empty;
-            HintText.color = HintTextColor;
+            hintText.text = string.Empty;
+            hintText.color = HintTextColor;
         }
 
         private void OnEnable()
         {
-            InputField.Select();
-            InputField.ActivateInputField();
+            inputField.Select();
+            inputField.ActivateInputField();
         }
     }
 }

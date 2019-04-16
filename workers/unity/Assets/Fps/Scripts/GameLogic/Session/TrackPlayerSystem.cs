@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Diagnostics;
 using Improbable.Gdk.Movement;
 using Improbable.Gdk.Session;
 using Unity.Entities;

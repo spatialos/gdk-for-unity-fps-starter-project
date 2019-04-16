@@ -1,11 +1,4 @@
-using System.Diagnostics;
-using Improbable.Gdk.Core;
 using Improbable.Gdk.Session;
-using Improbable.PlayerLifecycle;
-using Improbable.Worker.CInterop;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using Debug = UnityEngine.Debug;
 
 namespace Fps
 {

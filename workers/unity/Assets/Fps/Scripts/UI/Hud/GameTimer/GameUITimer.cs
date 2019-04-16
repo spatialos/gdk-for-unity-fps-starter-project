@@ -5,26 +5,26 @@ namespace Fps
 {
     public class GameUITimer : MonoBehaviour
     {
-        [SerializeField] private Text Minutes;
-        [SerializeField] private Text Seconds;
-        [SerializeField] private Text Divider;
+        [SerializeField] private Text minutes;
+        [SerializeField] private Text seconds;
+        [SerializeField] private Text divider;
 
-        [SerializeField] private Color DefaultColor;
-        [SerializeField] private Color LowTimeColor;
-        [SerializeField] private int RedSeconds;
+        [SerializeField] private Color defaultColor;
+        [SerializeField] private Color lowTimeColor;
+        [SerializeField] private int redSeconds;
 
         private uint maxTime;
 
         private void UpdateTime(int seconds)
         {
-            var col = seconds <= RedSeconds ? LowTimeColor : DefaultColor;
+            var col = seconds <= redSeconds ? lowTimeColor : defaultColor;
 
-            Minutes.text = (seconds / 60).ToString("D2");
-            Seconds.text = (seconds % 60).ToString("D2");
+            minutes.text = (seconds / 60).ToString("D2");
+            this.seconds.text = (seconds % 60).ToString("D2");
 
-            Minutes.color = col;
-            Seconds.color = col;
-            Divider.color = col;
+            minutes.color = col;
+            this.seconds.color = col;
+            divider.color = col;
         }
 
         public void SynchronizeTime(uint seconds)

@@ -1,4 +1,3 @@
-using Improbable.Gdk.Core;
 using Improbable.PlayerLifecycle;
 using Improbable.Worker.CInterop;
 using UnityEngine;

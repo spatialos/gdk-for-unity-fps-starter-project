@@ -17,26 +17,29 @@ namespace Fps
         [SerializeField] private Table DeploymentListTable;
 
         private const int maxRows = 11; // Includes header
-        private int currentlyHighlightedEntry = -1;
+        private int highlightedIndex = -1;
         private DeploymentData[] deploymentList;
+
+        private bool IsHighlightedIndexValid()
+        {
+            return highlightedIndex >= 0 && highlightedIndex < deploymentList.Length;
+        }
 
         public bool IsHighlightedDeploymentAvailable()
         {
-            if (currentlyHighlightedEntry < 0
-                || deploymentList == null
-                || currentlyHighlightedEntry >= deploymentList.Length)
+            if (!IsHighlightedIndexValid() || deploymentList == null)
             {
                 return false;
             }
 
-            return deploymentList[currentlyHighlightedEntry].IsAvailable;
+            return deploymentList[highlightedIndex].IsAvailable;
         }
 
         public string GetChosenDeployment()
         {
             if (IsHighlightedDeploymentAvailable())
             {
-                return deploymentList[currentlyHighlightedEntry].Name;
+                return deploymentList[highlightedIndex].Name;
             }
 
             return null;
@@ -45,12 +48,12 @@ namespace Fps
         public void SetDeployments(DeploymentData[] deployments)
         {
             var highlightedDeploymentName = string.Empty;
-            if (deploymentList != null && currentlyHighlightedEntry != -1)
+            if (deploymentList != null && IsHighlightedIndexValid())
             {
-                highlightedDeploymentName = deploymentList[currentlyHighlightedEntry].Name;
+                highlightedDeploymentName = deploymentList[highlightedIndex].Name;
             }
 
-            currentlyHighlightedEntry = -1;
+            highlightedIndex = -1;
             DeploymentListTable.ClearEntries();
 
             for (var i = 0; i < Mathf.Min(maxRows - 1, deployments.Length); i++)
@@ -67,9 +70,22 @@ namespace Fps
 
         private void Update()
         {
-            if (currentlyHighlightedEntry == -1
-                && (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow))
-                && deploymentList.Length > 0)
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                TryPressBackButton();
+            }
+
+            if (deploymentList.Length == 0)
+            {
+                return;
+            }
+
+            if (IsHighlightedIndexValid() && (Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return)))
+            {
+                TryPressJoinButton();
+            }
+
+            if (!IsHighlightedIndexValid() && (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow)))
             {
                 SelectEntry(0);
                 return;
@@ -77,34 +93,22 @@ namespace Fps
 
             if (Input.GetKeyDown(KeyCode.UpArrow))
             {
-                if (currentlyHighlightedEntry == 0)
+                if (highlightedIndex == 0)
                 {
                     return;
                 }
 
-                SelectEntry(currentlyHighlightedEntry - 1);
+                SelectEntry(highlightedIndex - 1);
             }
 
             if (Input.GetKeyDown(KeyCode.DownArrow))
             {
-                if (currentlyHighlightedEntry == deploymentList.Length - 1)
+                if (highlightedIndex == deploymentList.Length - 1)
                 {
                     return;
                 }
 
-                SelectEntry(currentlyHighlightedEntry + 1);
-            }
-
-
-            if ((Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return))
-                && currentlyHighlightedEntry >= 0)
-            {
-                TryPressJoinButton();
-            }
-
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                TryPressBackButton();
+                SelectEntry(highlightedIndex + 1);
             }
         }
 
@@ -140,16 +144,16 @@ namespace Fps
 
         private void SelectEntry(int index)
         {
-            if (currentlyHighlightedEntry >= 0)
+            if (IsHighlightedIndexValid())
             {
-                UnhighlightEntry(currentlyHighlightedEntry);
+                UnhighlightEntry(highlightedIndex);
             }
 
             var entry = DeploymentListTable.GetEntry(index);
             entry.Background.color = HighlightedColor;
             entry.SetAllTextVisuals(HighlightedTextColor, deploymentList[index].IsAvailable);
 
-            currentlyHighlightedEntry = index;
+            highlightedIndex = index;
         }
 
         private void UnhighlightEntry(int index)

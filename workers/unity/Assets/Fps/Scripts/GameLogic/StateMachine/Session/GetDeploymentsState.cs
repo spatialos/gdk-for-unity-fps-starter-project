@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using Improbable.Gdk.Core;
 using Improbable.Worker.CInterop;
 using Improbable.Worker.CInterop.Alpha;

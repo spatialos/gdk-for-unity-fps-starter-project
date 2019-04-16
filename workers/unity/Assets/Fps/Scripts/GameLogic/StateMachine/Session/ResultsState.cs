@@ -1,5 +1,3 @@
-using Improbable.Gdk.Core;
-
 namespace Fps
 {
     public class ResultsState : SessionState

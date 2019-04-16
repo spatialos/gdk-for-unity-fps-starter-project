@@ -1,5 +1,4 @@
 using System;
-using Improbable.Gdk.Core;
 using Improbable.Gdk.Session;
 
 namespace Fps

@@ -1,6 +1,5 @@
-using UnityEngine;
-
 #if UNITY_ANDROID
+using UnityEngine;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.Mobile;
 using Improbable.Gdk.Mobile.Android;

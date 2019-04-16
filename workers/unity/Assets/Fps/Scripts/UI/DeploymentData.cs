@@ -1,6 +1,6 @@
 ﻿namespace Fps
 {
-    public struct DeploymentData
+    public readonly struct DeploymentData
     {
         public readonly string Name;
         public readonly int CurrentPlayers;

@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace Fps
+﻿namespace Fps
 {
     public struct ResultsData
     {

@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace Fps
+﻿namespace Fps
 {
     public class StartScreenManager : ConnectionStatusManager
     {

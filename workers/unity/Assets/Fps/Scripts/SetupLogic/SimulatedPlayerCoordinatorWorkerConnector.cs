@@ -3,10 +3,8 @@ using System.Collections;
 using Fps;
 using UnityEngine;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Improbable.Gdk.Core;
-using Improbable.Gdk.PlayerLifecycle;
 using Improbable.Worker.CInterop;
 using Random = UnityEngine.Random;
 

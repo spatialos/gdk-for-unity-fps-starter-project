@@ -1,13 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
 using Improbable.Gdk.Core;
-using Improbable.Gdk.GameObjectCreation;
-using Improbable.Gdk.PlayerLifecycle;
-using Improbable.PlayerLifecycle;
 using Improbable.Worker.CInterop;
-using Improbable.Worker.CInterop.Alpha;
 using UnityEngine;
 
 namespace Fps

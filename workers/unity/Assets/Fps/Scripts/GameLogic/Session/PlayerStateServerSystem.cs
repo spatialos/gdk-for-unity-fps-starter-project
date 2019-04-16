@@ -1,9 +1,8 @@
 using Improbable.Gdk.Core;
-using Unity.Collections;
+using Improbable.Gdk.Session;
 using Unity.Entities;
-using UnityEngine;
 
-namespace Improbable.Gdk.Session
+namespace Fps
 {
     [UpdateInGroup(typeof(SpatialOSUpdateGroup))]
     public class PlayerStateServerSystem : ComponentSystem

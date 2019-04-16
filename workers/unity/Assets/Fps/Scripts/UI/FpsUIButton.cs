@@ -8,10 +8,7 @@ namespace Fps
     {
         public Image TargetFrame;
         public Image TargetFill;
-
         public Image[] TextOptions = new Image[2];
-
-        // Define visual style of button.
         public bool DarkTheme;
 
         // Initialise colour values.

@@ -5,12 +5,9 @@ using System.Text;
 using Improbable.Gdk.Core;
 using UnityEngine;
 using Improbable.Gdk.GameObjectCreation;
-using Improbable.Gdk.Subscriptions;
 using Improbable.Gdk.PlayerLifecycle;
 using Improbable.PlayerLifecycle;
-using Improbable.Worker.CInterop;
 using Improbable.Worker.CInterop.Alpha;
-using LocatorParameters = Improbable.Worker.CInterop.Alpha.LocatorParameters;
 
 namespace Fps
 {

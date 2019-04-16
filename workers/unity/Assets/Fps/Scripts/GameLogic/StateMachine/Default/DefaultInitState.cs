@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using Improbable.Worker.CInterop.Alpha;
-
 namespace Fps
 {
     public class DefaultInitState : DefaultState

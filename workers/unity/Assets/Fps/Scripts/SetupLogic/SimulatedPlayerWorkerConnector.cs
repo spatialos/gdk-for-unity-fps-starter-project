@@ -7,7 +7,6 @@ using Fps;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.PlayerLifecycle;
-using Improbable.PlayerLifecycle;
 using Improbable.Worker.CInterop.Alpha;
 using UnityEngine;
 

@@ -5,7 +5,6 @@ using Improbable.Gdk.Core;
 using Improbable.Worker.CInterop;
 using Improbable.Worker.CInterop.Alpha;
 using UnityEngine;
-using LocatorParameters = Improbable.Worker.CInterop.LocatorParameters;
 
 namespace Fps
 {

@@ -1,11 +1,9 @@
 using System.Collections;
 using UnityEngine;
 using Improbable.Gdk.GameObjectCreation;
-using Improbable.Gdk.Subscriptions;
 using Improbable.Gdk.Guns;
 using Improbable.Gdk.Health;
 using Improbable.Gdk.PlayerLifecycle;
-using Improbable.Gdk.Session;
 
 namespace Fps
 {
