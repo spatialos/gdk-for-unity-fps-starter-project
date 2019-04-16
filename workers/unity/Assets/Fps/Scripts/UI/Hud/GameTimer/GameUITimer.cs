@@ -5,14 +5,13 @@ namespace Fps
 {
     public class GameUITimer : MonoBehaviour
     {
-        public Text Minutes;
-        public Text Seconds;
-        public Text Divider;
+        [SerializeField] private Text Minutes;
+        [SerializeField] private Text Seconds;
+        [SerializeField] private Text Divider;
 
-        public Color DefaultColor;
-        public Color LowTimeColor;
-
-        private int RedSeconds = 60;
+        [SerializeField] private Color DefaultColor;
+        [SerializeField] private Color LowTimeColor;
+        [SerializeField] private int RedSeconds;
 
         private uint maxTime;
 

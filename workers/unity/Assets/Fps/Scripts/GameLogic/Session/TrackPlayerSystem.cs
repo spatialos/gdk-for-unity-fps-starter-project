@@ -29,6 +29,8 @@ namespace Fps
 
             playersGroup = GetComponentGroup(ComponentType.ReadOnly<PlayerState.Component>());
             sessionGroup = GetComponentGroup(ComponentType.ReadOnly<Session.Component>());
+
+            PlayerResults = new List<ResultsData>();
         }
 
         protected override void OnUpdate()
@@ -52,17 +54,16 @@ namespace Fps
                 PlayerName = playerStateData[0].Name;
             }
 
-            var results = new List<ResultsData>();
+            PlayerResults.Clear();
             var playerStates = playersGroup.GetComponentDataArray<PlayerState.Component>();
             for (var i = 0; i < playerStates.Length; i++)
             {
                 var playerState = playerStates[i];
                 var result = new ResultsData(playerState.Name, playerState.Kills, playerState.Deaths);
-                results.Add(result);
+                PlayerResults.Add(result);
             }
 
-            results.Sort((x, y) => y.KillDeathRatio.CompareTo(x.KillDeathRatio));
-            PlayerResults = results;
+            PlayerResults.Sort((x, y) => y.KillDeathRatio.CompareTo(x.KillDeathRatio));
         }
     }
 }

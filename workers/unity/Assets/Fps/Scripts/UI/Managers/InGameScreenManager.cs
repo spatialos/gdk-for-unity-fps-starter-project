@@ -37,7 +37,6 @@ namespace Fps
 
         public void TryOpenSettingsMenu()
         {
-            // Only allow escape screen if in-game, and not respawning.
             if (!gameObject.activeInHierarchy || RespawnScreen.activeInHierarchy)
             {
                 return;

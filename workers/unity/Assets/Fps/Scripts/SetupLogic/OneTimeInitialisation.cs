@@ -23,7 +23,6 @@ namespace Fps
 
             // Setup template to use for player on connecting client
             PlayerLifecycleConfig.CreatePlayerEntityTemplate = FpsEntityTemplates.Player;
-            PlayerLifecycleConfig.AutoRequestPlayerCreation = false;
         }
     }
 }

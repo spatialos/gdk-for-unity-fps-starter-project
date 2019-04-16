@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Text;
 using Improbable;
@@ -7,6 +6,7 @@ using Improbable.Gdk.Guns;
 using Improbable.Gdk.Health;
 using Improbable.Gdk.Movement;
 using Improbable.Gdk.PlayerLifecycle;
+using Improbable.Gdk.QueryBasedInterest;
 using Improbable.Gdk.Session;
 using Improbable.Gdk.StandardTypes;
 using Improbable.PlayerLifecycle;
@@ -138,13 +138,13 @@ namespace Fps
                 }
             };
 
-            var interestComponent = new Interest.Snapshot
-            {
-                ComponentInterest = new Dictionary<uint, ComponentInterest>
-                {
-                    { ClientMovement.ComponentId, playerInterest },
-                },
-            };
+            var playerStateQuery = InterestQuery.Query(Constraint.Component<PlayerState.Component>());
+            var sessionQuery = InterestQuery.Query(Constraint.Component<Session.Component>());
+
+            var interestTemplate = InterestTemplate.Create()
+                .AddQueries<ClientMovement.Component>(playerStateQuery, sessionQuery);
+
+            var interestComponent = interestTemplate.ToSnapshot();
 
             var playerName = Encoding.ASCII.GetString(args);
 
@@ -167,9 +167,8 @@ namespace Fps
             template.AddComponent(healthComponent, WorkerUtils.UnityGameLogic);
             template.AddComponent(healthRegenComponent, WorkerUtils.UnityGameLogic);
             template.AddComponent(playerStateComponent, WorkerUtils.UnityGameLogic);
-            template.AddComponent(interestComponent, WorkerUtils.UnityClient);
+            template.AddComponent(interestComponent, WorkerUtils.UnityGameLogic);
             PlayerLifecycleHelper.AddPlayerLifecycleComponents(template, workerId, WorkerUtils.UnityGameLogic);
-
 
             template.SetReadAccess(WorkerUtils.UnityClient, WorkerUtils.UnityGameLogic, WorkerUtils.AndroidClient, WorkerUtils.iOSClient);
             template.SetComponentWriteAccess(EntityAcl.ComponentId, WorkerUtils.UnityGameLogic);

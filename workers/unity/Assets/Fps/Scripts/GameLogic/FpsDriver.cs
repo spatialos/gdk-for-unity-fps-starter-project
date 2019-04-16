@@ -61,6 +61,11 @@ namespace Fps
             controller = GetComponent<IControlProvider>();
 
             inGameManager = GameObject.FindGameObjectWithTag("OnScreenUI")?.GetComponentInChildren<InGameScreenManager>(true);
+            if (inGameManager == null)
+            {
+                Debug.LogError("Was not able to find the OnScreenUI prefab in the scene.");
+                enabled = false;
+            }
         }
 
         private void OnEnable()

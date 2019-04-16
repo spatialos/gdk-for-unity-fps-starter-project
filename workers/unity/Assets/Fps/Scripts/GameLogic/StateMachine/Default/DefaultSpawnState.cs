@@ -31,9 +31,9 @@ namespace Fps
             DefaultConnectScreenManager.ConnectButton.onClick.RemoveListener(SpawnPlayer);
         }
 
-        private void OnPlayerResponse(PlayerCreator.CreatePlayer.ReceivedResponse obj)
+        private void OnPlayerResponse(PlayerCreator.CreatePlayer.ReceivedResponse response)
         {
-            if (obj.StatusCode == StatusCode.Success)
+            if (response.StatusCode == StatusCode.Success)
             {
                 Manager.ShowGameView();
             }

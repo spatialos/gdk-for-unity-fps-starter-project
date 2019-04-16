@@ -7,10 +7,12 @@ namespace Fps
 {
     public class ScreenManager : MonoBehaviour
     {
-        [Header("General")] public Button QuitButton;
-        [SerializeField] public GameObject FrontEndCamera;
+        [Header("General")]
+        public Button QuitButton;
+        [SerializeField] private GameObject FrontEndCamera;
 
-        [Header("Screens")] public DefaultConnectScreenManager DefaultConnectScreenManager;
+        [Header("Screens")]
+        public DefaultConnectScreenManager DefaultConnectScreenManager;
         public StartScreenManager StartScreenManager;
         public DeploymentListScreenManager DeploymentListScreenManager;
         public ResultsScreenManager ResultsScreenManager;

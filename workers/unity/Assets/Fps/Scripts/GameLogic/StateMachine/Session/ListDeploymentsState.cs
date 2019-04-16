@@ -4,8 +4,7 @@ namespace Fps
     {
         private readonly DeploymentListScreenManager deploymentListScreenManager;
 
-        public ListDeploymentsState(UIManager manager, ConnectionStateMachine owner) : base(manager,
-            owner)
+        public ListDeploymentsState(UIManager manager, ConnectionStateMachine owner) : base(manager, owner)
         {
             deploymentListScreenManager = manager.ScreenManager.DeploymentListScreenManager;
         }

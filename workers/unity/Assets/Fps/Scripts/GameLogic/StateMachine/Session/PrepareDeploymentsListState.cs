@@ -85,17 +85,18 @@ namespace Fps
                 deploymentDatas.Add(deploymentData);
             }
 
-            deploymentDatas.Sort((deployment1, deployment2) =>
-                String.Compare(deployment1.Name, deployment2.Name, StringComparison.Ordinal));
-            Manager.ScreenManager.DeploymentListScreenManager.SetDeployments(deploymentDatas.ToArray());
-
             if (!hasAvailableDeployment)
             {
                 ShowErrorMessage("No deployment is currently available.");
                 Owner.SetState(Owner.StartState, 2f);
+                return false;
             }
 
-            return hasAvailableDeployment;
+            deploymentDatas.Sort((deployment1, deployment2) =>
+                String.Compare(deployment1.Name, deployment2.Name, StringComparison.Ordinal));
+            Manager.ScreenManager.DeploymentListScreenManager.SetDeployments(deploymentDatas.ToArray());
+
+            return true;
         }
     }
 }

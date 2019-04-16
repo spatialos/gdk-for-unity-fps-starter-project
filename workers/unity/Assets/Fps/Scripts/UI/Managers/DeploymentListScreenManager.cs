@@ -5,44 +5,38 @@ namespace Fps
 {
     public class DeploymentListScreenManager : ConnectionStatusManager
     {
-        public Color BackgroundColor1;
-        public Color BackgroundColor2;
-        public Color HighlightedColor;
-        public Color HighlightedTextColor;
-        public Color UnavailableTextColor;
-        public Color DefaultTextColor;
         public Button JoinButton;
         public Button BackButton;
-        public Table DeploymentListTable;
 
-        public DeploymentData[] DeploymentList { get; private set; }
+        [SerializeField] private Color BackgroundColor1;
+        [SerializeField] private Color BackgroundColor2;
+        [SerializeField] private Color HighlightedColor;
+        [SerializeField] private Color HighlightedTextColor;
+        [SerializeField] private Color UnavailableTextColor;
+        [SerializeField] private Color DefaultTextColor;
+        [SerializeField] private Table DeploymentListTable;
 
-        private Color currentBgColor;
         private const int maxRows = 11; // Includes header
         private int currentlyHighlightedEntry = -1;
-
-        private void Awake()
-        {
-            JoinButton.enabled = false;
-        }
+        private DeploymentData[] deploymentList;
 
         public bool IsHighlightedDeploymentAvailable()
         {
             if (currentlyHighlightedEntry < 0
-                || DeploymentList == null
-                || currentlyHighlightedEntry >= DeploymentList.Length)
+                || deploymentList == null
+                || currentlyHighlightedEntry >= deploymentList.Length)
             {
                 return false;
             }
 
-            return DeploymentList[currentlyHighlightedEntry].IsAvailable;
+            return deploymentList[currentlyHighlightedEntry].IsAvailable;
         }
 
         public string GetChosenDeployment()
         {
             if (IsHighlightedDeploymentAvailable())
             {
-                return DeploymentList[currentlyHighlightedEntry].Name;
+                return deploymentList[currentlyHighlightedEntry].Name;
             }
 
             return null;
@@ -51,33 +45,31 @@ namespace Fps
         public void SetDeployments(DeploymentData[] deployments)
         {
             var highlightedDeploymentName = string.Empty;
-            if (DeploymentList != null && currentlyHighlightedEntry != -1)
+            if (deploymentList != null && currentlyHighlightedEntry != -1)
             {
-                highlightedDeploymentName = DeploymentList[currentlyHighlightedEntry].Name;
+                highlightedDeploymentName = deploymentList[currentlyHighlightedEntry].Name;
             }
 
             currentlyHighlightedEntry = -1;
             DeploymentListTable.ClearEntries();
-            currentBgColor = BackgroundColor1;
 
             for (var i = 0; i < Mathf.Min(maxRows - 1, deployments.Length); i++)
             {
                 AddDeploymentToTable(deployments[i], i);
-                currentBgColor = i % 2 == 0 ? BackgroundColor2 : BackgroundColor1;
                 if (deployments[i].Name == highlightedDeploymentName)
                 {
-                    currentlyHighlightedEntry = i;
+                    SelectEntry(i);
                 }
             }
 
-            DeploymentList = deployments;
+            deploymentList = deployments;
         }
 
         private void Update()
         {
             if (currentlyHighlightedEntry == -1
                 && (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow))
-                && DeploymentList.Length > 0)
+                && deploymentList.Length > 0)
             {
                 SelectEntry(0);
                 return;
@@ -95,7 +87,7 @@ namespace Fps
 
             if (Input.GetKeyDown(KeyCode.DownArrow))
             {
-                if (currentlyHighlightedEntry == DeploymentList.Length - 1)
+                if (currentlyHighlightedEntry == deploymentList.Length - 1)
                 {
                     return;
                 }
@@ -136,16 +128,6 @@ namespace Fps
             BackButton.onClick.Invoke();
         }
 
-        private void OnEnable()
-        {
-            if (currentlyHighlightedEntry >= 0)
-            {
-                UnhighlightEntry(currentlyHighlightedEntry);
-            }
-
-            currentlyHighlightedEntry = -1;
-        }
-
         private void AddDeploymentToTable(DeploymentData deployment, int index)
         {
             var entry = (DeploymentTableEntry) DeploymentListTable.AddEntry();
@@ -153,7 +135,7 @@ namespace Fps
             entryButton.onClick.AddListener(() => SelectEntry(index));
             entry.SetData(deployment);
             entry.SetAllTextVisuals(deployment.IsAvailable ? DefaultTextColor : UnavailableTextColor, false);
-            entry.Background.color = currentBgColor;
+            entry.Background.color = index % 2 == 0 ? BackgroundColor1 : BackgroundColor2;
         }
 
         private void SelectEntry(int index)
@@ -165,17 +147,16 @@ namespace Fps
 
             var entry = DeploymentListTable.GetEntry(index);
             entry.Background.color = HighlightedColor;
-            entry.SetAllTextVisuals(HighlightedTextColor, DeploymentList[index].IsAvailable);
+            entry.SetAllTextVisuals(HighlightedTextColor, deploymentList[index].IsAvailable);
 
             currentlyHighlightedEntry = index;
-            JoinButton.enabled = IsHighlightedDeploymentAvailable();
         }
 
         private void UnhighlightEntry(int index)
         {
             var entry = DeploymentListTable.GetEntry(index);
             entry.Background.color = index % 2 == 0 ? BackgroundColor1 : BackgroundColor2;
-            entry.SetAllTextVisuals(DeploymentList[index].IsAvailable ? DefaultTextColor : UnavailableTextColor, false);
+            entry.SetAllTextVisuals(deploymentList[index].IsAvailable ? DefaultTextColor : UnavailableTextColor, false);
         }
     }
 }
