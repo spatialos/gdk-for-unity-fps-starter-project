@@ -159,6 +159,18 @@ namespace Improbable.Gdk.DeploymentManager
                 WorkerType = WorkerType
             };
         }
+
+        internal override List<string> GetCreateArguments()
+        {
+            var args = base.GetCreateArguments();
+            args[0] = "create-sim";
+
+            args.Add($"--target_deployment={TargetDeploymentName}");
+            args.Add($"--flag_prefix={FlagPrefix}");
+            args.Add($"--simulated_coordinator_worker_type={WorkerType}");
+
+            return args;
+        }
     }
 
     [Serializable]
@@ -196,6 +208,29 @@ namespace Improbable.Gdk.DeploymentManager
             LaunchJson = string.Empty;
             Region = DeploymentRegionCode.EU;
             Tags = new List<string>();
+        }
+
+        internal virtual List<string> GetCreateArguments()
+        {
+            var args = new List<string>
+            {
+                "create",
+                $"--deployment_name={Name}",
+                $"--launch_json_path=\"{Path.Combine(Tools.Common.SpatialProjectRootDir, LaunchJson)}\"",
+                $"--region={Region.ToString()}"
+            };
+
+            if (!string.IsNullOrEmpty(SnapshotPath))
+            {
+                args.Add($"--snapshot_path=\"{Path.Combine(Tools.Common.SpatialProjectRootDir, SnapshotPath)}\"");
+            }
+
+            if (Tags.Count > 0)
+            {
+                args.Add($"--tags={string.Join(",", Tags)}");
+            }
+
+            return args;
         }
 
         internal BaseDeploymentConfig DeepCopy()

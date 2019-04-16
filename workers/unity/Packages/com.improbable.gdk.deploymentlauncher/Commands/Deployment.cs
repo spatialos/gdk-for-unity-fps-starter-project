@@ -22,36 +22,9 @@ namespace Improbable.Gdk.DeploymentManager.Commands
 
             source.CancelAfter(TimeSpan.FromMinutes(25));
 
-            var isSimulatedPlayerDeployment = config is SimulatedPlayerDeploymentConfig;
-
-            var args = new List<string>
-            {
-                isSimulatedPlayerDeployment ? "create-sim" : "create",
-                $"--project_name={projectName}",
-                $"--assembly_name={assemblyName}",
-                $"--deployment_name={config.Name}",
-                $"--launch_json_path=\"{Path.Combine(Tools.Common.SpatialProjectRootDir, config.LaunchJson)}\"",
-                $"--region={config.Region.ToString()}"
-            };
-
-            if (!string.IsNullOrEmpty(config.SnapshotPath))
-            {
-                args.Add($"--snapshot_path=\"{Path.Combine(Tools.Common.SpatialProjectRootDir, config.SnapshotPath)}\"");
-            }
-
-            if (config.Tags.Count > 0)
-            {
-                args.Add($"--tags={string.Join(",", config.Tags)}");
-            }
-
-            if (isSimulatedPlayerDeployment)
-            {
-                var simConfig = (SimulatedPlayerDeploymentConfig) config;
-
-                args.Add($"--target_deployment={simConfig.TargetDeploymentName}");
-                args.Add($"--flag_prefix={simConfig.FlagPrefix}");
-                args.Add($"--simulated_coordinator_worker_type={simConfig.WorkerType}");
-            }
+            var args = config.GetCreateArguments();
+            args.Add($"--project_name={projectName}");
+            args.Add($"--assembly_name={assemblyName}");
 
             return new WrappedTask<Result<RedirectedProcessResult, Ipc.Error>, BaseDeploymentConfig>
             {
