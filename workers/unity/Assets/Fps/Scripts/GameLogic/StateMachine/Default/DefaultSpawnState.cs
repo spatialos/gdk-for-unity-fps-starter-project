@@ -35,7 +35,7 @@ namespace Fps
         {
             if (response.StatusCode == StatusCode.Success)
             {
-                Manager.ShowGameView();
+                Owner.SetState(new DefaultPlayState(Manager, Owner));
             }
             else
             {

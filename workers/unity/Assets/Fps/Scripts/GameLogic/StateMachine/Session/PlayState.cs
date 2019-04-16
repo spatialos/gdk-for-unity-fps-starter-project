@@ -4,6 +4,7 @@ using Improbable.Gdk.Session;
 using Improbable.PlayerLifecycle;
 using Improbable.Worker.CInterop;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Debug = UnityEngine.Debug;
 
 namespace Fps
@@ -19,6 +20,14 @@ namespace Fps
 
         public override void StartState()
         {
+            Owner.ClientConnector.Worker.OnDisconnect += OnDisconnect;
+        }
+
+        private void OnDisconnect(string obj)
+        {
+            Owner.ClientConnector = null;
+            Manager.ScreenManager.StartScreenManager.ShowWorkerDisconnectedText();
+            Owner.SetState(Owner.StartState, 2f);
         }
 
         public override void ExitState()

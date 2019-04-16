@@ -21,6 +21,7 @@ namespace Fps
         {
             startScreenManager.browseButton.enabled = false;
             startScreenManager.quickJoinButton.enabled = false;
+            Manager.ShowFrontEnd();
             Manager.ScreenManager.SwitchToSessionScreen();
             var listDeploymentsState = new PrepareDeploymentsListState(Manager, Owner);
             var getPitState = new GetPlayerIdentityTokenState(listDeploymentsState, Manager, Owner);

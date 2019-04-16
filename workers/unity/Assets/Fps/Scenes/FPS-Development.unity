@@ -359,12 +359,12 @@ PrefabInstance:
       propertyPath: m_Color.a
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 4688950688902521913, guid: d52364553e6842940944c62b73e5e1b1,
+    - target: {fileID: 4688969647908050475, guid: d52364553e6842940944c62b73e5e1b1,
         type: 3}
       propertyPath: m_Color.a
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 4688969647908050475, guid: d52364553e6842940944c62b73e5e1b1,
+    - target: {fileID: 4688950688902521913, guid: d52364553e6842940944c62b73e5e1b1,
         type: 3}
       propertyPath: m_Color.a
       value: 1
@@ -533,7 +533,7 @@ GameObject:
   - component: {fileID: 1791962780}
   - component: {fileID: 1791962779}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: ClientWorker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -554,9 +554,11 @@ MonoBehaviour:
   UseSessionBasedFlow: 0
   PlayerName: Player
   DevAuthToken: 
+  PlayerIdentityToken: 
+  ClientConnector: {fileID: 0}
   clientWorkerConnectorPrefab: {fileID: 1638104666241782, guid: 075c14fd6c4ad514581b6aaabc0711bb,
     type: 3}
-  screenUIController: {fileID: 1345553513}
+  uiManager: {fileID: 1345553513}
 --- !u!4 &1791962780
 Transform:
   m_ObjectHideFlags: 0
