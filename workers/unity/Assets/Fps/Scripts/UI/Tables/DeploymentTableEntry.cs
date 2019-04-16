@@ -11,7 +11,6 @@ namespace Fps
         [SerializeField] private GameObject AvailableSymbol;
         [SerializeField] private GameObject UnavailableSymbol;
 
-
         public void SetData(DeploymentData data)
         {
             DeploymentNameText.text = data.Name;

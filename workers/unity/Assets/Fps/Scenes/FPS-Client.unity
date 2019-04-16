@@ -160,6 +160,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &403709550 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4689007441371564825, guid: d52364553e6842940944c62b73e5e1b1,
+    type: 3}
+  m_PrefabInstance: {fileID: 1769080386}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &663023874 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8394282429649562039, guid: d52364553e6842940944c62b73e5e1b1,
@@ -207,9 +219,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f8c7189676e488cbadd0180cc51fa57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UseSessionBasedFlow: 0
+  UseSessionBasedFlow: 1
   PlayerName: Player
   DevAuthToken: 
+  PlayerIdentityToken: 
+  ClientConnector: {fileID: 0}
   clientWorkerConnectorPrefab: {fileID: 1638104666241782, guid: 075c14fd6c4ad514581b6aaabc0711bb,
     type: 3}
   screenUIController: {fileID: 848779487}
@@ -674,7 +688,28 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 4691880619284344853, guid: d52364553e6842940944c62b73e5e1b1,
+        type: 3}
+      propertyPath: TextOptions.Array.data[0]
+      value: 
+      objectReference: {fileID: 403709550}
+    - target: {fileID: 4689159565516789255, guid: d52364553e6842940944c62b73e5e1b1,
+        type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4688969647908050475, guid: d52364553e6842940944c62b73e5e1b1,
+        type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4688950688902521913, guid: d52364553e6842940944c62b73e5e1b1,
+        type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 552241771014306721, guid: d52364553e6842940944c62b73e5e1b1, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: d52364553e6842940944c62b73e5e1b1, type: 3}
 --- !u!1001 &1897720940
 PrefabInstance:

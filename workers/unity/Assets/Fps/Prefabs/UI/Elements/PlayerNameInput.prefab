@@ -88,7 +88,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6215969143831722139}
-  - component: {fileID: 1824253528298564639}
   m_Layer: 0
   m_Name: PlayerNameInput
   m_TagString: Untagged
@@ -117,21 +116,6 @@ RectTransform:
   m_AnchoredPosition: {x: 190, y: 195}
   m_SizeDelta: {x: 950, y: 115}
   m_Pivot: {x: 0, y: 1}
---- !u!114 &1824253528298564639
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6150022445472934655}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 17ce4c61de1da8f4ea2305c0adf7f530, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  HintText: {fileID: 6110100663106550773}
-  AllowEdit: 1
-  inputField: {fileID: 6109936001690209001}
 --- !u!1 &6150029419029490893
 GameObject:
   m_ObjectHideFlags: 0

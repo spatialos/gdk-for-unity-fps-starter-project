@@ -11,7 +11,6 @@ namespace Fps
         [SerializeField] private Text DeathsText;
         [SerializeField] private Text KDText;
 
-
         public void SetData(ResultsData data)
         {
             RankText.text = data.Rank.ToString();

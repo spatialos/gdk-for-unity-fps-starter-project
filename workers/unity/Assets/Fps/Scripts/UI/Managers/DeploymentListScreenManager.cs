@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace Fps
 {
-    public class DeploymentListScreenController : MonoBehaviour
+    public class DeploymentListScreenManager : ConnectionStatusManager
     {
         public Color BackgroundColor1;
         public Color BackgroundColor2;
@@ -14,7 +14,6 @@ namespace Fps
         public Button JoinButton;
         public Button BackButton;
         public Table deploymentListTable;
-        public ConnectionStatusUIController ConnectionStatusUIController;
 
         public DeploymentData[] DeploymentList { get; private set; }
 
@@ -27,7 +26,7 @@ namespace Fps
             JoinButton.enabled = false;
         }
 
-        public bool IsAvailableDeploymentHighlighted()
+        public bool IsHighlightedDeploymentAvailable()
         {
             if (currentlyHighlightedEntry < 0
                 || DeploymentList == null
@@ -41,7 +40,7 @@ namespace Fps
 
         public string GetChosenDeployment()
         {
-            if (IsAvailableDeploymentHighlighted())
+            if (IsHighlightedDeploymentAvailable())
             {
                 return DeploymentList[currentlyHighlightedEntry].Name;
             }
@@ -51,18 +50,27 @@ namespace Fps
 
         public void SetDeployments(DeploymentData[] deployments)
         {
+            var highlightedDeploymentName = string.Empty;
+            if (DeploymentList != null && currentlyHighlightedEntry != -1)
+            {
+                highlightedDeploymentName = DeploymentList[currentlyHighlightedEntry].Name;
+            }
+
+            currentlyHighlightedEntry = -1;
             deploymentListTable.ClearEntries();
             currentBgColor = BackgroundColor1;
 
-            // TODO If previously-selected deployment is in list of new deployments, try and retain its position in the table
             for (var i = 0; i < Mathf.Min(maxRows - 1, deployments.Length); i++)
             {
                 AddDeploymentToTable(deployments[i], i);
                 currentBgColor = i % 2 == 0 ? BackgroundColor2 : BackgroundColor1;
+                if (deployments[i].Name == highlightedDeploymentName)
+                {
+                    currentlyHighlightedEntry = i;
+                }
             }
 
             DeploymentList = deployments;
-            currentlyHighlightedEntry = -1; // TODO Select previously-selected deployment if present in new list
         }
 
         private void Update()
@@ -145,7 +153,7 @@ namespace Fps
             entryButton.onClick.AddListener(() => SelectEntry(index));
             entry.SetData(deployment);
             entry.SetAllTextVisuals(deployment.IsAvailable ? DefaultTextColor : UnavailableTextColor, false);
-            entry.SetBackgroundColor(currentBgColor);
+            entry.Background.color = currentBgColor;
         }
 
         private void SelectEntry(int index)
@@ -155,24 +163,18 @@ namespace Fps
                 UnhighlightEntry(currentlyHighlightedEntry);
             }
 
-            HighlightEntry(index);
+            var entry = deploymentListTable.GetEntry(index);
+            entry.Background.color = HighlightedColor;
+            entry.SetAllTextVisuals(HighlightedTextColor, DeploymentList[index].IsAvailable);
 
             currentlyHighlightedEntry = index;
-
-            JoinButton.enabled = IsAvailableDeploymentHighlighted();
-        }
-
-        private void HighlightEntry(int index)
-        {
-            var entry = deploymentListTable.GetEntry(index);
-            entry.SetBackgroundColor(HighlightedColor);
-            entry.SetAllTextVisuals(HighlightedTextColor, DeploymentList[index].IsAvailable);
+            JoinButton.enabled = IsHighlightedDeploymentAvailable();
         }
 
         private void UnhighlightEntry(int index)
         {
             var entry = deploymentListTable.GetEntry(index);
-            entry.SetBackgroundColor(index % 2 == 0 ? BackgroundColor1 : BackgroundColor2);
+            entry.Background.color = index % 2 == 0 ? BackgroundColor1 : BackgroundColor2;
             entry.SetAllTextVisuals(DeploymentList[index].IsAvailable ? DefaultTextColor : UnavailableTextColor, false);
         }
     }

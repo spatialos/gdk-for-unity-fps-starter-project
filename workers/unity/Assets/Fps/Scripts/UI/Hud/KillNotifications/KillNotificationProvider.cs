@@ -7,7 +7,6 @@ namespace Fps
     {
         public GameObject KillNotificationPrefab;
 
-
         private readonly Queue<KillNotification> notificationQueue = new Queue<KillNotification>();
 
         public int MaxActiveNotifications = 3;

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace Fps
 {
-    public class ConnectionStatusUIController : MonoBehaviour
+    public class ConnectionStatusManager : MonoBehaviour
     {
         public GameObject SpinnerSymbol;
         public GameObject ErrorSymbol;
@@ -76,20 +76,9 @@ namespace Fps
                 || symbol == SpinnerSymbol
                 || symbol == SuccessSymbol);
 
-            if (ErrorSymbol != null)
-            {
-                ErrorSymbol.SetActive(symbol == ErrorSymbol);
-            }
-
-            if (SpinnerSymbol != null)
-            {
-                SpinnerSymbol.SetActive(symbol == SpinnerSymbol);
-            }
-
-            if (SuccessSymbol != null)
-            {
-                SuccessSymbol.SetActive(symbol == SuccessSymbol);
-            }
+            ErrorSymbol.SetActive(symbol == ErrorSymbol);
+            SpinnerSymbol.SetActive(symbol == SpinnerSymbol);
+            SuccessSymbol.SetActive(symbol == SuccessSymbol);
         }
 
         private void OnDisable()

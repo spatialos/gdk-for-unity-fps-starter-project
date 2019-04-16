@@ -14,8 +14,6 @@ namespace Fps
 
         private int RedSeconds = 60;
 
-        private float time;
-
         private uint maxTime;
 
         private void UpdateTime(int seconds)

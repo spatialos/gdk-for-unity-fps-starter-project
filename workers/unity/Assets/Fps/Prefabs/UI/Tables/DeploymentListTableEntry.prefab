@@ -528,7 +528,7 @@ GameObject:
   - component: {fileID: 4799642357629010387}
   - component: {fileID: 7163324553821422426}
   m_Layer: 5
-  m_Name: LobbyTableEntry
+  m_Name: DeploymentListTableEntry
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -647,7 +647,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ed59bc927c980f46a39cb1c6fcfcc53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Columns: []
+  Background: {fileID: 2274475554445963506}
+  TextVisuals:
+  - {fileID: 841091933593016108}
+  - {fileID: 8194140702234936646}
+  - {fileID: 2369268459459428779}
   DeploymentNameText: {fileID: 841091933593016108}
   PlayersText: {fileID: 8194140702234936646}
   MaxPlayersText: {fileID: 2369268459459428779}

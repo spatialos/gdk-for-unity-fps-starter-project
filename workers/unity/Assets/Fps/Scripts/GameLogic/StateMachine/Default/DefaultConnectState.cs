@@ -7,14 +7,14 @@ namespace Fps
 {
     public class DefaultConnectState : DefaultState
     {
-        public DefaultConnectState(ScreenUIController controller, ConnectionStateMachine owner) : base(controller, owner)
+        public DefaultConnectState(UIManager manager, ConnectionStateMachine owner) : base(manager, owner)
         {
         }
 
         public override void StartState()
         {
-            ConnectScreenController.ConnectButton.enabled = false;
-            ConnectScreenController.ConnectButton.onClick.AddListener(Connect);
+            DefaultConnectScreenManager.ConnectButton.enabled = false;
+            DefaultConnectScreenManager.ConnectButton.onClick.AddListener(Connect);
             Connect();
         }
 
@@ -22,8 +22,14 @@ namespace Fps
         {
             if (Owner.ClientConnector == null)
             {
-                ConnectScreenController.ConnectButton.enabled = true;
+                DefaultConnectScreenManager.ConnectButton.enabled = true;
                 Animator.SetTrigger("FailedToConnect");
+
+
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    DefaultConnectScreenManager.ConnectButton.onClick.Invoke();
+                }
 
                 return;
             }
@@ -34,26 +40,18 @@ namespace Fps
                 return;
             }
 
-            ConnectScreenController.ConnectButton.onClick.RemoveListener(Connect);
-            ConnectScreenController.ConnectButton.onClick.AddListener(SpawnPlayer);
-            ConnectScreenController.ConnectButton.enabled = true;
-            Animator.SetTrigger("Ready");
+            Owner.SetState(new DefaultSpawnState(Manager, Owner));
         }
 
         public override void ExitState()
         {
+            DefaultConnectScreenManager.ConnectButton.onClick.RemoveListener(Connect);
         }
 
         private void Connect()
         {
             Owner.CreateClientWorker();
             Owner.ClientConnector.Connect(string.Empty, false);
-        }
-
-        private void SpawnPlayer()
-        {
-            ConnectScreenController.ConnectButton.onClick.RemoveListener(SpawnPlayer);
-            Owner.SetState(new DefaultSpawnState(Controller, Owner));
         }
     }
 }

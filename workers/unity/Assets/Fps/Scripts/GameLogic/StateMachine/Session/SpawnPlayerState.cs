@@ -6,19 +6,19 @@ namespace Fps
 {
     public class SpawnPlayerState : SessionState
     {
-        private readonly LobbyScreenController lobbyScreenController;
+        private readonly LobbyScreenManager lobbyScreenManager;
 
-        public SpawnPlayerState(ScreenUIController controller, ConnectionStateMachine owner) : base(controller, owner)
+        public SpawnPlayerState(UIManager manager, ConnectionStateMachine owner) : base(manager, owner)
         {
-            lobbyScreenController = controller.FrontEndController.LobbyScreenController;
+            lobbyScreenManager = manager.FrontEndController.lobbyScreenManager;
         }
 
         public override void StartState()
         {
-            lobbyScreenController.ConnectionStatusUIController.ShowSpawningText();
-            lobbyScreenController.startButton.enabled = false;
+            lobbyScreenManager.ShowSpawningText();
+            lobbyScreenManager.startButton.enabled = false;
 
-            Owner.ClientConnector.SpawnPlayerAction(Controller.FrontEndController.LobbyScreenController.GetPlayerName(), CreatedPlayer);
+            Owner.ClientConnector.SpawnPlayerAction(Manager.FrontEndController.lobbyScreenManager.GetPlayerName(), CreatedPlayer);
         }
 
         public override void ExitState()
@@ -33,12 +33,12 @@ namespace Fps
         {
             if (response.StatusCode == StatusCode.Success)
             {
-                Controller.ShowGameView();
-                Owner.SetState(new PlayState(Controller, Owner));
+                Manager.ShowGameView();
+                Owner.SetState(new PlayState(Manager, Owner));
             }
             else
             {
-                Controller.FrontEndController.LobbyScreenController.ConnectionStatusUIController.ShowSpawningFailedText(response.Message);
+                Manager.FrontEndController.lobbyScreenManager.ShowSpawningFailedText(response.Message);
                 Owner.DestroyClientWorker();
                 Owner.SetState(Owner.StartState);
             }

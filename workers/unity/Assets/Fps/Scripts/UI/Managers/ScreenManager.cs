@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Fps
 {
-    public class FrontEndUIController : MonoBehaviour
+    public class ScreenManager : MonoBehaviour
     {
         private enum ScreenType
         {
@@ -20,11 +20,11 @@ namespace Fps
         [Header("General")] public Button QuitButton;
         [SerializeField] public GameObject FrontEndCamera;
 
-        [Header("Screens")] public ConnectScreenController ConnectScreenController;
-        public SessionScreenController SessionScreenController;
-        public DeploymentListScreenController DeploymentListScreenController;
-        public ResultsScreenController ResultsScreenController;
-        public LobbyScreenController LobbyScreenController;
+        [Header("Screens")] public DefaultConnectScreenManager defaultConnectScreenManager;
+        public StartScreenManager startScreenManager;
+        public DeploymentListScreenManager deploymentListScreenManager;
+        public ResultsScreenManager resultsScreenManager;
+        public LobbyScreenManager lobbyScreenManager;
 
         private ScreenType currentScreen = ScreenType.None;
 
@@ -62,11 +62,11 @@ namespace Fps
 
         private void Awake()
         {
-            ConnectScreenController.gameObject.SetActive(false);
-            SessionScreenController.gameObject.SetActive(false);
-            DeploymentListScreenController.gameObject.SetActive(false);
-            ResultsScreenController.gameObject.SetActive(false);
-            QuitButton.onClick.AddListener(ScreenUIController.Quit);
+            defaultConnectScreenManager.gameObject.SetActive(false);
+            startScreenManager.gameObject.SetActive(false);
+            deploymentListScreenManager.gameObject.SetActive(false);
+            resultsScreenManager.gameObject.SetActive(false);
+            QuitButton.onClick.AddListener(UIManager.Quit);
         }
 
         private void OnEnable()
@@ -81,20 +81,17 @@ namespace Fps
             FrontEndCamera.SetActive(false);
         }
 
-        private void RefreshActiveScreen()
-        {
-            var currentController = GetControllerFromScreen(currentScreen);
-            ConnectScreenController.gameObject.SetActive(ConnectScreenController == currentController);
-            SessionScreenController.gameObject.SetActive(SessionScreenController == currentController);
-            DeploymentListScreenController.gameObject.SetActive(DeploymentListScreenController == currentController);
-            ResultsScreenController.gameObject.SetActive(ResultsScreenController == currentController);
-            LobbyScreenController.gameObject.SetActive(LobbyScreenController == currentController);
-        }
-
         private void SetScreenTo(ScreenType screenType)
         {
+            var currentController = GetControllerFromScreen(currentScreen);
+            if (currentController != null)
+            {
+                currentController.gameObject.SetActive(false);
+            }
+
             currentScreen = screenType;
-            RefreshActiveScreen();
+            currentController = GetControllerFromScreen(currentScreen);
+            currentController.gameObject.SetActive(true);
         }
 
         private Component GetControllerFromScreen(ScreenType screenType)
@@ -104,15 +101,15 @@ namespace Fps
                 case ScreenType.None:
                     return null;
                 case ScreenType.DefaultConnect:
-                    return ConnectScreenController;
+                    return defaultConnectScreenManager;
                 case ScreenType.SessionScreen:
-                    return SessionScreenController;
+                    return startScreenManager;
                 case ScreenType.DeploymentList:
-                    return DeploymentListScreenController;
+                    return deploymentListScreenManager;
                 case ScreenType.Results:
-                    return ResultsScreenController;
+                    return resultsScreenManager;
                 case ScreenType.Lobby:
-                    return LobbyScreenController;
+                    return lobbyScreenManager;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(screenType), screenType, null);
             }

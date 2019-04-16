@@ -2,37 +2,37 @@ namespace Fps
 {
     public class ListDeploymentsState : SessionState
     {
-        private readonly DeploymentListScreenController deploymentListScreenController;
+        private readonly DeploymentListScreenManager deploymentListScreenManager;
 
-        public ListDeploymentsState(ScreenUIController controller, ConnectionStateMachine owner) : base(controller,
+        public ListDeploymentsState(UIManager manager, ConnectionStateMachine owner) : base(manager,
             owner)
         {
-            deploymentListScreenController = controller.FrontEndController.DeploymentListScreenController;
+            deploymentListScreenManager = manager.FrontEndController.deploymentListScreenManager;
         }
 
         public override void StartState()
         {
-            deploymentListScreenController.ConnectionStatusUIController.ShowDeploymentListAvailableText();
-            deploymentListScreenController.JoinButton.onClick.AddListener(Connect);
-            deploymentListScreenController.BackButton.onClick.AddListener(Back);
-            Controller.FrontEndController.SwitchToDeploymentListScreen();
+            deploymentListScreenManager.ShowDeploymentListAvailableText();
+            deploymentListScreenManager.JoinButton.onClick.AddListener(Connect);
+            deploymentListScreenManager.BackButton.onClick.AddListener(Back);
+            Manager.FrontEndController.SwitchToDeploymentListScreen();
         }
 
         public override void ExitState()
         {
-            deploymentListScreenController.JoinButton.onClick.RemoveListener(Connect);
-            deploymentListScreenController.BackButton.onClick.RemoveListener(Back);
+            deploymentListScreenManager.JoinButton.onClick.RemoveListener(Connect);
+            deploymentListScreenManager.BackButton.onClick.RemoveListener(Back);
         }
 
         public override void Tick()
         {
-            deploymentListScreenController.JoinButton.enabled =
-                deploymentListScreenController.IsAvailableDeploymentHighlighted();
+            deploymentListScreenManager.JoinButton.enabled =
+                deploymentListScreenManager.IsHighlightedDeploymentAvailable();
         }
 
         private void Connect()
         {
-            Owner.SetState(new ConnectState(deploymentListScreenController.GetChosenDeployment(), Controller, Owner));
+            Owner.SetState(new ConnectState(deploymentListScreenManager.GetChosenDeployment(), Manager, Owner));
         }
 
         private void Back()

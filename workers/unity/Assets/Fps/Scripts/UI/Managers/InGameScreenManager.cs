@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace Fps
 {
-    public class InGameUIController : MonoBehaviour
+    public class InGameScreenManager : MonoBehaviour
     {
         public GameObject RespawnScreen;
         public GameObject Reticle;
@@ -17,7 +17,7 @@ namespace Fps
 
         private void Awake()
         {
-            QuitButton.onClick.AddListener(ScreenUIController.Quit);
+            QuitButton.onClick.AddListener(UIManager.Quit);
         }
 
         public void OnEnable()

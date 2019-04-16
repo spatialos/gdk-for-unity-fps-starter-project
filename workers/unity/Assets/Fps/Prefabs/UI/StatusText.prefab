@@ -159,7 +159,6 @@ GameObject:
   - component: {fileID: 9036897945397620470}
   - component: {fileID: 2155556743333739796}
   - component: {fileID: 2845632616082728801}
-  - component: {fileID: 6089759569608584033}
   m_Layer: 5
   m_Name: StatusText
   m_TagString: Untagged
@@ -231,34 +230,6 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Information about current connection
---- !u!114 &6089759569608584033
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7600789095713804792}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 49cc0f9798257ef44a011cd0671ef60f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SpinnerSymbol: {fileID: 9160184143018011931}
-  ErrorSymbol: {fileID: 4212465101278386776}
-  SuccessSymbol: {fileID: 8182972233629507334}
-  StatusText: {fileID: 2845632616082728801}
-  DeploymentListAvailableText: Deployments available
-  GettingDeploymentListText: Getting deployment list...
-  FailedToGetDeploymentListText: Failed to get deployment list!
-  ConnectingText: Searching for deployment to join...
-  ConnectionFailedText: Failed to join deployment!
-  ConnectedText: Connected
-  WaitingForGameStartText: Game starting in {0:#} SECONDS
-  WaitingForGameToStartText_NoNumber: Game starting...
-  GameReadyText: Game begun! Ready to spawn.
-  SpawningText: Joining deployment...
-  SpawningFailedText: Failed to spawn player!
-  WorkerDisconnectedText: Worker was disconnected
 --- !u!1 &8182972233629507334
 GameObject:
   m_ObjectHideFlags: 0

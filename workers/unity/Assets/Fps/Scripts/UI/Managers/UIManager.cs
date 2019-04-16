@@ -2,15 +2,15 @@ using UnityEngine;
 
 namespace Fps
 {
-    public class ScreenUIController : MonoBehaviour
+    public class UIManager : MonoBehaviour
     {
-        public FrontEndUIController FrontEndController;
-        public InGameUIController InGameController;
+        public ScreenManager FrontEndController;
+        public InGameScreenManager inGameManager;
 
         private void Awake()
         {
             FrontEndController.gameObject.SetActive(false);
-            InGameController.gameObject.SetActive(false);
+            inGameManager.gameObject.SetActive(false);
         }
 
         private void Start()
@@ -21,14 +21,14 @@ namespace Fps
         public void ShowGameView()
         {
             FrontEndController.gameObject.SetActive(false);
-            InGameController.gameObject.SetActive(true);
+            inGameManager.gameObject.SetActive(true);
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
         }
 
         public void ShowFrontEnd()
         {
-            InGameController.gameObject.SetActive(false);
+            inGameManager.gameObject.SetActive(false);
             FrontEndController.gameObject.SetActive(true);
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;

@@ -7,41 +7,46 @@ namespace Fps
 {
     public class DefaultSpawnState : DefaultState
     {
-        public DefaultSpawnState(ScreenUIController controller, ConnectionStateMachine owner) : base(controller, owner)
+        public DefaultSpawnState(UIManager manager, ConnectionStateMachine owner) : base(manager, owner)
         {
         }
 
         public override void StartState()
         {
-            ConnectScreenController.ConnectButton.onClick.AddListener(SpawnPlayer);
+            DefaultConnectScreenManager.ConnectButton.enabled = true;
+            DefaultConnectScreenManager.ConnectButton.onClick.AddListener(SpawnPlayer);
             SpawnPlayer();
         }
 
         public override void Tick()
         {
-            ConnectScreenController.ConnectButton.onClick.AddListener(SpawnPlayer);
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                DefaultConnectScreenManager.ConnectButton.onClick.Invoke();
+            }
         }
 
         public override void ExitState()
         {
+            DefaultConnectScreenManager.ConnectButton.onClick.RemoveListener(SpawnPlayer);
         }
 
         private void OnPlayerResponse(PlayerCreator.CreatePlayer.ReceivedResponse obj)
         {
             if (obj.StatusCode == StatusCode.Success)
             {
-                Controller.ShowGameView();
+                Manager.ShowGameView();
             }
             else
             {
-                ConnectScreenController.ConnectButton.enabled = true;
+                DefaultConnectScreenManager.ConnectButton.enabled = true;
                 Animator.SetTrigger("FailedToSpawn");
             }
         }
 
         private void SpawnPlayer()
         {
-            ConnectScreenController.ConnectButton.enabled = false;
+            DefaultConnectScreenManager.ConnectButton.enabled = false;
             Owner.ClientConnector.SpawnPlayerAction("Local Player", OnPlayerResponse);
             Animator.SetTrigger("Connecting");
         }

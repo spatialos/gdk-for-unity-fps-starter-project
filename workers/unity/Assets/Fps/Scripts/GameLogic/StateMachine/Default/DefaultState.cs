@@ -8,17 +8,17 @@ namespace Fps
     public abstract class DefaultState : State
     {
         protected readonly ConnectionStateMachine Owner;
-        protected readonly ScreenUIController Controller;
-        protected readonly ConnectScreenController ConnectScreenController;
+        protected readonly UIManager Manager;
+        protected readonly DefaultConnectScreenManager DefaultConnectScreenManager;
         protected readonly Animator Animator;
 
-        protected DefaultState(ScreenUIController controller, ConnectionStateMachine owner)
+        protected DefaultState(UIManager manager, ConnectionStateMachine owner)
         {
-            Controller = controller;
-            ConnectScreenController = controller.FrontEndController.ConnectScreenController;
+            Manager = manager;
+            DefaultConnectScreenManager = manager.FrontEndController.defaultConnectScreenManager;
             Owner = owner;
 
-            Animator = ConnectScreenController.GetComponentInChildren<Animator>(true);
+            Animator = DefaultConnectScreenManager.GetComponentInChildren<Animator>(true);
         }
     }
 }

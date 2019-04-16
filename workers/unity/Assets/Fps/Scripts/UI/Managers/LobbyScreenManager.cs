@@ -3,10 +3,9 @@ using UnityEngine.UI;
 
 namespace Fps
 {
-    public class LobbyScreenController : MonoBehaviour
+    public class LobbyScreenManager : ConnectionStatusManager
     {
         public InputField inputField;
-        public ConnectionStatusUIController ConnectionStatusUIController;
         public FpsUIButton startButton;
         public FpsUIButton cancelButton;
         public Text HintText;
@@ -37,7 +36,7 @@ namespace Fps
             return inputField.text;
         }
 
-        public bool isValidName()
+        public bool IsValidName()
         {
             return inputField.text.Length >= 3;
         }

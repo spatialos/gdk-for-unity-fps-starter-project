@@ -8,14 +8,14 @@ namespace Fps
 {
     public class DefaultInitState : DefaultState
     {
-        public DefaultInitState(ScreenUIController controller, ConnectionStateMachine owner) : base(controller, owner)
+        public DefaultInitState(UIManager manager, ConnectionStateMachine owner) : base(manager, owner)
         {
         }
 
         public override void StartState()
         {
-            Controller.FrontEndController.SwitchToDefaultConnectScreen();
-            Owner.SetState(new DefaultConnectState(Controller, Owner));
+            Manager.FrontEndController.SwitchToDefaultConnectScreen();
+            Owner.SetState(new DefaultConnectState(Manager, Owner));
         }
 
         public override void ExitState()

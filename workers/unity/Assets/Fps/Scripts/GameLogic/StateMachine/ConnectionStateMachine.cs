@@ -24,24 +24,32 @@ namespace Fps
 
         private State currentState;
         private State nextState;
+        private float transitionTime;
 
         [SerializeField] private GameObject clientWorkerConnectorPrefab;
-        [SerializeField] private ScreenUIController screenUIController;
+        [SerializeField] private UIManager uiManager;
 
         public void SetState(State state)
         {
-            nextState = state;
+            SetState(state, 0f);
         }
+
+        public void SetState(State state, float waitTimeInSeconds)
+        {
+            nextState = state;
+            this.transitionTime = waitTimeInSeconds;
+        }
+
 
         private void Start()
         {
             if (UseSessionBasedFlow)
             {
-                StartState = new SessionInitState(screenUIController, this);
+                StartState = new SessionInitState(uiManager, this);
             }
             else
             {
-                StartState = new DefaultInitState(screenUIController, this);
+                StartState = new DefaultInitState(uiManager, this);
             }
 
             currentState = StartState;
@@ -52,6 +60,12 @@ namespace Fps
         {
             if (nextState != null)
             {
+                if (transitionTime > 0f)
+                {
+                    transitionTime -= Time.deltaTime;
+                    return;
+                }
+
                 currentState.ExitState();
                 currentState = nextState;
                 nextState = null;

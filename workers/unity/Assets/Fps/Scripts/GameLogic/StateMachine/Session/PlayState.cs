@@ -12,7 +12,7 @@ namespace Fps
     {
         private readonly TrackPlayerSystem trackPlayerSystem;
 
-        public PlayState(ScreenUIController controller, ConnectionStateMachine owner) : base(controller, owner)
+        public PlayState(UIManager manager, ConnectionStateMachine owner) : base(manager, owner)
         {
             trackPlayerSystem = Owner.ClientConnector.Worker.World.GetExistingManager<TrackPlayerSystem>();
         }
@@ -30,7 +30,7 @@ namespace Fps
             Status? status = trackPlayerSystem.SessionStatus;
             if (status == Status.STOPPING)
             {
-                Owner.SetState(new ResultsState(Controller, Owner));
+                Owner.SetState(new ResultsState(Manager, Owner));
             }
         }
     }

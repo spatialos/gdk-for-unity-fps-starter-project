@@ -5,7 +5,7 @@ namespace Fps
         private string deployment;
         private bool foundDeployment;
 
-        public ConnectState(string deployment, ScreenUIController controller, ConnectionStateMachine owner) : base(controller, owner)
+        public ConnectState(string deployment, UIManager manager, ConnectionStateMachine owner) : base(manager, owner)
         {
             this.deployment = deployment;
         }
@@ -23,10 +23,10 @@ namespace Fps
                 Owner.SetState(Owner.StartState);
             }
 
-            Controller.FrontEndController.SwitchToLobbyScreen();
+            Manager.FrontEndController.SwitchToLobbyScreen();
 
-            Controller.FrontEndController.LobbyScreenController.ConnectionStatusUIController.ShowConnectingText();
-            Controller.FrontEndController.LobbyScreenController.startButton.enabled = false;
+            Manager.FrontEndController.lobbyScreenManager.ShowConnectingText();
+            Manager.FrontEndController.lobbyScreenManager.startButton.enabled = false;
 
             Owner.CreateClientWorker();
             Owner.ClientConnector.Connect(deployment, true);
@@ -40,8 +40,8 @@ namespace Fps
                 return;
             }
 
-            var state = new WaitForGameState(Controller, Owner);
-            var nextState = new GetPlayerIdentityTokenState(state, Controller, Owner);
+            var state = new WaitForGameState(Manager, Owner);
+            var nextState = new GetPlayerIdentityTokenState(state, Manager, Owner);
             Owner.SetState(nextState);
         }
 

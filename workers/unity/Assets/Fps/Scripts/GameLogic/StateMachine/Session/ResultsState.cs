@@ -4,13 +4,13 @@ namespace Fps
 {
     public class ResultsState : SessionState
     {
-        public ResultsState(ScreenUIController controller, ConnectionStateMachine owner) : base(controller, owner)
+        public ResultsState(UIManager manager, ConnectionStateMachine owner) : base(manager, owner)
         {
         }
 
         public override void StartState()
         {
-            Controller.FrontEndController.ResultsScreenController.DoneButton.onClick.AddListener(Restart);
+            Manager.FrontEndController.resultsScreenManager.DoneButton.onClick.AddListener(Restart);
 
             var trackPlayerSystem = Owner.ClientConnector.Worker.World.GetExistingManager<TrackPlayerSystem>();
             var playerName = trackPlayerSystem.PlayerName;
@@ -30,18 +30,18 @@ namespace Fps
                 }
             }
 
-            Controller.FrontEndController.ResultsScreenController.SetResults(results.ToArray(), playerRank);
+            Manager.FrontEndController.resultsScreenManager.SetResults(results.ToArray(), playerRank);
 
             // show results screen
-            Controller.ShowFrontEnd();
-            Controller.FrontEndController.SwitchToResultsScreen();
+            Manager.ShowFrontEnd();
+            Manager.FrontEndController.SwitchToResultsScreen();
             Owner.DestroyClientWorker();
         }
 
         public override void ExitState()
         {
-            Controller.FrontEndController.ResultsScreenController.DoneButton.onClick.RemoveListener(Restart);
-            Controller.FrontEndController.SwitchToSessionScreen();
+            Manager.FrontEndController.resultsScreenManager.DoneButton.onClick.RemoveListener(Restart);
+            Manager.FrontEndController.SwitchToSessionScreen();
         }
 
         public override void Tick()

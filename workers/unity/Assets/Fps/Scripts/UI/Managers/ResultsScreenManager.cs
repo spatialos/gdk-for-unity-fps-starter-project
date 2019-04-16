@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace Fps
 {
-    public class ResultsScreenController : MonoBehaviour
+    public class ResultsScreenManager : MonoBehaviour
     {
         [SerializeField] private GameObject rankDivider;
         public Button DoneButton;
@@ -73,7 +73,7 @@ namespace Fps
             var entry = (ResultsTableEntry) ResultsTable.AddEntry();
             entry.SetData(data);
             entry.SetAllTextVisuals(isLocalPlayer ? LocalPlayerTextColor : DefaultTextColor, isLocalPlayer);
-            entry.SetBackgroundColor(isLocalPlayer ? LocalPlayerBackgroundColor : currentBgColor);
+            entry.Background.color = isLocalPlayer ? LocalPlayerBackgroundColor : currentBgColor;
         }
     }
 }

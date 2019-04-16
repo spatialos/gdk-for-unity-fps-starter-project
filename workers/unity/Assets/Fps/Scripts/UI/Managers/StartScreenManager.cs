@@ -2,10 +2,9 @@
 
 namespace Fps
 {
-    public class SessionScreenController : MonoBehaviour
+    public class StartScreenManager : ConnectionStatusManager
     {
         public FpsUIButton quickJoinButton;
         public FpsUIButton browseButton;
-        public ConnectionStatusUIController ConnectionStatusUIController;
     }
 }

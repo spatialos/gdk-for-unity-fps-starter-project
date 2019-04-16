@@ -8,30 +8,30 @@ namespace Fps
 {
     public class PrepareDeploymentsListState : SessionState
     {
-        private readonly SessionScreenController sessionScreenController;
+        private readonly StartScreenManager startScreenManager;
 
-        public PrepareDeploymentsListState(ScreenUIController controller, ConnectionStateMachine owner) : base(controller, owner)
+        public PrepareDeploymentsListState(UIManager manager, ConnectionStateMachine owner) : base(manager, owner)
         {
-            sessionScreenController = controller.FrontEndController.SessionScreenController;
+            startScreenManager = manager.FrontEndController.startScreenManager;
         }
 
         public override void StartState()
         {
             if (PrepareDeploymentsList())
             {
-                sessionScreenController.ConnectionStatusUIController.ShowDeploymentListAvailableText();
-                sessionScreenController.browseButton.onClick.AddListener(BrowseDeployments);
-                sessionScreenController.quickJoinButton.onClick.AddListener(Connect);
+                startScreenManager.ShowDeploymentListAvailableText();
+                startScreenManager.browseButton.onClick.AddListener(BrowseDeployments);
+                startScreenManager.quickJoinButton.onClick.AddListener(Connect);
 
-                sessionScreenController.browseButton.enabled = true;
-                sessionScreenController.quickJoinButton.enabled = true;
+                startScreenManager.browseButton.enabled = true;
+                startScreenManager.quickJoinButton.enabled = true;
             }
         }
 
         public override void ExitState()
         {
-            sessionScreenController.browseButton.onClick.RemoveListener(BrowseDeployments);
-            sessionScreenController.quickJoinButton.onClick.RemoveListener(Connect);
+            startScreenManager.browseButton.onClick.RemoveListener(BrowseDeployments);
+            startScreenManager.quickJoinButton.onClick.RemoveListener(Connect);
         }
 
         public override void Tick()
@@ -40,12 +40,12 @@ namespace Fps
 
         private void BrowseDeployments()
         {
-            Owner.SetState(new ListDeploymentsState(Controller, Owner));
+            Owner.SetState(new ListDeploymentsState(Manager, Owner));
         }
 
         private void Connect()
         {
-            Owner.SetState(new ConnectState(null, Controller, Owner));
+            Owner.SetState(new ConnectState(null, Manager, Owner));
         }
 
         private bool PrepareDeploymentsList()
@@ -87,12 +87,12 @@ namespace Fps
 
             deploymentDatas.Sort((deployment1, deployment2) =>
                 String.Compare(deployment1.Name, deployment2.Name, StringComparison.Ordinal));
-            Controller.FrontEndController.DeploymentListScreenController.SetDeployments(deploymentDatas.ToArray());
+            Manager.FrontEndController.deploymentListScreenManager.SetDeployments(deploymentDatas.ToArray());
 
             if (!hasAvailableDeployment)
             {
                 ShowErrorMessage("No deployment is currently available.");
-                Owner.SetState(Owner.StartState);
+                Owner.SetState(Owner.StartState, 2f);
             }
 
             return hasAvailableDeployment;

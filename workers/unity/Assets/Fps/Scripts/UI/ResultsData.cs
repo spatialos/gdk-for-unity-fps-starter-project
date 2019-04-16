@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Fps
 {
-    public class ResultsData
+    public struct ResultsData
     {
         public int Rank;
         public readonly string PlayerName;
@@ -18,11 +18,7 @@ namespace Fps
             Kills = kills;
             Deaths = deaths;
             KillDeathRatio = deaths == 0 ? kills : kills / (float) deaths;
-        }
-
-        public void SetRank(int rank)
-        {
-            Rank = rank;
+            Rank = -1;
         }
     }
 }

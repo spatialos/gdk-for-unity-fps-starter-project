@@ -18,23 +18,6 @@
           "cols": 1,
           "rows": 1
         }
-      },
-      {
-        "layer": "SimulatedPlayerCoordinator",
-        "rectangle_grid": {
-          "cols": 1,
-          "rows": 1
-        }
-      },
-      {
-        "layer": "DeploymentManager",
-        "rectangle_grid": {
-          "cols": 1,
-          "rows": 1
-        },
-        "options": {
-          "manual_worker_connection_only": true
-        }
       }
     ]
   },
@@ -45,28 +28,6 @@
         {
           "name": "world_size",
           "value": "small"
-        }
-      ],
-      "permissions": [
-        {
-          "all": {}
-        }
-      ]
-    },
-    {
-      "worker_type": "SimulatedPlayerCoordinator",
-      "flags": [
-        {
-          "name": "world_size",
-          "value": "small"
-        },
-        {
-          "name": "fps_simulated_players_per_coordinator",
-          "value": "10"
-        },
-        {
-          "name": "fps_simulated_players_creation_interval",
-          "value": "5"
         }
       ],
       "permissions": [

@@ -9,19 +9,19 @@ namespace Fps
 {
     public abstract class SessionState : State
     {
-        protected readonly ScreenUIController Controller;
+        protected readonly UIManager Manager;
         protected readonly ConnectionStateMachine Owner;
 
-        protected SessionState(ScreenUIController controller, ConnectionStateMachine owner)
+        protected SessionState(UIManager manager, ConnectionStateMachine owner)
         {
-            Controller = controller;
+            Manager = manager;
             Owner = owner;
         }
 
         protected void ShowErrorMessage(string errorMessage)
         {
-            Controller.FrontEndController.SessionScreenController.ConnectionStatusUIController.ShowFailedToGetDeploymentsText(errorMessage);
-            Controller.FrontEndController.LobbyScreenController.ConnectionStatusUIController.ShowFailedToGetDeploymentsText(errorMessage);
+            Manager.FrontEndController.startScreenManager.ShowFailedToGetDeploymentsText(errorMessage);
+            Manager.FrontEndController.lobbyScreenManager.ShowFailedToGetDeploymentsText(errorMessage);
         }
     }
 }

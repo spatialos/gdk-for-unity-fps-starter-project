@@ -13,7 +13,7 @@ namespace Fps
         private readonly State nextState;
         private Future<LoginTokensResponse?> loginTokensResponse;
 
-        public GetDeploymentsState(State nextState, ScreenUIController controller, ConnectionStateMachine owner) : base(controller, owner)
+        public GetDeploymentsState(State nextState, UIManager manager, ConnectionStateMachine owner) : base(manager, owner)
         {
             this.nextState = nextState;
         }
@@ -47,8 +47,8 @@ namespace Fps
 
             if (!result.HasValue || result.Value.Status.Code != ConnectionStatusCode.Success)
             {
-                ShowErrorMessage($"Failed to retrieve any login tokens.\n Error code: {result.Value.Status}");
-                Owner.SetState(Owner.StartState);
+                ShowErrorMessage($"Failed to retrieve any login tokens.\n Error code: {result.Value.Status.Code}");
+                Owner.SetState(Owner.StartState, 2f);
                 return;
             }
 
@@ -57,7 +57,7 @@ namespace Fps
             if (Owner.LoginTokens.Count == 0)
             {
                 ShowErrorMessage("No deployments are available.");
-                Owner.SetState(Owner.StartState);
+                Owner.SetState(Owner.StartState, 2f);
                 return;
             }
 

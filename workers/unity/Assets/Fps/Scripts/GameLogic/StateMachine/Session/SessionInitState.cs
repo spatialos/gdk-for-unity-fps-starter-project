@@ -10,20 +10,20 @@ namespace Fps
 {
     public class SessionInitState : SessionState
     {
-        private readonly SessionScreenController sessionScreenController;
+        private readonly StartScreenManager startScreenManager;
 
-        public SessionInitState(ScreenUIController controller, ConnectionStateMachine owner) : base(controller, owner)
+        public SessionInitState(UIManager manager, ConnectionStateMachine owner) : base(manager, owner)
         {
-            sessionScreenController = controller.FrontEndController.SessionScreenController;
+            startScreenManager = manager.FrontEndController.startScreenManager;
         }
 
         public override void StartState()
         {
-            sessionScreenController.browseButton.enabled = false;
-            sessionScreenController.quickJoinButton.enabled = false;
-            Controller.FrontEndController.SwitchToSessionScreen();
-            var listDeploymentsState = new PrepareDeploymentsListState(Controller, Owner);
-            var getPitState = new GetPlayerIdentityTokenState(listDeploymentsState, Controller, Owner);
+            startScreenManager.browseButton.enabled = false;
+            startScreenManager.quickJoinButton.enabled = false;
+            Manager.FrontEndController.SwitchToSessionScreen();
+            var listDeploymentsState = new PrepareDeploymentsListState(Manager, Owner);
+            var getPitState = new GetPlayerIdentityTokenState(listDeploymentsState, Manager, Owner);
 
             var textAsset = Resources.Load<TextAsset>("DevAuthToken");
             if (textAsset != null)
@@ -36,7 +36,7 @@ namespace Fps
                     "Unable to find DevAuthToken.txt inside the Resources folder. Ensure to generate one.");
             }
 
-            Controller.FrontEndController.SessionScreenController.ConnectionStatusUIController.ShowGetDeploymentListText();
+            Manager.FrontEndController.startScreenManager.ShowGetDeploymentListText();
             Owner.SetState(getPitState);
         }
 

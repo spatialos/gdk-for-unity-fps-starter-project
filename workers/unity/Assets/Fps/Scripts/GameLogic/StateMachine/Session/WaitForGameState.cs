@@ -6,24 +6,24 @@ namespace Fps
 {
     public class WaitForGameState : SessionState
     {
-        private readonly LobbyScreenController lobbyScreenController;
+        private readonly LobbyScreenManager lobbyScreenManager;
 
-        public WaitForGameState(ScreenUIController controller, ConnectionStateMachine owner) : base(controller, owner)
+        public WaitForGameState(UIManager manager, ConnectionStateMachine owner) : base(manager, owner)
         {
-            lobbyScreenController = controller.FrontEndController.LobbyScreenController;
+            lobbyScreenManager = manager.FrontEndController.lobbyScreenManager;
         }
 
         public override void StartState()
         {
-            lobbyScreenController.startButton.onClick.AddListener(StartSession);
-            lobbyScreenController.cancelButton.onClick.AddListener(CancelSession);
-            lobbyScreenController.ConnectionStatusUIController.ShowWaitForGameText();
+            lobbyScreenManager.startButton.onClick.AddListener(StartSession);
+            lobbyScreenManager.cancelButton.onClick.AddListener(CancelSession);
+            lobbyScreenManager.ShowWaitForGameText();
         }
 
         public override void ExitState()
         {
-            lobbyScreenController.startButton.onClick.RemoveListener(StartSession);
-            lobbyScreenController.cancelButton.onClick.RemoveListener(CancelSession);
+            lobbyScreenManager.startButton.onClick.RemoveListener(StartSession);
+            lobbyScreenManager.cancelButton.onClick.RemoveListener(CancelSession);
         }
 
         public override void Tick()
@@ -32,15 +32,15 @@ namespace Fps
             switch (status)
             {
                 case Status.LOBBY:
-                    var state = new WaitForGameState(Controller, Owner);
-                    var nextState = new GetPlayerIdentityTokenState(state, Controller, Owner);
+                    var state = new WaitForGameState(Manager, Owner);
+                    var nextState = new GetPlayerIdentityTokenState(state, Manager, Owner);
                     Owner.SetState(nextState);
                     break;
                 case Status.RUNNING:
-                    lobbyScreenController.UpdateHintText(true);
-                    var isValid = lobbyScreenController.isValidName();
-                    lobbyScreenController.startButton.enabled = status == Status.RUNNING && isValid;
-                    lobbyScreenController.ConnectionStatusUIController.ShowGameReadyText();
+                    lobbyScreenManager.UpdateHintText(true);
+                    var isValid = lobbyScreenManager.IsValidName();
+                    lobbyScreenManager.startButton.enabled = status == Status.RUNNING && isValid;
+                    lobbyScreenManager.ShowGameReadyText();
                     break;
                 case Status.STOPPING:
                 case Status.STOPPED:
@@ -54,7 +54,7 @@ namespace Fps
 
         private void StartSession()
         {
-            Owner.SetState(new SpawnPlayerState(Controller, Owner));
+            Owner.SetState(new SpawnPlayerState(Manager, Owner));
         }
 
         private void CancelSession()

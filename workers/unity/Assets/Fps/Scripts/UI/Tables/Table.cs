@@ -9,46 +9,44 @@ namespace Fps
         public RectTransform EntriesParentRect;
         public TableEntry EntryTemplate;
 
-        private float entryHeightCached = -1f;
-
-        [NonSerialized] private readonly List<TableEntry> Entries = new List<TableEntry>();
-
         public float EntryHeight
         {
             get
             {
-                if (entryHeightCached >= 0)
+                if (entryHeight <= 0f)
                 {
-                    return entryHeightCached;
+                    entryHeight = EntryTemplate.GetComponent<RectTransform>().rect.height;
                 }
 
-                entryHeightCached = EntryTemplate.GetComponent<RectTransform>().rect.height;
-                return entryHeightCached;
+                return entryHeight;
             }
         }
+
+        private readonly List<TableEntry> entries = new List<TableEntry>();
+        private float entryHeight;
+
 
         public TableEntry AddEntry()
         {
             TableEntry newEntry = Instantiate(EntryTemplate.gameObject, EntriesParentRect, false).GetComponent<TableEntry>();
-            newEntry.transform.localPosition = Vector3.down * EntryHeight * Entries.Count;
-            Entries.Add(newEntry);
+            newEntry.transform.localPosition = Vector3.down * EntryHeight * entries.Count;
+            entries.Add(newEntry);
             return newEntry;
         }
 
         public TableEntry GetEntry(int index)
         {
-            return Entries[index];
+            return entries[index];
         }
 
         public void ClearEntries()
         {
-            // Don't destroy the first child, use it to make new children
             for (var i = EntriesParentRect.childCount - 1; i >= 0; i--)
             {
                 Destroy(EntriesParentRect.GetChild(i).gameObject);
             }
 
-            Entries.Clear();
+            entries.Clear();
         }
     }
 }

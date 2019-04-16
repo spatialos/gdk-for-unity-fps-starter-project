@@ -22,16 +22,16 @@ namespace Fps
         [Require] private GunStateComponentReader gunStateReader;
 
         private float currentFocus;
-        private InGameUIController inGameUIController;
+        private InGameScreenManager inGameScreenManager;
         private HealthBarController healthBarController;
         private LowHealthVignette damageVolumeSettings;
 
         private void Awake()
         {
-            inGameUIController = GameObject.FindGameObjectWithTag("OnScreenUI")?.GetComponentInChildren<InGameUIController>(true);
-            if (inGameUIController != null)
+            inGameScreenManager = GameObject.FindGameObjectWithTag("OnScreenUI")?.GetComponentInChildren<InGameScreenManager>(true);
+            if (inGameScreenManager != null)
             {
-                healthBarController = inGameUIController.GetComponentInChildren<HealthBarController>(true);
+                healthBarController = inGameScreenManager.GetComponentInChildren<HealthBarController>(true);
             }
 
             postProcessObject = GameObject.FindGameObjectWithTag("PostProcessing");
@@ -52,8 +52,8 @@ namespace Fps
         private void OnRespawn(Empty obj)
         {
             // Hide respawn screen
-            inGameUIController.RespawnScreen.SetActive(false);
-            inGameUIController.Hud.SetActive(true);
+            inGameScreenManager.RespawnScreen.SetActive(false);
+            inGameScreenManager.Hud.SetActive(true);
             SetHealthEffect(1);
         }
 
@@ -68,9 +68,9 @@ namespace Fps
             if (healthModifiedInfo.Died)
             {
                 // Show respawn screen on death
-                inGameUIController.RespawnScreen.SetActive(true);
-                inGameUIController.SetEscapeScreen(false);
-                inGameUIController.Hud.SetActive(false);
+                inGameScreenManager.RespawnScreen.SetActive(true);
+                inGameScreenManager.SetEscapeScreen(false);
+                inGameScreenManager.Hud.SetActive(false);
             }
 
             var currentHealth = healthReader.Data.Health / healthReader.Data.MaxHealth;
@@ -81,7 +81,7 @@ namespace Fps
         private void AimingUpdated(BlittableBool isAiming)
         {
             // Inform the ScreenUIController of the aiming update.
-            inGameUIController.SetPlayerAiming(isAiming);
+            inGameScreenManager.SetPlayerAiming(isAiming);
         }
 
         public void ShowTookDamageEffect(Vector3 origin)

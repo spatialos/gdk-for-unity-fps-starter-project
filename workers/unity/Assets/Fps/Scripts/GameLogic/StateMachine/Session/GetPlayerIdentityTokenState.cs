@@ -13,7 +13,7 @@ namespace Fps
         private Future<PlayerIdentityTokenResponse?> pitResponse;
         private State nextState;
 
-        public GetPlayerIdentityTokenState(State nextState, ScreenUIController controller, ConnectionStateMachine owner) : base(controller, owner)
+        public GetPlayerIdentityTokenState(State nextState, UIManager manager, ConnectionStateMachine owner) : base(manager, owner)
         {
             this.nextState = nextState;
         }
@@ -46,12 +46,12 @@ namespace Fps
 
             if (!result.HasValue || result.Value.Status.Code != ConnectionStatusCode.Success)
             {
-                ShowErrorMessage($"Failed to retrieve player identity token.\n Error code: {result.Value.Status}");
-                Owner.SetState(Owner.StartState);
+                ShowErrorMessage($"Failed to retrieve player identity token.\n Error code: {result.Value.Status.Code}");
+                Owner.SetState(Owner.StartState, 2f);
             }
 
             Owner.PlayerIdentityToken = result.Value.PlayerIdentityToken;
-            Owner.SetState(new GetDeploymentsState(nextState, Controller, Owner));
+            Owner.SetState(new GetDeploymentsState(nextState, Manager, Owner));
         }
     }
 }
