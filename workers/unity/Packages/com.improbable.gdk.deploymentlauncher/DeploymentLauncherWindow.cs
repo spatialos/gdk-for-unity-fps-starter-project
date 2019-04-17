@@ -101,28 +101,20 @@ namespace Improbable.Gdk.DeploymentManager
             {
                 using (new EditorGUILayout.HorizontalScope())
                 {
-                    using (new EditorGUILayout.VerticalScope())
+                    using (new EditorGUI.DisabledScope(manager.IsLaunching || manager.IsUploading))
                     {
-                        EditorGUILayout.LabelField("Project Name", projectName);
-                    }
-
-                    using (new EditorGUILayout.VerticalScope())
-                    using (new EditorGUILayout.HorizontalScope())
-                    {
-                        GUILayout.FlexibleSpace();
                         var buttonIcon = new GUIContent(EditorGUIUtility.IconContent(BuiltInRefreshIcon))
                         {
                             tooltip = "Refresh your project name."
                         };
 
-                        using (new EditorGUI.DisabledScope(manager.IsLaunching || manager.IsUploading))
+                        if (GUILayout.Button(buttonIcon, EditorStyles.miniButton, GUILayout.ExpandWidth(false)))
                         {
-                            if (GUILayout.Button(buttonIcon, EditorStyles.miniButton))
-                            {
-                                projectName = GetProjectName();
-                            }
+                            projectName = GetProjectName();
                         }
                     }
+
+                    EditorGUILayout.LabelField("Project Name", projectName);
                 }
 
                 DrawHorizontalLine(5);
