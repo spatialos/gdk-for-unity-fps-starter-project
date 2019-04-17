@@ -57,7 +57,7 @@ namespace Fps
         {
             if (nextState == null)
             {
-                currentState.Tick();
+                currentState?.Tick();
                 return;
             }
 
@@ -67,11 +67,11 @@ namespace Fps
                 return;
             }
 
-            currentState.ExitState();
+            currentState?.ExitState();
             currentState = nextState;
             nextState = null;
-            currentState.StartState();
-            currentState.Tick();
+            currentState?.StartState();
+            currentState?.Tick();
         }
     }
 }

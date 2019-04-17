@@ -259,7 +259,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Blackboard:
-    UseSessionBasedFlow: 1
+    UseSessionBasedFlow: 0
     SessionStatus: 0
     PlayerName: Player
     DevAuthToken: 
@@ -482,6 +482,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 4648769248767123357, guid: c0011f63193627d4eb6f0db039fd8b17,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c0011f63193627d4eb6f0db039fd8b17, type: 3}

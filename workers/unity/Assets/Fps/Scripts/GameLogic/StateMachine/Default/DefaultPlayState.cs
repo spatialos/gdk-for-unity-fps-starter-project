@@ -9,6 +9,7 @@ namespace Fps
         public override void StartState()
         {
             Owner.Blackboard.ClientConnector.Worker.OnDisconnect += WorkerOnDisconnect;
+            Manager.InGameManager.Timer.SetActive(false);
             Manager.ShowGameView();
         }
 

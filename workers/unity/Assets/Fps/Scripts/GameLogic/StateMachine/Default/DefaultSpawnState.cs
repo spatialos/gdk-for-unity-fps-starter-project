@@ -12,6 +12,7 @@ namespace Fps
 
         public override void StartState()
         {
+            Animator.SetTrigger("Ready");
             DefaultConnectScreenManager.ConnectButton.onClick.AddListener(SpawnPlayer);
         }
 

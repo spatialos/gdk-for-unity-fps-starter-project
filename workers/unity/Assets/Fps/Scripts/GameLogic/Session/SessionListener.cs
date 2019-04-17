@@ -22,8 +22,7 @@ namespace Fps
             }
 
             uiManager.ShowGameView();
-            var timerGameObject = GameObject.FindGameObjectWithTag("Timer");
-
+            var timerGameObject = uiManager.InGameManager.Timer;
             timerGameObject.SetActive(true);
             gameUITimer = timerGameObject.GetComponent<GameUITimer>();
             gameUITimer.SetMaxTime(timerReader.Data.MaxTimeSeconds);
