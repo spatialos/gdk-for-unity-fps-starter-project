@@ -15,20 +15,20 @@ namespace Improbable.Gdk.DeploymentManager
 {
     internal class DeploymentLauncherWindow : EditorWindow
     {
-        internal const string BuiltInErrorIcon = "console.erroricon.sml";
-        internal const string BuiltInRefreshIcon = "Refresh";
-
-        private DeploymentLauncherConfig launcherConfig;
+        private const string BuiltInErrorIcon = "console.erroricon.sml";
+        private const string BuiltInRefreshIcon = "Refresh";
 
         private static readonly Vector2 SmallIconSize = new Vector2(12, 12);
+        private readonly Color horizontalLineColor = new Color(0.3f, 0.3f, 0.3f, 1);
         private Material spinnerMaterial;
 
+        private readonly TaskManager manager = new TaskManager();
+        private readonly UiStateManager stateManager = new UiStateManager();
+
+        private DeploymentLauncherConfig launcherConfig;
+        private int selectedDeploymentIndex;
         private Vector2 scrollPos;
         private string projectName;
-        private TaskManager manager = new TaskManager();
-        private UiStateManager stateManager = new UiStateManager();
-
-        private int selectedDeploymentIndex;
 
         [MenuItem("SpatialOS/Deployment Launcher", false, 51)]
         private static void LaunchDeploymentMenu()
@@ -464,7 +464,7 @@ namespace Improbable.Gdk.DeploymentManager
         private void DrawHorizontalLine(int height)
         {
             var rect = EditorGUILayout.GetControlRect(false, height, EditorStyles.foldout);
-            using (new Handles.DrawingScope(new Color(0.3f, 0.3f, 0.3f, 1)))
+            using (new Handles.DrawingScope(horizontalLineColor))
             {
                 Handles.DrawLine(new Vector2(rect.x, rect.yMax), new Vector2(rect.xMax, rect.yMax));
             }
