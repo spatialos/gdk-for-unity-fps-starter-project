@@ -399,5 +399,20 @@ namespace Improbable.Gdk.DeploymentManager
                 ShouldForceUpload = ShouldForceUpload
             };
         }
+
+        public string GetError()
+        {
+            if (string.IsNullOrEmpty(AssemblyName))
+            {
+                return "Assembly Name cannot be empty.";
+            }
+
+            if (!Regex.Match(AssemblyName, "^[a-zA-Z0-9_.-]{5,64}$").Success)
+            {
+                return $"Assembly Name \"{AssemblyName}\" is invalid. Must conform to the regex: ^[a-zA-Z0-9_.-]{{5,64}}";
+            }
+
+            return null;
+        }
     }
 }

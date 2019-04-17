@@ -208,6 +208,7 @@ namespace Improbable.Gdk.DeploymentManager
             GUILayout.Label("Assembly Upload", EditorStyles.boldLabel);
 
             var copy = config.DeepCopy();
+            var error = config.GetError();
 
             using (new EditorGUILayout.VerticalScope())
             {
@@ -215,6 +216,7 @@ namespace Improbable.Gdk.DeploymentManager
                 copy.ShouldForceUpload = EditorGUILayout.Toggle("Force Upload", config.ShouldForceUpload);
 
                 GUILayout.Space(EditorGUIUtility.standardVerticalSpacing);
+
 
                 using (new EditorGUILayout.HorizontalScope())
                 {
@@ -225,21 +227,29 @@ namespace Improbable.Gdk.DeploymentManager
                         copy.AssemblyName = $"{projectName}_{DateTime.Now.ToString("MMdd_hhmm")}";
                     }
 
-                    if (GUILayout.Button("Assign assembly name to deployments"))
+                    using (new EditorGUI.DisabledScope(error != null))
                     {
-                        foreach (var deplConfig in launcherConfig.DeploymentConfigs)
+                        if (GUILayout.Button("Assign assembly name to deployments"))
                         {
-                            deplConfig.AssemblyName = launcherConfig.AssemblyConfig.AssemblyName;
+                            foreach (var deplConfig in launcherConfig.DeploymentConfigs)
+                            {
+                                deplConfig.AssemblyName = launcherConfig.AssemblyConfig.AssemblyName;
+                            }
                         }
-                    }
 
-                    using (new EditorGUI.DisabledScope(manager.IsUploading))
-                    {
-                        if (GUILayout.Button("Upload Assembly"))
+                        using (new EditorGUI.DisabledScope(manager.IsUploading))
                         {
-                            manager.Upload(projectName, config);
+                            if (GUILayout.Button("Upload Assembly"))
+                            {
+                                manager.Upload(projectName, config);
+                            }
                         }
                     }
+                }
+
+                if (error != null)
+                {
+                    EditorGUILayout.HelpBox(error, MessageType.Error);
                 }
             }
 
