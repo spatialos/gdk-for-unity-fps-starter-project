@@ -88,7 +88,6 @@ namespace Fps
 
         private void AddPlayerToTable(ResultsData data, bool isLocalPlayer)
         {
-            Debug.Log($"is local player {isLocalPlayer}");
             var entry = (ResultsTableEntry) resultsTable.AddEntry();
             entry.SetData(data);
             entry.SetAllTextVisuals(isLocalPlayer ? localPlayerTextColor : defaultTextColor, isLocalPlayer);

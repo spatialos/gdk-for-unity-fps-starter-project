@@ -18,9 +18,6 @@ namespace Fps
             var results = trackPlayerSystem.PlayerResults;
             // get player rank
             var playerRank = results.FirstOrDefault(res => res.PlayerName == playerName).Rank;
-            UnityEngine.Debug.Log($"Player rank {playerRank}");
-            UnityEngine.Debug.Log($"Player name {playerName}");
-            UnityEngine.Debug.Log($"Player count {results.Count}");
 
             Manager.ScreenManager.ResultsScreenManager.SetResults(results.ToArray(), playerRank);
 
