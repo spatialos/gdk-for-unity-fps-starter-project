@@ -101,20 +101,26 @@ namespace Improbable.Gdk.DeploymentManager
             {
                 using (new EditorGUILayout.HorizontalScope())
                 {
-                    EditorGUILayout.LabelField("Project Name", projectName);
-
-                    var buttonIcon = new GUIContent(EditorGUIUtility.IconContent(BuiltInRefreshIcon))
+                    using (new EditorGUILayout.VerticalScope())
                     {
-                        tooltip = "Refresh your project name."
-                    };
+                        EditorGUILayout.LabelField("Project Name", projectName);
+                    }
 
-                    GUILayout.Space(EditorGUIUtility.currentViewWidth * 0.6f);
-
-                    using (new EditorGUI.DisabledScope(manager.IsLaunching || manager.IsUploading))
+                    using (new EditorGUILayout.VerticalScope())
+                    using (new EditorGUILayout.HorizontalScope())
                     {
-                        if (GUILayout.Button(buttonIcon, EditorStyles.miniButton))
+                        GUILayout.FlexibleSpace();
+                        var buttonIcon = new GUIContent(EditorGUIUtility.IconContent(BuiltInRefreshIcon))
                         {
-                            projectName = GetProjectName();
+                            tooltip = "Refresh your project name."
+                        };
+
+                        using (new EditorGUI.DisabledScope(manager.IsLaunching || manager.IsUploading))
+                        {
+                            if (GUILayout.Button(buttonIcon, EditorStyles.miniButton))
+                            {
+                                projectName = GetProjectName();
+                            }
                         }
                     }
                 }
@@ -220,7 +226,16 @@ namespace Improbable.Gdk.DeploymentManager
 
                 using (new EditorGUILayout.HorizontalScope())
                 {
-                    GUILayout.FlexibleSpace();
+                    var shouldBeVertical = EditorGUIUtility.currentViewWidth < 550;
+                    /* Response Layout, Intuitive API! */
+                    if (shouldBeVertical)
+                    {
+                        EditorGUILayout.BeginVertical();
+                    }
+                    else
+                    {
+                        GUILayout.FlexibleSpace();
+                    }
 
                     if (GUILayout.Button("Generate assembly name"))
                     {
@@ -244,6 +259,11 @@ namespace Improbable.Gdk.DeploymentManager
                                 manager.Upload(projectName, config);
                             }
                         }
+                    }
+
+                    if (shouldBeVertical)
+                    {
+                        EditorGUILayout.EndVertical();
                     }
                 }
 
@@ -475,6 +495,7 @@ namespace Improbable.Gdk.DeploymentManager
             if (data == null)
             {
                 Debug.LogError($"Could not parse spatialos.json file located at: {spatialJsonFile}");
+                return null;
             }
 
             try
