@@ -167,7 +167,7 @@ namespace Improbable.Gdk.DeploymentManager
 
                     var hasErrors = isValid && launcherConfig.DeploymentConfigs[selectedDeploymentIndex].GetErrors().Any();
 
-                    using (new EditorGUI.DisabledScope(!isValid || hasErrors || manager.IsLaunching))
+                    using (new EditorGUI.DisabledScope(!isValid || hasErrors || manager.IsLaunching || manager.IsUploading))
                     {
                         if (GUILayout.Button("Launch deployment"))
                         {
@@ -175,7 +175,7 @@ namespace Improbable.Gdk.DeploymentManager
 
                             manager.Launch(projectName, deplConfig.AssemblyName, deplConfig.Deployment);
 
-                            foreach (var simPlayerDepl in deplConfig.SimulatedPlayerDeploymentConfig)
+                            foreach (var simPlayerDepl in deplConfig.SimulatedPlayerDeploymentConfigs)
                             {
                                 manager.Launch(projectName, deplConfig.AssemblyName, simPlayerDepl);
                             }
@@ -244,7 +244,7 @@ namespace Improbable.Gdk.DeploymentManager
                             }
                         }
 
-                        using (new EditorGUI.DisabledScope(manager.IsUploading))
+                        using (new EditorGUI.DisabledScope(manager.IsUploading || manager.IsLaunching))
                         {
                             if (GUILayout.Button("Upload Assembly"))
                             {
@@ -322,22 +322,22 @@ namespace Improbable.Gdk.DeploymentManager
 
                         EditorGUILayout.LabelField("Simulated Player Deployments");
 
-                        for (var i = 0; i < copy.SimulatedPlayerDeploymentConfig.Count; i++)
+                        for (var i = 0; i < copy.SimulatedPlayerDeploymentConfigs.Count; i++)
                         {
-                            var simConfig = copy.SimulatedPlayerDeploymentConfig[i];
+                            var simConfig = copy.SimulatedPlayerDeploymentConfigs[i];
                             var (shouldRemove, updated) = DrawSimulatedConfig(i, simConfig);
 
                             GUILayout.Space(5);
 
                             if (shouldRemove)
                             {
-                                copy.SimulatedPlayerDeploymentConfig.RemoveAt(i);
+                                copy.SimulatedPlayerDeploymentConfigs.RemoveAt(i);
                                 i--;
                                 UpdateSimulatedDeploymentNames(copy);
                             }
                             else
                             {
-                                copy.SimulatedPlayerDeploymentConfig[i] = updated;
+                                copy.SimulatedPlayerDeploymentConfigs[i] = updated;
                             }
                         }
                     }
@@ -353,9 +353,9 @@ namespace Improbable.Gdk.DeploymentManager
                         {
                             var newSimPlayerDepl = new SimulatedPlayerDeploymentConfig();
                             newSimPlayerDepl.TargetDeploymentName = config.Deployment.Name;
-                            newSimPlayerDepl.Name = $"{config.Deployment.Name}_sim{config.SimulatedPlayerDeploymentConfig.Count + 1}";
+                            newSimPlayerDepl.Name = $"{config.Deployment.Name}_sim{config.SimulatedPlayerDeploymentConfigs.Count + 1}";
 
-                            copy.SimulatedPlayerDeploymentConfig.Add(newSimPlayerDepl);
+                            copy.SimulatedPlayerDeploymentConfigs.Add(newSimPlayerDepl);
                         }
                     }
                 }
@@ -391,7 +391,7 @@ namespace Improbable.Gdk.DeploymentManager
 
             using (new EditorGUI.IndentLevelScope())
             {
-                for (int i = 0; i < dest.Tags.Count; i++)
+                for (var i = 0; i < dest.Tags.Count; i++)
                 {
                     dest.Tags[i] = EditorGUILayout.TextField($"Tag #{i + 1}", dest.Tags[i]);
                 }
@@ -449,15 +449,15 @@ namespace Improbable.Gdk.DeploymentManager
 
         private void UpdateSimulatedDeploymentNames(DeploymentConfig config)
         {
-            for (var i = 0; i < config.SimulatedPlayerDeploymentConfig.Count; i++)
+            for (var i = 0; i < config.SimulatedPlayerDeploymentConfigs.Count; i++)
             {
                 var previousFoldoutState =
-                    stateManager.GetStateObject<bool>(config.SimulatedPlayerDeploymentConfig[i].Name.GetHashCode());
+                    stateManager.GetStateObject<bool>(config.SimulatedPlayerDeploymentConfigs[i].Name.GetHashCode());
 
-                config.SimulatedPlayerDeploymentConfig[i].Name = $"{config.Deployment.Name}_sim{i + 1}";
-                config.SimulatedPlayerDeploymentConfig[i].TargetDeploymentName = config.Deployment.Name;
+                config.SimulatedPlayerDeploymentConfigs[i].Name = $"{config.Deployment.Name}_sim{i + 1}";
+                config.SimulatedPlayerDeploymentConfigs[i].TargetDeploymentName = config.Deployment.Name;
 
-                stateManager.SetStateObject(config.SimulatedPlayerDeploymentConfig[i].Name.GetHashCode(), previousFoldoutState);
+                stateManager.SetStateObject(config.SimulatedPlayerDeploymentConfigs[i].Name.GetHashCode(), previousFoldoutState);
             }
         }
 

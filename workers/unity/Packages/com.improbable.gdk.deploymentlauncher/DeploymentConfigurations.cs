@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using UnityEngine.Serialization;
 
 namespace Improbable.Gdk.DeploymentManager
 {
@@ -50,13 +51,13 @@ namespace Improbable.Gdk.DeploymentManager
         /// <summary>
         ///     List of simulated player deployments that will target this deployment.
         /// </summary>
-        public List<SimulatedPlayerDeploymentConfig> SimulatedPlayerDeploymentConfig;
+        public List<SimulatedPlayerDeploymentConfig> SimulatedPlayerDeploymentConfigs;
 
         public DeploymentConfig()
         {
             AssemblyName = string.Empty;
             Deployment = new BaseDeploymentConfig();
-            SimulatedPlayerDeploymentConfig = new List<SimulatedPlayerDeploymentConfig>();
+            SimulatedPlayerDeploymentConfigs = new List<SimulatedPlayerDeploymentConfig>();
         }
 
         public Errors GetErrors()
@@ -70,7 +71,7 @@ namespace Improbable.Gdk.DeploymentManager
                 errors.DeplErrors[Deployment.Name].Add(message);
             }
 
-            foreach (var simPlayerDepl in SimulatedPlayerDeploymentConfig)
+            foreach (var simPlayerDepl in SimulatedPlayerDeploymentConfigs)
             {
                 errors.DeplErrors.Add(simPlayerDepl.Name, simPlayerDepl.GetErrors().ToList());
             }
@@ -88,8 +89,8 @@ namespace Improbable.Gdk.DeploymentManager
             {
                 AssemblyName = AssemblyName,
                 Deployment = Deployment.DeepCopy(),
-                SimulatedPlayerDeploymentConfig =
-                    SimulatedPlayerDeploymentConfig.Select(config => config.DeepCopy()).ToList(),
+                SimulatedPlayerDeploymentConfigs =
+                    SimulatedPlayerDeploymentConfigs.Select(config => config.DeepCopy()).ToList(),
             };
         }
 

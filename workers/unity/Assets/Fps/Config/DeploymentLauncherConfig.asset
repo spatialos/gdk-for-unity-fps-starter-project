@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: DeploymentLauncherConfig
   m_EditorClassIdentifier: 
   AssemblyConfig:
-    AssemblyName: unity_gdk_0412_1112
-    ShouldForceUpload: 1
+    AssemblyName: unity_gdk_0417_0557
+    ShouldForceUpload: 0
   DeploymentConfigs:
-  - AssemblyName: unity_gdk_0412_1112
+  - AssemblyName: unity_gdk_0417_1207
     Deployment:
       Name: test_depl_2
       SnapshotPath: snapshots/cloud.snapshot
@@ -24,7 +24,7 @@ MonoBehaviour:
       Region: 1
       Tags:
       - dev_login
-    SimulatedPlayerDeploymentConfig:
+    SimulatedPlayerDeploymentConfigs:
     - Name: test_depl_2_sim1
       SnapshotPath: 
       LaunchJson: cloud_launch_large_sim_players.json
