@@ -51,7 +51,7 @@ namespace Improbable.Gdk.Guns
                         Amount = -damage,
                         Origin = shotInfo.HitOrigin,
                         AppliedLocation = shotInfo.HitLocation,
-                        Owner = shotInfo.OwnId
+                        Owner = shotInfo.EntityId,
                     }
                 );
 

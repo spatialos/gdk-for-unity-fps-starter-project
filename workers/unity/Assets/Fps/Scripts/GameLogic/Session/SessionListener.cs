@@ -1,3 +1,4 @@
+using System;
 using Improbable.Gdk.Subscriptions;
 using Improbable.Gdk.Session;
 using UnityEngine;
@@ -14,35 +15,22 @@ namespace Fps
 
         private void OnEnable()
         {
-            InitTimer();
-            timerReader.OnCurrentTimeSecondsUpdate += OnCurrentTimeSecondsUpdated;
-        }
-
-        private void OnCurrentTimeSecondsUpdated(uint currentTimeSeconds)
-        {
-            if (gameUITimer == null)
-            {
-                InitTimer();
-            }
-
-            if (gameUITimer != null)
-            {
-                gameUITimer.SynchronizeTime(currentTimeSeconds);
-            }
-        }
-
-        private void InitTimer()
-        {
             var timerGameObject = GameObject.FindGameObjectWithTag("Timer");
             if (timerGameObject == null)
             {
-                return;
+                throw new NullReferenceException("Unable to find Game Object with tag 'Timer'.");
             }
 
             timerGameObject.SetActive(true);
             gameUITimer = timerGameObject.GetComponent<GameUITimer>();
             gameUITimer.SetMaxTime(timerReader.Data.MaxTimeSeconds);
             gameUITimer.SynchronizeTime(timerReader.Data.CurrentTimeSeconds);
+            timerReader.OnCurrentTimeSecondsUpdate += OnCurrentTimeSecondsUpdated;
+        }
+
+        private void OnCurrentTimeSecondsUpdated(uint currentTimeSeconds)
+        {
+            gameUITimer.SynchronizeTime(currentTimeSeconds);
         }
     }
 }

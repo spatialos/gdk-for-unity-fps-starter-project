@@ -1,38 +1,58 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Fps
 {
     public class ResultsScreenManager : MonoBehaviour
     {
-        public Color BackgroundStripColor1;
-        public Color BackgroundStripColor2;
-        public Color LocalPlayerBackgroundColor;
-        public Color LocalPlayerTextColor;
-        public Color DefaultTextColor;
-        public Table ResultsTable;
         public Button DoneButton;
 
+        [SerializeField] private Color backgroundStripColor1;
+        [SerializeField] private Color backgroundStripColor2;
+        [SerializeField] private Color localPlayerBackgroundColor;
+        [SerializeField] private Color localPlayerTextColor;
+        [SerializeField] private Color defaultTextColor;
+        [SerializeField] private Table resultsTable;
         [SerializeField] private GameObject rankDivider;
+
         private const int MaxVisibleRowCount = 12; // Includes header
         private Color currentBgColor;
 
+        private void OnValidate()
+        {
+            if (DoneButton == null)
+            {
+                throw new NullReferenceException("Missing reference to the done button.");
+            }
+
+            if (resultsTable == null)
+            {
+                throw new NullReferenceException("Missing reference to the results table.");
+            }
+
+            if (rankDivider == null)
+            {
+                throw new NullReferenceException("Missing reference to the rank divider.");
+            }
+        }
+
         public void SetResults(ResultsData[] results, int playerRank)
         {
-            ResultsTable.ClearEntries();
-            currentBgColor = BackgroundStripColor1;
+            resultsTable.ClearEntries();
+            currentBgColor = backgroundStripColor1;
 
             AdjustTableHeight(playerRank);
 
             for (var i = 0; i < Mathf.Min(10, results.Length); i++)
             {
-                AddPlayerToTable(results[i], playerRank == i);
-                currentBgColor = i % 2 == 0 ? BackgroundStripColor2 : BackgroundStripColor1;
+                AddPlayerToTable(results[i], isLocalPlayer: playerRank == (i + 1));
+                currentBgColor = i % 2 == 0 ? backgroundStripColor2 : backgroundStripColor1;
             }
 
             if (playerRank >= 10)
             {
-                AddPlayerToTable(results[playerRank], true);
+                AddPlayerToTable(results[playerRank], isLocalPlayer: true);
             }
         }
 
@@ -50,28 +70,29 @@ namespace Fps
         {
             if (playerRank < 10)
             {
-                var rect = ResultsTable.GetComponent<RectTransform>();
+                var rect = resultsTable.GetComponent<RectTransform>();
                 rect.offsetMin = new Vector2(rect.offsetMin.x,
-                    (MaxVisibleRowCount - 1) * ResultsTable.EntryHeight * -.5f);
+                    (MaxVisibleRowCount - 1) * resultsTable.EntryHeight * -.5f);
                 rect.offsetMax = new Vector2(rect.offsetMax.x,
-                    (MaxVisibleRowCount - 1) * ResultsTable.EntryHeight * .5f);
+                    (MaxVisibleRowCount - 1) * resultsTable.EntryHeight * .5f);
                 rankDivider.SetActive(false);
             }
             else
             {
-                var rect = ResultsTable.GetComponent<RectTransform>();
-                rect.offsetMin = new Vector2(rect.offsetMin.x, MaxVisibleRowCount * ResultsTable.EntryHeight * -.5f);
-                rect.offsetMax = new Vector2(rect.offsetMax.x, MaxVisibleRowCount * ResultsTable.EntryHeight * .5f);
+                var rect = resultsTable.GetComponent<RectTransform>();
+                rect.offsetMin = new Vector2(rect.offsetMin.x, MaxVisibleRowCount * resultsTable.EntryHeight * -.5f);
+                rect.offsetMax = new Vector2(rect.offsetMax.x, MaxVisibleRowCount * resultsTable.EntryHeight * .5f);
                 rankDivider.SetActive(true);
             }
         }
 
         private void AddPlayerToTable(ResultsData data, bool isLocalPlayer)
         {
-            var entry = (ResultsTableEntry) ResultsTable.AddEntry();
+            Debug.Log($"is local player {isLocalPlayer}");
+            var entry = (ResultsTableEntry) resultsTable.AddEntry();
             entry.SetData(data);
-            entry.SetAllTextVisuals(isLocalPlayer ? LocalPlayerTextColor : DefaultTextColor, isLocalPlayer);
-            entry.Background.color = isLocalPlayer ? LocalPlayerBackgroundColor : currentBgColor;
+            entry.SetAllTextVisuals(isLocalPlayer ? localPlayerTextColor : defaultTextColor, isLocalPlayer);
+            entry.Background.color = isLocalPlayer ? localPlayerBackgroundColor : currentBgColor;
         }
     }
 }

@@ -10,11 +10,5 @@ namespace Fps
             Manager = manager;
             Owner = owner;
         }
-
-        protected void ShowErrorMessage(string errorMessage)
-        {
-            Manager.ScreenManager.StartScreenManager.ShowFailedToGetDeploymentsText(errorMessage);
-            Manager.ScreenManager.LobbyScreenManager.ShowFailedToGetDeploymentsText(errorMessage);
-        }
     }
 }

@@ -328,12 +328,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccb652deb0bedd04dbd00464e05717c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Minutes: {fileID: 8882895057461656558}
-  Seconds: {fileID: 8883786863242717408}
-  Divider: {fileID: 8883782556289041784}
-  DefaultColor: {r: 1, g: 1, b: 1, a: 1}
-  LowTimeColor: {r: 1, g: 0.5235849, b: 0.5235849, a: 1}
-  RedSeconds: 60
+  minutes: {fileID: 8882895057461656558}
+  seconds: {fileID: 8883786863242717408}
+  divider: {fileID: 8883782556289041784}
+  defaultColor: {r: 1, g: 1, b: 1, a: 1}
+  lowTimeColor: {r: 1, g: 0.5254902, b: 0.5254902, a: 1}
+  lowSecondsThreshold: 60
 --- !u!1 &8851592017313216596
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,3 +1,6 @@
+using System.Linq;
+using Improbable.Gdk.Core;
+
 namespace Fps
 {
     public class ResultsState : SessionState
@@ -10,40 +13,28 @@ namespace Fps
         {
             Manager.ScreenManager.ResultsScreenManager.DoneButton.onClick.AddListener(Restart);
 
-            var trackPlayerSystem = Owner.ClientConnector.Worker.World.GetExistingManager<TrackPlayerSystem>();
+            var trackPlayerSystem = Owner.Blackboard.ClientConnector.Worker.World.GetExistingManager<TrackPlayerSystem>();
             var playerName = trackPlayerSystem.PlayerName;
             var results = trackPlayerSystem.PlayerResults;
             // get player rank
-            var playerRank = -1;
-
-            for (var i = 0; i < results.Count; i++)
-            {
-                var result = results[i];
-                result.Rank = i + 1;
-                results[i] = result;
-
-                if (playerName == result.PlayerName)
-                {
-                    playerRank = i;
-                }
-            }
+            var playerRank = results.FirstOrDefault(res => res.PlayerName == playerName).Rank;
+            UnityEngine.Debug.Log($"Player rank {playerRank}");
+            UnityEngine.Debug.Log($"Player name {playerName}");
+            UnityEngine.Debug.Log($"Player count {results.Count}");
 
             Manager.ScreenManager.ResultsScreenManager.SetResults(results.ToArray(), playerRank);
 
             // show results screen
             Manager.ShowFrontEnd();
             Manager.ScreenManager.SwitchToResultsScreen();
-            Owner.DestroyClientWorker();
+            UnityObjectDestroyer.Destroy(Owner.Blackboard.ClientConnector);
+            Owner.Blackboard.ClientConnector = null;
         }
 
         public override void ExitState()
         {
             Manager.ScreenManager.ResultsScreenManager.DoneButton.onClick.RemoveListener(Restart);
             Manager.ScreenManager.SwitchToSessionScreen();
-        }
-
-        public override void Tick()
-        {
         }
 
         private void Restart()

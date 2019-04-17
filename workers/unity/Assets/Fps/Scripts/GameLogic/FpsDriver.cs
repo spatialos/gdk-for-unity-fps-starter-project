@@ -60,12 +60,16 @@ namespace Fps
             currentGun = GetComponent<GunManager>();
             controller = GetComponent<IControlProvider>();
 
-            inGameManager = GameObject.FindGameObjectWithTag("OnScreenUI")?.GetComponentInChildren<InGameScreenManager>(true);
-            if (inGameManager == null)
+            var uiManager = GameObject.FindGameObjectWithTag("OnScreenUI").GetComponent<UIManager>();
+            if (uiManager == null)
             {
                 Debug.LogError("Was not able to find the OnScreenUI prefab in the scene.");
                 enabled = false;
+                return;
             }
+
+            uiManager.ShowGameView();
+            inGameManager = uiManager.InGameManager;
         }
 
         private void OnEnable()
@@ -84,7 +88,7 @@ namespace Fps
             }
 
             // Don't allow controls if in the menu.
-            if (InGameScreenManager.InEscapeMenu)
+            if (inGameManager.InEscapeMenu)
             {
                 // Still apply physics.
                 movement.ApplyMovement(Vector3.zero, transform.rotation, MovementSpeed.Run, false);

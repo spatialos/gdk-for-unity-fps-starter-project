@@ -13,14 +13,14 @@ namespace Fps
         {
             deploymentListScreenManager.ShowDeploymentListAvailableText();
             deploymentListScreenManager.JoinButton.onClick.AddListener(Connect);
-            deploymentListScreenManager.BackButton.onClick.AddListener(Back);
+            deploymentListScreenManager.BackButton.onClick.AddListener(ResetToStart);
             Manager.ScreenManager.SwitchToDeploymentListScreen();
         }
 
         public override void ExitState()
         {
             deploymentListScreenManager.JoinButton.onClick.RemoveListener(Connect);
-            deploymentListScreenManager.BackButton.onClick.RemoveListener(Back);
+            deploymentListScreenManager.BackButton.onClick.RemoveListener(ResetToStart);
         }
 
         public override void Tick()
@@ -34,7 +34,7 @@ namespace Fps
             Owner.SetState(new ConnectState(deploymentListScreenManager.GetChosenDeployment(), Manager, Owner));
         }
 
-        private void Back()
+        private void ResetToStart()
         {
             Owner.SetState(Owner.StartState);
         }

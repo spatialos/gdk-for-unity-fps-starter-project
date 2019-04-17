@@ -1,5 +1,9 @@
 using System;
+using System.Linq;
+using Improbable.Gdk.Core;
+using Improbable.Gdk.Core.Commands;
 using Improbable.Gdk.Session;
+using Improbable.Worker.CInterop.Query;
 
 namespace Fps
 {
@@ -27,24 +31,22 @@ namespace Fps
 
         public override void Tick()
         {
-            var status = GetStatus();
-            switch (status)
+            switch (Owner.Blackboard.SessionStatus)
             {
                 case Status.LOBBY:
                     var state = new WaitForGameState(Manager, Owner);
-                    var nextState = new GetPlayerIdentityTokenState(state, Manager, Owner);
+                    var nextState = new QuerySessionStatusState(state, Manager, Owner);
                     Owner.SetState(nextState);
                     break;
                 case Status.RUNNING:
-                    lobbyScreenManager.UpdateHintText(true);
-                    var isValid = lobbyScreenManager.IsValidName();
-                    lobbyScreenManager.StartButton.enabled = status == Status.RUNNING && isValid;
+                    lobbyScreenManager.UpdateHintText(hasGameBegun: true);
+                    lobbyScreenManager.StartButton.enabled = Owner.Blackboard.SessionStatus == Status.RUNNING
+                        && lobbyScreenManager.IsValidName();
                     lobbyScreenManager.ShowGameReadyText();
                     break;
                 case Status.STOPPING:
                 case Status.STOPPED:
-                    Owner.DestroyClientWorker();
-                    Owner.SetState(Owner.StartState);
+                    CancelSession();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -58,39 +60,9 @@ namespace Fps
 
         private void CancelSession()
         {
-            Owner.DestroyClientWorker();
+            UnityObjectDestroyer.Destroy(Owner.Blackboard.ClientConnector);
+            Owner.Blackboard.ClientConnector = null;
             Owner.SetState(Owner.StartState);
-        }
-
-        private Status GetStatus()
-        {
-            foreach (var loginToken in Owner.LoginTokens)
-            {
-                if (loginToken.DeploymentName == Owner.ClientConnector.Deployment)
-                {
-                    foreach (var tag in loginToken.Tags)
-                    {
-                        if (!tag.Contains("status"))
-                        {
-                            continue;
-                        }
-
-                        switch (tag)
-                        {
-                            case "status_lobby":
-                                return Status.LOBBY;
-                            case "status_running":
-                                return Status.RUNNING;
-                            case "status_stopping":
-                                return Status.STOPPING;
-                            default:
-                                return Status.STOPPED;
-                        }
-                    }
-                }
-            }
-
-            return Status.STOPPED;
         }
     }
 }

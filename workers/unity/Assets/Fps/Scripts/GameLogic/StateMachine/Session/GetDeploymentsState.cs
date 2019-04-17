@@ -22,7 +22,7 @@ namespace Fps
                 new LoginTokensRequest
                 {
                     WorkerType = WorkerUtils.UnityClient,
-                    PlayerIdentityToken = Owner.PlayerIdentityToken,
+                    PlayerIdentityToken = Owner.Blackboard.PlayerIdentityToken,
                     UseInsecureConnection = false,
                     DurationSeconds = 120,
                 }
@@ -43,16 +43,17 @@ namespace Fps
 
             if (!result.HasValue || result.Value.Status.Code != ConnectionStatusCode.Success)
             {
-                ShowErrorMessage($"Failed to retrieve any login tokens.\n Error code: {result.Value.Status.Code}");
+                Manager.ScreenManager.StartScreenManager.ShowFailedToGetDeploymentsText(
+                    $"Failed to retrieve any login tokens.\n Error code: {result.Value.Status.Code}");
                 Owner.SetState(Owner.StartState, 2f);
                 return;
             }
 
-            Owner.LoginTokens = result.Value.LoginTokens;
+            Owner.Blackboard.LoginTokens = result.Value.LoginTokens;
 
-            if (Owner.LoginTokens.Count == 0)
+            if (Owner.Blackboard.LoginTokens.Count == 0)
             {
-                ShowErrorMessage("No deployments are available.");
+                Manager.ScreenManager.StartScreenManager.ShowFailedToGetDeploymentsText("No deployments are available.");
                 Owner.SetState(Owner.StartState, 2f);
                 return;
             }

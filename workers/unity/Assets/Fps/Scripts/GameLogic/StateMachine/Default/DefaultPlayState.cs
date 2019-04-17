@@ -8,12 +8,8 @@ namespace Fps
 
         public override void StartState()
         {
-            Owner.ClientConnector.Worker.OnDisconnect += WorkerOnDisconnect;
+            Owner.Blackboard.ClientConnector.Worker.OnDisconnect += WorkerOnDisconnect;
             Manager.ShowGameView();
-        }
-
-        public override void Tick()
-        {
         }
 
         public override void ExitState()
@@ -22,7 +18,7 @@ namespace Fps
 
         private void WorkerOnDisconnect(string obj)
         {
-            Owner.ClientConnector = null;
+            Owner.Blackboard.ClientConnector = null;
             Owner.SetState(Owner.StartState);
         }
     }

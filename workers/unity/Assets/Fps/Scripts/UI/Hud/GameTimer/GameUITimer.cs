@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Fps
@@ -11,19 +12,37 @@ namespace Fps
 
         [SerializeField] private Color defaultColor;
         [SerializeField] private Color lowTimeColor;
-        [SerializeField] private int redSeconds;
+        [SerializeField] private int lowSecondsThreshold;
 
         private uint maxTime;
 
-        private void UpdateTime(int seconds)
+        private void OnValidate()
         {
-            var col = seconds <= redSeconds ? lowTimeColor : defaultColor;
+            if (minutes == null)
+            {
+                throw new NullReferenceException("Missing reference to the minutes text.");
+            }
 
-            minutes.text = (seconds / 60).ToString("D2");
-            this.seconds.text = (seconds % 60).ToString("D2");
+            if (seconds == null)
+            {
+                throw new NullReferenceException("Missing reference to the seconds text.");
+            }
+
+            if (divider == null)
+            {
+                throw new NullReferenceException("Missing reference to the divider text.");
+            }
+        }
+
+        private void UpdateTime(int updatedSeconds)
+        {
+            var col = updatedSeconds <= lowSecondsThreshold ? lowTimeColor : defaultColor;
+
+            minutes.text = (updatedSeconds / 60).ToString("D2");
+            seconds.text = (updatedSeconds % 60).ToString("D2");
 
             minutes.color = col;
-            this.seconds.color = col;
+            seconds.color = col;
             divider.color = col;
         }
 

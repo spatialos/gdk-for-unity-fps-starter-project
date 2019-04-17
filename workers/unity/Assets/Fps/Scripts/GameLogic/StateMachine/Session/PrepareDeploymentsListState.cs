@@ -18,22 +18,23 @@ namespace Fps
             if (PrepareDeploymentsList())
             {
                 startScreenManager.ShowDeploymentListAvailableText();
-                startScreenManager.browseButton.onClick.AddListener(BrowseDeployments);
-                startScreenManager.quickJoinButton.onClick.AddListener(Connect);
+                startScreenManager.BrowseButton.onClick.AddListener(BrowseDeployments);
+                startScreenManager.QuickJoinButton.onClick.AddListener(Connect);
 
-                startScreenManager.browseButton.enabled = true;
-                startScreenManager.quickJoinButton.enabled = true;
+                startScreenManager.BrowseButton.enabled = true;
+                startScreenManager.QuickJoinButton.enabled = true;
+            }
+            else
+            {
+                Manager.ScreenManager.StartScreenManager.ShowFailedToGetDeploymentsText("No deployment is currently available.");
+                Owner.SetState(Owner.StartState, 2f);
             }
         }
 
         public override void ExitState()
         {
-            startScreenManager.browseButton.onClick.RemoveListener(BrowseDeployments);
-            startScreenManager.quickJoinButton.onClick.RemoveListener(Connect);
-        }
-
-        public override void Tick()
-        {
+            startScreenManager.BrowseButton.onClick.RemoveListener(BrowseDeployments);
+            startScreenManager.QuickJoinButton.onClick.RemoveListener(Connect);
         }
 
         private void BrowseDeployments()
@@ -43,58 +44,28 @@ namespace Fps
 
         private void Connect()
         {
-            Owner.SetState(new ConnectState(null, Manager, Owner));
+            Owner.SetState(new ConnectState(deployment: null, Manager, Owner));
         }
 
         private bool PrepareDeploymentsList()
         {
-            if (Owner.LoginTokens == null)
+            if (Owner.Blackboard.LoginTokens == null)
             {
                 Owner.SetState(Owner.StartState);
             }
 
-            bool hasAvailableDeployment = false;
-            var deploymentDatas = new List<DeploymentData>();
-            foreach (var loginToken in Owner.LoginTokens)
+            var hasAvailableDeployment = false;
+            var deploymentData = new List<DeploymentData>();
+            foreach (var loginToken in Owner.Blackboard.LoginTokens)
             {
-                var playerCount = 0;
-                var maxPlayerCount = 0;
-                var isAvailable = false;
-                foreach (var tag in loginToken.Tags)
-                {
-                    if (tag.StartsWith("players"))
-                    {
-                        playerCount = int.Parse(tag.Split('_').Last());
-                    }
-                    else if (tag.StartsWith("max_players"))
-                    {
-                        maxPlayerCount = int.Parse(tag.Split('_').Last());
-                    }
-                    else if (tag.StartsWith("status"))
-                    {
-                        var state = tag.Split('_').Last();
-                        isAvailable = state == "lobby" || state == "running";
-                        hasAvailableDeployment |= isAvailable;
-                    }
-                }
-
-                var deploymentData = new DeploymentData(loginToken.DeploymentName, playerCount, maxPlayerCount,
-                    isAvailable);
-                deploymentDatas.Add(deploymentData);
+                var data = DeploymentData.CreateFromTags(loginToken.DeploymentName, loginToken.Tags);
+                hasAvailableDeployment |= data.IsAvailable;
+                deploymentData.Add(data);
             }
 
-            if (!hasAvailableDeployment)
-            {
-                ShowErrorMessage("No deployment is currently available.");
-                Owner.SetState(Owner.StartState, 2f);
-                return false;
-            }
+            Manager.ScreenManager.DeploymentListScreenManager.SetDeployments(deploymentData);
 
-            deploymentDatas.Sort((deployment1, deployment2) =>
-                String.Compare(deployment1.Name, deployment2.Name, StringComparison.Ordinal));
-            Manager.ScreenManager.DeploymentListScreenManager.SetDeployments(deploymentDatas.ToArray());
-
-            return true;
+            return hasAvailableDeployment;
         }
     }
 }

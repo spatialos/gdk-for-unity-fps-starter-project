@@ -12,9 +12,7 @@ namespace Fps
 
         public override void StartState()
         {
-            DefaultConnectScreenManager.ConnectButton.enabled = true;
             DefaultConnectScreenManager.ConnectButton.onClick.AddListener(SpawnPlayer);
-            SpawnPlayer();
         }
 
         public override void Tick()
@@ -46,7 +44,7 @@ namespace Fps
         private void SpawnPlayer()
         {
             DefaultConnectScreenManager.ConnectButton.enabled = false;
-            Owner.ClientConnector.SpawnPlayerAction("Local Player", OnPlayerResponse);
+            Owner.Blackboard.ClientConnector.SpawnPlayer("Local Player", OnPlayerResponse);
             Animator.SetTrigger("Connecting");
         }
     }

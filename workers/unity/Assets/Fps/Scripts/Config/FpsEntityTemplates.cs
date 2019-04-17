@@ -18,7 +18,7 @@ namespace Fps
     {
         public static EntityTemplate DeploymentState()
         {
-            uint sessionTimeSeconds = 300;
+            const uint sessionTimeSeconds = 300;
 
             var position = new Position.Snapshot { Coords = new Vector3().ToSpatialCoordinates() };
             var metadata = new Metadata.Snapshot { EntityType = "DeploymentState" };

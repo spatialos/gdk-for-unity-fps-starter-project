@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Fps
@@ -12,6 +13,29 @@ namespace Fps
         [SerializeField] private InputField inputField;
 
         private readonly Color HintTextColor = new Color(1f, .4f, .4f);
+
+        private void OnValidate()
+        {
+            if (hintText == null)
+            {
+                throw new NullReferenceException("Missing reference to the hint text.");
+            }
+
+            if (inputField == null)
+            {
+                throw new NullReferenceException("Missing reference to the input field for the player name.");
+            }
+
+            if (StartButton == null)
+            {
+                throw new NullReferenceException("Missing reference to the start button.");
+            }
+
+            if (CancelButton == null)
+            {
+                throw new NullReferenceException("Missing reference to the cancel button.");
+            }
+        }
 
         public void UpdateHintText(bool hasGameBegun)
         {

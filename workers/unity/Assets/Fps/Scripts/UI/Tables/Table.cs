@@ -1,33 +1,40 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Fps
 {
     public class Table : MonoBehaviour
     {
-        public RectTransform EntriesParentRect;
-        public TableEntry EntryTemplate;
+        [SerializeField] private RectTransform entriesParentRect;
+        [SerializeField] private TableEntry entryTemplate;
 
-        public float EntryHeight
-        {
-            get
-            {
-                if (entryHeight <= 0f)
-                {
-                    entryHeight = EntryTemplate.GetComponent<RectTransform>().rect.height;
-                }
+        private RectTransform entryTemplateRect;
 
-                return entryHeight;
-            }
-        }
+        public float EntryHeight;
 
         private readonly List<TableEntry> entries = new List<TableEntry>();
         private float entryHeight;
 
+        private void OnValidate()
+        {
+            if (entriesParentRect == null)
+            {
+                throw new NullReferenceException("Missing reference to parent object for table entries.");
+            }
+
+            if (entryTemplate == null)
+            {
+                throw new NullReferenceException("Missing reference to table entry prefab.");
+            }
+
+            entryTemplateRect = entryTemplate.GetComponent<RectTransform>();
+            EntryHeight = entryTemplateRect.rect.height;
+        }
 
         public TableEntry AddEntry()
         {
-            TableEntry newEntry = Instantiate(EntryTemplate.gameObject, EntriesParentRect, false).GetComponent<TableEntry>();
+            TableEntry newEntry = Instantiate(entryTemplate.gameObject, entriesParentRect, false).GetComponent<TableEntry>();
             newEntry.transform.localPosition = Vector3.down * EntryHeight * entries.Count;
             entries.Add(newEntry);
             return newEntry;
@@ -40,9 +47,9 @@ namespace Fps
 
         public void ClearEntries()
         {
-            for (var i = EntriesParentRect.childCount - 1; i >= 0; i--)
+            for (var i = entriesParentRect.childCount - 1; i >= 0; i--)
             {
-                Destroy(EntriesParentRect.GetChild(i).gameObject);
+                Destroy(entriesParentRect.GetChild(i).gameObject);
             }
 
             entries.Clear();

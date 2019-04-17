@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -9,19 +10,35 @@ namespace Fps
         public Image TargetFrame;
         public Image TargetFill;
         public Image[] TextOptions = new Image[2];
-        public bool DarkTheme;
+        public bool IsDarkThemeEnabled;
 
         // Initialise colour values.
         private readonly Color32 lightColor = Color.white;
         private readonly Color32 darkColor = new Color32(69, 71, 71, 255);
         private readonly Color32 hoverColor = new Color32(150, 150, 150, 255);
         private readonly Color32 disabledFill = new Color32(255, 255, 255, 100);
-
         private readonly Color32 disabledText = new Color32(69, 71, 71, 100);
 
         private bool pointerInButton;
         private Image targetText;
 
+        private void OnValidate()
+        {
+            if (TargetFrame == null)
+            {
+                throw new NullReferenceException("Missing reference to target frame image.");
+            }
+
+            if (TargetFill == null)
+            {
+                throw new NullReferenceException("Missing reference to the target fill image.");
+            }
+
+            if (TextOptions == null || TextOptions.Length == 0)
+            {
+                throw new NullReferenceException("Missing reference to the text option images.");
+            }
+        }
 
         // Use this for initialization
         protected override void Awake()
@@ -54,7 +71,7 @@ namespace Fps
             // Pressed state
             if (interactable)
             {
-                if (DarkTheme)
+                if (IsDarkThemeEnabled)
                 {
                     targetText.color = lightColor;
                     TargetFill.color = lightColor;
@@ -105,7 +122,7 @@ namespace Fps
 
         private void DrawNeutralStrate()
         {
-            if (DarkTheme)
+            if (IsDarkThemeEnabled)
             {
                 targetText.color = lightColor;
                 TargetFill.color = darkColor;

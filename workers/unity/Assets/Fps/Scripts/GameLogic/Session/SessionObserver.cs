@@ -9,13 +9,11 @@ namespace Fps
         [Require] private SessionWriter sessionWriter;
         [Require] private TimerWriter timerWriter;
 
-        public float LobbyTime = 60f;
-        public float CooldownTime = 60f;
+        [SerializeField] private float lobbyTime = 60f;
+        [SerializeField] private float cooldownTime = 60f;
 
         private float sessionTimer;
-
         private float maxSessionTime;
-        private float currentSessionTime;
         private float lastUpdate;
 
         private void OnEnable()
@@ -26,26 +24,30 @@ namespace Fps
         private void Update()
         {
             var status = sessionWriter.Data.Status;
-            if (status == Status.STOPPING && sessionTimer > (maxSessionTime + CooldownTime + LobbyTime))
+            if (status == Status.STOPPING && sessionTimer > cooldownTime)
             {
                 sessionWriter.SendUpdate(new Session.Update { Status = Status.STOPPED });
+                sessionTimer = 0;
             }
-            else if (status == Status.RUNNING && sessionTimer > (maxSessionTime + LobbyTime))
+            else if (status == Status.RUNNING)
             {
-                sessionWriter.SendUpdate(new Session.Update { Status = Status.STOPPING });
+                if (sessionTimer > maxSessionTime)
+                {
+                    sessionWriter.SendUpdate(new Session.Update { Status = Status.STOPPING });
+                    sessionTimer = 0;
+                }
             }
-            else if (status == Status.LOBBY && sessionTimer > LobbyTime)
+            else if (status == Status.LOBBY && sessionTimer > lobbyTime)
             {
                 sessionWriter.SendUpdate(new Session.Update { Status = Status.RUNNING });
-                currentSessionTime = 0;
+                sessionTimer = 0;
             }
 
             sessionTimer += Time.deltaTime;
-            currentSessionTime += Time.deltaTime;
-            if (currentSessionTime - lastUpdate > 1f && status == Status.RUNNING)
+            if (sessionTimer - lastUpdate > 1f && status == Status.RUNNING)
             {
-                timerWriter.SendUpdate(new Timer.Update { CurrentTimeSeconds = (uint) Mathf.RoundToInt(currentSessionTime) });
-                lastUpdate = currentSessionTime;
+                timerWriter.SendUpdate(new Timer.Update { CurrentTimeSeconds = (uint) Mathf.RoundToInt(sessionTimer) });
+                lastUpdate = sessionTimer;
             }
         }
     }

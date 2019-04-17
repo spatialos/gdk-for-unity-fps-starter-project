@@ -14,17 +14,18 @@ namespace Fps
 
         public override void StartState()
         {
-            startScreenManager.browseButton.enabled = false;
-            startScreenManager.quickJoinButton.enabled = false;
+            startScreenManager.BrowseButton.enabled = false;
+            startScreenManager.QuickJoinButton.enabled = false;
             Manager.ShowFrontEnd();
             Manager.ScreenManager.SwitchToSessionScreen();
+
             var listDeploymentsState = new PrepareDeploymentsListState(Manager, Owner);
             var getPitState = new GetPlayerIdentityTokenState(listDeploymentsState, Manager, Owner);
 
             var textAsset = Resources.Load<TextAsset>("DevAuthToken");
             if (textAsset != null)
             {
-                Owner.DevAuthToken = textAsset.text.Trim();
+                Owner.Blackboard.DevAuthToken = textAsset.text.Trim();
             }
             else
             {
@@ -37,10 +38,6 @@ namespace Fps
         }
 
         public override void ExitState()
-        {
-        }
-
-        public override void Tick()
         {
         }
     }

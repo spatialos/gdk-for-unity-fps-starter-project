@@ -16,9 +16,5 @@ namespace Fps
         public override void ExitState()
         {
         }
-
-        public override void Tick()
-        {
-        }
     }
 }

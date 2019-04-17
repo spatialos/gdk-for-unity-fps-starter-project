@@ -1,14 +1,15 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Fps
 {
     public class ConnectionStatusManager : MonoBehaviour
     {
-        public GameObject SpinnerSymbol;
-        public GameObject ErrorSymbol;
-        public GameObject SuccessSymbol;
-        public Text StatusText;
+        [SerializeField] private GameObject SpinnerSymbol;
+        [SerializeField] private GameObject ErrorSymbol;
+        [SerializeField] private GameObject SuccessSymbol;
+        [SerializeField] private Text StatusText;
 
         private const string DeploymentListAvailableText = "Deployments available";
         private const string GettingDeploymentListText = "Getting deployment list...";
@@ -19,6 +20,29 @@ namespace Fps
         private const string GameReadyText = "Press start to play";
         private const string ConnectingText = "Joining deployment...";
         private const string SpawningFailedText = "Failed to spawn player!";
+
+        private void OnValidate()
+        {
+            if (SpinnerSymbol == null)
+            {
+                throw new NullReferenceException("Missing reference to the spinner symbol.");
+            }
+
+            if (ErrorSymbol == null)
+            {
+                throw new NullReferenceException("Missing reference to the error symbol.");
+            }
+
+            if (SuccessSymbol == null)
+            {
+                throw new NullReferenceException("Missing reference to the success symbol.");
+            }
+
+            if (StatusText == null)
+            {
+                throw new NullReferenceException("Missing reference to the status text.");
+            }
+        }
 
         public void ShowGetDeploymentListText()
         {

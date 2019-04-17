@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Fps
@@ -18,11 +20,29 @@ namespace Fps
 
         private const int maxRows = 11; // Includes header
         private int highlightedIndex = -1;
-        private DeploymentData[] deploymentList;
+        private List<DeploymentData> deploymentList = new List<DeploymentData>();
+
+        private void OnValidate()
+        {
+            if (JoinButton == null)
+            {
+                throw new NullReferenceException("Missing reference to the join button.");
+            }
+
+            if (BackButton == null)
+            {
+                throw new NullReferenceException("Missing reference to the back button.");
+            }
+
+            if (DeploymentListTable == null)
+            {
+                throw new NullReferenceException("Missing reference to the deployment list table.");
+            }
+        }
 
         private bool IsHighlightedIndexValid()
         {
-            return highlightedIndex >= 0 && highlightedIndex < deploymentList.Length;
+            return highlightedIndex >= 0 && highlightedIndex < deploymentList.Count;
         }
 
         public bool IsHighlightedDeploymentAvailable()
@@ -45,10 +65,18 @@ namespace Fps
             return null;
         }
 
-        public void SetDeployments(DeploymentData[] deployments)
+        public void SetDeployments(List<DeploymentData> deployments)
         {
+            if (deployments == null)
+            {
+                return;
+            }
+
+            deployments.Sort((deployment1, deployment2) =>
+                String.Compare(deployment1.Name, deployment2.Name, StringComparison.Ordinal));
+
             var highlightedDeploymentName = string.Empty;
-            if (deploymentList != null && IsHighlightedIndexValid())
+            if (IsHighlightedIndexValid())
             {
                 highlightedDeploymentName = deploymentList[highlightedIndex].Name;
             }
@@ -56,7 +84,7 @@ namespace Fps
             highlightedIndex = -1;
             DeploymentListTable.ClearEntries();
 
-            for (var i = 0; i < Mathf.Min(maxRows - 1, deployments.Length); i++)
+            for (var i = 0; i < Mathf.Min(maxRows - 1, deployments.Count); i++)
             {
                 AddDeploymentToTable(deployments[i], i);
                 if (deployments[i].Name == highlightedDeploymentName)
@@ -75,7 +103,7 @@ namespace Fps
                 TryPressBackButton();
             }
 
-            if (deploymentList.Length == 0)
+            if (deploymentList.Count == 0)
             {
                 return;
             }
@@ -103,7 +131,7 @@ namespace Fps
 
             if (Input.GetKeyDown(KeyCode.DownArrow))
             {
-                if (highlightedIndex == deploymentList.Length - 1)
+                if (highlightedIndex == deploymentList.Count - 1)
                 {
                     return;
                 }

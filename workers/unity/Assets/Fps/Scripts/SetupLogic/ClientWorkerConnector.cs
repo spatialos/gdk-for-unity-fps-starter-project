@@ -28,7 +28,7 @@ namespace Fps
             await AttemptConnect();
         }
 
-        public void SpawnPlayerAction(string playerName, Action<PlayerCreator.CreatePlayer.ReceivedResponse> onPlayerResponse)
+        public void SpawnPlayer(string playerName, Action<PlayerCreator.CreatePlayer.ReceivedResponse> onPlayerResponse)
         {
             this.onPlayerResponse = onPlayerResponse;
             this.playerName = playerName;

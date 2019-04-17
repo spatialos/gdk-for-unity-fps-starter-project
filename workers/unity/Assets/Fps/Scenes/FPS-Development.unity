@@ -297,7 +297,7 @@ PrefabInstance:
     - target: {fileID: 4648540397580954867, guid: d52364553e6842940944c62b73e5e1b1,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4648064201555364825, guid: d52364553e6842940944c62b73e5e1b1,
         type: 3}
@@ -352,6 +352,11 @@ PrefabInstance:
     - target: {fileID: 4688708138024354849, guid: d52364553e6842940944c62b73e5e1b1,
         type: 3}
       propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4648433929435404949, guid: d52364553e6842940944c62b73e5e1b1,
+        type: 3}
+      propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2790237538569206407, guid: d52364553e6842940944c62b73e5e1b1,
@@ -556,13 +561,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f8c7189676e488cbadd0180cc51fa57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UseSessionBasedFlow: 0
-  PlayerName: Player
-  DevAuthToken: 
-  PlayerIdentityToken: 
-  ClientConnector: {fileID: 0}
-  clientWorkerConnectorPrefab: {fileID: 1638104666241782, guid: 075c14fd6c4ad514581b6aaabc0711bb,
-    type: 3}
+  Blackboard:
+    UseSessionBasedFlow: 0
+    SessionStatus: 0
+    PlayerName: 
+    DevAuthToken: 
+    PlayerIdentityToken: 
+    ClientConnector: {fileID: 0}
+  ClientWorkerConnectorPrefab: {fileID: 0}
   uiManager: {fileID: 1345553513}
 --- !u!4 &1791962780
 Transform:

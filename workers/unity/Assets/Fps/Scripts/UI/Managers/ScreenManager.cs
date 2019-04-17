@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Fps
@@ -7,7 +8,6 @@ namespace Fps
     {
         [Header("General")]
         public Button QuitButton;
-        [SerializeField] private GameObject FrontEndCamera;
 
         [Header("Screens")]
         public DefaultConnectScreenManager DefaultConnectScreenManager;
@@ -16,7 +16,47 @@ namespace Fps
         public ResultsScreenManager ResultsScreenManager;
         public LobbyScreenManager LobbyScreenManager;
 
+        [SerializeField] private GameObject FrontEndCamera;
+
         private Component currentScreenManager;
+
+        private void OnValidate()
+        {
+            if (DefaultConnectScreenManager == null)
+            {
+                throw new NullReferenceException("Missing reference to the default connect screen manager.");
+            }
+
+            if (StartScreenManager == null)
+            {
+                throw new NullReferenceException("Missing reference to the start screen manager.");
+            }
+
+            if (DeploymentListScreenManager == null)
+            {
+                throw new NullReferenceException("Missing reference to the deployment list screen manager.");
+            }
+
+            if (ResultsScreenManager == null)
+            {
+                throw new NullReferenceException("Missing reference to the results screen manager.");
+            }
+
+            if (LobbyScreenManager == null)
+            {
+                throw new NullReferenceException("Missing reference to the lobby screen manager.");
+            }
+
+            if (FrontEndCamera == null)
+            {
+                throw new NullReferenceException("Missing reference to the front end camera.");
+            }
+
+            if (QuitButton == null)
+            {
+                throw new NullReferenceException("Missing reference to the quit button.");
+            }
+        }
 
         public void SwitchToDeploymentListScreen()
         {
@@ -50,7 +90,6 @@ namespace Fps
             DeploymentListScreenManager.gameObject.SetActive(false);
             LobbyScreenManager.gameObject.SetActive(false);
             ResultsScreenManager.gameObject.SetActive(false);
-            QuitButton.onClick.AddListener(UIManager.Quit);
         }
 
         private void OnEnable()

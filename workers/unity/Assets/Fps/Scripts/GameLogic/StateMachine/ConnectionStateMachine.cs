@@ -7,37 +7,26 @@ namespace Fps
 {
     public class ConnectionStateMachine : MonoBehaviour
     {
-        // Blackboard
-        public bool UseSessionBasedFlow;
-        public string PlayerName = "Player";
-        public string DevAuthToken;
-        public string PlayerIdentityToken;
+        public Blackboard Blackboard;
         public State StartState;
-        public List<LoginTokenDetails> LoginTokens = new List<LoginTokenDetails>();
-        public ClientWorkerConnector ClientConnector;
+
+        public GameObject ClientWorkerConnectorPrefab;
+        [SerializeField] private UIManager uiManager;
 
         private State currentState;
         private State nextState;
-        private float transitionTime;
+        private float waitTimeInSeconds;
 
-        [SerializeField] private GameObject clientWorkerConnectorPrefab;
-        [SerializeField] private UIManager uiManager;
 
-        public void SetState(State state)
-        {
-            SetState(state, 0f);
-        }
-
-        public void SetState(State state, float waitTimeInSeconds)
+        public void SetState(State state, float waitTimeInSeconds = 0f)
         {
             nextState = state;
-            this.transitionTime = waitTimeInSeconds;
+            this.waitTimeInSeconds = waitTimeInSeconds;
         }
-
 
         private void Start()
         {
-            if (UseSessionBasedFlow)
+            if (Blackboard.UseSessionBasedFlow)
             {
                 StartState = new SessionInitState(uiManager, this);
             }
@@ -52,33 +41,23 @@ namespace Fps
 
         private void Update()
         {
-            if (nextState != null)
+            if (nextState == null)
             {
-                if (transitionTime > 0f)
-                {
-                    transitionTime -= Time.deltaTime;
-                    return;
-                }
-
-                currentState.ExitState();
-                currentState = nextState;
-                nextState = null;
-                currentState.StartState();
+                currentState.Tick();
+                return;
             }
 
+            if (waitTimeInSeconds > 0f)
+            {
+                waitTimeInSeconds -= Time.deltaTime;
+                return;
+            }
+
+            currentState.ExitState();
+            currentState = nextState;
+            nextState = null;
+            currentState.StartState();
             currentState.Tick();
-        }
-
-        public void CreateClientWorker()
-        {
-            var clientWorker = Instantiate(clientWorkerConnectorPrefab, transform.position, Quaternion.identity);
-            ClientConnector = clientWorker.GetComponent<ClientWorkerConnector>();
-        }
-
-        public void DestroyClientWorker()
-        {
-            UnityObjectDestroyer.Destroy(ClientConnector);
-            ClientConnector = null;
         }
     }
 }

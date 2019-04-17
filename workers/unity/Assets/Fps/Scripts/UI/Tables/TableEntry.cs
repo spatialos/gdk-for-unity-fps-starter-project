@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Fps
@@ -6,11 +7,25 @@ namespace Fps
     public class TableEntry : MonoBehaviour
     {
         public Image Background;
-        public Text[] TextVisuals;
+
+        [SerializeField] private Text[] textVisuals;
+
+        private void OnValidate()
+        {
+            if (Background == null)
+            {
+                throw new NullReferenceException("Missing reference to the background image for this table entry.");
+            }
+
+            if (textVisuals == null)
+            {
+                throw new NullReferenceException("Missing reference to the text components for this table entry.");
+            }
+        }
 
         public void SetAllTextVisuals(Color color, bool bold)
         {
-            foreach (var text in TextVisuals)
+            foreach (var text in textVisuals)
             {
                 text.color = color;
                 text.fontStyle = bold ? FontStyle.Bold : FontStyle.Normal;

@@ -11,7 +11,7 @@ namespace Fps
         {
             var button = (FpsUIButton) target;
 
-            button.DarkTheme = EditorGUILayout.Toggle("Dark Style", button.DarkTheme);
+            button.IsDarkThemeEnabled = EditorGUILayout.Toggle("Dark Style", button.IsDarkThemeEnabled);
             button.TargetFill =
                 (Image) EditorGUILayout.ObjectField("Target Fill", button.TargetFill, typeof(Image), true);
             button.TargetFrame =

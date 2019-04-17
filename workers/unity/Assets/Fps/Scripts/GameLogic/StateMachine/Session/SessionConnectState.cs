@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace Fps
 {
     public class ConnectState : SessionState
@@ -15,7 +17,7 @@ namespace Fps
             // check if player select deployment, otherwise choose one
             if (string.IsNullOrEmpty(deployment))
             {
-                deployment = SelectDeployment();
+                deployment = SelectFirstDeployment();
             }
 
             if (string.IsNullOrEmpty(deployment))
@@ -28,20 +30,21 @@ namespace Fps
             Manager.ScreenManager.LobbyScreenManager.ShowConnectingText();
             Manager.ScreenManager.LobbyScreenManager.StartButton.enabled = false;
 
-            Owner.CreateClientWorker();
-            Owner.ClientConnector.Connect(deployment, true);
+            var clientWorker = Object.Instantiate(Owner.ClientWorkerConnectorPrefab, Owner.transform.position, Quaternion.identity);
+            Owner.Blackboard.ClientConnector = clientWorker.GetComponent<ClientWorkerConnector>();
+            Owner.Blackboard.ClientConnector.Connect(deployment, true);
         }
 
         public override void Tick()
         {
-            if (Owner.ClientConnector.Worker == null)
+            if (Owner.Blackboard.ClientConnector.Worker == null)
             {
                 // Worker has not connected yet. Continue waiting
                 return;
             }
 
             var state = new WaitForGameState(Manager, Owner);
-            var nextState = new GetPlayerIdentityTokenState(state, Manager, Owner);
+            var nextState = new QuerySessionStatusState(state, Manager, Owner);
             Owner.SetState(nextState);
         }
 
@@ -49,9 +52,9 @@ namespace Fps
         {
         }
 
-        private string SelectDeployment()
+        private string SelectFirstDeployment()
         {
-            foreach (var loginToken in Owner.LoginTokens)
+            foreach (var loginToken in Owner.Blackboard.LoginTokens)
             {
                 if (loginToken.Tags.Contains("status_lobby") || loginToken.Tags.Contains("status_running"))
                 {

@@ -8,17 +8,17 @@ namespace Fps
 
         public PlayState(UIManager manager, ConnectionStateMachine owner) : base(manager, owner)
         {
-            trackPlayerSystem = Owner.ClientConnector.Worker.World.GetExistingManager<TrackPlayerSystem>();
+            trackPlayerSystem = Owner.Blackboard.ClientConnector.Worker.World.GetExistingManager<TrackPlayerSystem>();
         }
 
         public override void StartState()
         {
-            Owner.ClientConnector.Worker.OnDisconnect += OnDisconnect;
+            Owner.Blackboard.ClientConnector.Worker.OnDisconnect += OnDisconnect;
         }
 
         private void OnDisconnect(string obj)
         {
-            Owner.ClientConnector = null;
+            Owner.Blackboard.ClientConnector = null;
             Manager.ScreenManager.StartScreenManager.ShowWorkerDisconnectedText();
             Owner.SetState(Owner.StartState, 2f);
         }

@@ -1,3 +1,4 @@
+using Improbable.Gdk.Core;
 using Improbable.PlayerLifecycle;
 using Improbable.Worker.CInterop;
 
@@ -17,28 +18,24 @@ namespace Fps
             lobbyScreenManager.ShowSpawningText();
             lobbyScreenManager.StartButton.enabled = false;
 
-            Owner.ClientConnector.SpawnPlayerAction(Manager.ScreenManager.LobbyScreenManager.GetPlayerName(), CreatedPlayer);
+            Owner.Blackboard.ClientConnector.SpawnPlayer(Manager.ScreenManager.LobbyScreenManager.GetPlayerName(), OnCreatePlayerResponse);
         }
 
         public override void ExitState()
         {
         }
 
-        public override void Tick()
-        {
-        }
-
-        private void CreatedPlayer(PlayerCreator.CreatePlayer.ReceivedResponse response)
+        private void OnCreatePlayerResponse(PlayerCreator.CreatePlayer.ReceivedResponse response)
         {
             if (response.StatusCode == StatusCode.Success)
             {
-                Manager.ShowGameView();
                 Owner.SetState(new PlayState(Manager, Owner));
             }
             else
             {
                 Manager.ScreenManager.LobbyScreenManager.ShowSpawningFailedText(response.Message);
-                Owner.DestroyClientWorker();
+                UnityObjectDestroyer.Destroy(Owner.Blackboard.ClientConnector);
+                Owner.Blackboard.ClientConnector = null;
                 Owner.SetState(Owner.StartState);
             }
         }

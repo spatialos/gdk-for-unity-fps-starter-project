@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Fps
@@ -6,6 +7,19 @@ namespace Fps
     {
         public ScreenManager ScreenManager;
         public InGameScreenManager InGameManager;
+
+        private void OnValidate()
+        {
+            if (ScreenManager == null)
+            {
+                throw new NullReferenceException("Missing reference to the screen manager.");
+            }
+
+            if (InGameManager == null)
+            {
+                throw new NullReferenceException("Missing reference to the in-game screen manager.");
+            }
+        }
 
         private void Awake()
         {
@@ -16,6 +30,8 @@ namespace Fps
         private void Start()
         {
             ShowFrontEnd();
+            InGameManager.QuitButton.onClick.AddListener(Quit);
+            ScreenManager.QuitButton.onClick.AddListener(Quit);
         }
 
         public void ShowGameView()
@@ -34,7 +50,7 @@ namespace Fps
             Cursor.lockState = CursorLockMode.None;
         }
 
-        public static void Quit()
+        private void Quit()
         {
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;

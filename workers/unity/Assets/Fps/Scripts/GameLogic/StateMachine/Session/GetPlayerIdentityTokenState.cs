@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Improbable.Gdk.Core;
 using Improbable.Worker.CInterop;
 using Improbable.Worker.CInterop.Alpha;
@@ -6,8 +7,8 @@ namespace Fps
 {
     public class GetPlayerIdentityTokenState : SessionState
     {
+        private readonly State nextState;
         private Future<PlayerIdentityTokenResponse?> pitResponse;
-        private State nextState;
 
         public GetPlayerIdentityTokenState(State nextState, UIManager manager, ConnectionStateMachine owner) : base(manager, owner)
         {
@@ -21,8 +22,8 @@ namespace Fps
                 RuntimeConfigDefaults.AnonymousAuthenticationPort,
                 new PlayerIdentityTokenRequest
                 {
-                    DevelopmentAuthenticationTokenId = Owner.DevAuthToken,
-                    PlayerId = Owner.PlayerName,
+                    DevelopmentAuthenticationTokenId = Owner.Blackboard.DevAuthToken,
+                    PlayerId = Owner.Blackboard.PlayerName,
                     DisplayName = string.Empty,
                 }
             );
@@ -42,11 +43,14 @@ namespace Fps
 
             if (!result.HasValue || result.Value.Status.Code != ConnectionStatusCode.Success)
             {
-                ShowErrorMessage($"Failed to retrieve player identity token.\n Error code: {result.Value.Status.Code}");
+                Manager.ScreenManager.StartScreenManager.ShowFailedToGetDeploymentsText(
+                    $"Failed to retrieve player identity token.\n Error code: {result.Value.Status.Code}");
                 Owner.SetState(Owner.StartState, 2f);
+
+                UnityEngine.Debug.LogWarning($"{result.Value.Status.Code} - {result.Value.Status.Detail}");
             }
 
-            Owner.PlayerIdentityToken = result.Value.PlayerIdentityToken;
+            Owner.Blackboard.PlayerIdentityToken = result.Value.PlayerIdentityToken;
             Owner.SetState(new GetDeploymentsState(nextState, Manager, Owner));
         }
     }

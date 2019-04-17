@@ -17,7 +17,7 @@ namespace Fps
 
         public override void Tick()
         {
-            if (Owner.ClientConnector == null)
+            if (Owner.Blackboard.ClientConnector == null)
             {
                 DefaultConnectScreenManager.ConnectButton.enabled = true;
                 Animator.SetTrigger("FailedToConnect");
@@ -31,7 +31,7 @@ namespace Fps
                 return;
             }
 
-            if (Owner.ClientConnector.Worker == null)
+            if (Owner.Blackboard.ClientConnector.Worker == null)
             {
                 // Worker has not connected yet. Continue waiting
                 return;
@@ -47,8 +47,9 @@ namespace Fps
 
         private void Connect()
         {
-            Owner.CreateClientWorker();
-            Owner.ClientConnector.Connect(string.Empty, false);
+            var clientWorker = Object.Instantiate(Owner.ClientWorkerConnectorPrefab, Owner.transform.position, Quaternion.identity);
+            Owner.Blackboard.ClientConnector = clientWorker.GetComponent<ClientWorkerConnector>();
+            Owner.Blackboard.ClientConnector.Connect(string.Empty, false);
         }
     }
 }

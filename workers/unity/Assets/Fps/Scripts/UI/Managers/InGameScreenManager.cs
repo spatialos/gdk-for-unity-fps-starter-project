@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Fps
@@ -11,12 +12,36 @@ namespace Fps
         public GameObject EscapeScreen;
         public Button QuitButton;
 
-        public static bool InEscapeMenu { get; private set; }
+        public bool InEscapeMenu { private set; get; }
+
         private bool isPlayerAiming;
 
-        private void Awake()
+        private void OnValidate()
         {
-            QuitButton.onClick.AddListener(UIManager.Quit);
+            if (RespawnScreen == null)
+            {
+                throw new NullReferenceException("Missing reference to the respawn screen.");
+            }
+
+            if (Reticle == null)
+            {
+                throw new NullReferenceException("Missing reference to the reticle.");
+            }
+
+            if (Hud == null)
+            {
+                throw new NullReferenceException("Missing reference to the hud.");
+            }
+
+            if (EscapeScreen == null)
+            {
+                throw new NullReferenceException("Missing reference to the escape screen.");
+            }
+
+            if (QuitButton == null)
+            {
+                throw new NullReferenceException("Missing reference to the quit button.");
+            }
         }
 
         public void OnEnable()
@@ -24,6 +49,7 @@ namespace Fps
             Hud.SetActive(true);
             Reticle.SetActive(true);
             RespawnScreen.SetActive(false);
+
             SetEscapeScreen(false);
             SetPlayerAiming(false);
         }
@@ -52,7 +78,6 @@ namespace Fps
             Cursor.visible = inEscapeScreen;
             Cursor.lockState = inEscapeScreen ? CursorLockMode.Confined : CursorLockMode.Locked;
 
-            // Inform the static variable, for FpsDriver etc.
             InEscapeMenu = inEscapeScreen;
         }
 

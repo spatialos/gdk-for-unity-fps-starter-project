@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Improbable.Gdk.Core.Commands;
 using Improbable.Gdk.Movement;
 using Improbable.Gdk.Session;
 using Unity.Entities;
@@ -63,6 +64,13 @@ namespace Fps
             }
 
             PlayerResults.Sort((x, y) => y.KillDeathRatio.CompareTo(x.KillDeathRatio));
+
+            for (var i = 0; i < PlayerResults.Count; i++)
+            {
+                var result = PlayerResults[i];
+                result.Rank = i + 1;
+                PlayerResults[i] = result;
+            }
         }
     }
 }
