@@ -9,7 +9,6 @@ using Improbable.Gdk.DeploymentManager.Commands;
 using Improbable.Gdk.Tools;
 using Improbable.Gdk.Tools.MiniJSON;
 using UnityEditor;
-using UnityEditor.U2D;
 using UnityEngine;
 
 namespace Improbable.Gdk.DeploymentManager
@@ -18,6 +17,18 @@ namespace Improbable.Gdk.DeploymentManager
     {
         internal const string BuiltInErrorIcon = "console.erroricon.sml";
         internal const string BuiltInRefreshIcon = "Refresh";
+
+        private DeploymentLauncherConfig launcherConfig;
+
+        private static readonly Vector2 SmallIconSize = new Vector2(12, 12);
+        private Material spinnerMaterial;
+
+        private Vector2 scrollPos;
+        private string projectName;
+        private TaskManager manager = new TaskManager();
+        private UiStateManager stateManager = new UiStateManager();
+
+        private int selectedDeploymentIndex;
 
         [MenuItem("SpatialOS/Deployment Launcher", false, 51)]
         private static void LaunchDeploymentMenu()
@@ -29,60 +40,46 @@ namespace Improbable.Gdk.DeploymentManager
             deploymentWindow.Show();
         }
 
-        private DeploymentLauncherConfig launcherConfig;
-
-        private static readonly Vector2 SmallIconSize = new Vector2(12, 12);
-        private Material spinnerMaterial;
-
-        private Vector2 scrollPos;
-        private string projectName;
-        private TaskManager manager;
-        private UiStateManager stateManager = new UiStateManager();
-
-        private int selectedDeploymentIndex;
-
         private void OnEnable()
         {
             launcherConfig = DeploymentLauncherConfig.GetInstance();
             projectName = GetProjectName();
             spinnerMaterial = new Material(Shader.Find("UI/Default"));
-            manager = new TaskManager();
         }
 
         private void Update()
         {
             manager.Update();
 
-            foreach (var result in manager.UploadTaskResults)
+            foreach (var wrappedTask in manager.CompletedUploadTasks)
             {
-                if (result.Task.Result.ExitCode != 0)
+                if (wrappedTask.Task.Result.ExitCode != 0)
                 {
-                    Debug.LogError($"Upload of {result.Context.AssemblyName} failed.");
+                    Debug.LogError($"Upload of {wrappedTask.Context.AssemblyName} failed.");
                 }
                 else
                 {
-                    Debug.Log($"Upload of {result.Context.AssemblyName} succeeded.");
+                    Debug.Log($"Upload of {wrappedTask.Context.AssemblyName} succeeded.");
                 }
             }
 
-            manager.UploadTaskResults.Clear();
+            manager.CompletedUploadTasks.Clear();
 
-            foreach (var result in manager.LaunchTaskResults)
+            foreach (var wrappedTask in manager.CompletedLaunchTasks)
             {
-                var actualResult = result.Task.Result;
-                if (actualResult.IsOkay)
+                var result = wrappedTask.Task.Result;
+                if (result.IsOkay)
                 {
-                    var context = result.Context;
-                    Application.OpenURL($"https://console.improbable.io/projects/{projectName}/deployments/{context.Name}/overview");
+                    Application.OpenURL($"https://console.improbable.io/projects/{projectName}/deployments/{wrappedTask.Context.Name}/overview");
                 }
                 else
                 {
-                    var error = actualResult.UnwrapError();
-                    Debug.LogError($"Launch of {result.Context.Name} failed. Code: {error.Code} Message:{error.Message}");
+                    var error = result.UnwrapError();
+                    Debug.LogError($"Launch of {wrappedTask.Context.Name} failed. Code: {error.Code} Message:{error.Message}");
                 }
             }
 
-            manager.LaunchTaskResults.Clear();
+            manager.CompletedLaunchTasks.Clear();
         }
 
         private void OnGUI()
@@ -151,10 +148,12 @@ namespace Improbable.Gdk.DeploymentManager
                     {
                         var deploymentConfig = new DeploymentConfig
                         {
-                            AssemblyName = launcherConfig.AssemblyConfig.AssemblyName
+                            AssemblyName = launcherConfig.AssemblyConfig.AssemblyName,
+                            Deployment = new BaseDeploymentConfig
+                            {
+                                Name = $"deployment_{launcherConfig.DeploymentConfigs.Count}"
+                            }
                         };
-
-                        deploymentConfig.Deployment.Name = $"deployment_{launcherConfig.DeploymentConfigs.Count}";
 
                         launcherConfig.DeploymentConfigs.Add(deploymentConfig);
                     }
@@ -162,8 +161,6 @@ namespace Improbable.Gdk.DeploymentManager
 
                 using (new GUILayout.HorizontalScope())
                 {
-                    //GUILayout.FlexibleSpace();
-
                     selectedDeploymentIndex = EditorGUILayout.Popup("Deployment", selectedDeploymentIndex,
                         launcherConfig.DeploymentConfigs.Select(config => config.Deployment.Name).ToArray());
 
@@ -303,7 +300,7 @@ namespace Improbable.Gdk.DeploymentManager
 
                         EditorGUILayout.LabelField("Simulated Player Deployments");
 
-                        for (int i = 0; i < copy.SimulatedPlayerDeploymentConfig.Count; i++)
+                        for (var i = 0; i < copy.SimulatedPlayerDeploymentConfig.Count; i++)
                         {
                             var simConfig = copy.SimulatedPlayerDeploymentConfig[i];
                             var (shouldRemove, updated) = DrawSimulatedConfig(i, simConfig);
@@ -367,7 +364,6 @@ namespace Improbable.Gdk.DeploymentManager
             dest.SnapshotPath = EditorGUILayout.TextField("Snapshot Path", source.SnapshotPath);
             dest.LaunchJson = EditorGUILayout.TextField("Launch Config", source.LaunchJson);
             dest.Region = (DeploymentRegionCode) EditorGUILayout.EnumPopup("Region", source.Region);
-
 
             EditorGUILayout.LabelField("Tags");
 
@@ -495,8 +491,8 @@ namespace Improbable.Gdk.DeploymentManager
             public bool IsUploading { get; private set; }
             public bool IsLaunching { get; private set; }
 
-            public readonly List<WrappedTask<RedirectedProcessResult, AssemblyConfig>> UploadTaskResults = new List<WrappedTask<RedirectedProcessResult, AssemblyConfig>>();
-            public readonly List<WrappedTask<Result<RedirectedProcessResult, Ipc.Error>, BaseDeploymentConfig>> LaunchTaskResults = new List<WrappedTask<Result<RedirectedProcessResult, Ipc.Error>, BaseDeploymentConfig>>();
+            public readonly List<WrappedTask<RedirectedProcessResult, AssemblyConfig>> CompletedUploadTasks = new List<WrappedTask<RedirectedProcessResult, AssemblyConfig>>();
+            public readonly List<WrappedTask<Result<RedirectedProcessResult, Ipc.Error>, BaseDeploymentConfig>> CompletedLaunchTasks = new List<WrappedTask<Result<RedirectedProcessResult, Ipc.Error>, BaseDeploymentConfig>>();
 
             private WrappedTask<RedirectedProcessResult, AssemblyConfig> uploadTask;
             private WrappedTask<Result<RedirectedProcessResult, Ipc.Error>, BaseDeploymentConfig> launchTask;
@@ -527,17 +523,17 @@ namespace Improbable.Gdk.DeploymentManager
 
             public void Update()
             {
-                if (uploadTask?.Task.IsCompleted == true && IsUploading)
+                if (uploadTask?.Task.IsCompleted == true)
                 {
                     IsUploading = false;
                     EditorApplication.UnlockReloadAssemblies();
-                    UploadTaskResults.Add(uploadTask);
+                    CompletedUploadTasks.Add(uploadTask);
                     uploadTask = null;
                 }
 
-                if (launchTask?.Task.IsCompleted == true && IsLaunching)
+                if (launchTask?.Task.IsCompleted == true)
                 {
-                    LaunchTaskResults.Add(launchTask);
+                    CompletedLaunchTasks.Add(launchTask);
 
                     if (queuedLaunches.Count > 0)
                     {

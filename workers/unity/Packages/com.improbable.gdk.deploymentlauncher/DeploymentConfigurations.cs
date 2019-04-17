@@ -4,9 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using Improbable.Gdk.Tools.MiniJSON;
-using UnityEditor;
-using UnityEngine;
 
 namespace Improbable.Gdk.DeploymentManager
 {
@@ -73,7 +70,6 @@ namespace Improbable.Gdk.DeploymentManager
                 errors.DeplErrors[Deployment.Name].Add(message);
             }
 
-
             foreach (var simPlayerDepl in SimulatedPlayerDeploymentConfig)
             {
                 errors.DeplErrors.Add(simPlayerDepl.Name, simPlayerDepl.GetErrors().ToList());
@@ -92,7 +88,8 @@ namespace Improbable.Gdk.DeploymentManager
             {
                 AssemblyName = AssemblyName,
                 Deployment = Deployment.DeepCopy(),
-                SimulatedPlayerDeploymentConfig = SimulatedPlayerDeploymentConfig.Select(config => config.DeepCopy()).ToList(),
+                SimulatedPlayerDeploymentConfig =
+                    SimulatedPlayerDeploymentConfig.Select(config => config.DeepCopy()).ToList(),
             };
         }
 
@@ -104,10 +101,10 @@ namespace Improbable.Gdk.DeploymentManager
                 return false;
             }
 
-
             if (!Regex.Match(AssemblyName, "^[a-zA-Z0-9_.-]{5,64}$").Success)
             {
-                message = $"Assembly Name \"{AssemblyName}\" is invalid. Must conform to the regex: ^[a-zA-Z0-9_.-]{{5,64}}";
+                message =
+                    $"Assembly Name \"{AssemblyName}\" is invalid. Must conform to the regex: ^[a-zA-Z0-9_.-]{{5,64}}";
                 return false;
             }
 
@@ -389,6 +386,9 @@ namespace Improbable.Gdk.DeploymentManager
         /// </summary>
         public string AssemblyName;
 
+        /// <summary>
+        ///     Denotes whether to overwrite an existing assembly when uploading.
+        /// </summary>
         public bool ShouldForceUpload;
 
         internal AssemblyConfig DeepCopy()

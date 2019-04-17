@@ -44,7 +44,7 @@ namespace Improbable.Gdk.DeploymentManager
                         return new Error
                         {
                             Code = ErrorCode.CannotParseOutput,
-                            Message = $"Parse error. Deserialize returned null. Raw stderr: {string.Join("\n", stderr)}"
+                            Message = $"Unable to parse the standard error. Raw standard error: {string.Join("\n", stderr)}"
                         };
                     }
 
@@ -59,7 +59,7 @@ namespace Improbable.Gdk.DeploymentManager
                     return new Error
                     {
                         Code = ErrorCode.CannotParseOutput,
-                        Message = $"Parse error: {e.Message}.\nRaw stderr: {string.Join("\n", stderr)}"
+                        Message = $"Unable to parse the standard error. Raw standard error: {string.Join("\n", stderr)}"
                     };
                 }
                 catch (KeyNotFoundException e)
@@ -67,7 +67,7 @@ namespace Improbable.Gdk.DeploymentManager
                     return new Error
                     {
                         Code = ErrorCode.CannotParseOutput,
-                        Message = $"Parse error: {e.Message}.\nRaw stderr: {string.Join("\n", stderr)}"
+                        Message = $"Unable to parse the standard error. Raw standard error: {string.Join("\n", stderr)}"
                     };
                 }
             }
