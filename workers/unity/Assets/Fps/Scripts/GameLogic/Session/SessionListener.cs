@@ -15,11 +15,14 @@ namespace Fps
 
         private void OnEnable()
         {
-            var timerGameObject = GameObject.FindGameObjectWithTag("Timer");
-            if (timerGameObject == null)
+            var uiManager = GameObject.FindGameObjectWithTag("OnScreenUI").GetComponent<UIManager>();
+            if (uiManager == null)
             {
-                throw new NullReferenceException("Unable to find Game Object with tag 'Timer'.");
+                throw new NullReferenceException("Was not able to find the OnScreenUI prefab in the scene.");
             }
+
+            uiManager.ShowGameView();
+            var timerGameObject = GameObject.FindGameObjectWithTag("Timer");
 
             timerGameObject.SetActive(true);
             gameUITimer = timerGameObject.GetComponent<GameUITimer>();

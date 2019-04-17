@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Improbable.Common;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.Subscriptions;
@@ -63,12 +64,9 @@ namespace Fps
             var uiManager = GameObject.FindGameObjectWithTag("OnScreenUI").GetComponent<UIManager>();
             if (uiManager == null)
             {
-                Debug.LogError("Was not able to find the OnScreenUI prefab in the scene.");
-                enabled = false;
-                return;
+                throw new NullReferenceException("Was not able to find the OnScreenUI prefab in the scene.");
             }
 
-            uiManager.ShowGameView();
             inGameManager = uiManager.InGameManager;
         }
 

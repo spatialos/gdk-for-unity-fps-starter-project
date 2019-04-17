@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Improbable.Gdk.Core;
 using Improbable.Worker.CInterop.Alpha;
@@ -22,6 +23,19 @@ namespace Fps
         {
             nextState = state;
             this.waitTimeInSeconds = waitTimeInSeconds;
+        }
+
+        private void Awake()
+        {
+            if (ClientWorkerConnectorPrefab == null)
+            {
+                throw new NullReferenceException("Missing reference to client worker prefab");
+            }
+
+            if (uiManager == null)
+            {
+                throw new NullReferenceException("Missing reference to UI manager");
+            }
         }
 
         private void Start()

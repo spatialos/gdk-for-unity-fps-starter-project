@@ -240,7 +240,7 @@ GameObject:
   - component: {fileID: 1168413885}
   - component: {fileID: 1168413884}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: ClientWorker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -258,12 +258,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f8c7189676e488cbadd0180cc51fa57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UseSessionBasedFlow: 0
-  PlayerName: Player
-  DevAuthToken: 
-  PlayerIdentityToken: 
-  ClientConnector: {fileID: 0}
-  clientWorkerConnectorPrefab: {fileID: 1765859764722708, guid: a823c764c6b3a07469424eac6035a74c,
+  Blackboard:
+    UseSessionBasedFlow: 1
+    SessionStatus: 0
+    PlayerName: Player
+    DevAuthToken: 
+    PlayerIdentityToken: 
+    ClientConnector: {fileID: 0}
+  ClientWorkerConnectorPrefab: {fileID: 1765859764722708, guid: a823c764c6b3a07469424eac6035a74c,
     type: 3}
   uiManager: {fileID: 1497107807}
 --- !u!4 &1168413885
@@ -349,18 +351,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 35, y: -60, z: 0}
---- !u!114 &1451565129 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4688935748361665597, guid: c0011f63193627d4eb6f0db039fd8b17,
-    type: 3}
-  m_PrefabInstance: {fileID: 1497107806}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e7687c6d3bd1c348b9975a596f60c61, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1497107806
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -373,16 +363,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: OnScreenUI_Mobile
       objectReference: {fileID: 0}
-    - target: {fileID: 5238200821785583470, guid: c0011f63193627d4eb6f0db039fd8b17,
-        type: 3}
-      propertyPath: deploymentListTable
-      value: 
-      objectReference: {fileID: 1686911069}
-    - target: {fileID: 5238200821785583470, guid: c0011f63193627d4eb6f0db039fd8b17,
-        type: 3}
-      propertyPath: frontEndUiController
-      value: 
-      objectReference: {fileID: 1451565129}
     - target: {fileID: 4871009320061034181, guid: c0011f63193627d4eb6f0db039fd8b17,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -493,50 +473,15 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: 97
       objectReference: {fileID: 0}
-    - target: {fileID: 4871743361917398587, guid: c0011f63193627d4eb6f0db039fd8b17,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -92
-      objectReference: {fileID: 0}
     - target: {fileID: 7807697133000478772, guid: c0011f63193627d4eb6f0db039fd8b17,
         type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 97
       objectReference: {fileID: 0}
-    - target: {fileID: 4647835796208073867, guid: c0011f63193627d4eb6f0db039fd8b17,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4871210673482636243, guid: c0011f63193627d4eb6f0db039fd8b17,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 50
-      objectReference: {fileID: 0}
     - target: {fileID: 4871470225106377897, guid: c0011f63193627d4eb6f0db039fd8b17,
         type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 8160620565028064989, guid: c0011f63193627d4eb6f0db039fd8b17,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 778369375860513480, guid: c0011f63193627d4eb6f0db039fd8b17,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 4648737916515989303, guid: c0011f63193627d4eb6f0db039fd8b17,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2030595107262849433, guid: c0011f63193627d4eb6f0db039fd8b17,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c0011f63193627d4eb6f0db039fd8b17, type: 3}
@@ -550,18 +495,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c29c8b12a7d111e45a7d87d2753e91ad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1686911069 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8946224398212592301, guid: c0011f63193627d4eb6f0db039fd8b17,
-    type: 3}
-  m_PrefabInstance: {fileID: 1497107806}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fbae37dc2bd5b394684387d32c0eb680, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &1897720940

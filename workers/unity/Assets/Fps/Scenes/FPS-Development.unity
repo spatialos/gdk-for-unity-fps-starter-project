@@ -278,109 +278,8 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4648052397860628367, guid: d52364553e6842940944c62b73e5e1b1,
-        type: 3}
-      propertyPath: m_TagString
-      value: OnScreenUI
-      objectReference: {fileID: 0}
-    - target: {fileID: 4688935748361665597, guid: d52364553e6842940944c62b73e5e1b1,
-        type: 3}
-      propertyPath: EditorCurrentScreen
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4648737916515989303, guid: d52364553e6842940944c62b73e5e1b1,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4648540397580954867, guid: d52364553e6842940944c62b73e5e1b1,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4648064201555364825, guid: d52364553e6842940944c62b73e5e1b1,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2750977883958393269, guid: d52364553e6842940944c62b73e5e1b1,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4689281514684122751, guid: d52364553e6842940944c62b73e5e1b1,
-        type: 3}
-      propertyPath: m_Color.r
-      value: 0.27058825
-      objectReference: {fileID: 0}
-    - target: {fileID: 4689281514684122751, guid: d52364553e6842940944c62b73e5e1b1,
-        type: 3}
-      propertyPath: m_Color.g
-      value: 0.2784314
-      objectReference: {fileID: 0}
-    - target: {fileID: 4689281514684122751, guid: d52364553e6842940944c62b73e5e1b1,
-        type: 3}
-      propertyPath: m_Color.b
-      value: 0.2784314
-      objectReference: {fileID: 0}
-    - target: {fileID: 4689281514684122751, guid: d52364553e6842940944c62b73e5e1b1,
-        type: 3}
-      propertyPath: m_Color.a
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4689064927622340367, guid: d52364553e6842940944c62b73e5e1b1,
-        type: 3}
-      propertyPath: m_Color.a
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4688708138024354849, guid: d52364553e6842940944c62b73e5e1b1,
-        type: 3}
-      propertyPath: m_Color.r
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4688708138024354849, guid: d52364553e6842940944c62b73e5e1b1,
-        type: 3}
-      propertyPath: m_Color.g
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4688708138024354849, guid: d52364553e6842940944c62b73e5e1b1,
-        type: 3}
-      propertyPath: m_Color.b
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4688708138024354849, guid: d52364553e6842940944c62b73e5e1b1,
-        type: 3}
-      propertyPath: m_Color.a
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4648433929435404949, guid: d52364553e6842940944c62b73e5e1b1,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2790237538569206407, guid: d52364553e6842940944c62b73e5e1b1,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4689159565516789255, guid: d52364553e6842940944c62b73e5e1b1,
-        type: 3}
-      propertyPath: m_Color.a
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4688969647908050475, guid: d52364553e6842940944c62b73e5e1b1,
-        type: 3}
-      propertyPath: m_Color.a
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4688950688902521913, guid: d52364553e6842940944c62b73e5e1b1,
-        type: 3}
-      propertyPath: m_Color.a
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 3714415189141042991, guid: d52364553e6842940944c62b73e5e1b1, type: 3}
+    m_Modifications: []
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d52364553e6842940944c62b73e5e1b1, type: 3}
 --- !u!114 &1345553513 stripped
 MonoBehaviour:
@@ -568,7 +467,8 @@ MonoBehaviour:
     DevAuthToken: 
     PlayerIdentityToken: 
     ClientConnector: {fileID: 0}
-  ClientWorkerConnectorPrefab: {fileID: 0}
+  ClientWorkerConnectorPrefab: {fileID: 1638104666241782, guid: 075c14fd6c4ad514581b6aaabc0711bb,
+    type: 3}
   uiManager: {fileID: 1345553513}
 --- !u!4 &1791962780
 Transform:

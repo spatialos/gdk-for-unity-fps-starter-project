@@ -44,15 +44,15 @@ namespace Fps
 
             AdjustTableHeight(playerRank);
 
-            for (var i = 0; i < Mathf.Min(10, results.Length); i++)
+            for (var i = 1; i <= Mathf.Min(10, results.Length); i++)
             {
-                AddPlayerToTable(results[i], isLocalPlayer: playerRank == (i + 1));
-                currentBgColor = i % 2 == 0 ? backgroundStripColor2 : backgroundStripColor1;
+                AddPlayerToTable(results[i - 1], isLocalPlayer: playerRank == i);
+                currentBgColor = i % 2 == 0 ? backgroundStripColor1 : backgroundStripColor2;
             }
 
-            if (playerRank >= 10)
+            if (playerRank > 10)
             {
-                AddPlayerToTable(results[playerRank], isLocalPlayer: true);
+                AddPlayerToTable(results[playerRank - 1], isLocalPlayer: true);
             }
         }
 
