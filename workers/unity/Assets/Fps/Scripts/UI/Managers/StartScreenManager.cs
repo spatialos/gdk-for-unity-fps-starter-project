@@ -1,4 +1,4 @@
-﻿using System;
+﻿using UnityEngine;
 
 namespace Fps
 {
@@ -11,12 +11,12 @@ namespace Fps
         {
             if (QuickJoinButton == null)
             {
-                throw new NullReferenceException("Missing reference to the quick join button.");
+                throw new MissingReferenceException("Missing reference to the quick join button.");
             }
 
             if (BrowseButton == null)
             {
-                throw new NullReferenceException("Missing reference to the browse button.");
+                throw new MissingReferenceException("Missing reference to the browse button.");
             }
         }
     }

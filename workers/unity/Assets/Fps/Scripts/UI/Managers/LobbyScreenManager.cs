@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace Fps
@@ -18,22 +17,22 @@ namespace Fps
         {
             if (hintText == null)
             {
-                throw new NullReferenceException("Missing reference to the hint text.");
+                throw new MissingReferenceException("Missing reference to the hint text.");
             }
 
             if (inputField == null)
             {
-                throw new NullReferenceException("Missing reference to the input field for the player name.");
+                throw new MissingReferenceException("Missing reference to the input field for the player name.");
             }
 
             if (StartButton == null)
             {
-                throw new NullReferenceException("Missing reference to the start button.");
+                throw new MissingReferenceException("Missing reference to the start button.");
             }
 
             if (CancelButton == null)
             {
-                throw new NullReferenceException("Missing reference to the cancel button.");
+                throw new MissingReferenceException("Missing reference to the cancel button.");
             }
         }
 

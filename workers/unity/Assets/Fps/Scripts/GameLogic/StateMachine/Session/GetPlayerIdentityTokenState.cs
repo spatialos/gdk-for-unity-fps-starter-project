@@ -41,13 +41,18 @@ namespace Fps
                 return;
             }
 
-            if (!result.HasValue || result.Value.Status.Code != ConnectionStatusCode.Success)
+            if (!result.HasValue)
+            {
+                Manager.ScreenManager.StartScreenManager.ShowFailedToGetDeploymentsText(
+                    $"Failed to retrieve player identity token.\n Unknown error.");
+                Owner.SetState(Owner.StartState, 2f);
+            }
+
+            if (result.Value.Status.Code != ConnectionStatusCode.Success)
             {
                 Manager.ScreenManager.StartScreenManager.ShowFailedToGetDeploymentsText(
                     $"Failed to retrieve player identity token.\n Error code: {result.Value.Status.Code}");
                 Owner.SetState(Owner.StartState, 2f);
-
-                UnityEngine.Debug.LogWarning($"{result.Value.Status.Code} - {result.Value.Status.Detail}");
             }
 
             Owner.Blackboard.PlayerIdentityToken = result.Value.PlayerIdentityToken;

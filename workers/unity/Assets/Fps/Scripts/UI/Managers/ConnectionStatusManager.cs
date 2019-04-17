@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace Fps
@@ -25,22 +24,22 @@ namespace Fps
         {
             if (SpinnerSymbol == null)
             {
-                throw new NullReferenceException("Missing reference to the spinner symbol.");
+                throw new MissingReferenceException("Missing reference to the spinner symbol.");
             }
 
             if (ErrorSymbol == null)
             {
-                throw new NullReferenceException("Missing reference to the error symbol.");
+                throw new MissingReferenceException("Missing reference to the error symbol.");
             }
 
             if (SuccessSymbol == null)
             {
-                throw new NullReferenceException("Missing reference to the success symbol.");
+                throw new MissingReferenceException("Missing reference to the success symbol.");
             }
 
             if (StatusText == null)
             {
-                throw new NullReferenceException("Missing reference to the status text.");
+                throw new MissingReferenceException("Missing reference to the status text.");
             }
         }
 

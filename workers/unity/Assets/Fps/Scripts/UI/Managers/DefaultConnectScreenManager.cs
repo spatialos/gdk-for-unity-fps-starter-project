@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace Fps
@@ -12,7 +11,7 @@ namespace Fps
         {
             if (ConnectButton == null)
             {
-                throw new NullReferenceException("Missing reference to the connect button.");
+                throw new MissingReferenceException("Missing reference to the connect button.");
             }
         }
     }

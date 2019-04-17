@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace Fps
@@ -23,24 +22,23 @@ namespace Fps
         {
             if (DoneButton == null)
             {
-                throw new NullReferenceException("Missing reference to the done button.");
+                throw new MissingReferenceException("Missing reference to the done button.");
             }
 
             if (resultsTable == null)
             {
-                throw new NullReferenceException("Missing reference to the results table.");
+                throw new MissingReferenceException("Missing reference to the results table.");
             }
 
             if (rankDivider == null)
             {
-                throw new NullReferenceException("Missing reference to the rank divider.");
+                throw new MissingReferenceException("Missing reference to the rank divider.");
             }
         }
 
         public void SetResults(ResultsData[] results, int playerRank)
         {
             resultsTable.ClearEntries();
-            currentBgColor = backgroundStripColor1;
 
             AdjustTableHeight(playerRank);
 

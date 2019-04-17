@@ -26,17 +26,17 @@ namespace Fps
         {
             if (JoinButton == null)
             {
-                throw new NullReferenceException("Missing reference to the join button.");
+                throw new MissingReferenceException("Missing reference to the join button.");
             }
 
             if (BackButton == null)
             {
-                throw new NullReferenceException("Missing reference to the back button.");
+                throw new MissingReferenceException("Missing reference to the back button.");
             }
 
             if (DeploymentListTable == null)
             {
-                throw new NullReferenceException("Missing reference to the deployment list table.");
+                throw new MissingReferenceException("Missing reference to the deployment list table.");
             }
         }
 
@@ -72,8 +72,7 @@ namespace Fps
                 return;
             }
 
-            deployments.Sort((deployment1, deployment2) =>
-                String.Compare(deployment1.Name, deployment2.Name, StringComparison.Ordinal));
+            deployments.Sort();
 
             var highlightedDeploymentName = string.Empty;
             if (IsHighlightedIndexValid())

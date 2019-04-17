@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Improbable.Gdk.Core.Commands;
 using Improbable.Gdk.Movement;
 using Improbable.Gdk.Session;
 using Unity.Entities;
@@ -42,6 +41,11 @@ namespace Fps
             else
             {
                 SessionStatus = sessionGroup.GetComponentDataArray<Session.Component>()[0].Status;
+            }
+
+            if (SessionStatus != Status.STOPPING)
+            {
+                return;
             }
 
             var playerStateData = ownPlayerGroup.GetComponentDataArray<PlayerState.Component>();

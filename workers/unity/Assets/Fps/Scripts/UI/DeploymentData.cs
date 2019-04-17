@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Fps
 {
-    public readonly struct DeploymentData
+    public readonly struct DeploymentData : IComparable<DeploymentData>
     {
         public readonly string Name;
         public readonly int CurrentPlayers;
@@ -18,11 +19,11 @@ namespace Fps
             IsAvailable = isAvailable;
         }
 
-        public static DeploymentData CreateFromTags(string deploymentName, IReadOnlyList<string> tags)
+        public static bool TryToCreateFromTags(string deploymentName, IReadOnlyList<string> tags, out DeploymentData data)
         {
-            var playerCount = 0;
-            var maxPlayerCount = 0;
-            var isAvailable = false;
+            int? playerCount = null;
+            int? maxPlayerCount = null;
+            bool? isAvailable = null;
             foreach (var tag in tags)
             {
                 if (tag.StartsWith("players"))
@@ -40,7 +41,19 @@ namespace Fps
                 }
             }
 
-            return new DeploymentData(deploymentName, playerCount, maxPlayerCount, isAvailable);
+            if (!playerCount.HasValue || !maxPlayerCount.HasValue || !isAvailable.HasValue)
+            {
+                data = new DeploymentData();
+                return false;
+            }
+
+            data = new DeploymentData(deploymentName, playerCount.Value, maxPlayerCount.Value, isAvailable.Value);
+            return true;
+        }
+
+        public int CompareTo(DeploymentData other)
+        {
+            return String.Compare(Name, other.Name, StringComparison.Ordinal);
         }
     }
 }

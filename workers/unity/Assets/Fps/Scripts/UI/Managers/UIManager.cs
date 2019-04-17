@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace Fps
@@ -12,12 +11,12 @@ namespace Fps
         {
             if (ScreenManager == null)
             {
-                throw new NullReferenceException("Missing reference to the screen manager.");
+                throw new MissingReferenceException("Missing reference to the screen manager.");
             }
 
             if (InGameManager == null)
             {
-                throw new NullReferenceException("Missing reference to the in-game screen manager.");
+                throw new MissingReferenceException("Missing reference to the in-game screen manager.");
             }
         }
 

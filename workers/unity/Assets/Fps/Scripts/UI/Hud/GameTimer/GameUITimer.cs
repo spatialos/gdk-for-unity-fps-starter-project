@@ -20,17 +20,17 @@ namespace Fps
         {
             if (minutes == null)
             {
-                throw new NullReferenceException("Missing reference to the minutes text.");
+                throw new MissingReferenceException("Missing reference to the minutes text.");
             }
 
             if (seconds == null)
             {
-                throw new NullReferenceException("Missing reference to the seconds text.");
+                throw new MissingReferenceException("Missing reference to the seconds text.");
             }
 
             if (divider == null)
             {
-                throw new NullReferenceException("Missing reference to the divider text.");
+                throw new MissingReferenceException("Missing reference to the divider text.");
             }
         }
 

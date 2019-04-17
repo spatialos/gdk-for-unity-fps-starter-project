@@ -41,7 +41,15 @@ namespace Fps
                 return;
             }
 
-            if (!result.HasValue || result.Value.Status.Code != ConnectionStatusCode.Success)
+            if (!result.HasValue)
+            {
+                Manager.ScreenManager.StartScreenManager.ShowFailedToGetDeploymentsText(
+                    $"Failed to retrieve any login tokens.\n Unknown error.");
+                Owner.SetState(Owner.StartState, 2f);
+                return;
+            }
+
+            if (result.Value.Status.Code != ConnectionStatusCode.Success)
             {
                 Manager.ScreenManager.StartScreenManager.ShowFailedToGetDeploymentsText(
                     $"Failed to retrieve any login tokens.\n Error code: {result.Value.Status.Code}");

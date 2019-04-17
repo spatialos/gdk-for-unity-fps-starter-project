@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Fps
@@ -20,12 +19,12 @@ namespace Fps
         {
             if (entriesParentRect == null)
             {
-                throw new NullReferenceException("Missing reference to parent object for table entries.");
+                throw new MissingReferenceException("Missing reference to parent object for table entries.");
             }
 
             if (entryTemplate == null)
             {
-                throw new NullReferenceException("Missing reference to table entry prefab.");
+                throw new MissingReferenceException("Missing reference to table entry prefab.");
             }
 
             entryTemplateRect = entryTemplate.GetComponent<RectTransform>();

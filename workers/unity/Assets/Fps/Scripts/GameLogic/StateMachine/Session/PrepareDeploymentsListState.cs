@@ -58,9 +58,11 @@ namespace Fps
             var deploymentData = new List<DeploymentData>();
             foreach (var loginToken in Owner.Blackboard.LoginTokens)
             {
-                var data = DeploymentData.CreateFromTags(loginToken.DeploymentName, loginToken.Tags);
-                hasAvailableDeployment |= data.IsAvailable;
-                deploymentData.Add(data);
+                if (DeploymentData.TryToCreateFromTags(loginToken.DeploymentName, loginToken.Tags, out var data))
+                {
+                    hasAvailableDeployment |= data.IsAvailable;
+                    deploymentData.Add(data);
+                }
             }
 
             Manager.ScreenManager.DeploymentListScreenManager.SetDeployments(deploymentData);

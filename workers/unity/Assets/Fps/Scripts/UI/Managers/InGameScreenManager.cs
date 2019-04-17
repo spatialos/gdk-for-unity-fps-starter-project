@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace Fps
@@ -20,27 +19,27 @@ namespace Fps
         {
             if (RespawnScreen == null)
             {
-                throw new NullReferenceException("Missing reference to the respawn screen.");
+                throw new MissingReferenceException("Missing reference to the respawn screen.");
             }
 
             if (Reticle == null)
             {
-                throw new NullReferenceException("Missing reference to the reticle.");
+                throw new MissingReferenceException("Missing reference to the reticle.");
             }
 
             if (Hud == null)
             {
-                throw new NullReferenceException("Missing reference to the hud.");
+                throw new MissingReferenceException("Missing reference to the hud.");
             }
 
             if (EscapeScreen == null)
             {
-                throw new NullReferenceException("Missing reference to the escape screen.");
+                throw new MissingReferenceException("Missing reference to the escape screen.");
             }
 
             if (QuitButton == null)
             {
-                throw new NullReferenceException("Missing reference to the quit button.");
+                throw new MissingReferenceException("Missing reference to the quit button.");
             }
         }
 

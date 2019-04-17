@@ -36,19 +36,21 @@ namespace Fps
                     sessionWriter.SendUpdate(new Session.Update { Status = Status.STOPPING });
                     sessionTimer = 0;
                 }
+
+                if (sessionTimer - lastUpdate > 1f)
+                {
+                    timerWriter.SendUpdate(new Timer.Update { CurrentTimeSeconds = (uint) Mathf.RoundToInt(sessionTimer) });
+                    lastUpdate = sessionTimer;
+                }
             }
             else if (status == Status.LOBBY && sessionTimer > lobbyTime)
             {
                 sessionWriter.SendUpdate(new Session.Update { Status = Status.RUNNING });
                 sessionTimer = 0;
+                lastUpdate = 0;
             }
 
             sessionTimer += Time.deltaTime;
-            if (sessionTimer - lastUpdate > 1f && status == Status.RUNNING)
-            {
-                timerWriter.SendUpdate(new Timer.Update { CurrentTimeSeconds = (uint) Mathf.RoundToInt(sessionTimer) });
-                lastUpdate = sessionTimer;
-            }
         }
     }
 }

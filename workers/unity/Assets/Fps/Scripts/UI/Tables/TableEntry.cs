@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace Fps
@@ -14,12 +13,12 @@ namespace Fps
         {
             if (Background == null)
             {
-                throw new NullReferenceException("Missing reference to the background image for this table entry.");
+                throw new MissingReferenceException("Missing reference to the background image for this table entry.");
             }
 
             if (textVisuals == null)
             {
-                throw new NullReferenceException("Missing reference to the text components for this table entry.");
+                throw new MissingReferenceException("Missing reference to the text components for this table entry.");
             }
         }
 

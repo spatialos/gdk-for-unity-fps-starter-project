@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace Fps
@@ -24,37 +23,37 @@ namespace Fps
         {
             if (DefaultConnectScreenManager == null)
             {
-                throw new NullReferenceException("Missing reference to the default connect screen manager.");
+                throw new MissingReferenceException("Missing reference to the default connect screen manager.");
             }
 
             if (StartScreenManager == null)
             {
-                throw new NullReferenceException("Missing reference to the start screen manager.");
+                throw new MissingReferenceException("Missing reference to the start screen manager.");
             }
 
             if (DeploymentListScreenManager == null)
             {
-                throw new NullReferenceException("Missing reference to the deployment list screen manager.");
+                throw new MissingReferenceException("Missing reference to the deployment list screen manager.");
             }
 
             if (ResultsScreenManager == null)
             {
-                throw new NullReferenceException("Missing reference to the results screen manager.");
+                throw new MissingReferenceException("Missing reference to the results screen manager.");
             }
 
             if (LobbyScreenManager == null)
             {
-                throw new NullReferenceException("Missing reference to the lobby screen manager.");
+                throw new MissingReferenceException("Missing reference to the lobby screen manager.");
             }
 
             if (FrontEndCamera == null)
             {
-                throw new NullReferenceException("Missing reference to the front end camera.");
+                throw new MissingReferenceException("Missing reference to the front end camera.");
             }
 
             if (QuitButton == null)
             {
-                throw new NullReferenceException("Missing reference to the quit button.");
+                throw new MissingReferenceException("Missing reference to the quit button.");
             }
         }
 
