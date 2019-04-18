@@ -11,7 +11,7 @@ namespace Fps
         public readonly int MaxPlayers;
         public readonly bool IsAvailable;
 
-        public DeploymentData(string name, int currentPlayers, int maxPlayers, bool isAvailable)
+        private DeploymentData(string name, int currentPlayers, int maxPlayers, bool isAvailable)
         {
             Name = name;
             CurrentPlayers = currentPlayers;
@@ -19,7 +19,7 @@ namespace Fps
             IsAvailable = isAvailable;
         }
 
-        public static bool TryToCreateFromTags(string deploymentName, IReadOnlyList<string> tags, out DeploymentData data)
+        public static bool TryFromTags(string deploymentName, IReadOnlyList<string> tags, out DeploymentData data)
         {
             int? playerCount = null;
             int? maxPlayerCount = null;

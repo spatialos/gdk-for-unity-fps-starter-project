@@ -20,6 +20,8 @@ namespace Fps
         private const string ConnectingText = "Joining deployment...";
         private const string SpawningFailedText = "Failed to spawn player!";
 
+        private GameObject activeSymbol;
+
         private void OnValidate()
         {
             if (SpinnerSymbol == null)
@@ -98,14 +100,9 @@ namespace Fps
 
         private void SetSymbol(GameObject symbol)
         {
-            Debug.Assert(symbol == null
-                || symbol == ErrorSymbol
-                || symbol == SpinnerSymbol
-                || symbol == SuccessSymbol);
-
-            ErrorSymbol.SetActive(symbol == ErrorSymbol);
-            SpinnerSymbol.SetActive(symbol == SpinnerSymbol);
-            SuccessSymbol.SetActive(symbol == SuccessSymbol);
+            activeSymbol.SetActive(false);
+            symbol.SetActive(true);
+            activeSymbol = symbol;
         }
 
         private void OnDisable()

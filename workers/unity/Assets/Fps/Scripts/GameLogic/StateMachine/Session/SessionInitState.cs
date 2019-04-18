@@ -5,19 +5,16 @@ namespace Fps
 {
     public class SessionInitState : SessionState
     {
-        private readonly StartScreenManager startScreenManager;
-
         public SessionInitState(UIManager manager, ConnectionStateMachine owner) : base(manager, owner)
         {
-            startScreenManager = manager.ScreenManager.StartScreenManager;
         }
 
         public override void StartState()
         {
-            startScreenManager.BrowseButton.enabled = false;
-            startScreenManager.QuickJoinButton.enabled = false;
+            ScreenManager.ListDeploymentsButton.enabled = false;
+            ScreenManager.QuickJoinButton.enabled = false;
             Manager.ShowFrontEnd();
-            Manager.ScreenManager.SwitchToSessionScreen();
+            Manager.ScreenManager.SwitchToStartScreen();
 
             var listDeploymentsState = new PrepareDeploymentsListState(Manager, Owner);
             var getPitState = new GetPlayerIdentityTokenState(listDeploymentsState, Manager, Owner);
@@ -25,7 +22,7 @@ namespace Fps
             var textAsset = Resources.Load<TextAsset>("DevAuthToken");
             if (textAsset != null)
             {
-                Owner.Blackboard.DevAuthToken = textAsset.text.Trim();
+                Blackboard.DevAuthToken = textAsset.text.Trim();
             }
             else
             {
@@ -33,12 +30,8 @@ namespace Fps
                     "Unable to find DevAuthToken.txt inside your Resources folder. Ensure to generate one.");
             }
 
-            Manager.ScreenManager.StartScreenManager.ShowGetDeploymentListText();
+            Manager.ScreenManager.DeploymentListStatus.ShowGetDeploymentListText();
             Owner.SetState(getPitState);
-        }
-
-        public override void ExitState()
-        {
         }
     }
 }

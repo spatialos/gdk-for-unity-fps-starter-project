@@ -1,6 +1,7 @@
 using Improbable.PlayerLifecycle;
 using Improbable.Worker.CInterop;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Fps
 {
@@ -13,20 +14,20 @@ namespace Fps
         public override void StartState()
         {
             Animator.SetTrigger("Ready");
-            DefaultConnectScreenManager.ConnectButton.onClick.AddListener(SpawnPlayer);
+            ScreenManager.DefaultConnectButton.onClick.AddListener(SpawnPlayer);
         }
 
         public override void Tick()
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                DefaultConnectScreenManager.ConnectButton.onClick.Invoke();
+                ScreenManager.DefaultConnectButton.onClick.Invoke();
             }
         }
 
         public override void ExitState()
         {
-            DefaultConnectScreenManager.ConnectButton.onClick.RemoveListener(SpawnPlayer);
+            ScreenManager.DefaultConnectButton.onClick.RemoveListener(SpawnPlayer);
         }
 
         private void OnPlayerResponse(PlayerCreator.CreatePlayer.ReceivedResponse response)
@@ -37,15 +38,15 @@ namespace Fps
             }
             else
             {
-                DefaultConnectScreenManager.ConnectButton.enabled = true;
+                ScreenManager.DefaultConnectButton.enabled = true;
                 Animator.SetTrigger("FailedToSpawn");
             }
         }
 
         private void SpawnPlayer()
         {
-            DefaultConnectScreenManager.ConnectButton.enabled = false;
-            Owner.Blackboard.ClientConnector.SpawnPlayer("Local Player", OnPlayerResponse);
+            ScreenManager.DefaultConnectButton.enabled = false;
+            Blackboard.ClientConnector.SpawnPlayer("Local Player", OnPlayerResponse);
             Animator.SetTrigger("Connecting");
         }
     }

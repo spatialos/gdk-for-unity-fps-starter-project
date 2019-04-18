@@ -5,12 +5,12 @@ namespace Fps
 {
     public class Table : MonoBehaviour
     {
+        public float EntryHeight;
+
         [SerializeField] private RectTransform entriesParentRect;
         [SerializeField] private TableEntry entryTemplate;
 
         private RectTransform entryTemplateRect;
-
-        public float EntryHeight;
 
         private readonly List<TableEntry> entries = new List<TableEntry>();
         private float entryHeight;

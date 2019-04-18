@@ -1,4 +1,5 @@
 using Improbable.Gdk.Session;
+using UnityEngine;
 
 namespace Fps
 {
@@ -8,23 +9,19 @@ namespace Fps
 
         public PlayState(UIManager manager, ConnectionStateMachine owner) : base(manager, owner)
         {
-            trackPlayerSystem = Owner.Blackboard.ClientConnector.Worker.World.GetExistingManager<TrackPlayerSystem>();
+            trackPlayerSystem = Blackboard.ClientConnector.Worker.World.GetExistingManager<TrackPlayerSystem>();
         }
 
         public override void StartState()
         {
-            Owner.Blackboard.ClientConnector.Worker.OnDisconnect += OnDisconnect;
+            Blackboard.ClientConnector.Worker.OnDisconnect += OnDisconnect;
         }
 
-        private void OnDisconnect(string obj)
+        private void OnDisconnect(string disconnectReason)
         {
-            Owner.Blackboard.ClientConnector = null;
-            Manager.ScreenManager.StartScreenManager.ShowWorkerDisconnectedText();
+            Blackboard.ClientConnector = null;
+            Manager.ScreenManager.StartStatus.ShowWorkerDisconnectedText();
             Owner.SetState(Owner.StartState, 2f);
-        }
-
-        public override void ExitState()
-        {
         }
 
         public override void Tick()

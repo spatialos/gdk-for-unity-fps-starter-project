@@ -2,12 +2,12 @@ using UnityEngine;
 
 namespace Fps
 {
-    public class ConnectState : SessionState
+    public class SessionConnectState : SessionState
     {
         private string deployment;
-        private bool foundDeployment;
+        private readonly Color HintTextColor = new Color(1f, .4f, .4f);
 
-        public ConnectState(string deployment, UIManager manager, ConnectionStateMachine owner) : base(manager, owner)
+        public SessionConnectState(string deployment, UIManager manager, ConnectionStateMachine owner) : base(manager, owner)
         {
             this.deployment = deployment;
         }
@@ -27,17 +27,22 @@ namespace Fps
 
             Manager.ScreenManager.SwitchToLobbyScreen();
 
-            Manager.ScreenManager.LobbyScreenManager.ShowConnectingText();
-            Manager.ScreenManager.LobbyScreenManager.StartButton.enabled = false;
+            Manager.ScreenManager.LobbyStatus.ShowConnectingText();
+            ScreenManager.StartGameButton.enabled = false;
 
             var clientWorker = Object.Instantiate(Owner.ClientWorkerConnectorPrefab, Owner.transform.position, Quaternion.identity);
-            Owner.Blackboard.ClientConnector = clientWorker.GetComponent<ClientWorkerConnector>();
-            Owner.Blackboard.ClientConnector.Connect(deployment, true);
+            Blackboard.ClientConnector = clientWorker.GetComponent<ClientWorkerConnector>();
+            Blackboard.ClientConnector.Connect(deployment);
+
+            ScreenManager.PlayerNameHintText.text = string.Empty;
+            ScreenManager.PlayerNameHintText.color = HintTextColor;
+            ScreenManager.PlayerNameInputField.Select();
+            ScreenManager.PlayerNameInputField.ActivateInputField();
         }
 
         public override void Tick()
         {
-            if (Owner.Blackboard.ClientConnector.Worker == null)
+            if (Blackboard.ClientConnector.Worker == null)
             {
                 // Worker has not connected yet. Continue waiting
                 return;
@@ -48,13 +53,9 @@ namespace Fps
             Owner.SetState(nextState);
         }
 
-        public override void ExitState()
-        {
-        }
-
         private string SelectFirstDeployment()
         {
-            foreach (var loginToken in Owner.Blackboard.LoginTokens)
+            foreach (var loginToken in Blackboard.LoginTokens)
             {
                 if (loginToken.Tags.Contains("status_lobby") || loginToken.Tags.Contains("status_running"))
                 {

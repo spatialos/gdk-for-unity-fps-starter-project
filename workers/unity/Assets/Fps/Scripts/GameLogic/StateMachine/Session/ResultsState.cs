@@ -1,5 +1,6 @@
 using System.Linq;
 using Improbable.Gdk.Core;
+using UnityEngine;
 
 namespace Fps
 {
@@ -11,32 +12,38 @@ namespace Fps
 
         public override void StartState()
         {
-            Manager.ScreenManager.ResultsScreenManager.DoneButton.onClick.AddListener(Restart);
+            ScreenManager.ResultsScreenDoneButton.onClick.AddListener(Restart);
 
-            var trackPlayerSystem = Owner.Blackboard.ClientConnector.Worker.World.GetExistingManager<TrackPlayerSystem>();
-            var playerName = trackPlayerSystem.PlayerName;
+            var trackPlayerSystem = Blackboard.ClientConnector.Worker.World.GetExistingManager<TrackPlayerSystem>();
             var results = trackPlayerSystem.PlayerResults;
-            // get player rank
-            var playerRank = results.FirstOrDefault(res => res.PlayerName == playerName).Rank;
-
-            Manager.ScreenManager.ResultsScreenManager.SetResults(results.ToArray(), playerRank);
-
+            var playerRank = results.FirstOrDefault(res => res.PlayerName == Blackboard.PlayerName).Rank;
+            ScreenManager.InformOfResults(results, playerRank);
             // show results screen
             Manager.ShowFrontEnd();
-            Manager.ScreenManager.SwitchToResultsScreen();
-            UnityObjectDestroyer.Destroy(Owner.Blackboard.ClientConnector);
-            Owner.Blackboard.ClientConnector = null;
+            ScreenManager.SwitchToResultsScreen();
+            UnityObjectDestroyer.Destroy(Blackboard.ClientConnector);
+            Blackboard.ClientConnector = null;
         }
 
         public override void ExitState()
         {
-            Manager.ScreenManager.ResultsScreenManager.DoneButton.onClick.RemoveListener(Restart);
-            Manager.ScreenManager.SwitchToSessionScreen();
+            ScreenManager.ResultsScreenDoneButton.onClick.RemoveListener(Restart);
+            ScreenManager.SwitchToStartScreen();
         }
 
         private void Restart()
         {
             Owner.SetState(Owner.StartState);
+        }
+
+        public override void Tick()
+        {
+            if (Input.GetKeyDown(KeyCode.KeypadEnter)
+                || Input.GetKeyDown(KeyCode.Return)
+                || Input.GetKeyDown(KeyCode.Escape))
+            {
+                ScreenManager.ResultsScreenDoneButton.onClick.Invoke();
+            }
         }
     }
 }

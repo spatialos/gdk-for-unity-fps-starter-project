@@ -18,31 +18,26 @@ namespace Fps
         private static readonly string SessionSnapshotPath =
             Path.Combine(Application.dataPath, "../../../snapshots/session.snapshot");
 
-        private static void GenerateSnapshot(Snapshot snapshot)
-        {
-            snapshot.AddEntity(FpsEntityTemplates.Spawner(Coordinates.Zero));
-        }
-
         [MenuItem("SpatialOS/Generate FPS Snapshot")]
         private static void GenerateFpsSnapshot()
         {
-            var localSnapshot = new Snapshot();
-            var cloudSnapshot = new Snapshot();
-            var sessionSnapshot = new Snapshot();
+            SaveSnapshot(DefaultSnapshotPath, GenerateDefaultSnapshot());
+            SaveSnapshot(SessionSnapshotPath, GenerateSessionSnapshot());
+        }
 
-            GenerateSnapshot(localSnapshot);
-            GenerateSnapshot(cloudSnapshot);
-            GenerateSnapshot(sessionSnapshot);
+        private static Snapshot GenerateDefaultSnapshot()
+        {
+            var snapshot = new Snapshot();
+            snapshot.AddEntity(FpsEntityTemplates.Spawner(Coordinates.Zero));
+            return snapshot;
+        }
 
-            // The local snapshot is identical to the cloud snapshot, but also includes a simulated player coordinator
-            // trigger.
-            var simulatedPlayerCoordinatorTrigger = FpsEntityTemplates.SimulatedPlayerCoordinatorTrigger();
-            localSnapshot.AddEntity(simulatedPlayerCoordinatorTrigger);
-            sessionSnapshot.AddEntity(FpsEntityTemplates.DeploymentState());
-
-            SaveSnapshot(DefaultSnapshotPath, localSnapshot);
-            SaveSnapshot(CloudSnapshotPath, cloudSnapshot);
-            SaveSnapshot(SessionSnapshotPath, sessionSnapshot);
+        private static Snapshot GenerateSessionSnapshot()
+        {
+            var snapshot = new Snapshot();
+            snapshot.AddEntity(FpsEntityTemplates.Spawner(Coordinates.Zero));
+            snapshot.AddEntity(FpsEntityTemplates.DeploymentState());
+            return snapshot;
         }
 
         private static void SaveSnapshot(string path, Snapshot snapshot)

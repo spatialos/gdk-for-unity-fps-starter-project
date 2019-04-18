@@ -6,23 +6,16 @@ namespace Fps
 {
     public class SpawnPlayerState : SessionState
     {
-        private readonly LobbyScreenManager lobbyScreenManager;
-
         public SpawnPlayerState(UIManager manager, ConnectionStateMachine owner) : base(manager, owner)
         {
-            lobbyScreenManager = manager.ScreenManager.LobbyScreenManager;
         }
 
         public override void StartState()
         {
-            lobbyScreenManager.ShowSpawningText();
-            lobbyScreenManager.StartButton.enabled = false;
+            ScreenManager.LobbyStatus.ShowSpawningText();
+            ScreenManager.StartGameButton.enabled = false;
 
-            Owner.Blackboard.ClientConnector.SpawnPlayer(Manager.ScreenManager.LobbyScreenManager.GetPlayerName(), OnCreatePlayerResponse);
-        }
-
-        public override void ExitState()
-        {
+            Blackboard.ClientConnector.SpawnPlayer(Manager.ScreenManager.PlayerNameInputField.text, OnCreatePlayerResponse);
         }
 
         private void OnCreatePlayerResponse(PlayerCreator.CreatePlayer.ReceivedResponse response)
@@ -33,9 +26,9 @@ namespace Fps
             }
             else
             {
-                Manager.ScreenManager.LobbyScreenManager.ShowSpawningFailedText(response.Message);
-                UnityObjectDestroyer.Destroy(Owner.Blackboard.ClientConnector);
-                Owner.Blackboard.ClientConnector = null;
+                Manager.ScreenManager.LobbyStatus.ShowSpawningFailedText(response.Message);
+                UnityObjectDestroyer.Destroy(Blackboard.ClientConnector);
+                Blackboard.ClientConnector = null;
                 Owner.SetState(Owner.StartState);
             }
         }

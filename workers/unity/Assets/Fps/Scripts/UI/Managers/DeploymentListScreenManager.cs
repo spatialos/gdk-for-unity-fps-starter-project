@@ -5,65 +5,20 @@ using UnityEngine.UI;
 
 namespace Fps
 {
-    public class DeploymentListScreenManager : ConnectionStatusManager
+    public class DeploymentListScreenManager : MonoBehaviour
     {
-        public Button JoinButton;
-        public Button BackButton;
-
-        [SerializeField] private Color BackgroundColor1;
-        [SerializeField] private Color BackgroundColor2;
-        [SerializeField] private Color HighlightedColor;
-        [SerializeField] private Color HighlightedTextColor;
-        [SerializeField] private Color UnavailableTextColor;
-        [SerializeField] private Color DefaultTextColor;
-        [SerializeField] private Table DeploymentListTable;
+        [SerializeField] private Blackboard blackboard;
+        [SerializeField] private Color backgroundColor1;
+        [SerializeField] private Color backgroundColor2;
+        [SerializeField] private Color highlightedColor;
+        [SerializeField] private Color highlightedTextColor;
+        [SerializeField] private Color unavailableTextColor;
+        [SerializeField] private Color defaultTextColor;
+        [SerializeField] private Table deploymentListTable;
 
         private const int maxRows = 11; // Includes header
         private int highlightedIndex = -1;
-        private List<DeploymentData> deploymentList = new List<DeploymentData>();
-
-        private void OnValidate()
-        {
-            if (JoinButton == null)
-            {
-                throw new MissingReferenceException("Missing reference to the join button.");
-            }
-
-            if (BackButton == null)
-            {
-                throw new MissingReferenceException("Missing reference to the back button.");
-            }
-
-            if (DeploymentListTable == null)
-            {
-                throw new MissingReferenceException("Missing reference to the deployment list table.");
-            }
-        }
-
-        private bool IsHighlightedIndexValid()
-        {
-            return highlightedIndex >= 0 && highlightedIndex < deploymentList.Count;
-        }
-
-        public bool IsHighlightedDeploymentAvailable()
-        {
-            if (!IsHighlightedIndexValid() || deploymentList == null)
-            {
-                return false;
-            }
-
-            return deploymentList[highlightedIndex].IsAvailable;
-        }
-
-        public string GetChosenDeployment()
-        {
-            if (IsHighlightedDeploymentAvailable())
-            {
-                return deploymentList[highlightedIndex].Name;
-            }
-
-            return null;
-        }
+        private List<DeploymentData> deployments = new List<DeploymentData>();
 
         public void SetDeployments(List<DeploymentData> deployments)
         {
@@ -77,11 +32,11 @@ namespace Fps
             var highlightedDeploymentName = string.Empty;
             if (IsHighlightedIndexValid())
             {
-                highlightedDeploymentName = deploymentList[highlightedIndex].Name;
+                highlightedDeploymentName = this.deployments[highlightedIndex].Name;
             }
 
             highlightedIndex = -1;
-            DeploymentListTable.ClearEntries();
+            deploymentListTable.ClearEntries();
 
             for (var i = 0; i < Mathf.Min(maxRows - 1, deployments.Count); i++)
             {
@@ -92,24 +47,19 @@ namespace Fps
                 }
             }
 
-            deploymentList = deployments;
+            this.deployments = deployments;
+        }
+
+        private bool IsHighlightedIndexValid()
+        {
+            return highlightedIndex >= 0 && highlightedIndex < deployments.Count;
         }
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                TryPressBackButton();
-            }
-
-            if (deploymentList.Count == 0)
+            if (deployments.Count == 0)
             {
                 return;
-            }
-
-            if (IsHighlightedIndexValid() && (Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return)))
-            {
-                TryPressJoinButton();
             }
 
             if (!IsHighlightedIndexValid() && (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow)))
@@ -130,7 +80,7 @@ namespace Fps
 
             if (Input.GetKeyDown(KeyCode.DownArrow))
             {
-                if (highlightedIndex == deploymentList.Count - 1)
+                if (highlightedIndex == deployments.Count - 1)
                 {
                     return;
                 }
@@ -139,55 +89,36 @@ namespace Fps
             }
         }
 
-        private void TryPressJoinButton()
-        {
-            if (!JoinButton.enabled)
-            {
-                return;
-            }
-
-            JoinButton.onClick.Invoke();
-        }
-
-        private void TryPressBackButton()
-        {
-            if (!BackButton.enabled)
-            {
-                return;
-            }
-
-            BackButton.onClick.Invoke();
-        }
-
         private void AddDeploymentToTable(DeploymentData deployment, int index)
         {
-            var entry = (DeploymentTableEntry) DeploymentListTable.AddEntry();
+            var entry = (DeploymentTableEntry) deploymentListTable.AddEntry();
             var entryButton = entry.GetComponent<Button>();
             entryButton.onClick.AddListener(() => SelectEntry(index));
             entry.SetData(deployment);
-            entry.SetAllTextVisuals(deployment.IsAvailable ? DefaultTextColor : UnavailableTextColor, false);
-            entry.Background.color = index % 2 == 0 ? BackgroundColor1 : BackgroundColor2;
+            SetDefaultVisuals(index);
         }
 
         private void SelectEntry(int index)
         {
             if (IsHighlightedIndexValid())
             {
-                UnhighlightEntry(highlightedIndex);
+                SetDefaultVisuals(highlightedIndex);
             }
 
-            var entry = DeploymentListTable.GetEntry(index);
-            entry.Background.color = HighlightedColor;
-            entry.SetAllTextVisuals(HighlightedTextColor, deploymentList[index].IsAvailable);
+            var entry = deploymentListTable.GetEntry(index);
+            entry.Background.color = highlightedColor;
+            entry.SetAllTextVisuals(highlightedTextColor, deployments[index].IsAvailable);
 
             highlightedIndex = index;
+            blackboard.Deployment = entry.name;
         }
 
-        private void UnhighlightEntry(int index)
+        private void SetDefaultVisuals(int index)
         {
-            var entry = DeploymentListTable.GetEntry(index);
-            entry.Background.color = index % 2 == 0 ? BackgroundColor1 : BackgroundColor2;
-            entry.SetAllTextVisuals(deploymentList[index].IsAvailable ? DefaultTextColor : UnavailableTextColor, false);
+            var entry = deploymentListTable.GetEntry(index);
+            var isAvailable = deployments[index].IsAvailable;
+            entry.Background.color = index % 2 == 0 ? backgroundColor1 : backgroundColor2;
+            entry.SetAllTextVisuals(isAvailable ? defaultTextColor : unavailableTextColor, false);
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Fps
 
         public QuerySessionStatusState(State nextState, UIManager manager, ConnectionStateMachine owner) : base(manager, owner)
         {
-            commandSystem = Owner.Blackboard.ClientConnector.Worker.World.GetExistingManager<CommandSystem>();
+            commandSystem = Blackboard.ClientConnector.Worker.World.GetExistingManager<CommandSystem>();
             this.nextState = nextState;
         }
 
@@ -32,10 +32,6 @@ namespace Fps
             requestId = commandSystem.SendCommand(query);
         }
 
-        public override void ExitState()
-        {
-        }
-
         public override void Tick()
         {
             var status = GetStatus();
@@ -44,7 +40,7 @@ namespace Fps
                 return;
             }
 
-            Owner.Blackboard.SessionStatus = status.Value;
+            Blackboard.SessionStatus = status.Value;
             Owner.SetState(nextState);
         }
 

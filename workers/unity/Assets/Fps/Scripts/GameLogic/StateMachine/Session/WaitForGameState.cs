@@ -4,34 +4,32 @@ using Improbable.Gdk.Core;
 using Improbable.Gdk.Core.Commands;
 using Improbable.Gdk.Session;
 using Improbable.Worker.CInterop.Query;
+using UnityEngine;
 
 namespace Fps
 {
     public class WaitForGameState : SessionState
     {
-        private readonly LobbyScreenManager lobbyScreenManager;
-
         public WaitForGameState(UIManager manager, ConnectionStateMachine owner) : base(manager, owner)
         {
-            lobbyScreenManager = manager.ScreenManager.LobbyScreenManager;
         }
 
         public override void StartState()
         {
-            lobbyScreenManager.StartButton.onClick.AddListener(StartSession);
-            lobbyScreenManager.CancelButton.onClick.AddListener(CancelSession);
-            lobbyScreenManager.ShowWaitForGameText();
+            ScreenManager.StartGameButton.onClick.AddListener(StartSession);
+            ScreenManager.CancelLobbyButton.onClick.AddListener(CancelSession);
+            ScreenManager.LobbyStatus.ShowWaitForGameText();
         }
 
         public override void ExitState()
         {
-            lobbyScreenManager.StartButton.onClick.RemoveListener(StartSession);
-            lobbyScreenManager.CancelButton.onClick.RemoveListener(CancelSession);
+            ScreenManager.StartGameButton.onClick.RemoveListener(StartSession);
+            ScreenManager.CancelLobbyButton.onClick.RemoveListener(CancelSession);
         }
 
         public override void Tick()
         {
-            switch (Owner.Blackboard.SessionStatus)
+            switch (Blackboard.SessionStatus)
             {
                 case Status.LOBBY:
                     var state = new WaitForGameState(Manager, Owner);
@@ -39,10 +37,8 @@ namespace Fps
                     Owner.SetState(nextState);
                     break;
                 case Status.RUNNING:
-                    lobbyScreenManager.UpdateHintText(hasGameBegun: true);
-                    lobbyScreenManager.StartButton.enabled = Owner.Blackboard.SessionStatus == Status.RUNNING
-                        && lobbyScreenManager.IsValidName();
-                    lobbyScreenManager.ShowGameReadyText();
+                    ScreenManager.StartGameButton.enabled = IsValidName();
+                    ScreenManager.LobbyStatus.ShowGameReadyText();
                     break;
                 case Status.STOPPING:
                 case Status.STOPPED:
@@ -60,9 +56,33 @@ namespace Fps
 
         private void CancelSession()
         {
-            UnityObjectDestroyer.Destroy(Owner.Blackboard.ClientConnector);
-            Owner.Blackboard.ClientConnector = null;
+            UnityObjectDestroyer.Destroy(Blackboard.ClientConnector);
+            Blackboard.ClientConnector = null;
             Owner.SetState(Owner.StartState);
+        }
+
+        private bool IsValidName()
+        {
+            UpdateHintText();
+            return ScreenManager.PlayerNameInputField.text.Length >= 3;
+        }
+
+        private void UpdateHintText()
+        {
+            var nameLength = ScreenManager.PlayerNameInputField.text.Trim().Length;
+
+            if (nameLength == 0)
+            {
+                ScreenManager.PlayerNameInputField.text = "You must enter a name to play";
+            }
+            else if (nameLength < 3)
+            {
+                ScreenManager.PlayerNameInputField.text = "Minimum 3 characters required";
+            }
+            else
+            {
+                ScreenManager.PlayerNameInputField.text = string.Empty;
+            }
         }
     }
 }

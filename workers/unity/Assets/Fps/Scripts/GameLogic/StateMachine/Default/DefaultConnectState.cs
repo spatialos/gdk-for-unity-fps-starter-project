@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Fps
 {
@@ -10,28 +11,28 @@ namespace Fps
 
         public override void StartState()
         {
-            DefaultConnectScreenManager.ConnectButton.enabled = false;
-            DefaultConnectScreenManager.ConnectButton.onClick.AddListener(Connect);
+            ScreenManager.DefaultConnectButton.enabled = false;
+            ScreenManager.DefaultConnectButton.onClick.AddListener(Connect);
             Connect();
         }
 
         public override void Tick()
         {
-            if (Owner.Blackboard.ClientConnector == null)
+            if (Blackboard.ClientConnector == null)
             {
-                DefaultConnectScreenManager.ConnectButton.enabled = true;
+                ScreenManager.DefaultConnectButton.enabled = true;
                 Animator.SetTrigger("FailedToConnect");
 
 
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    DefaultConnectScreenManager.ConnectButton.onClick.Invoke();
+                    ScreenManager.DefaultConnectButton.onClick.Invoke();
                 }
 
                 return;
             }
 
-            if (Owner.Blackboard.ClientConnector.Worker == null)
+            if (Blackboard.ClientConnector.Worker == null)
             {
                 // Worker has not connected yet. Continue waiting
                 return;
@@ -42,14 +43,14 @@ namespace Fps
 
         public override void ExitState()
         {
-            DefaultConnectScreenManager.ConnectButton.onClick.RemoveListener(Connect);
+            ScreenManager.DefaultConnectButton.onClick.RemoveListener(Connect);
         }
 
         private void Connect()
         {
             var clientWorker = Object.Instantiate(Owner.ClientWorkerConnectorPrefab, Owner.transform.position, Quaternion.identity);
-            Owner.Blackboard.ClientConnector = clientWorker.GetComponent<ClientWorkerConnector>();
-            Owner.Blackboard.ClientConnector.Connect(deployment: string.Empty, useSessionFlow: false);
+            Blackboard.ClientConnector = clientWorker.GetComponent<ClientWorkerConnector>();
+            Blackboard.ClientConnector.Connect();
         }
     }
 }

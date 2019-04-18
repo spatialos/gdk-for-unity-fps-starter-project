@@ -54,21 +54,6 @@ namespace Fps
             return template;
         }
 
-        public static EntityTemplate SimulatedPlayerCoordinatorTrigger()
-        {
-            var metadata = new Metadata.Snapshot { EntityType = "SimulatedPlayerCoordinatorTrigger" };
-
-            var template = new EntityTemplate();
-            template.AddComponent(new Position.Snapshot(), WorkerUtils.SimulatedPlayerCoordinator);
-            template.AddComponent(metadata, WorkerUtils.SimulatedPlayerCoordinator);
-            template.AddComponent(new Persistence.Snapshot(), WorkerUtils.SimulatedPlayerCoordinator);
-
-            template.SetReadAccess(WorkerUtils.SimulatedPlayerCoordinator);
-            template.SetComponentWriteAccess(EntityAcl.ComponentId, WorkerUtils.SimulatedPlayerCoordinator);
-
-            return template;
-        }
-
         public static EntityTemplate Player(string workerId, byte[] args)
         {
             var client = EntityTemplate.GetWorkerAccessAttribute(workerId);

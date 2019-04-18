@@ -8,18 +8,14 @@ namespace Fps
 
         public override void StartState()
         {
-            Owner.Blackboard.ClientConnector.Worker.OnDisconnect += WorkerOnDisconnect;
+            Blackboard.ClientConnector.Worker.OnDisconnect += WorkerOnDisconnect;
             Manager.InGameManager.Timer.SetActive(false);
             Manager.ShowGameView();
         }
 
-        public override void ExitState()
-        {
-        }
-
         private void WorkerOnDisconnect(string obj)
         {
-            Owner.Blackboard.ClientConnector = null;
+            Blackboard.ClientConnector = null;
             Owner.SetState(Owner.StartState);
         }
     }

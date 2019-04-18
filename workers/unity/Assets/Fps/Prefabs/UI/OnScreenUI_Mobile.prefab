@@ -426,7 +426,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b5861719a96cc24eaf1712de7ce8a6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DoneButton: {fileID: 4691880619284344853}
   backgroundStripColor1: {r: 0.27058825, g: 0.27450982, b: 0.27450982, a: 1}
   backgroundStripColor2: {r: 0.29803923, g: 0.30588236, b: 0.30588236, a: 1}
   localPlayerBackgroundColor: {r: 1, g: 0.74509805, b: 0.18039216, a: 1}
@@ -509,10 +508,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbae37dc2bd5b394684387d32c0eb680, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  EntryHeight: 110
   entriesParentRect: {fileID: 8735343101017322101}
   entryTemplate: {fileID: 8104983922144875102, guid: 8d31458134c329e478c989fa7d7024ae,
     type: 3}
-  EntryHeight: 110
 --- !u!1 &2238683348515429920
 GameObject:
   m_ObjectHideFlags: 0
@@ -1007,7 +1006,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4649958004627385747}
-  - component: {fileID: 6171914580964012087}
+  - component: {fileID: 6893452171569633809}
   m_Layer: 5
   m_Name: LobbyScreen
   m_TagString: Untagged
@@ -1040,7 +1039,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &6171914580964012087
+--- !u!114 &6893452171569633809
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1049,17 +1048,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 3930919685541799866}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf303b9588e50d349a7a4b2ff52b4a73, type: 3}
+  m_Script: {fileID: 11500000, guid: 49cc0f9798257ef44a011cd0671ef60f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   SpinnerSymbol: {fileID: 7324530321987622219}
   ErrorSymbol: {fileID: 2364347781118353928}
   SuccessSymbol: {fileID: 7725281480401250134}
   StatusText: {fileID: 4451738682437082929}
-  StartButton: {fileID: 1693188808958594774}
-  CancelButton: {fileID: 7640934736226893801}
-  hintText: {fileID: 697123253322432780}
-  inputField: {fileID: 697221910176952336}
 --- !u!1 &4642966425071876036
 GameObject:
   m_ObjectHideFlags: 0
@@ -2793,7 +2788,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4871414716947154897}
-  - component: {fileID: 4691667897783103137}
+  - component: {fileID: 5918994321482993099}
   m_Layer: 5
   m_Name: SessionScreen
   m_TagString: Untagged
@@ -2825,7 +2820,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &4691667897783103137
+--- !u!114 &5918994321482993099
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2834,15 +2829,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 4648064201555364825}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab00513f5aa881844ac01e3ef40ff53b, type: 3}
+  m_Script: {fileID: 11500000, guid: 49cc0f9798257ef44a011cd0671ef60f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   SpinnerSymbol: {fileID: 9037769708126894809}
   ErrorSymbol: {fileID: 4037116326015978906}
   SuccessSymbol: {fileID: 8357793312591988932}
   StatusText: {fileID: 2670263570319618211}
-  QuickJoinButton: {fileID: 4688834320589359147}
-  BrowseButton: {fileID: 4688601539389922835}
 --- !u!1 &4648090528533625801
 GameObject:
   m_ObjectHideFlags: 0
@@ -3661,10 +3654,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbae37dc2bd5b394684387d32c0eb680, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  EntryHeight: 110
   entriesParentRect: {fileID: 8394282429649562039}
   entryTemplate: {fileID: 7163324553821422426, guid: 30a862ef81ecf9b438e9823a8f2aa51a,
     type: 3}
-  EntryHeight: 110
 --- !u!1 &4648286127619651879
 GameObject:
   m_ObjectHideFlags: 0
@@ -5420,6 +5413,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4871096889621310429}
   - component: {fileID: 5238200821785583470}
+  - component: {fileID: 592403920795471268}
   m_Layer: 5
   m_Name: DeploymentListScreen
   m_TagString: Untagged
@@ -5465,19 +5459,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cc898fb93634574a9485403c278d570, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  blackboard:
+    UseSessionBasedFlow: 0
+    SessionStatus: 0
+    PlayerName: 
+    DevAuthToken: 
+    PlayerIdentityToken: 
+    Deployment: 
+    ClientConnector: {fileID: 0}
+  backgroundColor1: {r: 0.30588236, g: 0.30980393, b: 0.31764707, a: 1}
+  backgroundColor2: {r: 0.27058825, g: 0.27450982, b: 0.28235295, a: 1}
+  highlightedColor: {r: 0.69411767, g: 0.6901961, b: 0.68235296, a: 1}
+  highlightedTextColor: {r: 0, g: 0, b: 0, a: 1}
+  unavailableTextColor: {r: 0.5647059, g: 0.5647059, b: 0.57254905, a: 1}
+  defaultTextColor: {r: 1, g: 1, b: 1, a: 1}
+  deploymentListTable: {fileID: 8946224398212592301}
+--- !u!114 &592403920795471268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4648433929435404949}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49cc0f9798257ef44a011cd0671ef60f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   SpinnerSymbol: {fileID: 1434085603664899507}
   ErrorSymbol: {fileID: 6236580589065870064}
   SuccessSymbol: {fileID: 2123067154301231022}
   StatusText: {fileID: 5441703471048026057}
-  JoinButton: {fileID: 4691843582524963159}
-  BackButton: {fileID: 4688574696080362841}
-  BackgroundColor1: {r: 0.30588236, g: 0.30980393, b: 0.31764707, a: 1}
-  BackgroundColor2: {r: 0.27058825, g: 0.27450982, b: 0.28235295, a: 1}
-  HighlightedColor: {r: 0.69411767, g: 0.6901961, b: 0.68235296, a: 1}
-  HighlightedTextColor: {r: 0, g: 0, b: 0, a: 1}
-  UnavailableTextColor: {r: 0.5647059, g: 0.5647059, b: 0.57254905, a: 1}
-  DefaultTextColor: {r: 1, g: 1, b: 1, a: 1}
-  DeploymentListTable: {fileID: 8946224398212592301}
 --- !u!1 &4648442307814191113
 GameObject:
   m_ObjectHideFlags: 0
@@ -6074,7 +6086,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4870971370994269395}
-  - component: {fileID: 4689077752758408411}
   m_Layer: 5
   m_Name: ConnectScreen
   m_TagString: Untagged
@@ -6103,19 +6114,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &4689077752758408411
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4648540397580954867}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 222f38ce5ef8017448162fffa66b4d2d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ConnectButton: {fileID: 4688646874067823831}
 --- !u!1 &4648737916515989303
 GameObject:
   m_ObjectHideFlags: 0
@@ -6171,12 +6169,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e7687c6d3bd1c348b9975a596f60c61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DefaultScreen: {fileID: 4648540397580954867}
+  StartScreen: {fileID: 4648064201555364825}
+  DeploymentListScreen: {fileID: 4648433929435404949}
+  LobbyScreen: {fileID: 3930919685541799866}
+  ResultsScreen: {fileID: 2030595107262849433}
+  PlayerNameHintText: {fileID: 697123253322432780}
+  PlayerNameInputField: {fileID: 697221910176952336}
+  StartStatus: {fileID: 5918994321482993099}
+  DeploymentListStatus: {fileID: 592403920795471268}
+  LobbyStatus: {fileID: 6893452171569633809}
   QuitButton: {fileID: 4688799787672040641}
-  DefaultConnectScreenManager: {fileID: 4689077752758408411}
-  StartScreenManager: {fileID: 4691667897783103137}
-  DeploymentListScreenManager: {fileID: 5238200821785583470}
-  ResultsScreenManager: {fileID: 725924505858706367}
-  LobbyScreenManager: {fileID: 6171914580964012087}
+  DefaultConnectButton: {fileID: 4688646874067823831}
+  ResultsScreenDoneButton: {fileID: 4691880619284344853}
+  JoinDeploymentButton: {fileID: 4691843582524963159}
+  BackButton: {fileID: 4688574696080362841}
+  StartGameButton: {fileID: 1693188808958594774}
+  CancelLobbyButton: {fileID: 7640934736226893801}
+  QuickJoinButton: {fileID: 4688834320589359147}
+  ListDeploymentsButton: {fileID: 4688601539389922835}
   FrontEndCamera: {fileID: 4648286127619651879}
 --- !u!1 &4648741441122516389
 GameObject:

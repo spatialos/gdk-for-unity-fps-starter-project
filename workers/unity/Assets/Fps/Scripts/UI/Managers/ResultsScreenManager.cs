@@ -1,12 +1,11 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace Fps
 {
     public class ResultsScreenManager : MonoBehaviour
     {
-        public Button DoneButton;
-
         [SerializeField] private Color backgroundStripColor1;
         [SerializeField] private Color backgroundStripColor2;
         [SerializeField] private Color localPlayerBackgroundColor;
@@ -20,11 +19,6 @@ namespace Fps
 
         private void OnValidate()
         {
-            if (DoneButton == null)
-            {
-                throw new MissingReferenceException("Missing reference to the done button.");
-            }
-
             if (resultsTable == null)
             {
                 throw new MissingReferenceException("Missing reference to the results table.");
@@ -36,13 +30,13 @@ namespace Fps
             }
         }
 
-        public void SetResults(ResultsData[] results, int playerRank)
+        public void SetResults(List<ResultsData> results, int playerRank)
         {
             resultsTable.ClearEntries();
 
             AdjustTableHeight(playerRank);
 
-            for (var i = 1; i <= Mathf.Min(10, results.Length); i++)
+            for (var i = 1; i <= Mathf.Min(10, results.Count); i++)
             {
                 AddPlayerToTable(results[i - 1], isLocalPlayer: playerRank == i);
                 currentBgColor = i % 2 == 0 ? backgroundStripColor1 : backgroundStripColor2;
@@ -51,16 +45,6 @@ namespace Fps
             if (playerRank > 10)
             {
                 AddPlayerToTable(results[playerRank - 1], isLocalPlayer: true);
-            }
-        }
-
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.KeypadEnter)
-                || Input.GetKeyDown(KeyCode.Return)
-                || Input.GetKeyDown(KeyCode.Escape))
-            {
-                DoneButton.onClick.Invoke();
             }
         }
 

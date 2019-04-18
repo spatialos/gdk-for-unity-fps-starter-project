@@ -9,12 +9,8 @@ namespace Fps
         public override void StartState()
         {
             Manager.ShowFrontEnd();
-            Manager.ScreenManager.SwitchToDefaultConnectScreen();
+            ScreenManager.SwitchToDefaultScreen();
             Owner.SetState(new DefaultConnectState(Manager, Owner));
-        }
-
-        public override void ExitState()
-        {
         }
     }
 }

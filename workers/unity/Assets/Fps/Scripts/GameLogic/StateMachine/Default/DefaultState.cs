@@ -6,16 +6,19 @@ namespace Fps
     {
         protected readonly ConnectionStateMachine Owner;
         protected readonly UIManager Manager;
-        protected readonly DefaultConnectScreenManager DefaultConnectScreenManager;
+        protected readonly ScreenManager ScreenManager;
         protected readonly Animator Animator;
+
+        protected Blackboard Blackboard;
 
         protected DefaultState(UIManager manager, ConnectionStateMachine owner)
         {
             Manager = manager;
-            DefaultConnectScreenManager = manager.ScreenManager.DefaultConnectScreenManager;
+            ScreenManager = Manager.ScreenManager;
             Owner = owner;
+            Blackboard = Owner.Blackboard;
 
-            Animator = DefaultConnectScreenManager.GetComponentInChildren<Animator>(true);
+            Animator = manager.GetComponentInChildren<Animator>(true);
         }
     }
 }

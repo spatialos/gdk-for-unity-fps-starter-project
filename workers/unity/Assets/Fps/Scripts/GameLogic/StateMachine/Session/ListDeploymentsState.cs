@@ -1,37 +1,45 @@
+using UnityEngine;
+
 namespace Fps
 {
     public class ListDeploymentsState : SessionState
     {
-        private readonly DeploymentListScreenManager deploymentListScreenManager;
-
         public ListDeploymentsState(UIManager manager, ConnectionStateMachine owner) : base(manager, owner)
         {
-            deploymentListScreenManager = manager.ScreenManager.DeploymentListScreenManager;
         }
 
         public override void StartState()
         {
-            deploymentListScreenManager.ShowDeploymentListAvailableText();
-            deploymentListScreenManager.JoinButton.onClick.AddListener(Connect);
-            deploymentListScreenManager.BackButton.onClick.AddListener(ResetToStart);
-            Manager.ScreenManager.SwitchToDeploymentListScreen();
+            ScreenManager.DeploymentListStatus.ShowDeploymentListAvailableText();
+            ScreenManager.JoinDeploymentButton.onClick.AddListener(Connect);
+            ScreenManager.BackButton.onClick.AddListener(ResetToStart);
+            ScreenManager.SwitchToDeploymentListScreen();
         }
 
         public override void ExitState()
         {
-            deploymentListScreenManager.JoinButton.onClick.RemoveListener(Connect);
-            deploymentListScreenManager.BackButton.onClick.RemoveListener(ResetToStart);
+            ScreenManager.JoinDeploymentButton.onClick.RemoveListener(Connect);
+            ScreenManager.BackButton.onClick.RemoveListener(ResetToStart);
         }
 
         public override void Tick()
         {
-            deploymentListScreenManager.JoinButton.enabled =
-                deploymentListScreenManager.IsHighlightedDeploymentAvailable();
+            ScreenManager.JoinDeploymentButton.enabled = !string.IsNullOrEmpty(Blackboard.Deployment);
+
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                ScreenManager.BackButton.onClick.Invoke();
+            }
+
+            if ((Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return)) && ScreenManager.JoinDeploymentButton.enabled)
+            {
+                ScreenManager.JoinDeploymentButton.onClick.Invoke();
+            }
         }
 
         private void Connect()
         {
-            Owner.SetState(new ConnectState(deploymentListScreenManager.GetChosenDeployment(), Manager, Owner));
+            Owner.SetState(new SessionConnectState(Blackboard.Deployment, Manager, Owner));
         }
 
         private void ResetToStart()

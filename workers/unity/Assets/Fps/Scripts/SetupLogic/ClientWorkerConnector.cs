@@ -18,12 +18,10 @@ namespace Fps
         private string playerName;
         private bool isReadyToSpawn;
         private bool wantsSpawn;
-        private bool useSessionFlow;
         private Action<PlayerCreator.CreatePlayer.ReceivedResponse> onPlayerResponse;
 
-        public async void Connect(string deployment, bool useSessionFlow)
+        public async void Connect(string deployment = "")
         {
-            this.useSessionFlow = useSessionFlow;
             Deployment = deployment;
             await AttemptConnect();
         }
@@ -76,7 +74,7 @@ namespace Fps
 
         protected override ConnectionService GetConnectionService()
         {
-            if (useSessionFlow)
+            if (!string.IsNullOrEmpty(Deployment))
             {
                 LoadDevAuthToken();
                 return ConnectionService.AlphaLocator;

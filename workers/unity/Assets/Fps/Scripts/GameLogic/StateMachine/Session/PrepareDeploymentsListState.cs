@@ -6,35 +6,32 @@ namespace Fps
 {
     public class PrepareDeploymentsListState : SessionState
     {
-        private readonly StartScreenManager startScreenManager;
-
         public PrepareDeploymentsListState(UIManager manager, ConnectionStateMachine owner) : base(manager, owner)
         {
-            startScreenManager = manager.ScreenManager.StartScreenManager;
         }
 
         public override void StartState()
         {
             if (PrepareDeploymentsList())
             {
-                startScreenManager.ShowDeploymentListAvailableText();
-                startScreenManager.BrowseButton.onClick.AddListener(BrowseDeployments);
-                startScreenManager.QuickJoinButton.onClick.AddListener(Connect);
+                ScreenManager.DeploymentListStatus.ShowDeploymentListAvailableText();
+                ScreenManager.ListDeploymentsButton.onClick.AddListener(BrowseDeployments);
+                ScreenManager.QuickJoinButton.onClick.AddListener(Connect);
 
-                startScreenManager.BrowseButton.enabled = true;
-                startScreenManager.QuickJoinButton.enabled = true;
+                ScreenManager.ListDeploymentsButton.enabled = true;
+                ScreenManager.QuickJoinButton.enabled = true;
             }
             else
             {
-                Manager.ScreenManager.StartScreenManager.ShowFailedToGetDeploymentsText("No deployment is currently available.");
+                Manager.ScreenManager.DeploymentListStatus.ShowFailedToGetDeploymentsText("No deployment is currently available.");
                 Owner.SetState(Owner.StartState, 2f);
             }
         }
 
         public override void ExitState()
         {
-            startScreenManager.BrowseButton.onClick.RemoveListener(BrowseDeployments);
-            startScreenManager.QuickJoinButton.onClick.RemoveListener(Connect);
+            ScreenManager.ListDeploymentsButton.onClick.RemoveListener(BrowseDeployments);
+            ScreenManager.QuickJoinButton.onClick.RemoveListener(Connect);
         }
 
         private void BrowseDeployments()
@@ -44,30 +41,27 @@ namespace Fps
 
         private void Connect()
         {
-            Owner.SetState(new ConnectState(deployment: null, Manager, Owner));
+            Owner.SetState(new SessionConnectState(deployment: null, Manager, Owner));
         }
 
         private bool PrepareDeploymentsList()
         {
-            if (Owner.Blackboard.LoginTokens == null)
+            if (Blackboard.LoginTokens == null)
             {
                 Owner.SetState(Owner.StartState);
             }
 
-            var hasAvailableDeployment = false;
             var deploymentData = new List<DeploymentData>();
-            foreach (var loginToken in Owner.Blackboard.LoginTokens)
+            foreach (var loginToken in Blackboard.LoginTokens)
             {
-                if (DeploymentData.TryToCreateFromTags(loginToken.DeploymentName, loginToken.Tags, out var data))
+                if (DeploymentData.TryFromTags(loginToken.DeploymentName, loginToken.Tags, out var data))
                 {
-                    hasAvailableDeployment |= data.IsAvailable;
                     deploymentData.Add(data);
                 }
             }
 
-            Manager.ScreenManager.DeploymentListScreenManager.SetDeployments(deploymentData);
-
-            return hasAvailableDeployment;
+            ScreenManager.InformOfDeployments(deploymentData);
+            return deploymentData.Any(data => data.IsAvailable);
         }
     }
 }

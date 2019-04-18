@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Improbable.Gdk.Core;
 using Improbable.Worker.CInterop;
 using Improbable.Worker.CInterop.Alpha;
@@ -22,8 +21,8 @@ namespace Fps
                 RuntimeConfigDefaults.AnonymousAuthenticationPort,
                 new PlayerIdentityTokenRequest
                 {
-                    DevelopmentAuthenticationTokenId = Owner.Blackboard.DevAuthToken,
-                    PlayerId = Owner.Blackboard.PlayerName,
+                    DevelopmentAuthenticationTokenId = Blackboard.DevAuthToken,
+                    PlayerId = Blackboard.PlayerName,
                     DisplayName = string.Empty,
                 }
             );
@@ -43,19 +42,19 @@ namespace Fps
 
             if (!result.HasValue)
             {
-                Manager.ScreenManager.StartScreenManager.ShowFailedToGetDeploymentsText(
-                    $"Failed to retrieve player identity token.\n Unknown error.");
+                ScreenManager.StartStatus.ShowFailedToGetDeploymentsText(
+                    $"Failed to retrieve player identity token.\nUnknown error - Please report this to us!");
                 Owner.SetState(Owner.StartState, 2f);
             }
 
             if (result.Value.Status.Code != ConnectionStatusCode.Success)
             {
-                Manager.ScreenManager.StartScreenManager.ShowFailedToGetDeploymentsText(
+                ScreenManager.StartStatus.ShowFailedToGetDeploymentsText(
                     $"Failed to retrieve player identity token.\n Error code: {result.Value.Status.Code}");
                 Owner.SetState(Owner.StartState, 2f);
             }
 
-            Owner.Blackboard.PlayerIdentityToken = result.Value.PlayerIdentityToken;
+            Blackboard.PlayerIdentityToken = result.Value.PlayerIdentityToken;
             Owner.SetState(new GetDeploymentsState(nextState, Manager, Owner));
         }
     }
