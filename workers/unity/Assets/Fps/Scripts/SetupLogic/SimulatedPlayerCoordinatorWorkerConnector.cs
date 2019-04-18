@@ -47,8 +47,7 @@ public class SimulatedPlayerCoordinatorWorkerConnector : WorkerConnectorBase
 
         if (SimulatedPlayerWorkerConnector != null)
         {
-            var simPlayerCount = Random.Range(DefaultSimulatedPlayerCount / 2, DefaultSimulatedPlayerCount + 1);
-            while (Application.isPlaying && simulatedPlayerConnectors.Count < simPlayerCount)
+            while (Application.isPlaying && simulatedPlayerConnectors.Count < DefaultSimulatedPlayerCount)
             {
                 var simulatedPlayer = Instantiate(SimulatedPlayerWorkerConnector, transform.position, transform.rotation);
                 var simulatedPlayerConnector = simulatedPlayer.GetComponent<SimulatedPlayerWorkerConnector>();

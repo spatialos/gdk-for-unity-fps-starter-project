@@ -49,7 +49,7 @@ namespace Fps
         {
             var clientWorker = Object.Instantiate(Owner.ClientWorkerConnectorPrefab, Owner.transform.position, Quaternion.identity);
             Owner.Blackboard.ClientConnector = clientWorker.GetComponent<ClientWorkerConnector>();
-            Owner.Blackboard.ClientConnector.Connect(string.Empty, false);
+            Owner.Blackboard.ClientConnector.Connect(deployment: string.Empty, useSessionFlow: false);
         }
     }
 }

@@ -71,7 +71,7 @@ namespace Fps
                 }
             }
 
-            throw new ArgumentException("Was not able to connect to chosen deployment. Going back to beginning");
+            throw new ArgumentException("Was not able to connect to deployment.");
         }
 
         protected override ConnectionService GetConnectionService()
@@ -89,7 +89,7 @@ namespace Fps
         {
             var world = Worker.World;
 
-            PlayerLifecycleHelper.AddClientSystems(world, false);
+            PlayerLifecycleHelper.AddClientSystems(world, autoRequestPlayerCreation: false);
             PlayerLifecycleConfig.MaxPlayerCreationRetries = 0;
 
             var fallback = new GameObjectCreatorFromMetadata(Worker.WorkerType, Worker.Origin, Worker.LogDispatcher);
@@ -106,7 +106,7 @@ namespace Fps
 
         protected override void HandleWorkerConnectionFailure(string errorMessage)
         {
-            Debug.LogWarning($"Connection failed: {errorMessage}");
+            Debug.LogError($"Connection failed: {errorMessage}");
             Destroy(gameObject);
         }
 

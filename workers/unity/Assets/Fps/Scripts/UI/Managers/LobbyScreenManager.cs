@@ -38,7 +38,7 @@ namespace Fps
 
         public void UpdateHintText(bool hasGameBegun)
         {
-            var nameLength = inputField.text.Trim().Length;
+            var nameLength = GetPlayerName().Trim().Length;
 
             if (nameLength == 0 && !hasGameBegun)
             {

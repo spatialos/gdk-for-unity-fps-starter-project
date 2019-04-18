@@ -20,16 +20,16 @@ namespace Fps
         {
             const uint sessionTimeSeconds = 300;
 
-            var position = new Position.Snapshot { Coords = new Vector3().ToSpatialCoordinates() };
+            var position = new Position.Snapshot();
             var metadata = new Metadata.Snapshot { EntityType = "DeploymentState" };
 
             var template = new EntityTemplate();
             template.AddComponent(position, WorkerUtils.UnityGameLogic);
             template.AddComponent(metadata, WorkerUtils.UnityGameLogic);
             template.AddComponent(new Persistence.Snapshot(), WorkerUtils.UnityGameLogic);
-            template.AddComponent(new Session.Snapshot { Status = Status.LOBBY }, WorkerUtils.UnityGameLogic);
+            template.AddComponent(new Session.Snapshot(Status.LOBBY), WorkerUtils.UnityGameLogic);
             template.AddComponent(new Deployment.Snapshot(), WorkerUtils.DeploymentManager);
-            template.AddComponent(new Timer.Snapshot { CurrentTimeSeconds = 0, MaxTimeSeconds = sessionTimeSeconds }, WorkerUtils.UnityGameLogic);
+            template.AddComponent(new Timer.Snapshot(0, sessionTimeSeconds), WorkerUtils.UnityGameLogic);
 
             template.SetReadAccess(WorkerUtils.UnityGameLogic, WorkerUtils.DeploymentManager, WorkerUtils.UnityClient, WorkerUtils.AndroidClient, WorkerUtils.iOSClient);
             template.SetComponentWriteAccess(EntityAcl.ComponentId, WorkerUtils.UnityGameLogic);
@@ -107,35 +107,6 @@ namespace Fps
                 RegenCooldownTimer = PlayerHealthSettings.RegenAfterDamageCooldown,
                 RegenInterval = PlayerHealthSettings.RegenInterval,
                 RegenPauseTime = 0,
-            };
-
-            var playerInterest = new ComponentInterest
-            {
-                Queries = new List<ComponentInterest.Query>
-                {
-                    new ComponentInterest.Query
-                    {
-                        Constraint = new ComponentInterest.QueryConstraint
-                        {
-                            ComponentConstraint = PlayerState.ComponentId,
-                            AndConstraint = new List<ComponentInterest.QueryConstraint>(),
-                            OrConstraint = new List<ComponentInterest.QueryConstraint>(),
-                        },
-                        FullSnapshotResult = true,
-                        ResultComponentId = new List<uint>(),
-                    },
-                    new ComponentInterest.Query
-                    {
-                        Constraint = new ComponentInterest.QueryConstraint
-                        {
-                            ComponentConstraint = Session.ComponentId,
-                            AndConstraint = new List<ComponentInterest.QueryConstraint>(),
-                            OrConstraint = new List<ComponentInterest.QueryConstraint>(),
-                        },
-                        FullSnapshotResult = true,
-                        ResultComponentId = new List<uint>(),
-                    }
-                }
             };
 
             var playerStateQuery = InterestQuery.Query(Constraint.Component<PlayerState.Component>());
