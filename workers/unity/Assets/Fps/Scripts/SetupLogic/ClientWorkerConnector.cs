@@ -13,16 +13,18 @@ namespace Fps
 {
     public class ClientWorkerConnector : WorkerConnectorBase
     {
-        public string Deployment { get; private set; }
-
+        private string deployment;
         private string playerName;
         private bool isReadyToSpawn;
         private bool wantsSpawn;
         private Action<PlayerCreator.CreatePlayer.ReceivedResponse> onPlayerResponse;
 
+        private bool shouldUseSessionFlow => !string.IsNullOrEmpty(deployment);
+
+
         public async void Connect(string deployment = "")
         {
-            Deployment = deployment;
+            this.deployment = deployment;
             await AttemptConnect();
         }
 
@@ -31,6 +33,11 @@ namespace Fps
             this.onPlayerResponse = onPlayerResponse;
             this.playerName = playerName;
             wantsSpawn = true;
+        }
+
+        public bool HasConnected()
+        {
+            return Worker != null;
         }
 
         protected override string GetWorkerType()
@@ -50,7 +57,7 @@ namespace Fps
 
         protected override string SelectLoginToken(List<LoginTokenDetails> loginTokens)
         {
-            if (string.IsNullOrEmpty(Deployment))
+            if (shouldUseSessionFlow)
             {
                 foreach (var loginToken in loginTokens)
                 {
@@ -63,7 +70,7 @@ namespace Fps
 
             foreach (var loginToken in loginTokens)
             {
-                if (loginToken.DeploymentName == Deployment)
+                if (loginToken.DeploymentName == deployment)
                 {
                     return loginToken.LoginToken;
                 }
@@ -74,7 +81,7 @@ namespace Fps
 
         protected override ConnectionService GetConnectionService()
         {
-            if (!string.IsNullOrEmpty(Deployment))
+            if (shouldUseSessionFlow)
             {
                 LoadDevAuthToken();
                 return ConnectionService.AlphaLocator;

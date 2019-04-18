@@ -14,7 +14,7 @@ namespace Fps
         {
             if (PrepareDeploymentsList())
             {
-                ScreenManager.DeploymentListStatus.ShowDeploymentListAvailableText();
+                ScreenManager.StartStatus.ShowDeploymentListAvailableText();
                 ScreenManager.ListDeploymentsButton.onClick.AddListener(BrowseDeployments);
                 ScreenManager.QuickJoinButton.onClick.AddListener(Connect);
 
@@ -23,7 +23,7 @@ namespace Fps
             }
             else
             {
-                Manager.ScreenManager.DeploymentListStatus.ShowFailedToGetDeploymentsText("No deployment is currently available.");
+                Manager.ScreenManager.StartStatus.ShowFailedToGetDeploymentsText("No deployment is currently available.");
                 Owner.SetState(Owner.StartState, 2f);
             }
         }
@@ -51,14 +51,11 @@ namespace Fps
                 Owner.SetState(Owner.StartState);
             }
 
-            var deploymentData = new List<DeploymentData>();
-            foreach (var loginToken in Blackboard.LoginTokens)
-            {
-                if (DeploymentData.TryFromTags(loginToken.DeploymentName, loginToken.Tags, out var data))
-                {
-                    deploymentData.Add(data);
-                }
-            }
+            var deploymentData = Blackboard.LoginTokens
+                .Select(token => (DeploymentData.TryFromLoginToken(token, out var data), data))
+                .Where(pair => pair.Item1)
+                .Select(pair => pair.data)
+                .ToList();
 
             ScreenManager.InformOfDeployments(deploymentData);
             return deploymentData.Any(data => data.IsAvailable);

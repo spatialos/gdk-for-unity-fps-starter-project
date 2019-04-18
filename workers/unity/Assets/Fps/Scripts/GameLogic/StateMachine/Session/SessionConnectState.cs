@@ -5,7 +5,7 @@ namespace Fps
     public class SessionConnectState : SessionState
     {
         private string deployment;
-        private readonly Color HintTextColor = new Color(1f, .4f, .4f);
+        private readonly Color hintTextColor = new Color(1f, .4f, .4f);
 
         public SessionConnectState(string deployment, UIManager manager, ConnectionStateMachine owner) : base(manager, owner)
         {
@@ -14,7 +14,6 @@ namespace Fps
 
         public override void StartState()
         {
-            // check if player select deployment, otherwise choose one
             if (string.IsNullOrEmpty(deployment))
             {
                 deployment = SelectFirstDeployment();
@@ -35,16 +34,15 @@ namespace Fps
             Blackboard.ClientConnector.Connect(deployment);
 
             ScreenManager.PlayerNameHintText.text = string.Empty;
-            ScreenManager.PlayerNameHintText.color = HintTextColor;
+            ScreenManager.PlayerNameHintText.color = hintTextColor;
             ScreenManager.PlayerNameInputField.Select();
             ScreenManager.PlayerNameInputField.ActivateInputField();
         }
 
         public override void Tick()
         {
-            if (Blackboard.ClientConnector.Worker == null)
+            if (!Blackboard.ClientConnector.HasConnected())
             {
-                // Worker has not connected yet. Continue waiting
                 return;
             }
 

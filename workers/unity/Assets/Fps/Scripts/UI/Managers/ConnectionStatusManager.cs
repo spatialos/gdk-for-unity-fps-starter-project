@@ -9,6 +9,7 @@ namespace Fps
         [SerializeField] private GameObject ErrorSymbol;
         [SerializeField] private GameObject SuccessSymbol;
         [SerializeField] private Text StatusText;
+        [SerializeField] private GameObject activeSymbol;
 
         private const string DeploymentListAvailableText = "Deployments available";
         private const string GettingDeploymentListText = "Getting deployment list...";
@@ -19,8 +20,6 @@ namespace Fps
         private const string GameReadyText = "Press start to play";
         private const string ConnectingText = "Joining deployment...";
         private const string SpawningFailedText = "Failed to spawn player!";
-
-        private GameObject activeSymbol;
 
         private void OnValidate()
         {
@@ -43,6 +42,8 @@ namespace Fps
             {
                 throw new MissingReferenceException("Missing reference to the status text.");
             }
+
+            activeSymbol = SpinnerSymbol;
         }
 
         public void ShowGetDeploymentListText()

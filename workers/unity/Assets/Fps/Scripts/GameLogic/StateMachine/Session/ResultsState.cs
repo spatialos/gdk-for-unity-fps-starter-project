@@ -12,15 +12,15 @@ namespace Fps
 
         public override void StartState()
         {
-            ScreenManager.ResultsScreenDoneButton.onClick.AddListener(Restart);
-
             var trackPlayerSystem = Blackboard.ClientConnector.Worker.World.GetExistingManager<TrackPlayerSystem>();
             var results = trackPlayerSystem.PlayerResults;
             var playerRank = results.FirstOrDefault(res => res.PlayerName == Blackboard.PlayerName).Rank;
+
+            ScreenManager.ResultsScreenDoneButton.onClick.AddListener(Restart);
             ScreenManager.InformOfResults(results, playerRank);
-            // show results screen
             Manager.ShowFrontEnd();
             ScreenManager.SwitchToResultsScreen();
+
             UnityObjectDestroyer.Destroy(Blackboard.ClientConnector);
             Blackboard.ClientConnector = null;
         }

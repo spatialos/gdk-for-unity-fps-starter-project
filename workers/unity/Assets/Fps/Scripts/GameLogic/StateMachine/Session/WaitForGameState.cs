@@ -73,15 +73,15 @@ namespace Fps
 
             if (nameLength == 0)
             {
-                ScreenManager.PlayerNameInputField.text = "You must enter a name to play";
+                ScreenManager.PlayerNameHintText.text = "You must enter a name to play";
             }
             else if (nameLength < 3)
             {
-                ScreenManager.PlayerNameInputField.text = "Minimum 3 characters required";
+                ScreenManager.PlayerNameHintText.text = "Minimum 3 characters required";
             }
             else
             {
-                ScreenManager.PlayerNameInputField.text = string.Empty;
+                ScreenManager.PlayerNameHintText.text = string.Empty;
             }
         }
     }

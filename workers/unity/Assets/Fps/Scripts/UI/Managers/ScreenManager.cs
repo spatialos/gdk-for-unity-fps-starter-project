@@ -28,10 +28,10 @@ namespace Fps
         public Button ResultsScreenDoneButton;
         public Button JoinDeploymentButton;
         public Button BackButton;
-        public FpsUIButton StartGameButton;
-        public FpsUIButton CancelLobbyButton;
-        public FpsUIButton QuickJoinButton;
-        public FpsUIButton ListDeploymentsButton;
+        public Button StartGameButton;
+        public Button CancelLobbyButton;
+        public Button QuickJoinButton;
+        public Button ListDeploymentsButton;
 
         [SerializeField] private GameObject FrontEndCamera;
 
@@ -200,9 +200,9 @@ namespace Fps
 
         private void SetScreenTo(GameObject screenObject)
         {
-            if (screenObject != null)
+            if (currentScreen != null)
             {
-                screenObject.gameObject.SetActive(false);
+                currentScreen.gameObject.SetActive(false);
             }
 
             currentScreen = screenObject;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Improbable.Worker.CInterop.Alpha;
 
 namespace Fps
 {
@@ -19,12 +20,12 @@ namespace Fps
             IsAvailable = isAvailable;
         }
 
-        public static bool TryFromTags(string deploymentName, IReadOnlyList<string> tags, out DeploymentData data)
+        public static bool TryFromLoginToken(LoginTokenDetails token, out DeploymentData data)
         {
             int? playerCount = null;
             int? maxPlayerCount = null;
             bool? isAvailable = null;
-            foreach (var tag in tags)
+            foreach (var tag in token.Tags)
             {
                 if (tag.StartsWith("players"))
                 {
@@ -47,7 +48,7 @@ namespace Fps
                 return false;
             }
 
-            data = new DeploymentData(deploymentName, playerCount.Value, maxPlayerCount.Value, isAvailable.Value);
+            data = new DeploymentData(token.DeploymentName, playerCount.Value, maxPlayerCount.Value, isAvailable.Value);
             return true;
         }
 

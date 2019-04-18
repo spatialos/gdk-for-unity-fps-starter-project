@@ -30,7 +30,7 @@ namespace Fps
                     "Unable to find DevAuthToken.txt inside your Resources folder. Ensure to generate one.");
             }
 
-            Manager.ScreenManager.DeploymentListStatus.ShowGetDeploymentListText();
+            Manager.ScreenManager.StartStatus.ShowGetDeploymentListText();
             Owner.SetState(getPitState);
         }
     }

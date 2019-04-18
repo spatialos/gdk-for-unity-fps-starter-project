@@ -264,6 +264,7 @@ MonoBehaviour:
     PlayerName: Player
     DevAuthToken: 
     PlayerIdentityToken: 
+    Deployment: 
     ClientConnector: {fileID: 0}
   ClientWorkerConnectorPrefab: {fileID: 1765859764722708, guid: a823c764c6b3a07469424eac6035a74c,
     type: 3}
@@ -363,6 +364,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: OnScreenUI_Mobile
       objectReference: {fileID: 0}
+    - target: {fileID: 5238200821785583470, guid: c0011f63193627d4eb6f0db039fd8b17,
+        type: 3}
+      propertyPath: stateMachine
+      value: 
+      objectReference: {fileID: 1168413884}
     - target: {fileID: 4871009320061034181, guid: c0011f63193627d4eb6f0db039fd8b17,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -471,22 +477,17 @@ PrefabInstance:
     - target: {fileID: 8924888868065465695, guid: c0011f63193627d4eb6f0db039fd8b17,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 97
+      value: 96.99951
       objectReference: {fileID: 0}
     - target: {fileID: 7807697133000478772, guid: c0011f63193627d4eb6f0db039fd8b17,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 97
+      value: 96.99951
       objectReference: {fileID: 0}
     - target: {fileID: 4871470225106377897, guid: c0011f63193627d4eb6f0db039fd8b17,
         type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 4648769248767123357, guid: c0011f63193627d4eb6f0db039fd8b17,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c0011f63193627d4eb6f0db039fd8b17, type: 3}

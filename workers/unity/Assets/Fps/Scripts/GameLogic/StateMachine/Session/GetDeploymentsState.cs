@@ -43,7 +43,7 @@ namespace Fps
 
             if (!result.HasValue)
             {
-                ScreenManager.LobbyStatus.ShowFailedToGetDeploymentsText(
+                ScreenManager.StartStatus.ShowFailedToGetDeploymentsText(
                     $"Failed to retrieve any login tokens.\nUnknown error - Please report this to us!");
                 Owner.SetState(Owner.StartState, 2f);
                 return;
@@ -51,7 +51,7 @@ namespace Fps
 
             if (result.Value.Status.Code != ConnectionStatusCode.Success)
             {
-                ScreenManager.LobbyStatus.ShowFailedToGetDeploymentsText(
+                ScreenManager.StartStatus.ShowFailedToGetDeploymentsText(
                     $"Failed to retrieve any login tokens.\n Error code: {result.Value.Status.Code}");
                 Owner.SetState(Owner.StartState, 2f);
                 return;
@@ -61,7 +61,7 @@ namespace Fps
 
             if (Blackboard.LoginTokens.Count == 0)
             {
-                ScreenManager.LobbyStatus.ShowFailedToGetDeploymentsText("No deployments are available.");
+                ScreenManager.StartStatus.ShowFailedToGetDeploymentsText("No deployments are available.");
                 Owner.SetState(Owner.StartState, 2f);
                 return;
             }

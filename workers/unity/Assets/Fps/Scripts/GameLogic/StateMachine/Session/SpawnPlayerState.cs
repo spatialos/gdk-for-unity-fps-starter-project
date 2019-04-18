@@ -15,7 +15,8 @@ namespace Fps
             ScreenManager.LobbyStatus.ShowSpawningText();
             ScreenManager.StartGameButton.enabled = false;
 
-            Blackboard.ClientConnector.SpawnPlayer(Manager.ScreenManager.PlayerNameInputField.text, OnCreatePlayerResponse);
+            Blackboard.ClientConnector.SpawnPlayer(ScreenManager.PlayerNameInputField.text, OnCreatePlayerResponse);
+            Blackboard.PlayerName = ScreenManager.PlayerNameInputField.text;
         }
 
         private void OnCreatePlayerResponse(PlayerCreator.CreatePlayer.ReceivedResponse response)
@@ -26,7 +27,7 @@ namespace Fps
             }
             else
             {
-                Manager.ScreenManager.LobbyStatus.ShowSpawningFailedText(response.Message);
+                ScreenManager.LobbyStatus.ShowSpawningFailedText(response.Message);
                 UnityObjectDestroyer.Destroy(Blackboard.ClientConnector);
                 Blackboard.ClientConnector = null;
                 Owner.SetState(Owner.StartState);

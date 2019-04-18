@@ -7,7 +7,7 @@ namespace Fps
 {
     public class DeploymentListScreenManager : MonoBehaviour
     {
-        [SerializeField] private Blackboard blackboard;
+        [SerializeField] private ConnectionStateMachine stateMachine;
         [SerializeField] private Color backgroundColor1;
         [SerializeField] private Color backgroundColor2;
         [SerializeField] private Color highlightedColor;
@@ -20,13 +20,14 @@ namespace Fps
         private int highlightedIndex = -1;
         private List<DeploymentData> deployments = new List<DeploymentData>();
 
-        public void SetDeployments(List<DeploymentData> deployments)
+        public void SetDeployments(List<DeploymentData> newDeployments)
         {
-            if (deployments == null)
+            if (newDeployments == null)
             {
                 return;
             }
 
+            deployments = newDeployments;
             deployments.Sort();
 
             var highlightedDeploymentName = string.Empty;
@@ -46,8 +47,6 @@ namespace Fps
                     SelectEntry(i);
                 }
             }
-
-            this.deployments = deployments;
         }
 
         private bool IsHighlightedIndexValid()
@@ -110,7 +109,7 @@ namespace Fps
             entry.SetAllTextVisuals(highlightedTextColor, deployments[index].IsAvailable);
 
             highlightedIndex = index;
-            blackboard.Deployment = entry.name;
+            stateMachine.Blackboard.Deployment = deployments[index].Name;
         }
 
         private void SetDefaultVisuals(int index)

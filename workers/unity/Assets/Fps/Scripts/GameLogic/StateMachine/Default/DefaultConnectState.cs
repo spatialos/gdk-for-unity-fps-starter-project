@@ -32,9 +32,8 @@ namespace Fps
                 return;
             }
 
-            if (Blackboard.ClientConnector.Worker == null)
+            if (!Blackboard.ClientConnector.HasConnected())
             {
-                // Worker has not connected yet. Continue waiting
                 return;
             }
 
