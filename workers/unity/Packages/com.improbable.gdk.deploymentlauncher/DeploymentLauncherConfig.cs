@@ -10,5 +10,15 @@ namespace Improbable.Gdk.DeploymentManager
     {
         [SerializeField] public AssemblyConfig AssemblyConfig = new AssemblyConfig();
         [SerializeField] public List<DeploymentConfig> DeploymentConfigs = new List<DeploymentConfig>();
+
+        public void SetProjectName(string projectName)
+        {
+            AssemblyConfig.ProjectName = projectName;
+
+            foreach (var config in DeploymentConfigs)
+            {
+                config.ProjectName = projectName;
+            }
+        }
     }
 }

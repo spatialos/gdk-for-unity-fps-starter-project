@@ -7,7 +7,7 @@ namespace Improbable.Gdk.DeploymentManager.Commands
 {
     public static class Assembly
     {
-        public static WrappedTask<RedirectedProcessResult, AssemblyConfig> UploadAsync(string projectName, AssemblyConfig config)
+        public static WrappedTask<RedirectedProcessResult, AssemblyConfig> UploadAsync(AssemblyConfig config)
         {
             var source = new CancellationTokenSource();
             var token = source.Token;
@@ -18,7 +18,7 @@ namespace Improbable.Gdk.DeploymentManager.Commands
                 "upload",
                 config.AssemblyName,
                 "--project_name",
-                projectName,
+                config.ProjectName,
                 "--json_output"
             };
 

@@ -44,6 +44,14 @@ namespace Improbable.Gdk.DeploymentManager
         {
             launcherConfig = DeploymentLauncherConfig.GetInstance();
             projectName = GetProjectName();
+
+            if (launcherConfig != null && projectName != null)
+            {
+                launcherConfig.SetProjectName(projectName);
+                EditorUtility.SetDirty(launcherConfig);
+                AssetDatabase.SaveAssets();
+            }
+
             spinnerMaterial = new Material(Shader.Find("UI/Default"));
         }
 
@@ -111,6 +119,9 @@ namespace Improbable.Gdk.DeploymentManager
                         if (GUILayout.Button(buttonIcon, EditorStyles.miniButton, GUILayout.ExpandWidth(false)))
                         {
                             projectName = GetProjectName();
+                            launcherConfig.SetProjectName(projectName);
+                            EditorUtility.SetDirty(launcherConfig);
+                            AssetDatabase.SaveAssets();
                         }
                     }
 
@@ -173,11 +184,11 @@ namespace Improbable.Gdk.DeploymentManager
                         {
                             var deplConfig = launcherConfig.DeploymentConfigs[selectedDeploymentIndex];
 
-                            manager.Launch(projectName, deplConfig.AssemblyName, deplConfig.Deployment);
+                            manager.Launch(deplConfig.ProjectName, deplConfig.AssemblyName, deplConfig.Deployment);
 
                             foreach (var simPlayerDepl in deplConfig.SimulatedPlayerDeploymentConfigs)
                             {
-                                manager.Launch(projectName, deplConfig.AssemblyName, simPlayerDepl);
+                                manager.Launch(deplConfig.ProjectName, deplConfig.AssemblyName, simPlayerDepl);
                             }
                         }
                     }
@@ -248,7 +259,7 @@ namespace Improbable.Gdk.DeploymentManager
                         {
                             if (GUILayout.Button("Upload Assembly"))
                             {
-                                manager.Upload(projectName, config);
+                                manager.Upload(config);
                             }
                         }
                     }
@@ -524,11 +535,11 @@ namespace Improbable.Gdk.DeploymentManager
 
             private Queue<(string, string, BaseDeploymentConfig)> queuedLaunches = new Queue<(string, string, BaseDeploymentConfig)>();
 
-            public void Upload(string projectName, AssemblyConfig config)
+            public void Upload(AssemblyConfig config)
             {
                 EditorApplication.LockReloadAssemblies();
                 IsUploading = true;
-                uploadTask = Assembly.UploadAsync(projectName, config);
+                uploadTask = Assembly.UploadAsync(config);
             }
 
             public void Launch(string projectName, string assemblyName, BaseDeploymentConfig config)

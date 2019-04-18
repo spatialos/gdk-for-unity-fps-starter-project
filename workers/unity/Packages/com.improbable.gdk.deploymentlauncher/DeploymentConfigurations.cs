@@ -39,6 +39,11 @@ namespace Improbable.Gdk.DeploymentManager
         }
 
         /// <summary>
+        ///     The SpatialOS project to launch this deployment into.
+        /// </summary>
+        public string ProjectName;
+
+        /// <summary>
         ///     The name of the assembly to use in the deployment.
         /// </summary>
         public string AssemblyName;
@@ -87,6 +92,7 @@ namespace Improbable.Gdk.DeploymentManager
         {
             return new DeploymentConfig
             {
+                ProjectName = ProjectName,
                 AssemblyName = AssemblyName,
                 Deployment = Deployment.DeepCopy(),
                 SimulatedPlayerDeploymentConfigs =
@@ -383,6 +389,11 @@ namespace Improbable.Gdk.DeploymentManager
     public class AssemblyConfig
     {
         /// <summary>
+        ///     The name of the SpatialOS project for this assembly.
+        /// </summary>
+        public string ProjectName;
+
+        /// <summary>
         ///     The name of this assembly.
         /// </summary>
         public string AssemblyName;
@@ -396,6 +407,7 @@ namespace Improbable.Gdk.DeploymentManager
         {
             return new AssemblyConfig
             {
+                ProjectName = ProjectName,
                 AssemblyName = AssemblyName,
                 ShouldForceUpload = ShouldForceUpload
             };
