@@ -36,6 +36,11 @@ namespace Fps
 
         protected override AlphaLocatorConfig GetAlphaLocatorConfig(string workerType)
         {
+            if (string.IsNullOrEmpty(DevelopmentAuthToken))
+            {
+                return base.GetAlphaLocatorConfig(workerType);
+            }
+
             var pit = GetDevelopmentPlayerIdentityToken(DevelopmentAuthToken, GetPlayerId(), GetDisplayName());
             var loginTokenDetails = GetDevelopmentLoginTokens(workerType, pit);
             var loginToken = SelectLoginToken(loginTokenDetails);

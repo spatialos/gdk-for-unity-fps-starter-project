@@ -15,7 +15,7 @@ namespace Fps
 
         private void OnEnable()
         {
-            var uiManager = FindObjectOfType<UIManager>();
+            var uiManager = GetComponent<UIManager>()?.GetComponent<UIManager>();
             if (uiManager == null)
             {
                 throw new NullReferenceException("Was not able to find the OnScreenUI prefab in the scene.");

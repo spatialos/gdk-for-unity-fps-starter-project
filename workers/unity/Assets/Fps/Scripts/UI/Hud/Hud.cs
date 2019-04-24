@@ -28,18 +28,29 @@ namespace Fps
 
         private void Awake()
         {
-            inGameScreenManager = FindObjectOfType<InGameScreenManager>();
-            if (inGameScreenManager != null)
+            var uiManager = GameObject.FindGameObjectWithTag("OnScreenUI");
+            if (uiManager == null)
             {
-                healthBarController = inGameScreenManager.GetComponentInChildren<HealthBarController>(true);
+                throw new MissingReferenceException("Missing reference to the UI manager.");
             }
 
-            postProcessObject = GameObject.FindGameObjectWithTag("PostProcessing");
-            if (postProcessObject != null)
+            inGameScreenManager = uiManager.GetComponentInChildren<InGameScreenManager>(true);
+            if (inGameScreenManager == null)
             {
-                var volume = postProcessObject.GetComponent<PostProcessVolume>();
-                volume.profile.TryGetSettings(out damageVolumeSettings);
+                throw new MissingReferenceException("Missing reference to the in game screen manager.");
             }
+
+            healthBarController = inGameScreenManager.GetComponentInChildren<HealthBarController>(true);
+
+
+            postProcessObject = GameObject.FindGameObjectWithTag("PostProcessing");
+            if (postProcessObject == null)
+            {
+                throw new MissingReferenceException("Missing reference to the post process object.");
+            }
+
+            var volume = postProcessObject.GetComponent<PostProcessVolume>();
+            volume.profile.TryGetSettings(out damageVolumeSettings);
         }
 
         private void OnEnable()
