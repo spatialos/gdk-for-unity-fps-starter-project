@@ -28,7 +28,7 @@ namespace Fps
 
         private void Awake()
         {
-            inGameScreenManager = GameObject.FindGameObjectWithTag("OnScreenUI")?.GetComponentInChildren<InGameScreenManager>(true);
+            inGameScreenManager = FindObjectOfType<InGameScreenManager>();
             if (inGameScreenManager != null)
             {
                 healthBarController = inGameScreenManager.GetComponentInChildren<HealthBarController>(true);
