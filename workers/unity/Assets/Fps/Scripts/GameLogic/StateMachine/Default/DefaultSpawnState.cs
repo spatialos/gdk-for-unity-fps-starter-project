@@ -15,6 +15,7 @@ namespace Fps
         {
             Animator.SetTrigger("Ready");
             ScreenManager.DefaultConnectButton.onClick.AddListener(SpawnPlayer);
+            ScreenManager.DefaultConnectButton.enabled = true;
         }
 
         public override void Tick()

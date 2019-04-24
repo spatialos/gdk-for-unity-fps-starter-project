@@ -49,8 +49,8 @@ namespace Fps
                     {
                         Heartbeat = new HeartbeatParameters()
                         {
-                            IntervalMillis = 5000,
-                            TimeoutMillis = 10000
+                            IntervalMillis = 2500,
+                            TimeoutMillis = 20000
                         }
                     }
                 },

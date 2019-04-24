@@ -24,7 +24,7 @@ namespace Fps
 
         public async void Connect(string deployment = "")
         {
-            this.deployment = deployment;
+            this.deployment = deployment.Trim();
             await AttemptConnect();
         }
 
@@ -61,19 +61,15 @@ namespace Fps
             {
                 foreach (var loginToken in loginTokens)
                 {
-                    if (loginToken.Tags.Contains("state_lobby") || loginToken.Tags.Contains("state_running"))
+                    if (loginToken.DeploymentName == deployment)
                     {
                         return loginToken.LoginToken;
                     }
                 }
             }
-
-            foreach (var loginToken in loginTokens)
+            else
             {
-                if (loginToken.DeploymentName == deployment)
-                {
-                    return loginToken.LoginToken;
-                }
+                return base.SelectLoginToken(loginTokens);
             }
 
             throw new ArgumentException("Was not able to connect to deployment.");

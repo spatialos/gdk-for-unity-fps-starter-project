@@ -1055,6 +1055,7 @@ MonoBehaviour:
   ErrorSymbol: {fileID: 2364347781118353928}
   SuccessSymbol: {fileID: 7725281480401250134}
   StatusText: {fileID: 4451738682437082929}
+  activeSymbol: {fileID: 7324530321987622219}
 --- !u!1 &4642966425071876036
 GameObject:
   m_ObjectHideFlags: 0
@@ -2836,6 +2837,7 @@ MonoBehaviour:
   ErrorSymbol: {fileID: 4037116326015978906}
   SuccessSymbol: {fileID: 8357793312591988932}
   StatusText: {fileID: 2670263570319618211}
+  activeSymbol: {fileID: 9037769708126894809}
 --- !u!1 &4648090528533625801
 GameObject:
   m_ObjectHideFlags: 0
@@ -5459,14 +5461,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cc898fb93634574a9485403c278d570, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blackboard:
-    UseSessionBasedFlow: 0
-    SessionStatus: 0
-    PlayerName: 
-    DevAuthToken: 
-    PlayerIdentityToken: 
-    Deployment: 
-    ClientConnector: {fileID: 0}
+  stateMachine: {fileID: 0}
   backgroundColor1: {r: 0.30588236, g: 0.30980393, b: 0.31764707, a: 1}
   backgroundColor2: {r: 0.27058825, g: 0.27450982, b: 0.28235295, a: 1}
   highlightedColor: {r: 0.69411767, g: 0.6901961, b: 0.68235296, a: 1}
@@ -5490,6 +5485,7 @@ MonoBehaviour:
   ErrorSymbol: {fileID: 6236580589065870064}
   SuccessSymbol: {fileID: 2123067154301231022}
   StatusText: {fileID: 5441703471048026057}
+  activeSymbol: {fileID: 1434085603664899507}
 --- !u!1 &4648442307814191113
 GameObject:
   m_ObjectHideFlags: 0
@@ -6326,7 +6322,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &4871745658051371527
 RectTransform:
   m_ObjectHideFlags: 0

@@ -16,6 +16,8 @@ namespace Fps
                 throw new MissingReferenceException("Missing reference to the background image for this table entry.");
             }
 
+            textVisuals = GetComponentsInChildren<Text>();
+
             if (textVisuals == null)
             {
                 throw new MissingReferenceException("Missing reference to the text components for this table entry.");
