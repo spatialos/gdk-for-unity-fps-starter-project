@@ -2,6 +2,7 @@ using System.Text.RegularExpressions;
 using UnityEngine;
 
 #if UNITY_IOS
+using Improbable.Gdk.Core;
 using Improbable.Gdk.Mobile.iOS;
 #endif
 

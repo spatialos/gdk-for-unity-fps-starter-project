@@ -1,10 +1,6 @@
 using System;
-using System.Linq;
 using Improbable.Gdk.Core;
-using Improbable.Gdk.Core.Commands;
 using Improbable.Gdk.Session;
-using Improbable.Worker.CInterop.Query;
-using UnityEngine;
 
 namespace Fps
 {
@@ -18,7 +14,6 @@ namespace Fps
         {
             ScreenManager.StartGameButton.onClick.AddListener(StartSession);
             ScreenManager.CancelLobbyButton.onClick.AddListener(CancelSession);
-            ScreenManager.LobbyStatus.ShowWaitForGameText();
         }
 
         public override void ExitState()

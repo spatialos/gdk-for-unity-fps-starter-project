@@ -1,9 +1,7 @@
 using System.Collections.Generic;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.Core.Commands;
-using Improbable.Gdk.Movement;
 using Improbable.Gdk.Session;
-using Improbable.PlayerLifecycle;
 using Improbable.Worker.CInterop;
 using Improbable.Worker.CInterop.Query;
 using Unity.Entities;
@@ -14,7 +12,6 @@ namespace Fps
     [DisableAutoCreation]
     public class TrackPlayerSystem : ComponentSystem
     {
-        private bool sentPlayerStateRequest;
         private long? sentPlayerStateQueryId;
         private ComponentGroup sessionGroup;
         private CommandSystem commandSystem;
@@ -23,7 +20,7 @@ namespace Fps
         private readonly EntityQuery playerStateQuery = new EntityQuery
         {
             Constraint = new ComponentConstraint(PlayerState.ComponentId),
-            ResultType = new SnapshotResultType()
+            ResultType = new SnapshotResultType(new List<uint> { PlayerState.ComponentId })
         };
 
         public Status? SessionStatus { get; private set; }
@@ -35,6 +32,7 @@ namespace Fps
 
             commandSystem = World.GetExistingManager<CommandSystem>();
             logDispatcher = World.GetExistingManager<WorkerSystem>().LogDispatcher;
+            sessionGroup = GetComponentGroup(ComponentType.ReadOnly<Session.Component>());
 
             PlayerResults = new List<ResultsData>();
         }
@@ -58,7 +56,6 @@ namespace Fps
             if (sentPlayerStateQueryId == null && PlayerResults.Count == 0)
             {
                 sentPlayerStateQueryId = commandSystem.SendCommand(new WorldCommands.EntityQuery.Request(playerStateQuery));
-                sentPlayerStateRequest = true;
             }
 
             var entityQueryResponses = commandSystem.GetResponses<WorldCommands.EntityQuery.ReceivedResponse>();
@@ -86,9 +83,9 @@ namespace Fps
 
                     for (var j = 0; j < PlayerResults.Count; j++)
                     {
-                        var result = PlayerResults[i];
+                        var result = PlayerResults[j];
                         result.Rank = j + 1;
-                        PlayerResults[i] = result;
+                        PlayerResults[j] = result;
                     }
                 }
                 else

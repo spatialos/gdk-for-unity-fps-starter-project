@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -33,7 +32,7 @@ namespace Fps
             var highlightedDeploymentName = string.Empty;
             if (IsHighlightedIndexValid())
             {
-                highlightedDeploymentName = this.deployments[highlightedIndex].Name;
+                highlightedDeploymentName = deployments[highlightedIndex].Name;
             }
 
             highlightedIndex = -1;

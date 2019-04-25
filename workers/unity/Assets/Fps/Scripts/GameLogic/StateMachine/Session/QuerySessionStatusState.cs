@@ -44,7 +44,6 @@ namespace Fps
             Owner.SetState(nextState);
         }
 
-
         private Status? GetStatus()
         {
             var messages = commandSystem.GetResponse<WorldCommands.EntityQuery.ReceivedResponse>(requestId);

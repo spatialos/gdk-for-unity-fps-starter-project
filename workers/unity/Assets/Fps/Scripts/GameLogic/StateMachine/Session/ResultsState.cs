@@ -6,23 +6,15 @@ namespace Fps
 {
     public class ResultsState : SessionState
     {
+        private readonly TrackPlayerSystem trackPlayerSystem;
+
         public ResultsState(UIManager manager, ConnectionStateMachine owner) : base(manager, owner)
         {
+            trackPlayerSystem = Blackboard.ClientConnector.Worker.World.GetExistingManager<TrackPlayerSystem>();
         }
 
         public override void StartState()
         {
-            var trackPlayerSystem = Blackboard.ClientConnector.Worker.World.GetExistingManager<TrackPlayerSystem>();
-            var results = trackPlayerSystem.PlayerResults;
-            var playerRank = results.FirstOrDefault(res => res.PlayerName == Blackboard.PlayerName).Rank;
-
-            ScreenManager.ResultsScreenDoneButton.onClick.AddListener(Restart);
-            ScreenManager.InformOfResults(results, playerRank);
-            Manager.ShowFrontEnd();
-            ScreenManager.SwitchToResultsScreen();
-
-            UnityObjectDestroyer.Destroy(Blackboard.ClientConnector);
-            Blackboard.ClientConnector = null;
         }
 
         public override void ExitState()
@@ -44,6 +36,29 @@ namespace Fps
             {
                 ScreenManager.ResultsScreenDoneButton.onClick.Invoke();
             }
+
+            if (Blackboard.ClientConnector == null)
+            {
+                return;
+            }
+
+            if (trackPlayerSystem.PlayerResults.Count == 0)
+            {
+                return;
+            }
+
+            var results = trackPlayerSystem.PlayerResults;
+            var playerRank = results.FirstOrDefault(res => res.PlayerName == Blackboard.PlayerName).Rank;
+            Debug.Log($"playerRank {playerRank}");
+            Debug.Log($"player name {Blackboard.PlayerName}");
+
+            ScreenManager.ResultsScreenDoneButton.onClick.AddListener(Restart);
+            ScreenManager.InformOfResults(results, playerRank);
+            Manager.ShowFrontEnd();
+            ScreenManager.SwitchToResultsScreen();
+
+            UnityObjectDestroyer.Destroy(Blackboard.ClientConnector);
+            Blackboard.ClientConnector = null;
         }
     }
 }

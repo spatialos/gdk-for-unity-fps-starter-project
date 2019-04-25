@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Fps
 {
@@ -22,7 +21,6 @@ namespace Fps
             {
                 ScreenManager.DefaultConnectButton.enabled = true;
                 Animator.SetTrigger("FailedToConnect");
-
 
                 if (Input.GetKeyDown(KeyCode.Space))
                 {

@@ -22,6 +22,7 @@ namespace Fps
         private static void GenerateFpsSnapshot()
         {
             SaveSnapshot(DefaultSnapshotPath, GenerateDefaultSnapshot());
+            SaveSnapshot(CloudSnapshotPath, GenerateDefaultSnapshot());
             SaveSnapshot(SessionSnapshotPath, GenerateSessionSnapshot());
         }
 

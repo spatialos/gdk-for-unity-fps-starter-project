@@ -48,6 +48,7 @@ namespace Fps
 
             var state = new WaitForGameState(Manager, Owner);
             var nextState = new QuerySessionStatusState(state, Manager, Owner);
+            ScreenManager.LobbyStatus.ShowWaitForGameText();
             Owner.SetState(nextState);
         }
 

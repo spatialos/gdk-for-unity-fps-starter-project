@@ -1,5 +1,4 @@
 using Improbable.Gdk.Session;
-using UnityEngine;
 
 namespace Fps
 {

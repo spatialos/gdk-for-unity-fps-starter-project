@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using Improbable.Gdk.Core;
-using Improbable.Worker.CInterop.Alpha;
 using UnityEngine;
 
 namespace Fps
@@ -17,7 +14,6 @@ namespace Fps
         private State currentState;
         private State nextState;
         private float waitTimeInSeconds;
-
 
         public void SetState(State state, float waitTimeInSeconds = 0f)
         {

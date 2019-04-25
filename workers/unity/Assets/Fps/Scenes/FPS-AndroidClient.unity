@@ -259,7 +259,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Blackboard:
-    UseSessionBasedFlow: 0
+    UseSessionBasedFlow: 1
     SessionStatus: 0
     PlayerName: Player
     DevAuthToken: 
@@ -489,6 +489,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: 50
       objectReference: {fileID: 0}
+    - target: {fileID: 5238200821785583470, guid: c0011f63193627d4eb6f0db039fd8b17,
+        type: 3}
+      propertyPath: stateMachine
+      value: 
+      objectReference: {fileID: 1168413884}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c0011f63193627d4eb6f0db039fd8b17, type: 3}
 --- !u!114 &1497107807 stripped

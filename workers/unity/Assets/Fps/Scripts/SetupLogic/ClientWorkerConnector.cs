@@ -21,7 +21,6 @@ namespace Fps
 
         private bool shouldUseSessionFlow => !string.IsNullOrEmpty(deployment);
 
-
         public async void Connect(string deployment = "")
         {
             this.deployment = deployment.Trim();
