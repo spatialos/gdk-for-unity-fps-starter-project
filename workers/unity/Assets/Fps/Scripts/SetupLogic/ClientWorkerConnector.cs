@@ -100,7 +100,11 @@ namespace Fps
                 world,
                 new AdvancedEntityPipeline(Worker, GetAuthPlayerPrefabPath(), GetNonAuthPlayerPrefabPath(), fallback),
                 gameObject);
-            world.GetOrCreateManager<TrackPlayerSystem>();
+
+            if (shouldUseSessionFlow)
+            {
+                world.GetOrCreateManager<TrackPlayerSystem>();
+            }
 
             base.HandleWorkerConnectionEstablished();
         }

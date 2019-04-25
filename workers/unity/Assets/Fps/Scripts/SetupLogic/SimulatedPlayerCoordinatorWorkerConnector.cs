@@ -52,7 +52,7 @@ public class SimulatedPlayerCoordinatorWorkerConnector : WorkerConnectorBase
                 var simulatedPlayer = Instantiate(SimulatedPlayerWorkerConnector, transform.position, transform.rotation);
                 var simulatedPlayerConnector = simulatedPlayer.GetComponent<SimulatedPlayerWorkerConnector>();
                 await simulatedPlayerConnector
-                    .ConnectSimulatedPlayer(Worker.LogDispatcher, SimulatedPlayerDevAuthTokenId, SimulatedPlayerTargetDeployment, simulatedPlayerConnectors.Count);
+                    .ConnectSimulatedPlayer(Worker.LogDispatcher, SimulatedPlayerDevAuthTokenId, SimulatedPlayerTargetDeployment);
                 simulatedPlayerConnector.SpawnPlayer(simulatedPlayerConnectors.Count);
 
                 simulatedPlayerConnectors.Add(simulatedPlayer);
@@ -89,7 +89,7 @@ public class SimulatedPlayerCoordinatorWorkerConnector : WorkerConnectorBase
                     var simulatedPlayerConnector = simulatedPlayer.GetComponent<SimulatedPlayerWorkerConnector>();
 
                     var task = simulatedPlayerConnector.ConnectSimulatedPlayer(Worker.LogDispatcher, SimulatedPlayerDevAuthTokenId,
-                        SimulatedPlayerTargetDeployment, simulatedPlayerConnectors.Count);
+                        SimulatedPlayerTargetDeployment);
                     yield return new WaitUntil(() => task.IsCompleted);
                     simulatedPlayerConnector.SpawnPlayer(simulatedPlayerConnectors.Count);
 

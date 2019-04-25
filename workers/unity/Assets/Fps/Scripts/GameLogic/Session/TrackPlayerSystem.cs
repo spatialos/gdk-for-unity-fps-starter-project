@@ -1,18 +1,31 @@
 using System.Collections.Generic;
+using Improbable.Gdk.Core;
+using Improbable.Gdk.Core.Commands;
 using Improbable.Gdk.Movement;
 using Improbable.Gdk.Session;
+using Improbable.PlayerLifecycle;
+using Improbable.Worker.CInterop;
+using Improbable.Worker.CInterop.Query;
 using Unity.Entities;
+using UnityEngine;
 
 namespace Fps
 {
     [DisableAutoCreation]
     public class TrackPlayerSystem : ComponentSystem
     {
-        private ComponentGroup ownPlayerGroup;
-        private ComponentGroup playersGroup;
+        private bool sentPlayerStateRequest;
+        private long? sentPlayerStateQueryId;
         private ComponentGroup sessionGroup;
+        private CommandSystem commandSystem;
+        private ILogDispatcher logDispatcher;
 
-        public string PlayerName { get; private set; }
+        private readonly EntityQuery playerStateQuery = new EntityQuery
+        {
+            Constraint = new ComponentConstraint(PlayerState.ComponentId),
+            ResultType = new SnapshotResultType()
+        };
+
         public Status? SessionStatus { get; private set; }
         public List<ResultsData> PlayerResults { get; private set; }
 
@@ -20,14 +33,8 @@ namespace Fps
         {
             base.OnCreateManager();
 
-            ownPlayerGroup = GetComponentGroup(
-                ComponentType.ReadOnly<PlayerState.Component>(),
-                ComponentType.ReadOnly<ClientMovement.ComponentAuthority>()
-            );
-            ownPlayerGroup.SetFilter(ClientMovement.ComponentAuthority.Authoritative);
-
-            playersGroup = GetComponentGroup(ComponentType.ReadOnly<PlayerState.Component>());
-            sessionGroup = GetComponentGroup(ComponentType.ReadOnly<Session.Component>());
+            commandSystem = World.GetExistingManager<CommandSystem>();
+            logDispatcher = World.GetExistingManager<WorkerSystem>().LogDispatcher;
 
             PlayerResults = new List<ResultsData>();
         }
@@ -48,32 +55,48 @@ namespace Fps
                 return;
             }
 
-            var playerStateData = ownPlayerGroup.GetComponentDataArray<PlayerState.Component>();
-            if (playerStateData.Length == 0)
+            if (sentPlayerStateQueryId == null && PlayerResults.Count == 0)
             {
-                PlayerName = null;
-            }
-            else
-            {
-                PlayerName = playerStateData[0].Name;
+                sentPlayerStateQueryId = commandSystem.SendCommand(new WorldCommands.EntityQuery.Request(playerStateQuery));
+                sentPlayerStateRequest = true;
             }
 
-            PlayerResults.Clear();
-            var playerStates = playersGroup.GetComponentDataArray<PlayerState.Component>();
-            for (var i = 0; i < playerStates.Length; i++)
+            var entityQueryResponses = commandSystem.GetResponses<WorldCommands.EntityQuery.ReceivedResponse>();
+            for (var i = 0; i < entityQueryResponses.Count; i++)
             {
-                var playerState = playerStates[i];
-                var result = new ResultsData(playerState.Name, playerState.Kills, playerState.Deaths);
-                PlayerResults.Add(result);
-            }
+                ref readonly var response = ref entityQueryResponses[i];
+                if (response.RequestId != sentPlayerStateQueryId)
+                {
+                    continue;
+                }
 
-            PlayerResults.Sort((x, y) => y.KillDeathRatio.CompareTo(x.KillDeathRatio));
+                sentPlayerStateQueryId = null;
 
-            for (var i = 0; i < PlayerResults.Count; i++)
-            {
-                var result = PlayerResults[i];
-                result.Rank = i + 1;
-                PlayerResults[i] = result;
+                if (response.StatusCode == StatusCode.Success)
+                {
+                    PlayerResults.Clear();
+                    foreach (var responseValue in response.Result.Values)
+                    {
+                        var playerState = responseValue.GetComponentSnapshot<PlayerState.Snapshot>().Value;
+                        var result = new ResultsData(playerState.Name, playerState.Kills, playerState.Deaths);
+                        PlayerResults.Add(result);
+                    }
+
+                    PlayerResults.Sort((x, y) => y.KillDeathRatio.CompareTo(x.KillDeathRatio));
+
+                    for (var j = 0; j < PlayerResults.Count; j++)
+                    {
+                        var result = PlayerResults[i];
+                        result.Rank = j + 1;
+                        PlayerResults[i] = result;
+                    }
+                }
+                else
+                {
+                    logDispatcher.HandleLog(LogType.Error, new LogEvent(
+                        $"Failed to receive results..."
+                    ));
+                }
             }
         }
     }

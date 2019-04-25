@@ -94,12 +94,8 @@ namespace Fps
                 RegenPauseTime = 0,
             };
 
-            var playerStateQuery = InterestQuery.Query(Constraint.Component<PlayerState.Component>());
             var sessionQuery = InterestQuery.Query(Constraint.Component<Session.Component>());
-
-            var interestTemplate = InterestTemplate.Create()
-                .AddQueries<ClientMovement.Component>(playerStateQuery, sessionQuery);
-
+            var interestTemplate = InterestTemplate.Create().AddQueries<ClientMovement.Component>(sessionQuery);
             var interestComponent = interestTemplate.ToSnapshot();
 
             var playerName = Encoding.ASCII.GetString(args);
@@ -124,6 +120,7 @@ namespace Fps
             template.AddComponent(healthRegenComponent, WorkerUtils.UnityGameLogic);
             template.AddComponent(playerStateComponent, WorkerUtils.UnityGameLogic);
             template.AddComponent(interestComponent, WorkerUtils.UnityGameLogic);
+
             PlayerLifecycleHelper.AddPlayerLifecycleComponents(template, workerId, WorkerUtils.UnityGameLogic);
 
             template.SetReadAccess(WorkerUtils.UnityClient, WorkerUtils.UnityGameLogic, WorkerUtils.AndroidClient, WorkerUtils.iOSClient);

@@ -22,7 +22,7 @@ public class SimulatedPlayerWorkerConnector : DefaultWorkerConnector
     private string simulatedPlayerTargetDeployment;
 
     public async Task ConnectSimulatedPlayer(ILogDispatcher logDispatcher, string simulatedPlayerDevAuthTokenId,
-        string simulatedPlayerTargetDeployment, int number)
+        string simulatedPlayerTargetDeployment)
     {
         simulatedCoordinatorLogDispatcher = logDispatcher;
 
@@ -41,6 +41,8 @@ public class SimulatedPlayerWorkerConnector : DefaultWorkerConnector
 
             connectToRemoteDeployment = true;
         }
+
+        Debug.Log(connectToRemoteDeployment);
 
         await Connect(WorkerUtils.UnityClient, new ForwardingDispatcher());
     }

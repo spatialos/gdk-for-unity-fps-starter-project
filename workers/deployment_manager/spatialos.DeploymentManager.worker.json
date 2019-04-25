@@ -28,7 +28,11 @@
     },
     "component_delivery": {
       "default": "RELIABLE_ORDERED",
-      "checkoutAllInitially": true
+      "override": {
+        "improbable.gdk.session.Session": {
+          "checkout_initially": true
+        }
+      }
     }
   },
   "external": {
