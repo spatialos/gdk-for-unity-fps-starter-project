@@ -23,7 +23,7 @@ namespace Improbable.Gdk.DeploymentManager
         private Material spinnerMaterial;
 
         private readonly TaskManager manager = new TaskManager();
-        private readonly UiStateManager stateManager = new UiStateManager();
+        private readonly UIStateManager stateManager = new UIStateManager();
 
         private DeploymentLauncherConfig launcherConfig;
         private int selectedDeploymentIndex;
@@ -283,7 +283,7 @@ namespace Improbable.Gdk.DeploymentManager
 
         private (bool, DeploymentConfig) DrawDeploymentConfig(DeploymentConfig config)
         {
-            var foldoutState = stateManager.GetStateObject<bool>(config.Deployment.Name.GetHashCode());
+            var foldoutState = stateManager.GetStateObjectOrDefault<bool>(config.Deployment.Name.GetHashCode());
             var copy = config.DeepCopy();
 
             var errors = copy.GetErrors();
@@ -416,7 +416,7 @@ namespace Improbable.Gdk.DeploymentManager
         private (bool, SimulatedPlayerDeploymentConfig) DrawSimulatedConfig(int index, SimulatedPlayerDeploymentConfig config)
         {
             var copy = config.DeepCopy();
-            var foldoutState = stateManager.GetStateObject<bool>(config.Name.GetHashCode());
+            var foldoutState = stateManager.GetStateObjectOrDefault<bool>(config.Name.GetHashCode());
 
             using (var check = new EditorGUI.ChangeCheckScope())
             {
@@ -463,7 +463,7 @@ namespace Improbable.Gdk.DeploymentManager
             for (var i = 0; i < config.SimulatedPlayerDeploymentConfigs.Count; i++)
             {
                 var previousFoldoutState =
-                    stateManager.GetStateObject<bool>(config.SimulatedPlayerDeploymentConfigs[i].Name.GetHashCode());
+                    stateManager.GetStateObjectOrDefault<bool>(config.SimulatedPlayerDeploymentConfigs[i].Name.GetHashCode());
 
                 config.SimulatedPlayerDeploymentConfigs[i].Name = $"{config.Deployment.Name}_sim{i + 1}";
                 config.SimulatedPlayerDeploymentConfigs[i].TargetDeploymentName = config.Deployment.Name;
