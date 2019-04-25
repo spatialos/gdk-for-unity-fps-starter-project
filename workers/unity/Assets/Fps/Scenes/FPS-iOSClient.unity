@@ -124,11 +124,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: OnScreenUI_Mobile
       objectReference: {fileID: 0}
-    - target: {fileID: 5238200821785583470, guid: c0011f63193627d4eb6f0db039fd8b17,
-        type: 3}
-      propertyPath: stateMachine
-      value: 
-      objectReference: {fileID: 1646996548}
     - target: {fileID: 4871009320061034181, guid: c0011f63193627d4eb6f0db039fd8b17,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -249,6 +244,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: 50
       objectReference: {fileID: 0}
+    - target: {fileID: 5238200821785583470, guid: c0011f63193627d4eb6f0db039fd8b17,
+        type: 3}
+      propertyPath: stateMachine
+      value: 
+      objectReference: {fileID: 1646996548}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c0011f63193627d4eb6f0db039fd8b17, type: 3}
 --- !u!114 &178210165 stripped
@@ -410,7 +410,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Blackboard:
-    UseSessionBasedFlow: 1
+    UseSessionBasedFlow: 0
     SessionStatus: 0
     PlayerName: Player
     DevAuthToken: 
