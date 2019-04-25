@@ -95,7 +95,9 @@ namespace Fps
             };
 
             var sessionQuery = InterestQuery.Query(Constraint.Component<Session.Component>());
-            var interestTemplate = InterestTemplate.Create().AddQueries<ClientMovement.Component>(sessionQuery);
+            var checkoutQuery = InterestQuery.Query(Constraint.RelativeCylinder(150));
+
+            var interestTemplate = InterestTemplate.Create().AddQueries<ClientMovement.Component>(sessionQuery, checkoutQuery);
             var interestComponent = interestTemplate.ToSnapshot();
 
             var playerName = Encoding.ASCII.GetString(args);
