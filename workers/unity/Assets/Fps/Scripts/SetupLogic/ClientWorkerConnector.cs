@@ -1,31 +1,88 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
+using Improbable.Gdk.Core;
 using UnityEngine;
 using Improbable.Gdk.GameObjectCreation;
-using Improbable.Gdk.Subscriptions;
 using Improbable.Gdk.PlayerLifecycle;
+using Improbable.PlayerLifecycle;
+using Improbable.Worker.CInterop.Alpha;
 
 namespace Fps
 {
-    [RequireComponent(typeof(ConnectionController))]
-    public class ClientWorkerConnector : WorkerConnectorBase, ITileProvider
+    public class ClientWorkerConnector : WorkerConnectorBase
     {
-        private const string AuthPlayer = "Prefabs/UnityClient/Authoritative/Player";
-        private const string NonAuthPlayer = "Prefabs/UnityClient/NonAuthoritative/Player";
+        private string deployment;
+        private string playerName;
+        private bool isReadyToSpawn;
+        private bool wantsSpawn;
+        private Action<PlayerCreator.CreatePlayer.ReceivedResponse> onPlayerResponse;
 
-        private List<TileEnabler> levelTiles = new List<TileEnabler>();
-        public List<TileEnabler> LevelTiles => levelTiles;
+        private bool shouldUseSessionFlow => !string.IsNullOrEmpty(deployment);
 
-        private ConnectionController connectionController;
-
-        private void Awake()
+        public async void Connect(string deployment = "")
         {
-            connectionController = GetComponent<ConnectionController>();
+            this.deployment = deployment.Trim();
+            await AttemptConnect();
+        }
+
+        public void SpawnPlayer(string playerName, Action<PlayerCreator.CreatePlayer.ReceivedResponse> onPlayerResponse)
+        {
+            this.onPlayerResponse = onPlayerResponse;
+            this.playerName = playerName;
+            wantsSpawn = true;
+        }
+
+        public bool HasConnected()
+        {
+            return Worker != null;
         }
 
         protected override string GetWorkerType()
         {
             return WorkerUtils.UnityClient;
+        }
+
+        protected virtual string GetAuthPlayerPrefabPath()
+        {
+            return "Prefabs/UnityClient/Authoritative/Player";
+        }
+
+        protected virtual string GetNonAuthPlayerPrefabPath()
+        {
+            return "Prefabs/UnityClient/NonAuthoritative/Player";
+        }
+
+        protected override string SelectLoginToken(List<LoginTokenDetails> loginTokens)
+        {
+            if (shouldUseSessionFlow)
+            {
+                foreach (var loginToken in loginTokens)
+                {
+                    if (loginToken.DeploymentName == deployment)
+                    {
+                        return loginToken.LoginToken;
+                    }
+                }
+            }
+            else
+            {
+                return base.SelectLoginToken(loginTokens);
+            }
+
+            throw new ArgumentException("Was not able to connect to deployment.");
+        }
+
+        protected override ConnectionService GetConnectionService()
+        {
+            if (shouldUseSessionFlow)
+            {
+                LoadDevAuthToken();
+                return ConnectionService.AlphaLocator;
+            }
+
+            return base.GetConnectionService();
         }
 
         protected override void HandleWorkerConnectionEstablished()
@@ -40,28 +97,43 @@ namespace Fps
             // Set the Worker gameObject to the ClientWorker so it can access PlayerCreater reader/writers
             GameObjectCreationHelper.EnableStandardGameObjectCreation(
                 world,
-                new AdvancedEntityPipeline(Worker, AuthPlayer, NonAuthPlayer, fallback),
+                new AdvancedEntityPipeline(Worker, GetAuthPlayerPrefabPath(), GetNonAuthPlayerPrefabPath(), fallback),
                 gameObject);
+
+            if (shouldUseSessionFlow)
+            {
+                world.GetOrCreateManager<TrackPlayerSystem>();
+            }
 
             base.HandleWorkerConnectionEstablished();
         }
 
         protected override void HandleWorkerConnectionFailure(string errorMessage)
         {
-            connectionController.OnFailedToConnect();
+            Debug.LogError($"Connection failed: {errorMessage}");
+            Destroy(gameObject);
         }
 
         protected override IEnumerator LoadWorld()
         {
             yield return base.LoadWorld();
+            isReadyToSpawn = true;
+        }
 
-            LevelInstance.GetComponentsInChildren<TileEnabler>(true, levelTiles);
-            foreach (var tileEnabler in levelTiles)
+        private void Update()
+        {
+            if (wantsSpawn && isReadyToSpawn)
             {
-                tileEnabler.Initialize(true);
+                wantsSpawn = false;
+                SendRequest();
             }
+        }
 
-            connectionController.OnReadyToSpawn();
+        private void SendRequest()
+        {
+            var serializedArgs = Encoding.ASCII.GetBytes(playerName);
+            Worker.World.GetExistingManager<SendCreatePlayerRequestSystem>()
+                .RequestPlayerCreation(serializedArgs, onPlayerResponse);
         }
     }
 }

@@ -1,24 +1,16 @@
 using System.Text.RegularExpressions;
-using Improbable.Gdk.Core;
 using UnityEngine;
 
 #if UNITY_IOS
+using Improbable.Gdk.Core;
 using Improbable.Gdk.Mobile.iOS;
 #endif
 
 namespace Fps
 {
-    public class iOSWorkerConnector : MobileWorkerConnectorBase, ITileProvider
+    public class iOSWorkerConnector : MobileWorkerConnector
     {
         [SerializeField] private string forcedIpAddress;
-
-        protected override async void Start()
-        {
-            Application.targetFrameRate = TargetFrameRate;
-            IpAddress = forcedIpAddress;
-
-            await AttemptConnect();
-        }
 
         private void OnValidate()
         {
@@ -35,7 +27,7 @@ namespace Fps
 #if UNITY_IOS
             if (!string.IsNullOrEmpty(IpAddress))
             {
-                return IpAddress;
+                return forcedIpAddress;
             }
 
             return RuntimeConfigDefaults.ReceptionistHost;

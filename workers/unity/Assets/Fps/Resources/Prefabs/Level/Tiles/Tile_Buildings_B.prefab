@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4818613765187326}
-  - component: {fileID: 114599208859016928}
   - component: {fileID: 8373223801951394552}
   m_Layer: 0
   m_Name: Tile_Buildings_B
@@ -85,20 +84,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114599208859016928
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1142183176141832}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 834cfda29cc04cfca5066eec0a4f98d6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PlayerTransform: {fileID: 0}
-  IsClient: 0
 --- !u!114 &8373223801951394552
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5160,11 +5145,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4818613765187326}
     m_Modifications:
-    - target: {fileID: 4015375697989228290, guid: 6ce7aea2aeeb9d2488a97bcb67069de1,
-        type: 3}
-      propertyPath: m_Name
-      value: House_8x8 (3)
-      objectReference: {fileID: 0}
     - target: {fileID: 232694899533628629, guid: 6ce7aea2aeeb9d2488a97bcb67069de1,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5220,6 +5200,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4015375697989228290, guid: 6ce7aea2aeeb9d2488a97bcb67069de1,
+        type: 3}
+      propertyPath: m_Name
+      value: House_8x8 (3)
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6ce7aea2aeeb9d2488a97bcb67069de1, type: 3}
 --- !u!4 &63650492474235208 stripped
@@ -5235,11 +5220,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4818613765187326}
     m_Modifications:
-    - target: {fileID: 4015375697989228290, guid: 6ce7aea2aeeb9d2488a97bcb67069de1,
-        type: 3}
-      propertyPath: m_Name
-      value: House_8x8 (2)
-      objectReference: {fileID: 0}
     - target: {fileID: 232694899533628629, guid: 6ce7aea2aeeb9d2488a97bcb67069de1,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5295,6 +5275,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4015375697989228290, guid: 6ce7aea2aeeb9d2488a97bcb67069de1,
+        type: 3}
+      propertyPath: m_Name
+      value: House_8x8 (2)
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6ce7aea2aeeb9d2488a97bcb67069de1, type: 3}
 --- !u!4 &1142961526061612895 stripped
@@ -5310,11 +5295,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4818613765187326}
     m_Modifications:
-    - target: {fileID: 4015375697989228290, guid: 6ce7aea2aeeb9d2488a97bcb67069de1,
-        type: 3}
-      propertyPath: m_Name
-      value: House_8x8
-      objectReference: {fileID: 0}
     - target: {fileID: 232694899533628629, guid: 6ce7aea2aeeb9d2488a97bcb67069de1,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5370,6 +5350,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4015375697989228290, guid: 6ce7aea2aeeb9d2488a97bcb67069de1,
+        type: 3}
+      propertyPath: m_Name
+      value: House_8x8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6ce7aea2aeeb9d2488a97bcb67069de1, type: 3}
 --- !u!4 &1734088050103828738 stripped
@@ -5385,11 +5370,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4818613765187326}
     m_Modifications:
-    - target: {fileID: 4015375697989228290, guid: 6ce7aea2aeeb9d2488a97bcb67069de1,
-        type: 3}
-      propertyPath: m_Name
-      value: House_8x8 (1)
-      objectReference: {fileID: 0}
     - target: {fileID: 232694899533628629, guid: 6ce7aea2aeeb9d2488a97bcb67069de1,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5444,6 +5424,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4015375697989228290, guid: 6ce7aea2aeeb9d2488a97bcb67069de1,
+        type: 3}
+      propertyPath: m_Name
+      value: House_8x8 (1)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6ce7aea2aeeb9d2488a97bcb67069de1, type: 3}

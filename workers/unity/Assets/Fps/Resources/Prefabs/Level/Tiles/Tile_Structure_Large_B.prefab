@@ -4312,7 +4312,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8018979963113944717}
-  - component: {fileID: 2895884433270455898}
   - component: {fileID: 4508664015587850626}
   m_Layer: 0
   m_Name: Tile_Structure_Large_B
@@ -4447,20 +4446,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2895884433270455898
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8018979963113944716}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 834cfda29cc04cfca5066eec0a4f98d6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PlayerTransform: {fileID: 0}
-  IsClient: 0
 --- !u!114 &4508664015587850626
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4473,7 +4458,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0acc01bb717a0db49aaafaa4d2b8bdbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TileSize: 32
+  InnerTileSize: 32
   ConnectorLength: 8
   ConnectorDepth: 4
   Color: {r: 0.2, g: 0.7, b: 0.2, a: 0.4}
@@ -7962,10 +7947,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8018979963113944717}
     m_Modifications:
-    - target: {fileID: 100006, guid: e825fc595b6172941a309a2eec021975, type: 3}
-      propertyPath: m_Name
-      value: SM_Wedge_1m (3)
-      objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: e825fc595b6172941a309a2eec021975, type: 3}
       propertyPath: m_LocalPosition.x
       value: -15
@@ -8017,6 +7998,10 @@ PrefabInstance:
     - target: {fileID: 400006, guid: e825fc595b6172941a309a2eec021975, type: 3}
       propertyPath: m_LocalScale.x
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 100006, guid: e825fc595b6172941a309a2eec021975, type: 3}
+      propertyPath: m_Name
+      value: SM_Wedge_1m (3)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e825fc595b6172941a309a2eec021975, type: 3}
@@ -8108,10 +8093,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8018979963113944717}
     m_Modifications:
-    - target: {fileID: 100006, guid: e825fc595b6172941a309a2eec021975, type: 3}
-      propertyPath: m_Name
-      value: SM_Wedge_1m (4)
-      objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: e825fc595b6172941a309a2eec021975, type: 3}
       propertyPath: m_LocalPosition.x
       value: -11
@@ -8164,6 +8145,10 @@ PrefabInstance:
       propertyPath: m_LocalScale.x
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 100006, guid: e825fc595b6172941a309a2eec021975, type: 3}
+      propertyPath: m_Name
+      value: SM_Wedge_1m (4)
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e825fc595b6172941a309a2eec021975, type: 3}
 --- !u!4 &766586096881527100 stripped
@@ -8179,11 +8164,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8018979963113944717}
     m_Modifications:
-    - target: {fileID: 6534165231605766947, guid: e5c1b3591499dc94cb92056f1ff716f1,
-        type: 3}
-      propertyPath: m_Name
-      value: CoverGroup 5
-      objectReference: {fileID: 0}
     - target: {fileID: 4079759058928164544, guid: e5c1b3591499dc94cb92056f1ff716f1,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -8238,6 +8218,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6534165231605766947, guid: e5c1b3591499dc94cb92056f1ff716f1,
+        type: 3}
+      propertyPath: m_Name
+      value: CoverGroup 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e5c1b3591499dc94cb92056f1ff716f1, type: 3}
@@ -8339,11 +8324,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8018979963113944717}
     m_Modifications:
-    - target: {fileID: 6157027414827820946, guid: ec9b5bf2f3082a74da4d35f2419c701b,
-        type: 3}
-      propertyPath: m_Name
-      value: CoverGroup 3
-      objectReference: {fileID: 0}
     - target: {fileID: 3347372278966110664, guid: ec9b5bf2f3082a74da4d35f2419c701b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -8409,6 +8389,11 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 1.0000007
       objectReference: {fileID: 0}
+    - target: {fileID: 6157027414827820946, guid: ec9b5bf2f3082a74da4d35f2419c701b,
+        type: 3}
+      propertyPath: m_Name
+      value: CoverGroup 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ec9b5bf2f3082a74da4d35f2419c701b, type: 3}
 --- !u!4 &4011319609161801192 stripped
@@ -8424,11 +8409,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8018979963113944717}
     m_Modifications:
-    - target: {fileID: 6534165231605766947, guid: e5c1b3591499dc94cb92056f1ff716f1,
-        type: 3}
-      propertyPath: m_Name
-      value: CoverGroup 5
-      objectReference: {fileID: 0}
     - target: {fileID: 4079759058928164544, guid: e5c1b3591499dc94cb92056f1ff716f1,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -8494,6 +8474,11 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 1.0000005
       objectReference: {fileID: 0}
+    - target: {fileID: 6534165231605766947, guid: e5c1b3591499dc94cb92056f1ff716f1,
+        type: 3}
+      propertyPath: m_Name
+      value: CoverGroup 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e5c1b3591499dc94cb92056f1ff716f1, type: 3}
 --- !u!4 &2564703187375600948 stripped
@@ -8509,10 +8494,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8018979963113944717}
     m_Modifications:
-    - target: {fileID: 100006, guid: e825fc595b6172941a309a2eec021975, type: 3}
-      propertyPath: m_Name
-      value: SM_Wedge_1m (7)
-      objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: e825fc595b6172941a309a2eec021975, type: 3}
       propertyPath: m_LocalPosition.x
       value: 15
@@ -8564,6 +8545,10 @@ PrefabInstance:
     - target: {fileID: 400006, guid: e825fc595b6172941a309a2eec021975, type: 3}
       propertyPath: m_LocalScale.x
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 100006, guid: e825fc595b6172941a309a2eec021975, type: 3}
+      propertyPath: m_Name
+      value: SM_Wedge_1m (7)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e825fc595b6172941a309a2eec021975, type: 3}
@@ -8655,10 +8640,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8018979963113944717}
     m_Modifications:
-    - target: {fileID: 100006, guid: e825fc595b6172941a309a2eec021975, type: 3}
-      propertyPath: m_Name
-      value: SM_Wedge_1m (10)
-      objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: e825fc595b6172941a309a2eec021975, type: 3}
       propertyPath: m_LocalPosition.x
       value: -11
@@ -8711,6 +8692,10 @@ PrefabInstance:
       propertyPath: m_LocalScale.x
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 100006, guid: e825fc595b6172941a309a2eec021975, type: 3}
+      propertyPath: m_Name
+      value: SM_Wedge_1m (10)
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e825fc595b6172941a309a2eec021975, type: 3}
 --- !u!4 &2560782081829613642 stripped
@@ -8726,10 +8711,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8018979963113944717}
     m_Modifications:
-    - target: {fileID: 100006, guid: e825fc595b6172941a309a2eec021975, type: 3}
-      propertyPath: m_Name
-      value: SM_Wedge_1m (1)
-      objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: e825fc595b6172941a309a2eec021975, type: 3}
       propertyPath: m_LocalPosition.x
       value: 9
@@ -8786,6 +8767,10 @@ PrefabInstance:
       propertyPath: m_LocalScale.y
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 100006, guid: e825fc595b6172941a309a2eec021975, type: 3}
+      propertyPath: m_Name
+      value: SM_Wedge_1m (1)
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e825fc595b6172941a309a2eec021975, type: 3}
 --- !u!4 &2786307913631478703 stripped
@@ -8801,11 +8786,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8018979963113944717}
     m_Modifications:
-    - target: {fileID: 6157027414827820946, guid: ec9b5bf2f3082a74da4d35f2419c701b,
-        type: 3}
-      propertyPath: m_Name
-      value: CoverGroup 3
-      objectReference: {fileID: 0}
     - target: {fileID: 3347372278966110664, guid: ec9b5bf2f3082a74da4d35f2419c701b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -8861,6 +8841,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6157027414827820946, guid: ec9b5bf2f3082a74da4d35f2419c701b,
+        type: 3}
+      propertyPath: m_Name
+      value: CoverGroup 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ec9b5bf2f3082a74da4d35f2419c701b, type: 3}
 --- !u!4 &560270112018845804 stripped
@@ -8876,10 +8861,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8018979963113944717}
     m_Modifications:
-    - target: {fileID: 100006, guid: e825fc595b6172941a309a2eec021975, type: 3}
-      propertyPath: m_Name
-      value: SM_Wedge_1m
-      objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: e825fc595b6172941a309a2eec021975, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -8936,6 +8917,10 @@ PrefabInstance:
       propertyPath: m_LocalScale.y
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 100006, guid: e825fc595b6172941a309a2eec021975, type: 3}
+      propertyPath: m_Name
+      value: SM_Wedge_1m
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e825fc595b6172941a309a2eec021975, type: 3}
 --- !u!4 &4058835899274851585 stripped
@@ -8951,10 +8936,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8018979963113944717}
     m_Modifications:
-    - target: {fileID: 100006, guid: e825fc595b6172941a309a2eec021975, type: 3}
-      propertyPath: m_Name
-      value: SM_Wedge_1m (11)
-      objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: e825fc595b6172941a309a2eec021975, type: 3}
       propertyPath: m_LocalPosition.x
       value: -15
@@ -9007,6 +8988,10 @@ PrefabInstance:
       propertyPath: m_LocalScale.x
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 100006, guid: e825fc595b6172941a309a2eec021975, type: 3}
+      propertyPath: m_Name
+      value: SM_Wedge_1m (11)
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e825fc595b6172941a309a2eec021975, type: 3}
 --- !u!4 &4649065289077049225 stripped
@@ -9022,11 +9007,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8018979963113944717}
     m_Modifications:
-    - target: {fileID: 6157027414827820946, guid: ec9b5bf2f3082a74da4d35f2419c701b,
-        type: 3}
-      propertyPath: m_Name
-      value: CoverGroup 3
-      objectReference: {fileID: 0}
     - target: {fileID: 3347372278966110664, guid: ec9b5bf2f3082a74da4d35f2419c701b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -9082,6 +9062,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6157027414827820946, guid: ec9b5bf2f3082a74da4d35f2419c701b,
+        type: 3}
+      propertyPath: m_Name
+      value: CoverGroup 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ec9b5bf2f3082a74da4d35f2419c701b, type: 3}
 --- !u!4 &7428719979482410030 stripped
@@ -9097,10 +9082,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8018979963113944717}
     m_Modifications:
-    - target: {fileID: 100006, guid: e825fc595b6172941a309a2eec021975, type: 3}
-      propertyPath: m_Name
-      value: SM_Wedge_1m (12)
-      objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: e825fc595b6172941a309a2eec021975, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -9153,6 +9134,10 @@ PrefabInstance:
       propertyPath: m_LocalScale.x
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 100006, guid: e825fc595b6172941a309a2eec021975, type: 3}
+      propertyPath: m_Name
+      value: SM_Wedge_1m (12)
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e825fc595b6172941a309a2eec021975, type: 3}
 --- !u!4 &5450855606042984127 stripped
@@ -9168,10 +9153,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8018979963113944717}
     m_Modifications:
-    - target: {fileID: 100006, guid: e825fc595b6172941a309a2eec021975, type: 3}
-      propertyPath: m_Name
-      value: SM_Wedge_1m (2)
-      objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: e825fc595b6172941a309a2eec021975, type: 3}
       propertyPath: m_LocalPosition.x
       value: -9
@@ -9228,6 +9209,10 @@ PrefabInstance:
       propertyPath: m_LocalScale.y
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 100006, guid: e825fc595b6172941a309a2eec021975, type: 3}
+      propertyPath: m_Name
+      value: SM_Wedge_1m (2)
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e825fc595b6172941a309a2eec021975, type: 3}
 --- !u!4 &6134598535287252015 stripped
@@ -9243,11 +9228,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8018979963113944717}
     m_Modifications:
-    - target: {fileID: 6534165231605766947, guid: e5c1b3591499dc94cb92056f1ff716f1,
-        type: 3}
-      propertyPath: m_Name
-      value: CoverGroup 5
-      objectReference: {fileID: 0}
     - target: {fileID: 4079759058928164544, guid: e5c1b3591499dc94cb92056f1ff716f1,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -9302,6 +9282,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6534165231605766947, guid: e5c1b3591499dc94cb92056f1ff716f1,
+        type: 3}
+      propertyPath: m_Name
+      value: CoverGroup 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e5c1b3591499dc94cb92056f1ff716f1, type: 3}
@@ -9519,10 +9504,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8018979963113944717}
     m_Modifications:
-    - target: {fileID: 100006, guid: e825fc595b6172941a309a2eec021975, type: 3}
-      propertyPath: m_Name
-      value: SM_Wedge_1m (8)
-      objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: e825fc595b6172941a309a2eec021975, type: 3}
       propertyPath: m_LocalPosition.x
       value: 15.000001
@@ -9575,6 +9556,10 @@ PrefabInstance:
       propertyPath: m_LocalScale.x
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 100006, guid: e825fc595b6172941a309a2eec021975, type: 3}
+      propertyPath: m_Name
+      value: SM_Wedge_1m (8)
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e825fc595b6172941a309a2eec021975, type: 3}
 --- !u!4 &7126057106307904593 stripped
@@ -9590,10 +9575,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8018979963113944717}
     m_Modifications:
-    - target: {fileID: 100006, guid: e825fc595b6172941a309a2eec021975, type: 3}
-      propertyPath: m_Name
-      value: SM_Wedge_1m (5)
-      objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: e825fc595b6172941a309a2eec021975, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -9646,6 +9627,10 @@ PrefabInstance:
       propertyPath: m_LocalScale.x
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 100006, guid: e825fc595b6172941a309a2eec021975, type: 3}
+      propertyPath: m_Name
+      value: SM_Wedge_1m (5)
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e825fc595b6172941a309a2eec021975, type: 3}
 --- !u!4 &7435291673010975648 stripped
@@ -9661,11 +9646,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8018979963113944717}
     m_Modifications:
-    - target: {fileID: 6157027414827820946, guid: ec9b5bf2f3082a74da4d35f2419c701b,
-        type: 3}
-      propertyPath: m_Name
-      value: CoverGroup 3
-      objectReference: {fileID: 0}
     - target: {fileID: 3347372278966110664, guid: ec9b5bf2f3082a74da4d35f2419c701b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -9721,6 +9701,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6157027414827820946, guid: ec9b5bf2f3082a74da4d35f2419c701b,
+        type: 3}
+      propertyPath: m_Name
+      value: CoverGroup 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ec9b5bf2f3082a74da4d35f2419c701b, type: 3}
 --- !u!4 &4924649418572360658 stripped
@@ -9736,10 +9721,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8018979963113944717}
     m_Modifications:
-    - target: {fileID: 100006, guid: e825fc595b6172941a309a2eec021975, type: 3}
-      propertyPath: m_Name
-      value: SM_Wedge_1m (6)
-      objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: e825fc595b6172941a309a2eec021975, type: 3}
       propertyPath: m_LocalPosition.x
       value: 11
@@ -9792,6 +9773,10 @@ PrefabInstance:
       propertyPath: m_LocalScale.x
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 100006, guid: e825fc595b6172941a309a2eec021975, type: 3}
+      propertyPath: m_Name
+      value: SM_Wedge_1m (6)
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e825fc595b6172941a309a2eec021975, type: 3}
 --- !u!4 &7649011275173912801 stripped
@@ -9807,10 +9792,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8018979963113944717}
     m_Modifications:
-    - target: {fileID: 100006, guid: e825fc595b6172941a309a2eec021975, type: 3}
-      propertyPath: m_Name
-      value: SM_Wedge_1m (9)
-      objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: e825fc595b6172941a309a2eec021975, type: 3}
       propertyPath: m_LocalPosition.x
       value: 11
@@ -9862,6 +9843,10 @@ PrefabInstance:
     - target: {fileID: 400006, guid: e825fc595b6172941a309a2eec021975, type: 3}
       propertyPath: m_LocalScale.x
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 100006, guid: e825fc595b6172941a309a2eec021975, type: 3}
+      propertyPath: m_Name
+      value: SM_Wedge_1m (9)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e825fc595b6172941a309a2eec021975, type: 3}

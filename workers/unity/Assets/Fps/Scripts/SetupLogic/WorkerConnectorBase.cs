@@ -3,6 +3,7 @@ using System.Collections;
 using System.Threading.Tasks;
 using Improbable.Gdk.Core;
 using Improbable.Worker.CInterop;
+using Improbable.Worker.CInterop.Alpha;
 using UnityEngine;
 
 namespace Fps
@@ -17,10 +18,9 @@ namespace Fps
 
         protected abstract string GetWorkerType();
 
-        protected virtual async void Start()
+        protected virtual void Start()
         {
             Application.targetFrameRate = TargetFrameRate;
-            await AttemptConnect();
         }
 
         protected async Task AttemptConnect()
@@ -32,6 +32,32 @@ namespace Fps
         {
             // This could be replaced with a splash screen asking to select a deployment or some other user-defined logic.
             return deployments.Deployments[0].DeploymentName;
+        }
+
+        protected override AlphaLocatorConfig GetAlphaLocatorConfig(string workerType)
+        {
+            if (string.IsNullOrEmpty(DevelopmentAuthToken))
+            {
+                return base.GetAlphaLocatorConfig(workerType);
+            }
+
+            var pit = GetDevelopmentPlayerIdentityToken(DevelopmentAuthToken, GetPlayerId(), GetDisplayName());
+            var loginTokenDetails = GetDevelopmentLoginTokens(workerType, pit);
+            var loginToken = SelectLoginToken(loginTokenDetails);
+
+            return new AlphaLocatorConfig
+            {
+                LocatorHost = RuntimeConfigDefaults.LocatorHost,
+                LocatorParameters = new Improbable.Worker.CInterop.Alpha.LocatorParameters
+                {
+                    PlayerIdentity = new PlayerIdentityCredentials
+                    {
+                        PlayerIdentityToken = pit,
+                        LoginToken = loginToken,
+                    },
+                    UseInsecureConnection = false,
+                }
+            };
         }
 
         protected override void HandleWorkerConnectionEstablished()
@@ -60,6 +86,19 @@ namespace Fps
                 Worker.WorkerType,
                 Worker.LogDispatcher,
                 this);
+        }
+
+        protected void LoadDevAuthToken()
+        {
+            var textAsset = Resources.Load<TextAsset>("DevAuthToken");
+            if (textAsset != null)
+            {
+                DevelopmentAuthToken = textAsset.text.Trim();
+            }
+            else
+            {
+                Debug.LogWarning("Unable to find DevAuthToken.txt in the Resources folder.");
+            }
         }
     }
 }

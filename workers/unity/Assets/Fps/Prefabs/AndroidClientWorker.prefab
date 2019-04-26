@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4555427980518638}
   - component: {fileID: 114297608704281880}
-  - component: {fileID: 114809205992229060}
   m_Layer: 0
   m_Name: AndroidClientWorker
   m_TagString: Untagged
@@ -46,18 +45,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxConnectionAttempts: 3
   DevelopmentAuthToken: 
-  ShouldConnectLocally: 0
+  UseExternalIp: 0
   TargetFrameRate: 60
   MapBuilderSettings: {fileID: 11400000, guid: 01bdc027ed9580647a1d601486e42493, type: 2}
---- !u!114 &114809205992229060
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1765859764722708}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c3f6fc6158bac8a4aac46762f5dbd51d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  shouldConnectLocally: 0

@@ -1,6 +1,7 @@
 using Improbable.Gdk.Core;
 using Improbable.Gdk.Health;
 using Unity.Entities;
+using UnityEngine;
 
 namespace Improbable.Gdk.Guns
 {
@@ -49,7 +50,8 @@ namespace Improbable.Gdk.Guns
                     {
                         Amount = -damage,
                         Origin = shotInfo.HitOrigin,
-                        AppliedLocation = shotInfo.HitLocation
+                        AppliedLocation = shotInfo.HitLocation,
+                        Owner = shotInfo.EntityId,
                     }
                 );
 

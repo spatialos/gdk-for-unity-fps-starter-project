@@ -9,33 +9,36 @@ namespace Fps
 {
     public class SnapshotMenu : MonoBehaviour
     {
-        public static readonly string DefaultSnapshotPath =
+        private static readonly string DefaultSnapshotPath =
             Path.Combine(Application.dataPath, "../../../snapshots/default.snapshot");
 
-        public static readonly string CloudSnapshotPath =
+        private static readonly string CloudSnapshotPath =
             Path.Combine(Application.dataPath, "../../../snapshots/cloud.snapshot");
 
-        private static void GenerateSnapshot(Snapshot snapshot)
-        {
-            snapshot.AddEntity(FpsEntityTemplates.Spawner(Coordinates.Zero));
-        }
+        private static readonly string SessionSnapshotPath =
+            Path.Combine(Application.dataPath, "../../../snapshots/session.snapshot");
 
         [MenuItem("SpatialOS/Generate FPS Snapshot")]
         private static void GenerateFpsSnapshot()
         {
-            var localSnapshot = new Snapshot();
-            var cloudSnapshot = new Snapshot();
+            SaveSnapshot(DefaultSnapshotPath, GenerateDefaultSnapshot());
+            SaveSnapshot(CloudSnapshotPath, GenerateDefaultSnapshot());
+            SaveSnapshot(SessionSnapshotPath, GenerateSessionSnapshot());
+        }
 
-            GenerateSnapshot(localSnapshot);
-            GenerateSnapshot(cloudSnapshot);
+        private static Snapshot GenerateDefaultSnapshot()
+        {
+            var snapshot = new Snapshot();
+            snapshot.AddEntity(FpsEntityTemplates.Spawner(Coordinates.Zero));
+            return snapshot;
+        }
 
-            // The local snapshot is identical to the cloud snapshot, but also includes a simulated player coordinator
-            // trigger.
-            var simulatedPlayerCoordinatorTrigger = FpsEntityTemplates.SimulatedPlayerCoordinatorTrigger();
-            localSnapshot.AddEntity(simulatedPlayerCoordinatorTrigger);
-
-            SaveSnapshot(DefaultSnapshotPath, localSnapshot);
-            SaveSnapshot(CloudSnapshotPath, cloudSnapshot);
+        private static Snapshot GenerateSessionSnapshot()
+        {
+            var snapshot = new Snapshot();
+            snapshot.AddEntity(FpsEntityTemplates.Spawner(Coordinates.Zero));
+            snapshot.AddEntity(FpsEntityTemplates.DeploymentState());
+            return snapshot;
         }
 
         private static void SaveSnapshot(string path, Snapshot snapshot)

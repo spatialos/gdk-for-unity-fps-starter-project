@@ -1,10 +1,13 @@
 using System.Collections.Generic;
+using System.Text;
 using Improbable;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.Guns;
 using Improbable.Gdk.Health;
 using Improbable.Gdk.Movement;
 using Improbable.Gdk.PlayerLifecycle;
+using Improbable.Gdk.QueryBasedInterest;
+using Improbable.Gdk.Session;
 using Improbable.Gdk.StandardTypes;
 using Improbable.PlayerLifecycle;
 using UnityEngine;
@@ -13,6 +16,27 @@ namespace Fps
 {
     public static class FpsEntityTemplates
     {
+        public static EntityTemplate DeploymentState()
+        {
+            const uint sessionTimeSeconds = 300;
+
+            var position = new Position.Snapshot();
+            var metadata = new Metadata.Snapshot { EntityType = "DeploymentState" };
+
+            var template = new EntityTemplate();
+            template.AddComponent(position, WorkerUtils.UnityGameLogic);
+            template.AddComponent(metadata, WorkerUtils.UnityGameLogic);
+            template.AddComponent(new Persistence.Snapshot(), WorkerUtils.UnityGameLogic);
+            template.AddComponent(new Session.Snapshot(Status.LOBBY), WorkerUtils.UnityGameLogic);
+            template.AddComponent(new Deployment.Snapshot(), WorkerUtils.DeploymentManager);
+            template.AddComponent(new Timer.Snapshot(0, sessionTimeSeconds), WorkerUtils.UnityGameLogic);
+
+            template.SetReadAccess(WorkerUtils.UnityGameLogic, WorkerUtils.DeploymentManager, WorkerUtils.UnityClient, WorkerUtils.AndroidClient, WorkerUtils.iOSClient);
+            template.SetComponentWriteAccess(EntityAcl.ComponentId, WorkerUtils.UnityGameLogic);
+
+            return template;
+        }
+
         public static EntityTemplate Spawner(Coordinates spawnerCoordinates)
         {
             var position = new Position.Snapshot(spawnerCoordinates);
@@ -26,21 +50,6 @@ namespace Fps
 
             template.SetReadAccess(WorkerUtils.UnityGameLogic);
             template.SetComponentWriteAccess(EntityAcl.ComponentId, WorkerUtils.UnityGameLogic);
-
-            return template;
-        }
-
-        public static EntityTemplate SimulatedPlayerCoordinatorTrigger()
-        {
-            var metadata = new Metadata.Snapshot { EntityType = "SimulatedPlayerCoordinatorTrigger" };
-
-            var template = new EntityTemplate();
-            template.AddComponent(new Position.Snapshot(), WorkerUtils.SimulatedPlayerCoordinator);
-            template.AddComponent(metadata, WorkerUtils.SimulatedPlayerCoordinator);
-            template.AddComponent(new Persistence.Snapshot(), WorkerUtils.SimulatedPlayerCoordinator);
-
-            template.SetReadAccess(WorkerUtils.SimulatedPlayerCoordinator);
-            template.SetComponentWriteAccess(EntityAcl.ComponentId, WorkerUtils.SimulatedPlayerCoordinator);
 
             return template;
         }
@@ -85,6 +94,21 @@ namespace Fps
                 RegenPauseTime = 0,
             };
 
+            var sessionQuery = InterestQuery.Query(Constraint.Component<Session.Component>());
+            var checkoutQuery = InterestQuery.Query(Constraint.RelativeCylinder(150));
+
+            var interestTemplate = InterestTemplate.Create().AddQueries<ClientMovement.Component>(sessionQuery, checkoutQuery);
+            var interestComponent = interestTemplate.ToSnapshot();
+
+            var playerName = Encoding.ASCII.GetString(args);
+
+            var playerStateComponent = new PlayerState.Snapshot
+            {
+                Name = playerName,
+                Kills = 0,
+                Deaths = 0,
+            };
+
             var template = new EntityTemplate();
             template.AddComponent(pos, WorkerUtils.UnityGameLogic);
             template.AddComponent(new Metadata.Snapshot { EntityType = "Player" }, WorkerUtils.UnityGameLogic);
@@ -96,6 +120,9 @@ namespace Fps
             template.AddComponent(gunStateComponent, client);
             template.AddComponent(healthComponent, WorkerUtils.UnityGameLogic);
             template.AddComponent(healthRegenComponent, WorkerUtils.UnityGameLogic);
+            template.AddComponent(playerStateComponent, WorkerUtils.UnityGameLogic);
+            template.AddComponent(interestComponent, WorkerUtils.UnityGameLogic);
+
             PlayerLifecycleHelper.AddPlayerLifecycleComponents(template, workerId, WorkerUtils.UnityGameLogic);
 
             template.SetReadAccess(WorkerUtils.UnityClient, WorkerUtils.UnityGameLogic, WorkerUtils.AndroidClient, WorkerUtils.iOSClient);

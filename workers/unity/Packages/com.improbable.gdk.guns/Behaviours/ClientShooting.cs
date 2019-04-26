@@ -87,7 +87,7 @@ namespace Improbable.Gdk.Guns
                 EntityId = entityId,
                 HitSomething = hitSomething,
                 HitLocation = (hitLocation - spatial.Worker.Origin).ToIntAbsolute(),
-                HitOrigin = (ray.origin - spatial.Worker.Origin).ToIntAbsolute()
+                HitOrigin = (ray.origin - spatial.Worker.Origin).ToIntAbsolute(),
             };
 
             shooting.SendShotsEvent(shotInfo);

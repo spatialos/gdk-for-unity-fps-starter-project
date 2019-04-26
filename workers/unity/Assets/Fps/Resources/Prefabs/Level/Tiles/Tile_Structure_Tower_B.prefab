@@ -6852,7 +6852,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7574749446895717809}
-  - component: {fileID: 79416737373937732}
   - component: {fileID: 5094583083637949714}
   m_Layer: 0
   m_Name: Tile_Structure_Tower_B
@@ -7014,20 +7013,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &79416737373937732
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7574749446895717808}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 834cfda29cc04cfca5066eec0a4f98d6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PlayerTransform: {fileID: 0}
-  IsClient: 0
 --- !u!114 &5094583083637949714
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7040,7 +7025,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0acc01bb717a0db49aaafaa4d2b8bdbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TileSize: 32
+  InnerTileSize: 32
   ConnectorLength: 8
   ConnectorDepth: 4
   Color: {r: 0.2, g: 0.7, b: 0.2, a: 0.4}
@@ -11876,10 +11861,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7574749446895717809}
     m_Modifications:
-    - target: {fileID: 100000, guid: 74dd3d4ca0605e04787a138a0af0d134, type: 3}
-      propertyPath: m_Name
-      value: SM_Railing_Riser_2m
-      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 74dd3d4ca0605e04787a138a0af0d134, type: 3}
       propertyPath: m_LocalPosition.x
       value: -6
@@ -11923,6 +11904,10 @@ PrefabInstance:
     - target: {fileID: 400000, guid: 74dd3d4ca0605e04787a138a0af0d134, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 74dd3d4ca0605e04787a138a0af0d134, type: 3}
+      propertyPath: m_Name
+      value: SM_Railing_Riser_2m
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 74dd3d4ca0605e04787a138a0af0d134, type: 3}
@@ -12219,10 +12204,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7574749446895717809}
     m_Modifications:
-    - target: {fileID: 100000, guid: 74dd3d4ca0605e04787a138a0af0d134, type: 3}
-      propertyPath: m_Name
-      value: SM_Railing_Riser_2m (1)
-      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 74dd3d4ca0605e04787a138a0af0d134, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2.125
@@ -12266,6 +12247,10 @@ PrefabInstance:
     - target: {fileID: 400000, guid: 74dd3d4ca0605e04787a138a0af0d134, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 74dd3d4ca0605e04787a138a0af0d134, type: 3}
+      propertyPath: m_Name
+      value: SM_Railing_Riser_2m (1)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 74dd3d4ca0605e04787a138a0af0d134, type: 3}
@@ -12420,10 +12405,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7574749446895717809}
     m_Modifications:
-    - target: {fileID: 100000, guid: bf3b591c9b1ec3046939bc5fdf397c1f, type: 3}
-      propertyPath: m_Name
-      value: SM_Corner_1m
-      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: bf3b591c9b1ec3046939bc5fdf397c1f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -6
@@ -12475,6 +12456,10 @@ PrefabInstance:
     - target: {fileID: 400000, guid: bf3b591c9b1ec3046939bc5fdf397c1f, type: 3}
       propertyPath: m_LocalScale.x
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: bf3b591c9b1ec3046939bc5fdf397c1f, type: 3}
+      propertyPath: m_Name
+      value: SM_Corner_1m
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf3b591c9b1ec3046939bc5fdf397c1f, type: 3}

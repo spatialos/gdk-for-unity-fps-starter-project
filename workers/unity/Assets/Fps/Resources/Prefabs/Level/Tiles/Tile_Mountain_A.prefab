@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4287935734642948}
-  - component: {fileID: 114253357202205812}
   - component: {fileID: 2995654509826940300}
   m_Layer: 0
   m_Name: Tile_Mountain_A
@@ -33,20 +32,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114253357202205812
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1851953567429334}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 834cfda29cc04cfca5066eec0a4f98d6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PlayerTransform: {fileID: 0}
-  IsClient: 0
 --- !u!114 &2995654509826940300
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -59,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0acc01bb717a0db49aaafaa4d2b8bdbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TileSize: 32
+  InnerTileSize: 32
   ConnectorLength: 8
   ConnectorDepth: 4
   Color: {r: 0.2, g: 0.7, b: 0.2, a: 0.4}
@@ -70,10 +55,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4287935734642948}
     m_Modifications:
-    - target: {fileID: 100000, guid: 22361437d8b4ad94288e56cde923d6d2, type: 3}
-      propertyPath: m_Name
-      value: SM_Terrain_Mountain_01
-      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 22361437d8b4ad94288e56cde923d6d2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -117,6 +98,10 @@ PrefabInstance:
     - target: {fileID: 400000, guid: 22361437d8b4ad94288e56cde923d6d2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 22361437d8b4ad94288e56cde923d6d2, type: 3}
+      propertyPath: m_Name
+      value: SM_Terrain_Mountain_01
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 22361437d8b4ad94288e56cde923d6d2, type: 3}

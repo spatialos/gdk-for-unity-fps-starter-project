@@ -95,7 +95,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4024951306346854}
-  - component: {fileID: 114903395132495914}
   - component: {fileID: 5661524383527873907}
   m_Layer: 0
   m_Name: Tile_Buildings_D
@@ -157,20 +156,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114903395132495914
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1792145740115774}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 834cfda29cc04cfca5066eec0a4f98d6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PlayerTransform: {fileID: 0}
-  IsClient: 0
 --- !u!114 &5661524383527873907
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4349,11 +4334,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4024951306346854}
     m_Modifications:
-    - target: {fileID: 5056529781645033006, guid: c3fac0e3c60c7f543909df4b211f77c9,
-        type: 3}
-      propertyPath: m_Name
-      value: WallPanel_Doorway_4m_A (1)
-      objectReference: {fileID: 0}
     - target: {fileID: 6993105969873836931, guid: c3fac0e3c60c7f543909df4b211f77c9,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4414,6 +4394,11 @@ PrefabInstance:
       propertyPath: m_LocalScale.x
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 5056529781645033006, guid: c3fac0e3c60c7f543909df4b211f77c9,
+        type: 3}
+      propertyPath: m_Name
+      value: WallPanel_Doorway_4m_A (1)
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c3fac0e3c60c7f543909df4b211f77c9, type: 3}
 --- !u!4 &8259089612202036950 stripped
@@ -4429,11 +4414,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4024951306346854}
     m_Modifications:
-    - target: {fileID: 4015375697989228290, guid: 6ce7aea2aeeb9d2488a97bcb67069de1,
-        type: 3}
-      propertyPath: m_Name
-      value: House_8x8 (2)
-      objectReference: {fileID: 0}
     - target: {fileID: 232694899533628629, guid: 6ce7aea2aeeb9d2488a97bcb67069de1,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4489,6 +4469,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4015375697989228290, guid: 6ce7aea2aeeb9d2488a97bcb67069de1,
+        type: 3}
+      propertyPath: m_Name
+      value: House_8x8 (2)
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6ce7aea2aeeb9d2488a97bcb67069de1, type: 3}
 --- !u!4 &2474855275594678432 stripped
@@ -4504,11 +4489,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4024951306346854}
     m_Modifications:
-    - target: {fileID: 8733975831095994110, guid: 614351c92fe49384f880d54dc105b5f9,
-        type: 3}
-      propertyPath: m_Name
-      value: WallPanel_Doorway_6m_A
-      objectReference: {fileID: 0}
     - target: {fileID: 6779526444613501779, guid: 614351c92fe49384f880d54dc105b5f9,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4579,6 +4559,11 @@ PrefabInstance:
       propertyPath: m_LocalScale.x
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 8733975831095994110, guid: 614351c92fe49384f880d54dc105b5f9,
+        type: 3}
+      propertyPath: m_Name
+      value: WallPanel_Doorway_6m_A
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 614351c92fe49384f880d54dc105b5f9, type: 3}
 --- !u!4 &9070851141876400328 stripped
@@ -4594,11 +4579,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4024951306346854}
     m_Modifications:
-    - target: {fileID: 4015375697989228290, guid: 6ce7aea2aeeb9d2488a97bcb67069de1,
-        type: 3}
-      propertyPath: m_Name
-      value: House_8x8
-      objectReference: {fileID: 0}
     - target: {fileID: 232694899533628629, guid: 6ce7aea2aeeb9d2488a97bcb67069de1,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4654,6 +4634,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4015375697989228290, guid: 6ce7aea2aeeb9d2488a97bcb67069de1,
+        type: 3}
+      propertyPath: m_Name
+      value: House_8x8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6ce7aea2aeeb9d2488a97bcb67069de1, type: 3}
 --- !u!4 &6253263271427470553 stripped
@@ -4669,11 +4654,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4024951306346854}
     m_Modifications:
-    - target: {fileID: 6345098178255080924, guid: 18a944989fc1eac4abaec30692a3a0a3,
-        type: 3}
-      propertyPath: m_Name
-      value: House_Shelter
-      objectReference: {fileID: 0}
     - target: {fileID: 3881617902344437665, guid: 18a944989fc1eac4abaec30692a3a0a3,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4729,6 +4709,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6345098178255080924, guid: 18a944989fc1eac4abaec30692a3a0a3,
+        type: 3}
+      propertyPath: m_Name
+      value: House_Shelter
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 18a944989fc1eac4abaec30692a3a0a3, type: 3}
 --- !u!4 &5963160869139950447 stripped
@@ -4744,11 +4729,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4024951306346854}
     m_Modifications:
-    - target: {fileID: 4015375697989228290, guid: 6ce7aea2aeeb9d2488a97bcb67069de1,
-        type: 3}
-      propertyPath: m_Name
-      value: House_8x8 (1)
-      objectReference: {fileID: 0}
     - target: {fileID: 232694899533628629, guid: 6ce7aea2aeeb9d2488a97bcb67069de1,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4803,6 +4783,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4015375697989228290, guid: 6ce7aea2aeeb9d2488a97bcb67069de1,
+        type: 3}
+      propertyPath: m_Name
+      value: House_8x8 (1)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6ce7aea2aeeb9d2488a97bcb67069de1, type: 3}

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Improbable.Common;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.Subscriptions;
@@ -49,6 +50,7 @@ namespace Fps
         private Coroutine requestingRespawnCoroutine;
 
         private IControlProvider controller;
+        private InGameScreenManager inGameManager;
 
         private void Awake()
         {
@@ -58,6 +60,18 @@ namespace Fps
             fpsAnimator = GetComponent<FpsAnimator>();
             currentGun = GetComponent<GunManager>();
             controller = GetComponent<IControlProvider>();
+
+            var uiManager = GameObject.FindGameObjectWithTag("OnScreenUI")?.GetComponent<UIManager>();
+            if (uiManager == null)
+            {
+                throw new NullReferenceException("Was not able to find the OnScreenUI prefab in the scene.");
+            }
+
+            inGameManager = uiManager.InGameManager;
+            if (inGameManager == null)
+            {
+                throw new NullReferenceException("Was not able to find the in-game manager in the scene.");
+            }
         }
 
         private void OnEnable()
@@ -72,11 +86,11 @@ namespace Fps
         {
             if (controller.MenuPressed)
             {
-                ClientWorkerHandler.ScreenUIController.TryOpenSettingsMenu();
+                inGameManager.TryOpenSettingsMenu();
             }
 
             // Don't allow controls if in the menu.
-            if (ScreenUIController.InEscapeMenu)
+            if (inGameManager.InEscapeMenu)
             {
                 // Still apply physics.
                 movement.ApplyMovement(Vector3.zero, transform.rotation, MovementSpeed.Run, false);

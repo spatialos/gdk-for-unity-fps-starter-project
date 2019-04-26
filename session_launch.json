@@ -1,0 +1,121 @@
+{
+  "template": "small",
+  "world": {
+    "chunkEdgeLengthMeters": 50,
+    "snapshots": {
+      "snapshotWritePeriodSeconds": 0
+    },
+    "dimensions": {
+      "xMeters": 300,
+      "zMeters": 300
+    }
+  },
+  "load_balancing": {
+    "layer_configurations": [
+      {
+        "layer": "UnityGameLogic",
+        "rectangle_grid": {
+          "cols": 1,
+          "rows": 1
+        }
+      },
+      {
+        "layer": "SimulatedPlayerCoordinator",
+        "rectangle_grid": {
+          "cols": 1,
+          "rows": 1
+        }
+      },
+      {
+        "layer": "DeploymentManager",
+        "rectangle_grid": {
+          "cols": 1,
+          "rows": 1
+        },
+        "options": {
+          "manual_worker_connection_only": true
+        }
+      }
+    ]
+  },
+  "workers": [
+    {
+      "worker_type": "UnityGameLogic",
+      "flags": [
+        {
+          "name": "world_size",
+          "value": "small"
+        }
+      ],
+      "permissions": [
+        {
+          "all": {}
+        }
+      ]
+    },
+    {
+      "worker_type": "SimulatedPlayerCoordinator",
+      "flags": [
+        {
+          "name": "world_size",
+          "value": "small"
+        },
+        {
+          "name": "fps_simulated_players_per_coordinator",
+          "value": "3"
+        },
+        {
+          "name": "fps_simulated_players_creation_interval",
+          "value": "5"
+        }
+      ],
+      "permissions": [
+        {
+          "all": {}
+        }
+      ]
+    },
+    {
+      "worker_type": "UnityClient",
+      "flags": [
+        {
+          "name": "world_size",
+          "value": "small"
+        }
+      ],
+      "permissions": [
+        {
+          "all": {}
+        }
+      ]
+    },
+    {
+      "worker_type": "AndroidClient",
+      "flags": [
+        {
+          "name": "world_size",
+          "value": "small"
+        }
+      ],
+      "permissions": [
+        {
+          "all": {}
+        }
+      ]
+    },
+    {
+      "worker_type": "iOSClient",
+      "flags": [
+        {
+          "name": "world_size",
+          "value": "small"
+        }
+      ],
+      "permissions": [
+        {
+          "all": {}
+        }
+      ]
+    }
+  ]
+}
