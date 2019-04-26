@@ -21,7 +21,7 @@ namespace Fps
                 RuntimeConfigDefaults.AnonymousAuthenticationPort,
                 new PlayerIdentityTokenRequest
                 {
-                    DevelopmentAuthenticationTokenId = Blackboard.DevAuthToken,
+                    DevelopmentAuthenticationToken = Blackboard.DevAuthToken,
                     PlayerId = Blackboard.PlayerName,
                     DisplayName = string.Empty,
                 }

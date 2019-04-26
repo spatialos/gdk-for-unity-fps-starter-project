@@ -42,8 +42,6 @@ public class SimulatedPlayerWorkerConnector : DefaultWorkerConnector
             connectToRemoteDeployment = true;
         }
 
-        Debug.Log(connectToRemoteDeployment);
-
         await Connect(WorkerUtils.UnityClient, new ForwardingDispatcher());
     }
 
