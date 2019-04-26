@@ -32,10 +32,10 @@ RectTransform:
   m_Father: {fileID: 8237954947675631663}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -407.3452, y: 7.7742805}
-  m_SizeDelta: {x: 399, y: -15.909912}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 72.654785, y: -29.72572}
+  m_SizeDelta: {x: 399, y: 60}
   m_Pivot: {x: 0, y: 0}
 --- !u!222 &8241284069490833425
 CanvasRenderer:
@@ -86,6 +86,7 @@ GameObject:
   - component: {fileID: 8237626295108826769}
   - component: {fileID: 8241463941069730441}
   - component: {fileID: 8132787179208798909}
+  - component: {fileID: 417687585829011997}
   m_Layer: 5
   m_Name: HealthBar
   m_TagString: Untagged
@@ -175,6 +176,19 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
+--- !u!114 &417687585829011997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8164181038905001369}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90d0c17b785889c4686063bca2d642e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HealthFill: {fileID: 8238363806543701665}
 --- !u!1 &8164219713899302229
 GameObject:
   m_ObjectHideFlags: 0
