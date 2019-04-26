@@ -18,7 +18,7 @@ public class SimulatedPlayerWorkerConnector : DefaultWorkerConnector
     private ILogDispatcher simulatedCoordinatorLogDispatcher;
     private bool connectToRemoteDeployment;
 
-    private string simulatedPlayerDevAuthTokenId;
+    private string simulatedPlayerDevAuthToken;
     private string simulatedPlayerTargetDeployment;
 
     public async Task ConnectSimulatedPlayer(ILogDispatcher logDispatcher, string simulatedPlayerDevAuthTokenId,
@@ -36,7 +36,7 @@ public class SimulatedPlayerWorkerConnector : DefaultWorkerConnector
                 return;
             }
 
-            this.simulatedPlayerDevAuthTokenId = simulatedPlayerDevAuthTokenId;
+            this.simulatedPlayerDevAuthToken = simulatedPlayerDevAuthTokenId;
             this.simulatedPlayerTargetDeployment = simulatedPlayerTargetDeployment;
 
             connectToRemoteDeployment = true;
@@ -81,7 +81,7 @@ public class SimulatedPlayerWorkerConnector : DefaultWorkerConnector
 
     protected override AlphaLocatorConfig GetAlphaLocatorConfig(string workerType)
     {
-        var pit = GetDevelopmentPlayerIdentityToken(simulatedPlayerDevAuthTokenId, "SimulatedPlayer", GetDisplayName());
+        var pit = GetDevelopmentPlayerIdentityToken(simulatedPlayerDevAuthToken, "SimulatedPlayer", GetDisplayName());
         var loginTokens = GetDevelopmentLoginTokens(workerType, pit);
         var loginToken = SelectLoginToken(loginTokens);
 
