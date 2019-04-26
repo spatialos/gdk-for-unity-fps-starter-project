@@ -149,7 +149,7 @@ namespace Improbable
                     // Add worker flags to sim deployment JSON.
                     var devAuthTokenIdFlag = new JObject();
                     devAuthTokenIdFlag.Add("name", "fps_simulated_players_dev_auth_token_id");
-                    devAuthTokenIdFlag.Add("value", dat.DevelopmentAuthenticationToken.Id);
+                    devAuthTokenIdFlag.Add("value", dat.TokenSecret);
 
                     var targetDeploymentFlag = new JObject();
                     targetDeploymentFlag.Add("name", "fps_simulated_players_target_deployment");
