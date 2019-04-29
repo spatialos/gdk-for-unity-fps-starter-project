@@ -107,7 +107,7 @@ namespace Improbable.Gdk.DeploymentLauncher.Commands
             var devAuthTokenIdFlag = new JObject
             {
                 { "name", $"{options.FlagPrefix}_simulated_players_dev_auth_token_id" },
-                { "value", dat.DevelopmentAuthenticationToken.Id }
+                { "value", dat.TokenSecret }
             };
 
             var targetDeploymentFlag = new JObject
