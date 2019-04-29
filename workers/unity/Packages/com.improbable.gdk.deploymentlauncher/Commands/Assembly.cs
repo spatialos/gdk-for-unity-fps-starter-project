@@ -7,8 +7,7 @@ namespace Improbable.Gdk.DeploymentManager.Commands
 {
     public static class Assembly
     {
-        public static WrappedTask<RedirectedProcessResult, AssemblyConfig> UploadAsync(AssemblyConfig config,
-            bool force = false)
+        public static WrappedTask<RedirectedProcessResult, AssemblyConfig> UploadAsync(AssemblyConfig config)
         {
             var source = new CancellationTokenSource();
             var token = source.Token;
@@ -23,7 +22,7 @@ namespace Improbable.Gdk.DeploymentManager.Commands
                 "--json_output"
             };
 
-            if (force)
+            if (config.ShouldForceUpload)
             {
                 args.Add("--force");
             }

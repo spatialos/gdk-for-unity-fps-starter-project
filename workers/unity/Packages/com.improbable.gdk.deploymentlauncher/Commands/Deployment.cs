@@ -15,41 +15,18 @@ namespace Improbable.Gdk.DeploymentManager.Commands
             Tools.Common.GetPackagePath("com.improbable.gdk.deploymentlauncher"),
             ".DeploymentLauncher/DeploymentLauncher.csproj"));
 
-        public static WrappedTask<Result<RedirectedProcessResult, Ipc.Error>, DeploymentConfig> LaunchAsync(DeploymentConfig config)
+        public static WrappedTask<Result<RedirectedProcessResult, Ipc.Error>, BaseDeploymentConfig> LaunchAsync(string projectName, string assemblyName, BaseDeploymentConfig config)
         {
             var source = new CancellationTokenSource();
             var token = source.Token;
 
             source.CancelAfter(TimeSpan.FromMinutes(25));
 
-            var args = new List<string>
-            {
-                config.SimulatedPlayerDeploymentConfig == null ? "create" : "create-sim",
-                $"--project_name={config.ProjectName}",
-                $"--assembly_name={config.AssemblyName}",
-                $"--deployment_name={config.Name}",
-                $"--launch_json_path=\"{Path.Combine(Tools.Common.SpatialProjectRootDir, config.LaunchJson)}\"",
-                $"--region={config.Region.ToString()}"
-            };
+            var args = config.GetCreateArguments();
+            args.Add($"--project_name={projectName}");
+            args.Add($"--assembly_name={assemblyName}");
 
-            if (!string.IsNullOrEmpty(config.SnapshotPath))
-            {
-                args.Add($"--snapshot_path=\"{Path.Combine(Tools.Common.SpatialProjectRootDir, config.SnapshotPath)}\"");
-            }
-
-            if (config.Tags.Count > 0)
-            {
-                args.Add($"--tags={string.Join(",", config.Tags)}");
-            }
-
-            if (config.SimulatedPlayerDeploymentConfig != null)
-            {
-                args.Add($"--target_deployment={config.SimulatedPlayerDeploymentConfig.TargetDeploymentName}");
-                args.Add($"--flag_prefix={config.SimulatedPlayerDeploymentConfig.FlagPrefix}");
-                args.Add($"--simulated_coordinator_worker_type={config.SimulatedPlayerDeploymentConfig.WorkerType}");
-            }
-
-            return new WrappedTask<Result<RedirectedProcessResult, Ipc.Error>, DeploymentConfig>
+            return new WrappedTask<Result<RedirectedProcessResult, Ipc.Error>, BaseDeploymentConfig>
             {
                 Task = RunDeploymentLauncher(args,
                     OutputRedirectBehaviour.None, token,
