@@ -22,7 +22,7 @@ namespace Fps
         private bool pointerInButton;
         private Image targetText;
 
-        private void OnValidate()
+        protected new void OnValidate()
         {
             if (TargetFrame == null)
             {
