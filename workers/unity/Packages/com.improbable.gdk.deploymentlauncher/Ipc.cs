@@ -39,6 +39,15 @@ namespace Improbable.Gdk.DeploymentManager
                     // We expect only the first line to be valid.
                     var deserialized = Json.Deserialize(stderr[0]);
 
+                    if (deserialized == null)
+                    {
+                        return new Error
+                        {
+                            Code = ErrorCode.CannotParseOutput,
+                            Message = $"Unable to parse the standard error. Raw standard error: {string.Join("\n", stderr)}"
+                        };
+                    }
+
                     return new Error
                     {
                         Code = (ErrorCode) Convert.ToUInt32(deserialized["Code"]),
@@ -50,7 +59,7 @@ namespace Improbable.Gdk.DeploymentManager
                     return new Error
                     {
                         Code = ErrorCode.CannotParseOutput,
-                        Message = $"Parse error: {e.Message}.\nRaw stderr: {string.Join("\n", stderr)}"
+                        Message = $"Unable to parse the standard error. Raw exception: {e}\nRaw standard error: {string.Join("\n", stderr)}"
                     };
                 }
                 catch (KeyNotFoundException e)
@@ -58,7 +67,7 @@ namespace Improbable.Gdk.DeploymentManager
                     return new Error
                     {
                         Code = ErrorCode.CannotParseOutput,
-                        Message = $"Parse error: {e.Message}.\nRaw stderr: {string.Join("\n", stderr)}"
+                        Message = $"Unable to parse the standard error. Raw exception: {e}. Raw standard error: {string.Join("\n", stderr)}"
                     };
                 }
             }
@@ -89,7 +98,7 @@ namespace Improbable.Gdk.DeploymentManager
                 return Result<List<DeploymentInfo>, Error>.Error(new Error
                 {
                     Code = ErrorCode.CannotParseOutput,
-                    Message = $"Parse error: {e.Message}.\nRaw stderr: {string.Join("\n", stdout)}"
+                    Message = $"Unable to parse the standard output.  Raw exception: {e}\nRaw standard output: {string.Join("\n", stdout)}"
                 });
             }
             catch (KeyNotFoundException e)
@@ -97,7 +106,7 @@ namespace Improbable.Gdk.DeploymentManager
                 return Result<List<DeploymentInfo>, Error>.Error(new Error
                 {
                     Code = ErrorCode.CannotParseOutput,
-                    Message = $"Parse error: {e.Message}.\nRaw stderr: {string.Join("\n", stdout)}"
+                    Message = $"Unable to parse the standard output.  Raw exception: {e}\nRaw standard output: {string.Join("\n", stdout)}"
                 });
             }
         }
