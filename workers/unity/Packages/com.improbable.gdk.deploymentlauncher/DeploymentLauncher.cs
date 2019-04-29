@@ -32,17 +32,6 @@ namespace Improbable.Gdk.DeploymentManager
 
         private static readonly Material spinnerMaterial = new Material(Shader.Find("UI/Default"));
 
-        [MenuItem(DeploymentLauncherMenuItem, false, DeploymentLauncherPriority)]
-        private static void LaunchDeploymentMenu()
-        {
-            // Show existing window instance. If one doesn't exist, make one.
-            var inspectorWindowType = typeof(EditorWindow).Assembly.GetType("UnityEditor.InspectorWindow");
-            var deploymentWindow = EditorWindow.GetWindow<DeploymentEditorWindow>(new Type[] { inspectorWindowType });
-            deploymentWindow.titleContent.text = "Deployments";
-            deploymentWindow.titleContent.tooltip = "A tab for managing your SpatialOS deployments.";
-            deploymentWindow.Show();
-        }
-
         internal class DeploymentInfo
         {
             public string Name;
