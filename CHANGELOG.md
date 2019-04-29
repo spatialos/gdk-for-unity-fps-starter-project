@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+### Added
+
+- Added session-based gameplay, hidden behind the `Use Session Based Flow` feature flag.
+
+### Changed
+
+- Changed connection and player-spawn flow.
+- Updated the available prefabs and textures.
+
 ## `0.2.1` - 2019-04-15
 
 ### Changed
