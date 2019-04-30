@@ -10,8 +10,7 @@ namespace Fps
 
         public override void StartState()
         {
-            ScreenManager.DefaultConnectButton.enabled = false;
-            ScreenManager.DefaultConnectButton.onClick.AddListener(Connect);
+            ScreenManager.DefaultConnectButton.onClick.AddListener(Retry);
             Connect();
         }
 
@@ -19,8 +18,11 @@ namespace Fps
         {
             if (Blackboard.ClientConnector == null)
             {
-                ScreenManager.DefaultConnectButton.enabled = true;
-                Animator.SetTrigger("FailedToConnect");
+                if (!ScreenManager.DefaultConnectButton.enabled)
+                {
+                    ScreenManager.DefaultConnectButton.enabled = true;
+                    Animator.SetTrigger("FailedToConnect");
+                }
 
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
@@ -40,11 +42,18 @@ namespace Fps
 
         public override void ExitState()
         {
-            ScreenManager.DefaultConnectButton.onClick.RemoveListener(Connect);
+            ScreenManager.DefaultConnectButton.onClick.RemoveListener(Retry);
+        }
+
+        private void Retry()
+        {
+            Animator.SetTrigger("Retry");
+            Connect();
         }
 
         private void Connect()
         {
+            ScreenManager.DefaultConnectButton.enabled = false;
             var clientWorker = Object.Instantiate(Owner.ClientWorkerConnectorPrefab, Owner.transform.position, Quaternion.identity);
             Blackboard.ClientConnector = clientWorker.GetComponent<ClientWorkerConnector>();
             Blackboard.ClientConnector.Connect();

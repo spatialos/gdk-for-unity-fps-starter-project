@@ -22,8 +22,11 @@ namespace Fps
         private bool pointerInButton;
         private Image targetText;
 
-        private void OnValidate()
+#if UNITY_EDITOR
+        protected override void OnValidate()
         {
+            base.OnValidate();
+
             if (TargetFrame == null)
             {
                 throw new NullReferenceException("Missing reference to target frame image.");
@@ -39,6 +42,7 @@ namespace Fps
                 throw new NullReferenceException("Missing reference to the text option images.");
             }
         }
+#endif
 
         // Use this for initialization
         protected override void Awake()

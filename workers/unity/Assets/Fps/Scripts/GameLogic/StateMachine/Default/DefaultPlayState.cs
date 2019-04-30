@@ -13,10 +13,14 @@ namespace Fps
             Manager.ShowGameView();
         }
 
-        private void WorkerOnDisconnect(string obj)
+        public override void ExitState()
         {
-            Blackboard.ClientConnector = null;
-            Owner.SetState(Owner.StartState);
+            Blackboard.ClientConnector.Worker.OnDisconnect -= WorkerOnDisconnect;
+        }
+
+        private void WorkerOnDisconnect(string reason)
+        {
+            Owner.SetState(new DisconnectedState(Manager, Owner));
         }
     }
 }

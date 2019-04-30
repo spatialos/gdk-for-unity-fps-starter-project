@@ -1,6 +1,5 @@
 using Improbable.PlayerLifecycle;
 using Improbable.Worker.CInterop;
-using UnityEngine;
 
 namespace Fps
 {
@@ -15,19 +14,13 @@ namespace Fps
             Animator.SetTrigger("Ready");
             ScreenManager.DefaultConnectButton.onClick.AddListener(SpawnPlayer);
             ScreenManager.DefaultConnectButton.enabled = true;
-        }
-
-        public override void Tick()
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                ScreenManager.DefaultConnectButton.onClick.Invoke();
-            }
+            Blackboard.ClientConnector.Worker.OnDisconnect += WorkerOnDisconnect;
         }
 
         public override void ExitState()
         {
             ScreenManager.DefaultConnectButton.onClick.RemoveListener(SpawnPlayer);
+            Blackboard.ClientConnector.Worker.OnDisconnect -= WorkerOnDisconnect;
         }
 
         private void OnPlayerResponse(PlayerCreator.CreatePlayer.ReceivedResponse response)
@@ -48,6 +41,11 @@ namespace Fps
             ScreenManager.DefaultConnectButton.enabled = false;
             Blackboard.ClientConnector.SpawnPlayer("Local Player", OnPlayerResponse);
             Animator.SetTrigger("Connecting");
+        }
+
+        private void WorkerOnDisconnect(string reason)
+        {
+            Owner.SetState(new DisconnectedState(Manager, Owner));
         }
     }
 }

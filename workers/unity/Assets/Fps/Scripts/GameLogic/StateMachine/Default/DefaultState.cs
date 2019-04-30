@@ -18,7 +18,15 @@ namespace Fps
             Owner = owner;
             Blackboard = Owner.Blackboard;
 
-            Animator = manager.GetComponentInChildren<Animator>(true);
+            Animator = manager.ScreenManager.DefaultConnectButton.GetComponent<Animator>();
+        }
+
+        public override void Tick()
+        {
+            if (Input.GetKeyDown(KeyCode.Space) && ScreenManager.DefaultConnectButton.enabled)
+            {
+                ScreenManager.DefaultConnectButton.onClick.Invoke();
+            }
         }
     }
 }
