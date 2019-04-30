@@ -22,7 +22,12 @@ PINNED_VERSION=$(cat ./gdk.pinned)
 
 rm -rf "${TARGET_DIRECTORY}"
 
-git clone --verbose ${CLONE_URI} "${TARGET_DIRECTORY}"
+mkdir "${TARGET_DIRECTORY}"
+
+# Workaround for being unable to clone a specific commit with depth of 1.
 pushd "${TARGET_DIRECTORY}"
+    git init
+    git remote add origin "${CLONE_URI}"
+    git fetch --depth 20 origin develop
     git checkout "${PINNED_VERSION}"
 popd
