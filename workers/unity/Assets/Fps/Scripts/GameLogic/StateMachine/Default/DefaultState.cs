@@ -19,7 +19,6 @@ namespace Fps
             Blackboard = Owner.Blackboard;
 
             Animator = manager.ScreenManager.DefaultConnectButton.GetComponent<Animator>();
-            Debug.Log(GetType());
         }
 
         public override void Tick()

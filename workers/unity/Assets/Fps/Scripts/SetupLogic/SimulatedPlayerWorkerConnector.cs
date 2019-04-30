@@ -21,7 +21,7 @@ public class SimulatedPlayerWorkerConnector : DefaultWorkerConnector
     private string simulatedPlayerDevAuthToken;
     private string simulatedPlayerTargetDeployment;
 
-    public async Task ConnectSimulatedPlayer(ILogDispatcher logDispatcher, string simulatedPlayerDevAuthTokenId,
+    public async Task ConnectSimulatedPlayer(ILogDispatcher logDispatcher, string simulatedPlayerDevAuthToken,
         string simulatedPlayerTargetDeployment)
     {
         simulatedCoordinatorLogDispatcher = logDispatcher;
@@ -29,14 +29,14 @@ public class SimulatedPlayerWorkerConnector : DefaultWorkerConnector
         // If we're connecting simulated players to another deployment, we need to fetch locator tokens.
         if (!string.IsNullOrEmpty(simulatedPlayerTargetDeployment))
         {
-            if (string.IsNullOrEmpty(simulatedPlayerDevAuthTokenId))
+            if (string.IsNullOrEmpty(simulatedPlayerDevAuthToken))
             {
                 logDispatcher.HandleLog(LogType.Error,
                     new LogEvent("Failed to launch simulated player. No development authentication token specified."));
                 return;
             }
 
-            this.simulatedPlayerDevAuthToken = simulatedPlayerDevAuthTokenId;
+            this.simulatedPlayerDevAuthToken = simulatedPlayerDevAuthToken;
             this.simulatedPlayerTargetDeployment = simulatedPlayerTargetDeployment;
 
             connectToRemoteDeployment = true;

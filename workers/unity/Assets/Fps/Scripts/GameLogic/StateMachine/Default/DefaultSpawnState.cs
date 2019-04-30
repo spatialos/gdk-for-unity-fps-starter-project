@@ -1,7 +1,5 @@
 using Improbable.PlayerLifecycle;
 using Improbable.Worker.CInterop;
-using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Fps
 {

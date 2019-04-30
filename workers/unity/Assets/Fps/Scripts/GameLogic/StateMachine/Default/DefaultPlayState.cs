@@ -1,5 +1,3 @@
-using System.Diagnostics;
-
 namespace Fps
 {
     public class DefaultPlayState : DefaultState

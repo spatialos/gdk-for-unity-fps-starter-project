@@ -22,8 +22,10 @@ namespace Fps
         private bool pointerInButton;
         private Image targetText;
 
-        protected new void OnValidate()
+        protected override void OnValidate()
         {
+            base.OnValidate();
+
             if (TargetFrame == null)
             {
                 throw new NullReferenceException("Missing reference to target frame image.");
