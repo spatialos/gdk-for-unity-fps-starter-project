@@ -61,7 +61,6 @@ namespace Fps
                 : base.GetAlphaLocatorConfig(workerType);
         }
 
-
         protected override string SelectLoginToken(List<LoginTokenDetails> loginTokens)
         {
             if (shouldUseSessionFlow)
