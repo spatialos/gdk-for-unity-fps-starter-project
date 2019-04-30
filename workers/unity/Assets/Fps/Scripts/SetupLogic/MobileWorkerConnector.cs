@@ -25,15 +25,14 @@ namespace Fps
             return "Prefabs/MobileClient/NonAuthoritative/Player";
         }
 
+        protected override AlphaLocatorConfig GetAlphaLocatorConfig(string workerType)
+        {
+            return GetAlphaLocatorConfigViaDevAuthFlow(workerType);
+        }
+
         protected override ConnectionService GetConnectionService()
         {
-            if (!shouldConnectLocally)
-            {
-                LoadDevAuthToken();
-                return ConnectionService.AlphaLocator;
-            }
-
-            return ConnectionService.Receptionist;
+            return shouldConnectLocally ? ConnectionService.Receptionist : ConnectionService.AlphaLocator;
         }
 
         protected override ConnectionParameters GetConnectionParameters(string workerType, ConnectionService service)
