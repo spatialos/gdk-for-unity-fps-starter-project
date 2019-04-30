@@ -54,6 +54,14 @@ namespace Fps
             return "Prefabs/UnityClient/NonAuthoritative/Player";
         }
 
+        protected override AlphaLocatorConfig GetAlphaLocatorConfig(string workerType)
+        {
+            return shouldUseSessionFlow
+                ? GetAlphaLocatorConfigViaDevAuthFlow(workerType)
+                : base.GetAlphaLocatorConfig(workerType);
+        }
+
+
         protected override string SelectLoginToken(List<LoginTokenDetails> loginTokens)
         {
             if (shouldUseSessionFlow)
@@ -76,13 +84,7 @@ namespace Fps
 
         protected override ConnectionService GetConnectionService()
         {
-            if (shouldUseSessionFlow)
-            {
-                LoadDevAuthToken();
-                return ConnectionService.AlphaLocator;
-            }
-
-            return base.GetConnectionService();
+            return shouldUseSessionFlow ? ConnectionService.AlphaLocator : base.GetConnectionService();
         }
 
         protected override void HandleWorkerConnectionEstablished()

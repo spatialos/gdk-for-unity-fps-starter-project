@@ -34,32 +34,6 @@ namespace Fps
             return deployments.Deployments[0].DeploymentName;
         }
 
-        protected override AlphaLocatorConfig GetAlphaLocatorConfig(string workerType)
-        {
-            if (string.IsNullOrEmpty(DevelopmentAuthToken))
-            {
-                return base.GetAlphaLocatorConfig(workerType);
-            }
-
-            var pit = GetDevelopmentPlayerIdentityToken(DevelopmentAuthToken, GetPlayerId(), GetDisplayName());
-            var loginTokenDetails = GetDevelopmentLoginTokens(workerType, pit);
-            var loginToken = SelectLoginToken(loginTokenDetails);
-
-            return new AlphaLocatorConfig
-            {
-                LocatorHost = RuntimeConfigDefaults.LocatorHost,
-                LocatorParameters = new Improbable.Worker.CInterop.Alpha.LocatorParameters
-                {
-                    PlayerIdentity = new PlayerIdentityCredentials
-                    {
-                        PlayerIdentityToken = pit,
-                        LoginToken = loginToken,
-                    },
-                    UseInsecureConnection = false,
-                }
-            };
-        }
-
         protected override void HandleWorkerConnectionEstablished()
         {
             StartCoroutine(LoadWorld());
@@ -86,19 +60,6 @@ namespace Fps
                 Worker.WorkerType,
                 Worker.LogDispatcher,
                 this);
-        }
-
-        protected void LoadDevAuthToken()
-        {
-            var textAsset = Resources.Load<TextAsset>("DevAuthToken");
-            if (textAsset != null)
-            {
-                DevelopmentAuthToken = textAsset.text.Trim();
-            }
-            else
-            {
-                Debug.LogWarning("Unable to find DevAuthToken.txt in the Resources folder.");
-            }
         }
     }
 }
