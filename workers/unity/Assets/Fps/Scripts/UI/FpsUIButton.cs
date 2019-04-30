@@ -22,6 +22,7 @@ namespace Fps
         private bool pointerInButton;
         private Image targetText;
 
+#if UNITY_EDITOR
         protected override void OnValidate()
         {
             base.OnValidate();
@@ -41,6 +42,7 @@ namespace Fps
                 throw new NullReferenceException("Missing reference to the text option images.");
             }
         }
+#endif
 
         // Use this for initialization
         protected override void Awake()
