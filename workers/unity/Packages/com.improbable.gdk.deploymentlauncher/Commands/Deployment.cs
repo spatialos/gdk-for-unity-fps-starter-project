@@ -79,7 +79,7 @@ namespace Improbable.Gdk.DeploymentManager.Commands
 
             return new WrappedTask<Result<List<DeploymentInfo>, Ipc.Error>, string>
             {
-                Task = RunDeploymentLauncher(args, OutputRedirectBehaviour.RedirectStdErr, token,
+                Task = RunDeploymentLauncher(args, OutputRedirectBehaviour.None, token,
                     res => RetrieveDeploymentList(res, projectName)),
                 CancelSource = source,
                 Context = projectName
