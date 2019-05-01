@@ -365,23 +365,52 @@ namespace Improbable.Gdk.DeploymentManager
         /// <summary>
         ///     The SpatialOS project that the deployment is running in.
         /// </summary>
-        public string ProjectName { get; }
+        public string ProjectName { get; private set; }
 
         /// <summary>
         ///     The name of the deployment.
         /// </summary>
-        public string Name { get; }
+        public string Name { get; private set; }
 
         /// <summary>
         ///     The id of the deployment.
         /// </summary>
-        public string Id { get; }
+        public string Id { get; private set; }
 
-        public DeploymentInfo(string projectName, string name, string id)
+        /// <summary>
+        ///     The start time of the deployment.
+        /// </summary>
+        public string StartTime { get; private set; }
+
+        /// <summary>
+        ///     The region that the deployment is in.
+        /// </summary>
+        public string Region { get; private set; }
+
+        /// <summary>
+        ///     The tags on the deployment.
+        /// </summary>
+        public List<string> Tags { get; private set; }
+
+        public Dictionary<string, long> Workers { get; private set; }
+
+        public static DeploymentInfo FromJson(string projectName, Dictionary<string, object> json)
         {
-            ProjectName = projectName;
-            Name = name;
-            Id = id;
+            var workers = (Dictionary<string, object>) json["Workers"];
+
+            return new DeploymentInfo
+            {
+                ProjectName = projectName,
+                Name = (string) json["Name"],
+                Id = (string) json["Id"],
+                StartTime = (string) json["StartTime"],
+                Region = (string) json["Region"],
+                Tags = ((List<object>) json["Tags"]).Select(str => (string) str).ToList(),
+                Workers = workers
+                    .Select(pair => (pair.Key, (long) pair.Value))
+                    .Where(pair => pair.Item2 > 0)
+                    .ToDictionary(pair => pair.Item1, pair => pair.Item2)
+            };
         }
     }
 

@@ -53,11 +53,24 @@ namespace Improbable.Gdk.DeploymentLauncher
         {
             public string Id;
             public string Name;
+            public string StartTime;
+            public string Region;
+            public List<string> Tags;
+            public Dictionary<string, int> Workers;
 
             public InternalDeployment(Deployment deployment)
             {
                 Id = deployment.Id;
                 Name = deployment.Name;
+
+                var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+                StartTime = epoch.AddSeconds(deployment.StartTime.Seconds).ToString();
+
+                Region = deployment.RegionCode;
+                Tags = deployment.Tag.ToList();
+                Workers = deployment.WorkerConnectionCapacities
+                    .Select(capacity => (capacity.WorkerType, capacity.MaxCapacity - capacity.RemainingCapacity))
+                    .ToDictionary(pair => pair.WorkerType, pair => pair.Item2);
             }
         }
 
