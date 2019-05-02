@@ -87,12 +87,9 @@ namespace Improbable.Gdk.DeploymentManager
                 else
                 {
                     var error = result.UnwrapError();
-                    Debug.LogError($"Launch of {wrappedTask.Context.Name} failed. Code: {error.Code} Message: {error.Message}");
 
-                    if (error.Code == Ipc.ErrorCode.Unauthenticated)
-                    {
-                        Debug.LogError("Please login with \"spatial auth login\" and try again.");
-                    }
+                    Debug.LogError($"Launch of {wrappedTask.Context.Name} failed. Code: {error.Code} Message: {error.Message}");
+                    HandleErrorGeneric(error);
                 }
             }
 
@@ -112,11 +109,7 @@ namespace Improbable.Gdk.DeploymentManager
                     var error = result.UnwrapError();
 
                     Debug.LogError($"Failed to list deployments in project {wrappedTask.Context}. Code: {error.Code} Message: {error.Message}");
-
-                    if (error.Code == Ipc.ErrorCode.Unauthenticated)
-                    {
-                        Debug.LogError("Please login with \"spatial auth login\" and try again.");
-                    }
+                    HandleErrorGeneric(error);
                 }
             }
 
@@ -135,11 +128,7 @@ namespace Improbable.Gdk.DeploymentManager
                     var error = result.UnwrapError();
 
                     Debug.LogError($"Failed to stop deployment: \"{info.Name}\". Code: {error.Code} Message: {error.Message}.");
-
-                    if (error.Code == Ipc.ErrorCode.Unauthenticated)
-                    {
-                        Debug.LogError("Please login with \"spatial auth login\" and try again.");
-                    }
+                    HandleErrorGeneric(error);
                 }
             }
 
@@ -231,8 +220,7 @@ namespace Improbable.Gdk.DeploymentManager
                         selectedDeploymentIndex = EditorGUILayout.Popup("Deployment", selectedDeploymentIndex,
                             launcherConfig.DeploymentConfigs.Select(config => config.Deployment.Name).ToArray());
 
-                        var isValid = selectedDeploymentIndex >= 0 &&
-                            selectedDeploymentIndex < launcherConfig.DeploymentConfigs.Count;
+                        var isValid = IsSelectedValid(launcherConfig.DeploymentConfigs, selectedDeploymentIndex);
 
                         var hasErrors = isValid && launcherConfig.DeploymentConfigs[selectedDeploymentIndex].GetErrors().Any();
 
@@ -637,10 +625,7 @@ namespace Improbable.Gdk.DeploymentManager
                     selectedListedDeploymentIndex = EditorGUILayout.Popup("Deployment", selectedListedDeploymentIndex,
                         listedDeployments.Select(config => config.Name).ToArray());
 
-                    var isValid = selectedListedDeploymentIndex >= 0 &&
-                        selectedListedDeploymentIndex < listedDeployments.Count;
-
-                    using (new EditorGUI.DisabledScope(!isValid || manager.IsActive))
+                    using (new EditorGUI.DisabledScope(!IsSelectedValid(listedDeployments, selectedListedDeploymentIndex) || manager.IsActive))
                     {
                         if (GUILayout.Button("Stop deployment"))
                         {
@@ -703,6 +688,19 @@ namespace Improbable.Gdk.DeploymentManager
                 Debug.LogError($"Could not find a \"name\" field in {spatialJsonFile}.\n Raw exception: {e.Message}");
                 return null;
             }
+        }
+
+        private void HandleErrorGeneric(Ipc.Error error)
+        {
+            if (error.Code == Ipc.ErrorCode.Unauthenticated)
+            {
+                Debug.LogError("Please login with \"spatial auth login\" and try again.");
+            }
+        }
+
+        private bool IsSelectedValid<T>(List<T> list, int index)
+        {
+            return index >= 0 && index < list.Count;
         }
 
         private void DrawSpinner(float value, Rect rect)
