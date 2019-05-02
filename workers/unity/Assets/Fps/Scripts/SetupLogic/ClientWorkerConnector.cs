@@ -19,7 +19,7 @@ namespace Fps
         private bool wantsSpawn;
         private Action<PlayerCreator.CreatePlayer.ReceivedResponse> onPlayerResponse;
 
-        private bool shouldUseSessionFlow => !string.IsNullOrEmpty(deployment);
+        protected bool UseSessionFlow => !string.IsNullOrEmpty(deployment);
 
         public async void Connect(string deployment = "")
         {
@@ -56,14 +56,14 @@ namespace Fps
 
         protected override AlphaLocatorConfig GetAlphaLocatorConfig(string workerType)
         {
-            return shouldUseSessionFlow
+            return UseSessionFlow
                 ? GetAlphaLocatorConfigViaDevAuthFlow(workerType)
                 : base.GetAlphaLocatorConfig(workerType);
         }
 
         protected override string SelectLoginToken(List<LoginTokenDetails> loginTokens)
         {
-            if (shouldUseSessionFlow)
+            if (UseSessionFlow)
             {
                 foreach (var loginToken in loginTokens)
                 {
@@ -83,7 +83,7 @@ namespace Fps
 
         protected override ConnectionService GetConnectionService()
         {
-            return shouldUseSessionFlow ? ConnectionService.AlphaLocator : base.GetConnectionService();
+            return UseSessionFlow ? ConnectionService.AlphaLocator : base.GetConnectionService();
         }
 
         protected override void HandleWorkerConnectionEstablished()
@@ -101,7 +101,7 @@ namespace Fps
                 new AdvancedEntityPipeline(Worker, GetAuthPlayerPrefabPath(), GetNonAuthPlayerPrefabPath(), fallback),
                 gameObject);
 
-            if (shouldUseSessionFlow)
+            if (UseSessionFlow)
             {
                 world.GetOrCreateManager<TrackPlayerSystem>();
             }
