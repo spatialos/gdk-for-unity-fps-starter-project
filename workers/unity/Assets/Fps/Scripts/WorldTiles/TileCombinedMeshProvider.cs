@@ -23,6 +23,7 @@ namespace MeshUtilities
     public class TileCombinedMeshProvider
     {
         private static int maxBakedScaleSize = 36;
+        private static readonly List<MeshFilter> cachedFilters = new List<MeshFilter>();
 
         public static int MaxBakedScaleSize
         {
@@ -66,12 +67,10 @@ namespace MeshUtilities
         {
             var matsToMeshes = new Dictionary<Material, List<CombineInstance>>();
 
-            var meshFilters = root.GetComponentsInChildren<MeshFilter>();
-            for (var j = 0; j < meshFilters.Length; j++)
+            root.GetComponentsInChildren<MeshFilter>(cachedFilters);
+            foreach (var meshFilter in cachedFilters)
             {
-                var meshFilter = meshFilters[j];
                 var meshRenderer = meshFilter.GetComponent<MeshRenderer>();
-
                 if (meshFilter.sharedMesh == null)
                 {
                     Debug.LogWarning("Skipping missing mesh", meshFilter.gameObject);
@@ -83,9 +82,11 @@ namespace MeshUtilities
 
                 ApplyScaleToVertexColours(ref objMesh, meshFilter.transform.lossyScale);
 
-                var combineInstance = new CombineInstance();
-                combineInstance.mesh = objMesh;
-                combineInstance.transform = meshFilter.transform.localToWorldMatrix;
+                var combineInstance = new CombineInstance
+                {
+                    mesh = objMesh,
+                    transform = meshFilter.transform.localToWorldMatrix
+                };
 
                 if (matsToMeshes.ContainsKey(material))
                 {
@@ -93,10 +94,12 @@ namespace MeshUtilities
                 }
                 else
                 {
-                    matsToMeshes.Add(material, new List<CombineInstance>());
-                    matsToMeshes[material].Add(combineInstance);
+                    var instanceList = new List<CombineInstance> { combineInstance };
+                    matsToMeshes.Add(material, instanceList);
                 }
             }
+
+            cachedFilters.Clear();
 
             return matsToMeshes;
         }
@@ -125,9 +128,12 @@ namespace MeshUtilities
                 var singleMaterialCombined = new Mesh();
                 singleMaterialCombined.CombineMeshes(sourceMeshes.ToArray());
 
-                var singleMaterialCombinedInstance = new CombineInstance();
-                singleMaterialCombinedInstance.mesh = singleMaterialCombined;
-                singleMaterialCombinedInstance.transform = root.localToWorldMatrix;
+                var singleMaterialCombinedInstance = new CombineInstance
+                {
+                    mesh = singleMaterialCombined,
+                    transform = root.localToWorldMatrix
+                };
+
                 singleMaterialsCombinedInstances.Add(singleMaterialCombinedInstance);
             }
 

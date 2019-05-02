@@ -8,6 +8,9 @@ public class TileCollapser : MonoBehaviour
     private readonly Dictionary<string, CombinedMeshAndMaterialsData> collapsedInstances =
         new Dictionary<string, CombinedMeshAndMaterialsData>();
 
+    private static readonly List<MeshRenderer> renderComponentsCache = new List<MeshRenderer>();
+    private static readonly List<MeshFilter> filterComponentsCache = new List<MeshFilter>();
+
     public void CollapseMeshes()
     {
         for (var i = 0; i < transform.childCount; i++)
@@ -24,16 +27,21 @@ public class TileCollapser : MonoBehaviour
             DestroyMeshRenderers(child);
             ApplyCollapsed(child);
         }
+
+        renderComponentsCache.Clear();
+        filterComponentsCache.Clear();
     }
 
     private void DestroyMeshRenderers(Transform obj)
     {
-        foreach (var meshRenderer in obj.GetComponentsInChildren<MeshRenderer>())
+        obj.GetComponentsInChildren<MeshRenderer>(renderComponentsCache);
+        foreach (var meshRenderer in renderComponentsCache)
         {
             UnityObjectDestroyer.Destroy(meshRenderer);
         }
 
-        foreach (var meshFilter in obj.GetComponentsInChildren<MeshFilter>())
+        obj.GetComponentsInChildren<MeshFilter>(filterComponentsCache);
+        foreach (var meshFilter in filterComponentsCache)
         {
             UnityObjectDestroyer.Destroy(meshFilter);
         }

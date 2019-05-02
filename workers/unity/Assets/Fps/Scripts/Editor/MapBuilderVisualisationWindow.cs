@@ -1,5 +1,4 @@
 using System.Collections;
-using Improbable.Gdk.Core;
 using UnityEditor;
 using UnityEngine;
 
@@ -13,7 +12,7 @@ namespace Fps.Editor
         private string seed = "SpatialOS GDK for Unity";
 
         private MapBuilder mapBuilder;
-        private MapBuilderSettings mapBuilderSettings;
+        private MapTemplate mapTemplate;
 
         private const string MapBuilderMenuItem = "SpatialOS/Map Builder";
         private const int MapBuilderMenuPriority = 52;
@@ -31,7 +30,7 @@ namespace Fps.Editor
 
         private void SetupMapBuilder()
         {
-            mapBuilder = new MapBuilder(mapBuilderSettings, new GameObject("FPS-Level_Visualisation"));
+            mapBuilder = new MapBuilder(mapTemplate, new GameObject("FPS-Level_Visualisation"));
         }
 
         public void OnGUI()
@@ -52,14 +51,14 @@ namespace Fps.Editor
                     "Different seeds produce different maps."),
                 seed);
 
-            mapBuilderSettings = (MapBuilderSettings) EditorGUILayout.ObjectField(new GUIContent(
-                    "Map Builder Settings",
+            mapTemplate = (MapTemplate) EditorGUILayout.ObjectField(new GUIContent(
+                    "Map Template",
                     "Different seeds produce different maps."),
-                mapBuilderSettings,
-                typeof(MapBuilderSettings),
+                mapTemplate,
+                typeof(MapTemplate),
                 false);
 
-            EditorGUI.BeginDisabledGroup(mapBuilderSettings == null);
+            EditorGUI.BeginDisabledGroup(mapTemplate == null);
             if (GUILayout.Button("Generate Map"))
             {
                 if (numTiles < WarnTilesThreshold
@@ -70,16 +69,7 @@ namespace Fps.Editor
                         SetupMapBuilder();
                     }
 
-                    var volumesPrefab = mapBuilderSettings.WorldTileVolumes == null
-                        ? null
-                        : Instantiate(mapBuilderSettings.WorldTileVolumes);
-
                     UnwindCoroutine(mapBuilder.CleanAndBuild(layerCount, seed));
-
-                    if (volumesPrefab != null)
-                    {
-                        UnityObjectDestroyer.Destroy(volumesPrefab);
-                    }
                 }
             }
 

@@ -2,8 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Improbable.Gdk.Core;
-using Improbable.Worker.CInterop;
 using UnityEngine;
+using UnityEngine.Profiling;
 using Object = UnityEngine.Object;
 using Random = System.Random;
 
@@ -11,20 +11,16 @@ namespace Fps
 {
     public class MapBuilder
     {
+        private readonly MapTemplate mapTemplate;
+        private readonly GameObject parentGameObject;
+
         private int layers;
-
-        private const string SmallLevelFlag = "small";
-        private const string LargeLevelFlag = "large";
-
-        private MapBuilderSettings mapBuilderSettings;
-
-        // Store the half-value as many calculations are simplified by going from -halfNumGroundLayers to halfNumGroundLayers.
-        private int halfNumGroundLayers => (layers - 1) / mapBuilderSettings.TilesPerGroundLayer + 1;
+        private Random random;
 
         private GameObject groundTile;
         private GameObject groundEdge;
-        private GameObject surroundWall;
-        private GameObject cornerPiece;
+        private GameObject wallStraight;
+        private GameObject wallCorner;
 
         private Transform tileParentTransform;
         private Transform groundParentTransform;
@@ -38,26 +34,31 @@ namespace Fps
 
         private const string GroundTilePath = "Prefabs/Level/Ground/Ground4x4";
         private const string GroundEdgePath = "Prefabs/Level/Ground/Edge";
-        private const string SurroundPath = "Prefabs/Level/Surround/Wall";
-        private const string CornerPath = "Prefabs/Level/Surround/Corner";
+        private const string WallStraightPath = "Prefabs/Level/Surround/Wall";
+        private const string WallCornerPath = "Prefabs/Level/Surround/Corner";
 
-        private GameObject gameObject;
+        private int HalfNumGroundLayers => (layers - 1) / 4 + 1;
+        private const int UnitsPerBlock = 4; // One textured square on the ground is a 'block'.
+        private static int UnitsPerTile => 9 * UnitsPerBlock;
 
-        private Random random;
+        private const int TilesPerGroundLayer = 4; // Ground layers are large quads that encompass 4x4 tiles.
+        private const int BoundaryCollisionHeight = 16;
 
-        public bool InvalidMapBuilder => gameObject == null;
+        private int UnitsPerGroundLayer => TilesPerGroundLayer * UnitsPerTile;
 
-        public MapBuilder(MapBuilderSettings mapBuilderSettings, GameObject gameObject)
+        public bool InvalidMapBuilder => parentGameObject == null;
+
+        public MapBuilder(MapTemplate mapTemplate, GameObject parentGameObject)
         {
-            this.mapBuilderSettings = mapBuilderSettings;
-            this.gameObject = gameObject;
+            this.mapTemplate = mapTemplate;
+            this.parentGameObject = parentGameObject;
         }
 
         public IEnumerator CleanAndBuild(int worldLayers = 4, string seed = "SpatialOS GDK for Unity")
         {
-            if (mapBuilderSettings == null)
+            if (mapTemplate == null)
             {
-                Debug.LogError("MapBuilderSettings has not been set.");
+                Debug.LogError("MapTemplate has not been set.");
                 yield break;
             }
 
@@ -72,51 +73,39 @@ namespace Fps
 
             Clean();
 
+            Profiler.BeginSample("InitializeGroupsAndComponents");
             InitializeGroupsAndComponents();
+            Profiler.EndSample();
 
-            var originalPosition = gameObject.transform.position;
-            var originalRotation = gameObject.transform.rotation;
-            gameObject.transform.position = Vector3.zero;
-            gameObject.transform.rotation = Quaternion.identity;
+            // TODO What is this? And why is it here..
+            var originalPosition = parentGameObject.transform.position;
+            var originalRotation = parentGameObject.transform.rotation;
+            parentGameObject.transform.position = Vector3.zero;
+            parentGameObject.transform.rotation = Quaternion.identity;
 
-            // Split the following operations over a number of frames to allow the connection to the SpatialOS runtime
-            // to stay alive.
-            yield return null;
-            yield return PlaceTiles();
+            Profiler.BeginSample("PlaceTiles");
+            PlaceTiles();
+            Profiler.EndSample();
 
-            yield return null;
+            Profiler.BeginSample("PlaceGround");
             PlaceGround();
+            Profiler.EndSample();
 
-            yield return null;
+            Profiler.BeginSample("FillSurround");
             FillSurround();
+            Profiler.EndSample();
 
-            yield return null;
-            CollapseTileMeshes();
-
-            yield return null;
-            MakeLevelObjectStatic();
+            Profiler.BeginSample("CollapseTileMeshes");
+            //CollapseTileMeshes();
+            Profiler.EndSample();
 
             spawnPointSystemTransform.gameObject.GetComponent<SpawnPoints>()?.SetSpawnPoints();
 
-            gameObject.transform.position = originalPosition;
-            gameObject.transform.rotation = originalRotation;
+            // TODO Really?
+            parentGameObject.transform.position = originalPosition;
+            parentGameObject.transform.rotation = originalRotation;
 
-            var numPlayableTilesWide = layers * 2;
-
-            // four tiles per groundLayer,
-            // number of ground tiles is 2 * groundLayers
-            // This value gives total tile-space including empty tiles around edge.
-            var numTotalTilesWide = halfNumGroundLayers * 2 * mapBuilderSettings.TilesPerGroundLayer;
-
-            Debug.Log("Finished building world\nClick for details..." +
-                "\n\tPlayable space" +
-                $"\n\t\t{numPlayableTilesWide}x{numPlayableTilesWide} tiles" +
-                $"\n\t\t{numPlayableTilesWide * mapBuilderSettings.UnitsPerTile + mapBuilderSettings.UnitsPerBlock}" +
-                $"x{numPlayableTilesWide * mapBuilderSettings.UnitsPerTile + mapBuilderSettings.UnitsPerBlock} units" +
-                "\n\tTOTAL space" +
-                $"\n\t\t{numTotalTilesWide}x{numTotalTilesWide} tiles" +
-                $"\n\t\t{numTotalTilesWide * mapBuilderSettings.UnitsPerTile + mapBuilderSettings.UnitsPerBlock}" +
-                $"x{numTotalTilesWide * mapBuilderSettings.UnitsPerTile + mapBuilderSettings.UnitsPerBlock} units\n");
+            //MakeLevelObjectStatic();
         }
 
         private void CollapseTileMeshes()
@@ -126,7 +115,7 @@ namespace Fps
 
         private void InitializeGroupsAndComponents()
         {
-            if (gameObject.GetComponentInChildren<SpawnPoints>() == null)
+            if (parentGameObject.GetComponentInChildren<SpawnPoints>() == null)
             {
                 spawnPointSystemTransform = MakeChildGroup(SpawnPointSystemName);
                 spawnPointSystemTransform.gameObject.AddComponent<SpawnPoints>();
@@ -144,8 +133,8 @@ namespace Fps
         {
             return TryLoadResource(GroundTilePath, out groundTile)
                 && TryLoadResource(GroundEdgePath, out groundEdge)
-                && TryLoadResource(SurroundPath, out surroundWall)
-                && TryLoadResource(CornerPath, out cornerPiece);
+                && TryLoadResource(WallStraightPath, out wallStraight)
+                && TryLoadResource(WallCornerPath, out wallCorner);
         }
 
         private bool TryLoadResource(string resourcePath, out GameObject resource)
@@ -163,7 +152,7 @@ namespace Fps
         private Transform MakeChildGroup(string groupName)
         {
             var group = new GameObject(groupName).transform;
-            group.parent = gameObject.transform;
+            group.parent = parentGameObject.transform;
             group.localPosition = Vector3.zero;
             group.localRotation = Quaternion.identity;
             group.localScale = Vector3.one;
@@ -172,12 +161,10 @@ namespace Fps
 
         private void FillSurround()
         {
-            for (var groundLayerIndex = -halfNumGroundLayers;
-                groundLayerIndex < halfNumGroundLayers;
-                groundLayerIndex++)
+            for (var groundLayerIndex = -HalfNumGroundLayers; groundLayerIndex < HalfNumGroundLayers; groundLayerIndex++)
             {
-                float offset = groundLayerIndex * mapBuilderSettings.unitsPerGroundLayer;
-                offset += mapBuilderSettings.unitsPerGroundLayer * .5f; // centre is half-distance across the ground layer
+                float offset = groundLayerIndex * UnitsPerGroundLayer;
+                offset += UnitsPerGroundLayer * .5f; // centre is half-distance across the ground layer
 
                 MakeEdge(offset, 0);
                 MakeEdge(offset, 90);
@@ -188,8 +175,8 @@ namespace Fps
             var cornerOffset =
                 new Vector3
                 {
-                    x = halfNumGroundLayers * -mapBuilderSettings.unitsPerGroundLayer,
-                    z = halfNumGroundLayers * mapBuilderSettings.unitsPerGroundLayer
+                    x = HalfNumGroundLayers * -UnitsPerGroundLayer,
+                    z = HalfNumGroundLayers * UnitsPerGroundLayer
                 };
 
             for (var i = 0; i < 4; i++)
@@ -206,56 +193,59 @@ namespace Fps
                 rotation * new Vector3(
                     offset,
                     0,
-                    halfNumGroundLayers * mapBuilderSettings.unitsPerGroundLayer +
-                    mapBuilderSettings.UnitsPerBlock * 0.25f),
+                    HalfNumGroundLayers * UnitsPerGroundLayer + UnitsPerBlock * 0.25f),
                 rotation * Quaternion.Euler(90, 0, 0),
                 groundParentTransform);
+
             floor.transform.localScale = new Vector3(
-                mapBuilderSettings.unitsPerGroundLayer,
-                mapBuilderSettings.UnitsPerBlock * .5f,
+                UnitsPerGroundLayer,
+                UnitsPerBlock * .5f,
                 1);
 
-            var wall = Object.Instantiate(surroundWall,
+            var wall = Object.Instantiate(wallStraight,
                 rotation * new Vector3(
                     offset,
-                    mapBuilderSettings.UnitsPerBlock * .5f,
-                    halfNumGroundLayers * mapBuilderSettings.unitsPerGroundLayer +
-                    mapBuilderSettings.UnitsPerBlock * .5f),
+                    UnitsPerBlock * .5f,
+                    HalfNumGroundLayers * UnitsPerGroundLayer + UnitsPerBlock * .5f),
                 rotation,
                 surroundParentTransform);
+
             wall.transform.localScale = new Vector3(
-                mapBuilderSettings.unitsPerGroundLayer,
-                mapBuilderSettings.UnitsPerBlock,
+                UnitsPerGroundLayer,
+                UnitsPerBlock,
                 1);
 
             var wallFloor = Object.Instantiate(groundEdge,
                 rotation * new Vector3(
                     offset,
-                    mapBuilderSettings.UnitsPerBlock,
-                    halfNumGroundLayers * mapBuilderSettings.unitsPerGroundLayer + mapBuilderSettings.UnitsPerBlock),
+                    UnitsPerBlock,
+                    HalfNumGroundLayers * UnitsPerGroundLayer + UnitsPerBlock),
                 rotation * Quaternion.Euler(90, 0, 0),
                 surroundParentTransform);
+
             wallFloor.transform.localScale = new Vector3(
-                mapBuilderSettings.unitsPerGroundLayer,
-                mapBuilderSettings.UnitsPerBlock,
+                UnitsPerGroundLayer,
+                UnitsPerBlock,
                 1);
 
             // Collision
-            var collision = Object.Instantiate(surroundWall,
+            var collision = Object.Instantiate(wallStraight,
                 rotation * new Vector3(
                     offset,
-                    mapBuilderSettings.UnitsPerBlock + mapBuilderSettings.BoundaryCollisionHeight * .5f,
-                    halfNumGroundLayers * mapBuilderSettings.unitsPerGroundLayer +
-                    mapBuilderSettings.UnitsPerBlock * .5f),
+                    UnitsPerBlock + BoundaryCollisionHeight * .5f,
+                    HalfNumGroundLayers * UnitsPerGroundLayer +
+                    UnitsPerBlock * .5f),
                 rotation,
                 surroundParentTransform);
+
             collision.transform.localScale =
                 new Vector3(
-                    mapBuilderSettings.unitsPerGroundLayer +
-                    mapBuilderSettings.UnitsPerBlock, // Collisions overlap to fill corners
-                    mapBuilderSettings.BoundaryCollisionHeight,
+                    UnitsPerGroundLayer +
+                    UnitsPerBlock, // Collisions overlap to fill corners
+                    BoundaryCollisionHeight,
                     1);
-            collision.gameObject.name = "Collision";
+
+            collision.name = "Collision";
 
             UnityObjectDestroyer.Destroy(collision.GetComponent<MeshRenderer>());
             UnityObjectDestroyer.Destroy(collision.GetComponent<MeshFilter>());
@@ -264,17 +254,15 @@ namespace Fps
         private void MakeCorner(int angle, Vector3 cornerOffset)
         {
             var rotation = Quaternion.Euler(0, angle, 0);
-            Object.Instantiate(cornerPiece,
+            Object.Instantiate(wallCorner,
                 rotation * cornerOffset,
                 rotation,
                 surroundParentTransform);
         }
 
-        private IEnumerator PlaceTiles()
+        private void PlaceTiles()
         {
-            const int tilesPerFrame = 50;
-
-            var tileCoord = new Vector2Int();
+            var tileCoord = new Vector2Int(0, 0);
             var diff = new Vector2Int(0, -1);
 
             var tileCount = Math.Pow(2 * layers, 2);
@@ -287,11 +275,7 @@ namespace Fps
                 if (-layers < tileCoord.x && tileCoord.x <= layers
                     && -layers < tileCoord.y && tileCoord.y <= layers)
                 {
-                    PlaceTile(tileCoord);
-                    if (i % tilesPerFrame == 0)
-                    {
-                        yield return null;
-                    }
+                    PlaceTemplatedTile(tileCoord);
                 }
 
                 if (tileCoord.x == tileCoord.y ||
@@ -311,9 +295,9 @@ namespace Fps
             };
         }
 
-        private void PlaceTile(Vector2Int tileCoord)
+        private void PlaceTemplatedTile(Vector2Int tileCoord)
         {
-            var tile = GetTileObjectAtCoordinate(tileCoord);
+            var tile = mapTemplate.GetTileForLocation(new Vector2(tileCoord.x, tileCoord.y), random);
 
             if (tile == null)
             {
@@ -327,17 +311,17 @@ namespace Fps
 
         private Vector3 GetWorldLocationFromCoordinate(Vector2Int coordinate)
         {
-            var tileOffset = mapBuilderSettings.UnitsPerTile / 2;
+            var tileOffset = UnitsPerTile / 2;
             return new Vector3
             {
-                x = (coordinate.x - 1) * mapBuilderSettings.UnitsPerTile + tileOffset,
-                z = (coordinate.y - 1) * mapBuilderSettings.UnitsPerTile + tileOffset
+                x = (coordinate.x - 1) * UnitsPerTile + tileOffset,
+                z = (coordinate.y - 1) * UnitsPerTile + tileOffset
             };
         }
 
         private void PlaceTile(Vector2Int tileCoord, GameObject tile, float rotation)
         {
-            var tileOffset = mapBuilderSettings.UnitsPerTile / 2;
+            var tileOffset = UnitsPerTile / 2;
 
             Object.Instantiate(
                 tile,
@@ -354,9 +338,9 @@ namespace Fps
 
         private void PlaceGround()
         {
-            for (var x = -halfNumGroundLayers; x < halfNumGroundLayers; x++)
+            for (var x = -HalfNumGroundLayers; x < HalfNumGroundLayers; x++)
             {
-                for (var z = -halfNumGroundLayers; z < halfNumGroundLayers; z++)
+                for (var z = -HalfNumGroundLayers; z < HalfNumGroundLayers; z++)
                 {
                     PlaceGroundTile(x, z);
                 }
@@ -369,8 +353,8 @@ namespace Fps
                 groundTile,
                 new Vector3
                 {
-                    x = groundX * mapBuilderSettings.unitsPerGroundLayer + mapBuilderSettings.unitsPerGroundLayer * .5f,
-                    z = groundZ * mapBuilderSettings.unitsPerGroundLayer + mapBuilderSettings.unitsPerGroundLayer * .5f
+                    x = groundX * UnitsPerGroundLayer + UnitsPerGroundLayer * .5f,
+                    z = groundZ * UnitsPerGroundLayer + UnitsPerGroundLayer * .5f
                 },
                 Quaternion.identity,
                 groundParentTransform.transform);
@@ -378,36 +362,23 @@ namespace Fps
 
         private void MakeLevelObjectStatic()
         {
-            gameObject.isStatic = true;
-            foreach (var childTransform in gameObject.GetComponentsInChildren<Transform>(true))
+            parentGameObject.isStatic = true;
+            foreach (var childTransform in parentGameObject.GetComponentsInChildren<Transform>(true))
             {
                 childTransform.gameObject.isStatic = true;
             }
         }
 
-        private GameObject GetTileObjectAtCoordinate(Vector2Int coordinate)
-        {
-            var hits = Physics.OverlapSphere(GetWorldLocationFromCoordinate(coordinate), .5f);
-
-            foreach (var hit in hits)
-            {
-                var volume = hit.gameObject.GetComponent<TileTypeVolume>();
-                if (volume == null)
-                {
-                    continue;
-                }
-
-                return volume.TypeCollection.GetRandomTile(random);
-            }
-
-            return mapBuilderSettings.DefaultTileTypeCollection?.GetRandomTile(random);
-        }
-
         public void Clean()
         {
+            if (parentGameObject == null)
+            {
+                return;
+            }
+
             var childrenToDestroy = new Queue<GameObject>();
 
-            foreach (var child in gameObject.GetComponentsInChildren<Transform>())
+            foreach (var child in parentGameObject.GetComponentsInChildren<Transform>())
             {
                 if (child.gameObject.name.Contains(TileParentName))
                 {
@@ -433,71 +404,29 @@ namespace Fps
             }
         }
 
-        public static Vector3 GetWorldDimensions(MapBuilderSettings mapBuilderSettings, int worldLayerCount)
+        public static Vector3 GetWorldDimensions(int layers)
         {
-            var dimensions = worldLayerCount * mapBuilderSettings.UnitsPerTile * 2 + mapBuilderSettings.UnitsPerBlock;
+            var dimensions = layers * UnitsPerTile * 2 + UnitsPerBlock;
             return new Vector3(dimensions, 100f, dimensions);
-        }
-
-        public static bool TryGetWorldLayerCount(MapBuilderSettings mapBuilderSettings,
-            string worldSize, out int worldLayerCount)
-        {
-            switch (worldSize)
-            {
-                case SmallLevelFlag:
-                    worldLayerCount = mapBuilderSettings.SmallWorldLayerCount;
-                    break;
-                case LargeLevelFlag:
-                    worldLayerCount = mapBuilderSettings.LargeWorldLayerCount;
-                    break;
-                default:
-                    return int.TryParse(worldSize, out worldLayerCount);
-            }
-
-            return true;
-        }
-
-        public static string GetWorldSizeFlag(Connection connection)
-        {
-            return connection.GetWorkerFlag("world_size");
         }
 
         // Get the world size from the config, and use it to generate the correct-sized level
         public static IEnumerator GenerateMap(
-            MapBuilderSettings mapBuilderSettings,
-            Transform workerTransform,
-            Connection connection,
+            MapTemplate mapTemplate,
+            int mapSize,
+            Transform parentTransform,
             string workerType,
-            ILogDispatcher logDispatcher,
             WorkerConnectorBase worker)
         {
-            var worldSize = GetWorldSizeFlag(connection);
+            var levelInstance = new GameObject($"FPS-Level_{mapSize}({workerType})");
+            levelInstance.transform.position = parentTransform.position;
+            levelInstance.transform.rotation = parentTransform.rotation;
 
-            if (!TryGetWorldLayerCount(mapBuilderSettings, worldSize, out var worldLayerCount))
-            {
-                logDispatcher.HandleLog(LogType.Error,
-                    new LogEvent("Invalid world_size worker flag. Make sure that it is either small or large,")
-                        .WithField("world_size", worldSize));
-                yield break;
-            }
+            var mapBuilder = new MapBuilder(mapTemplate, levelInstance);
 
-            var levelInstance = worker.LevelInstance = new GameObject();
-            levelInstance.name = $"FPS-Level_{worldLayerCount}({workerType})";
-            levelInstance.transform.position = workerTransform.position;
-            levelInstance.transform.rotation = workerTransform.rotation;
+            yield return mapBuilder.CleanAndBuild(mapSize);
 
-            var mapBuilder = new MapBuilder(mapBuilderSettings, levelInstance);
-
-            var volumesPrefab = mapBuilderSettings.WorldTileVolumes == null
-                ? null
-                : Object.Instantiate(mapBuilderSettings.WorldTileVolumes);
-
-            yield return mapBuilder.CleanAndBuild(worldLayerCount);
-
-            if (volumesPrefab != null)
-            {
-                UnityObjectDestroyer.Destroy(volumesPrefab);
-            }
+            worker.LevelInstance = levelInstance;
         }
     }
 }
