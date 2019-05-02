@@ -15,7 +15,7 @@ namespace Improbable.Gdk.DeploymentManager.Commands
             Tools.Common.GetPackagePath("com.improbable.gdk.deploymentlauncher"),
             ".DeploymentLauncher/DeploymentLauncher.csproj"));
 
-        public static WrappedTask<Result<RedirectedProcessResult, Ipc.Error>, BaseDeploymentConfig> LaunchAsync(string projectName, string assemblyName, BaseDeploymentConfig config)
+        public static WrappedTask<Result<RedirectedProcessResult, Ipc.Error>, (string, string, BaseDeploymentConfig)> LaunchAsync(string projectName, string assemblyName, BaseDeploymentConfig config)
         {
             var source = new CancellationTokenSource();
             var token = source.Token;
@@ -26,13 +26,13 @@ namespace Improbable.Gdk.DeploymentManager.Commands
             args.Add($"--project_name={projectName}");
             args.Add($"--assembly_name={assemblyName}");
 
-            return new WrappedTask<Result<RedirectedProcessResult, Ipc.Error>, BaseDeploymentConfig>
+            return new WrappedTask<Result<RedirectedProcessResult, Ipc.Error>, (string, string, BaseDeploymentConfig)>
             {
                 Task = RunDeploymentLauncher(args,
                     OutputRedirectBehaviour.None, token,
                     RetrieveIpcError),
                 CancelSource = source,
-                Context = config.DeepCopy()
+                Context = (projectName, assemblyName, config.DeepCopy())
             };
         }
 

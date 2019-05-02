@@ -47,6 +47,11 @@ namespace Improbable.Gdk.DeploymentLauncher
                 Ipc.WriteError(Ipc.ErrorCode.UnknownGrpcError, e.ToString());
                 return ErrorExitCode;
             }
+            catch (SpatialOS.Platform.Common.NoRefreshTokenFoundException)
+            {
+                Ipc.WriteError(Ipc.ErrorCode.Unauthenticated, "");
+                return ErrorExitCode;
+            }
         }
     }
 }
