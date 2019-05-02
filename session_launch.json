@@ -90,21 +90,7 @@
       ]
     },
     {
-      "worker_type": "AndroidClient",
-      "flags": [
-        {
-          "name": "world_size",
-          "value": "small"
-        }
-      ],
-      "permissions": [
-        {
-          "all": {}
-        }
-      ]
-    },
-    {
-      "worker_type": "iOSClient",
+      "worker_type": "MobileClient",
       "flags": [
         {
           "name": "world_size",

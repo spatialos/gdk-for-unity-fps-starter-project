@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Fps
 {
-    [WorkerType(WorkerUtils.UnityClient, WorkerUtils.iOSClient, WorkerUtils.AndroidClient)]
+    [WorkerType(WorkerUtils.UnityClient, WorkerUtils.MobileClient)]
     public class SessionListener : MonoBehaviour
     {
         [Require] private SessionReader sessionReader;

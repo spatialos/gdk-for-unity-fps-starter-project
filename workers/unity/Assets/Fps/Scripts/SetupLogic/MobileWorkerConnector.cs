@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Fps
 {
-    public abstract class MobileWorkerConnector : ClientWorkerConnector
+    public class MobileWorkerConnector : ClientWorkerConnector
     {
         private const string HostIpPlayerPrefsKey = "SpatialOSHostIp";
 
@@ -20,6 +20,11 @@ namespace Fps
         private void Awake()
         {
             InitializeClient();
+        }
+
+        protected override string GetWorkerType()
+        {
+            return WorkerUtils.MobileClient;
         }
 
         protected override string GetAuthPlayerPrefabPath()
