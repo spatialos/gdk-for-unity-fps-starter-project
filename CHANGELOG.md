@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Breaking Changes
+- Removed the `AndroidWorkerConnector` and `iOSWorkerConnector` and their specific scenes. You can now use the `MobileWorkerConnector` and its `FPS-MobileClientScene` to connect to a mobile device.
+
 ### Added
 
 - Added session-based gameplay, hidden behind the `Use Session Based Flow` feature flag.

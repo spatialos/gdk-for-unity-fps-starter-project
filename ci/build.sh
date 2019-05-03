@@ -13,8 +13,5 @@ source ".shared-ci/scripts/pinned-tools.sh"
 .shared-ci/scripts/build.sh "workers/unity" UnityClient cloud mono "$(pwd)/logs/UnityClientBuild-mono.log"
 .shared-ci/scripts/build.sh "workers/unity" UnityGameLogic cloud mono "$(pwd)/logs/UnityGameLogicBuild-mono.log"
 .shared-ci/scripts/build.sh "workers/unity" SimulatedPlayerCoordinator cloud mono "$(pwd)/logs/SimulatedPlayerCoordinatorSimulatedPlayerCoordinatorBuild-mono.log"
-.shared-ci/scripts/build.sh "workers/unity" AndroidClient local mono "$(pwd)/logs/AndroidClientBuild-mono.log"
+.shared-ci/scripts/build.sh "workers/unity" MobileClient local mono "$(pwd)/logs/MobileClientBuild-mono.log"
 
-if isMacOS; then
-  .shared-ci/scripts/build.sh "workers/unity" iOSClient local il2cpp "$(pwd)/logs/iOSClientBuild.log"
-fi

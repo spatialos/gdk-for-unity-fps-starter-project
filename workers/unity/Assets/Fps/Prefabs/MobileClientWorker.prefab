@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4555427980518638}
-  - component: {fileID: 114297608704281880}
+  - component: {fileID: 8725130665288586958}
   m_Layer: 0
-  m_Name: AndroidClientWorker
+  m_Name: MobileClientWorker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31,7 +31,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114297608704281880
+--- !u!114 &8725130665288586958
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -40,12 +40,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1765859764722708}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c4c7ed497ef881e418ecdd9ed4ad9236, type: 3}
+  m_Script: {fileID: 11500000, guid: de94081b87624120a12631f750beedd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   MaxConnectionAttempts: 3
-  DevelopmentAuthToken: 
   UseExternalIp: 0
   TargetFrameRate: 60
   MapBuilderSettings: {fileID: 11400000, guid: 01bdc027ed9580647a1d601486e42493, type: 2}
-  shouldConnectLocally: 0
+  IpAddress: 
+  ShouldConnectLocally: 0
