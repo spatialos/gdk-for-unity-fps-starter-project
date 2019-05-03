@@ -28,7 +28,7 @@ namespace Fps.Editor
                 false);
 
             // Units per tile
-            template.unitSize = EditorGUILayout.FloatField("Unity Size", template.unitSize);
+            template.unitSize = EditorGUILayout.FloatField("Tile size", template.unitSize);
 
             // Collection asset
             template.defaultTileCollection = (TileTypeCollection) EditorGUILayout.ObjectField(
@@ -46,6 +46,8 @@ namespace Fps.Editor
                     // Calculate positioning of the elements on this line
                     var collection = template.tileCollections[i];
                     var color = collection?.DisplayColor ?? Color.clear;
+
+                    // Icons are 16 pixels in size. Align elements.
                     var rect = EditorGUILayout.GetControlRect(false, 16);
                     var colorRect = new Rect(rect.x + 16, rect.y, 16, rect.height);
                     var objectRect = new Rect(rect.x + 26, rect.y, rect.width - 58, rect.height);
