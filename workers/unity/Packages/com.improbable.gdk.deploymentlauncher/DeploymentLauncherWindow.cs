@@ -61,6 +61,20 @@ namespace Improbable.Gdk.DeploymentManager
             }
 
             spinnerMaterial = new Material(Shader.Find("UI/Default"));
+
+            Application.quitting += OnExit;
+        }
+
+        private void OnDestroy()
+        {
+            OnExit();
+
+            Application.quitting -= OnExit;
+        }
+
+        private void OnExit()
+        {
+            manager.Cancel();
         }
 
         private void Update()
