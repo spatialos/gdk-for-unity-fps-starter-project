@@ -16,6 +16,9 @@
 - Disabled anti-aliasing for mobile to improve performance.
 - Refactor map generator for better performance.
 
+### Fixed
+- Fixed a bug where your own gun would not appear until after you moved around for a while.
+
 ## `0.2.1` - 2019-04-15
 
 ### Changed
