@@ -10,6 +10,9 @@ namespace Fps.Editor
     {
         private MapTemplate template;
 
+        private const int iconSize = 16;
+        private const int guiPadding = 10;
+
         public void OnEnable()
         {
             template = (MapTemplate) target;
@@ -48,10 +51,11 @@ namespace Fps.Editor
                     var color = collection?.DisplayColor ?? Color.clear;
 
                     // Icons are 16 pixels in size. Align elements.
+
                     var rect = EditorGUILayout.GetControlRect(false, 16);
-                    var colorRect = new Rect(rect.x + 16, rect.y, 16, rect.height);
-                    var objectRect = new Rect(rect.x + 26, rect.y, rect.width - 58, rect.height);
-                    var removeRect = new Rect(rect.width - 16, rect.y, 16, rect.height);
+                    var colorRect = new Rect(rect.x + iconSize, rect.y, iconSize, rect.height);
+                    var objectRect = new Rect(rect.x + iconSize + guiPadding, rect.y, rect.width - (iconSize * 3 + guiPadding), rect.height);
+                    var removeRect = new Rect(rect.width - iconSize, rect.y, iconSize, rect.height);
 
                     // Bitmap color
                     if (GUI.Button(colorRect, new GUIContent("", $"HTML RGB: {ColorUtility.ToHtmlStringRGBA(color)}"),
