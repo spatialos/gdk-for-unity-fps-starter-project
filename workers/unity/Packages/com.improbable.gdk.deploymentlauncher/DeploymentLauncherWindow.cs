@@ -1,15 +1,19 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Improbable.Gdk.Core.Collections;
 using Improbable.Gdk.Core.Editor;
-using Improbable.Gdk.DeploymentManager.Commands;
-using Improbable.Gdk.Tools;
 using Improbable.Gdk.Tools.MiniJSON;
 using UnityEditor;
 using UnityEngine;
+using UploadTask = Improbable.Gdk.DeploymentManager.Commands.WrappedTask<Improbable.Gdk.Tools.RedirectedProcessResult, Improbable.Gdk.DeploymentManager.AssemblyConfig>;
+using LaunchTask = Improbable.Gdk.DeploymentManager.Commands.WrappedTask<Improbable.Gdk.Core.Collections.Result<Improbable.Gdk.Tools.RedirectedProcessResult, Improbable.Gdk.DeploymentManager.Ipc.Error>, (string, string, Improbable.Gdk.DeploymentManager.BaseDeploymentConfig)>;
+using ListTask = Improbable.Gdk.DeploymentManager.Commands.WrappedTask<Improbable.Gdk.Core.Collections.Result<System.Collections.Generic.List<Improbable.Gdk.DeploymentManager.DeploymentInfo>, Improbable.Gdk.DeploymentManager.Ipc.Error>, string>;
+using StopTask = Improbable.Gdk.DeploymentManager.Commands.WrappedTask<Improbable.Gdk.Core.Collections.Result<Improbable.Gdk.Tools.RedirectedProcessResult, Improbable.Gdk.DeploymentManager.Ipc.Error>, Improbable.Gdk.DeploymentManager.DeploymentInfo>;
+using AuthTask = Improbable.Gdk.DeploymentManager.Commands.WrappedTask<Improbable.Gdk.Tools.RedirectedProcessResult, int>;
+
 
 namespace Improbable.Gdk.DeploymentManager
 {
@@ -17,6 +21,7 @@ namespace Improbable.Gdk.DeploymentManager
     {
         private const string BuiltInErrorIcon = "console.erroricon.sml";
         private const string BuiltInRefreshIcon = "Refresh";
+        private const string BuiltInWebIcon = "BuildSettings.Web.Small";
 
         private static readonly Vector2 SmallIconSize = new Vector2(12, 12);
         private readonly Color horizontalLineColor = new Color(0.3f, 0.3f, 0.3f, 1);
@@ -29,6 +34,9 @@ namespace Improbable.Gdk.DeploymentManager
         private int selectedDeploymentIndex;
         private Vector2 scrollPos;
         private string projectName;
+
+        private List<DeploymentInfo> listedDeployments = new List<DeploymentInfo>();
+        private int selectedListedDeploymentIndex;
 
         [MenuItem("SpatialOS/Deployment Launcher", false, 51)]
         private static void LaunchDeploymentMenu()
@@ -53,13 +61,27 @@ namespace Improbable.Gdk.DeploymentManager
             }
 
             spinnerMaterial = new Material(Shader.Find("UI/Default"));
+
+            Application.quitting += OnExit;
+        }
+
+        private void OnDestroy()
+        {
+            OnExit();
+
+            Application.quitting -= OnExit;
+        }
+
+        private void OnExit()
+        {
+            manager.Cancel();
         }
 
         private void Update()
         {
             manager.Update();
 
-            foreach (var wrappedTask in manager.CompletedUploadTasks)
+            foreach (var wrappedTask in manager.CompletedTasks.OfType<UploadTask>())
             {
                 if (wrappedTask.Task.Result.ExitCode != 0)
                 {
@@ -71,23 +93,94 @@ namespace Improbable.Gdk.DeploymentManager
                 }
             }
 
-            manager.CompletedUploadTasks.Clear();
-
-            foreach (var wrappedTask in manager.CompletedLaunchTasks)
+            foreach (var wrappedTask in manager.CompletedTasks.OfType<LaunchTask>())
             {
+                var (cachedProjectName, assemblyName, config) = wrappedTask.Context;
+
                 var result = wrappedTask.Task.Result;
                 if (result.IsOkay)
                 {
-                    Application.OpenURL($"https://console.improbable.io/projects/{projectName}/deployments/{wrappedTask.Context.Name}/overview");
+                    Application.OpenURL($"https://console.improbable.io/projects/{cachedProjectName}/deployments/{config.Name}/overview");
                 }
                 else
                 {
                     var error = result.UnwrapError();
-                    Debug.LogError($"Launch of {wrappedTask.Context.Name} failed. Code: {error.Code} Message:{error.Message}");
+
+                    if (TryAuthAndRetry(error))
+                    {
+                        manager.Launch(cachedProjectName, assemblyName, config, TaskManager.QueueMode.RunNext);
+                    }
+                    else
+                    {
+                        Debug.LogError($"Launch of {config.Name} failed. Code: {error.Code} Message: {error.Message}");
+                    }
                 }
             }
 
-            manager.CompletedLaunchTasks.Clear();
+            foreach (var wrappedTask in manager.CompletedTasks.OfType<ListTask>())
+            {
+                var result = wrappedTask.Task.Result;
+                if (result.IsOkay)
+                {
+                    listedDeployments = result.Unwrap();
+                    listedDeployments.Sort((first, second) => string.Compare(first.Name, second.Name, StringComparison.Ordinal));
+                    selectedDeploymentIndex = -1;
+                }
+                else
+                {
+                    var error = result.UnwrapError();
+
+                    if (TryAuthAndRetry(error))
+                    {
+                        manager.List(wrappedTask.Context, TaskManager.QueueMode.RunNext);
+                    }
+                    else
+                    {
+                        Debug.LogError($"Failed to list deployments in project {wrappedTask.Context}. Code: {error.Code} Message: {error.Message}");
+                    }
+                }
+            }
+
+            foreach (var wrappedTask in manager.CompletedTasks.OfType<StopTask>())
+            {
+                var result = wrappedTask.Task.Result;
+                var info = wrappedTask.Context;
+                if (result.IsOkay)
+                {
+                    Debug.Log($"Stopped deployment: \"{info.Name}\" successfully.");
+                }
+                else
+                {
+                    var error = result.UnwrapError();
+
+                    if (TryAuthAndRetry(error))
+                    {
+                        manager.Stop(wrappedTask.Context, TaskManager.QueueMode.RunNext);
+                    }
+                    else
+                    {
+                        Debug.LogError($"Failed to stop deployment: \"{info.Name}\". Code: {error.Code} Message: {error.Message}.");
+                    }
+                }
+            }
+
+            foreach (var wrappedTask in manager.CompletedTasks.OfType<AuthTask>())
+            {
+                var result = wrappedTask.Task.Result;
+
+                if (result.ExitCode == 0)
+                {
+                    Debug.Log("Successfully authenticated with SpatialOS. Retrying previous action.");
+                }
+                else
+                {
+                    // Stop the potential infinite loop of retries.
+                    manager.Cancel();
+                    Debug.LogError("Failed to authenticate with SpatialOS. Please run \"spatial auth login\" manually.");
+                }
+            }
+
+            manager.ClearResults();
         }
 
         private void OnGUI()
@@ -109,7 +202,7 @@ namespace Improbable.Gdk.DeploymentManager
             {
                 using (new EditorGUILayout.HorizontalScope())
                 {
-                    using (new EditorGUI.DisabledScope(manager.IsLaunching || manager.IsUploading))
+                    using (new EditorGUI.DisabledScope(manager.IsActive))
                     {
                         var buttonIcon = new GUIContent(EditorGUIUtility.IconContent(BuiltInRefreshIcon))
                         {
@@ -168,31 +261,37 @@ namespace Improbable.Gdk.DeploymentManager
                     }
                 }
 
-                using (new GUILayout.HorizontalScope())
+                if (launcherConfig.DeploymentConfigs.Count > 0)
                 {
-                    selectedDeploymentIndex = EditorGUILayout.Popup("Deployment", selectedDeploymentIndex,
-                        launcherConfig.DeploymentConfigs.Select(config => config.Deployment.Name).ToArray());
-
-                    var isValid = selectedDeploymentIndex >= 0 &&
-                        selectedDeploymentIndex < launcherConfig.DeploymentConfigs.Count;
-
-                    var hasErrors = isValid && launcherConfig.DeploymentConfigs[selectedDeploymentIndex].GetErrors().Any();
-
-                    using (new EditorGUI.DisabledScope(!isValid || hasErrors || manager.IsLaunching || manager.IsUploading))
+                    using (new GUILayout.HorizontalScope())
                     {
-                        if (GUILayout.Button("Launch deployment"))
+                        selectedDeploymentIndex = EditorGUILayout.Popup("Deployment", selectedDeploymentIndex,
+                            launcherConfig.DeploymentConfigs.Select(config => config.Deployment.Name).ToArray());
+
+                        var isValid = IsSelectedValid(launcherConfig.DeploymentConfigs, selectedDeploymentIndex);
+
+                        var hasErrors = isValid && launcherConfig.DeploymentConfigs[selectedDeploymentIndex].GetErrors().Any();
+
+                        using (new EditorGUI.DisabledScope(!isValid || hasErrors || manager.IsActive))
                         {
-                            var deplConfig = launcherConfig.DeploymentConfigs[selectedDeploymentIndex];
-
-                            manager.Launch(deplConfig.ProjectName, deplConfig.AssemblyName, deplConfig.Deployment);
-
-                            foreach (var simPlayerDepl in deplConfig.SimulatedPlayerDeploymentConfigs)
+                            if (GUILayout.Button("Launch deployment"))
                             {
-                                manager.Launch(deplConfig.ProjectName, deplConfig.AssemblyName, simPlayerDepl);
+                                var deplConfig = launcherConfig.DeploymentConfigs[selectedDeploymentIndex];
+
+                                manager.Launch(deplConfig.ProjectName, deplConfig.AssemblyName, deplConfig.Deployment);
+
+                                foreach (var simPlayerDepl in deplConfig.SimulatedPlayerDeploymentConfigs)
+                                {
+                                    manager.Launch(deplConfig.ProjectName, deplConfig.AssemblyName, simPlayerDepl);
+                                }
                             }
                         }
                     }
                 }
+
+                DrawHorizontalLine(5);
+                GUILayout.Label("Live Deployments", EditorStyles.boldLabel);
+                DrawDeploymentList();
 
                 scrollPos = scrollView.scrollPosition;
 
@@ -202,9 +301,9 @@ namespace Improbable.Gdk.DeploymentManager
                     AssetDatabase.SaveAssets();
                 }
 
-                if (manager.IsUploading || manager.IsLaunching)
+                if (manager.IsActive)
                 {
-                    EditorGUILayout.HelpBox(manager.GetStatusMessage(), MessageType.Info);
+                    EditorGUILayout.HelpBox(GetStatusMessage(), MessageType.Info);
                     var rect = EditorGUILayout.GetControlRect(false, 20);
                     DrawSpinner(Time.realtimeSinceStartup * 10, rect);
                     Repaint();
@@ -221,11 +320,19 @@ namespace Improbable.Gdk.DeploymentManager
 
             using (new EditorGUILayout.VerticalScope())
             {
-                copy.AssemblyName = EditorGUILayout.TextField("Assembly Name", config.AssemblyName);
+                using (new EditorGUILayout.HorizontalScope())
+                {
+                    copy.AssemblyName = EditorGUILayout.TextField("Assembly Name", config.AssemblyName);
+
+                    if (GUILayout.Button("Generate", GUILayout.ExpandWidth(false)))
+                    {
+                        copy.AssemblyName = $"{projectName}_{DateTime.Now.ToString("MMdd_hhmm")}";
+                    }
+                }
+
                 copy.ShouldForceUpload = EditorGUILayout.Toggle("Force Upload", config.ShouldForceUpload);
 
                 GUILayout.Space(EditorGUIUtility.standardVerticalSpacing);
-
 
                 using (new EditorGUILayout.HorizontalScope())
                 {
@@ -240,11 +347,6 @@ namespace Improbable.Gdk.DeploymentManager
                         GUILayout.FlexibleSpace();
                     }
 
-                    if (GUILayout.Button("Generate assembly name"))
-                    {
-                        copy.AssemblyName = $"{projectName}_{DateTime.Now.ToString("MMdd_hhmm")}";
-                    }
-
                     using (new EditorGUI.DisabledScope(error != null))
                     {
                         if (GUILayout.Button("Assign assembly name to deployments"))
@@ -255,9 +357,9 @@ namespace Improbable.Gdk.DeploymentManager
                             }
                         }
 
-                        using (new EditorGUI.DisabledScope(manager.IsUploading || manager.IsLaunching))
+                        using (new EditorGUI.DisabledScope(manager.IsActive))
                         {
-                            if (GUILayout.Button("Upload Assembly"))
+                            if (GUILayout.Button("Upload assembly"))
                             {
                                 manager.Upload(config);
                             }
@@ -276,7 +378,7 @@ namespace Improbable.Gdk.DeploymentManager
                 }
             }
 
-            DrawHorizontalLine(5);
+            DrawHorizontalLine(3);
 
             return copy;
         }
@@ -407,7 +509,7 @@ namespace Improbable.Gdk.DeploymentManager
                     dest.Tags[i] = EditorGUILayout.TextField($"Tag #{i + 1}", dest.Tags[i]);
                 }
 
-                dest.Tags.Add(EditorGUILayout.TextField($"Tag #{dest.Tags.Count + 1}", ""));
+                dest.Tags.Add(EditorGUILayout.TextField($"Tag #{dest.Tags.Count + 1}", string.Empty));
 
                 dest.Tags = dest.Tags.Where(tag => !string.IsNullOrEmpty(tag)).ToList();
             }
@@ -456,6 +558,130 @@ namespace Improbable.Gdk.DeploymentManager
             }
 
             return (false, copy);
+        }
+
+        private void DrawDeploymentList()
+        {
+            if (listedDeployments.Count == 0)
+            {
+                using (new EditorGUILayout.VerticalScope())
+                {
+                    using (new EditorGUILayout.HorizontalScope())
+                    {
+                        GUILayout.FlexibleSpace();
+                        GUILayout.Label("Could not find any live deployments.");
+                        GUILayout.FlexibleSpace();
+                    }
+
+                    using (new EditorGUILayout.HorizontalScope())
+                    {
+                        GUILayout.FlexibleSpace();
+                        GUILayout.Label("Press the \"Refresh\" button to search again.");
+                        GUILayout.FlexibleSpace();
+                    }
+                }
+            }
+            else
+            {
+                // Temporarily change the label width field to allow better spacing in the deployment list screen.
+                var previousWidth = EditorGUIUtility.labelWidth;
+                EditorGUIUtility.labelWidth = 250f;
+
+                for (var index = 0; index < listedDeployments.Count; index++)
+                {
+                    var deplInfo = listedDeployments[index];
+
+                    var foldoutState = stateManager.GetStateObjectOrDefault<bool>(deplInfo.Id.GetHashCode());
+                    using (var check = new EditorGUI.ChangeCheckScope())
+                    using (new EditorGUILayout.HorizontalScope())
+                    {
+                        foldoutState = EditorGUILayout.Foldout(foldoutState, new GUIContent(deplInfo.Name), true);
+
+                        var buttonIcon = new GUIContent(EditorGUIUtility.IconContent(BuiltInWebIcon))
+                        {
+                            tooltip = "Open this deployment in your browser."
+                        };
+
+                        if (GUILayout.Button(buttonIcon, EditorStyles.miniButton, GUILayout.ExpandWidth(false)))
+                        {
+                            Application.OpenURL($"https://console.improbable.io/projects/{projectName}/deployments/{deplInfo.Name}/overview/{deplInfo.Id}");
+                        }
+
+                        if (check.changed)
+                        {
+                            stateManager.SetStateObject(deplInfo.Id.GetHashCode(), foldoutState);
+                        }
+                    }
+
+                    using (new EditorGUI.IndentLevelScope())
+                    using (new EditorGUILayout.VerticalScope())
+                    {
+                        if (foldoutState)
+                        {
+                            EditorGUILayout.LabelField("Start Time", deplInfo.StartTime.ToString(CultureInfo.CurrentCulture));
+                            EditorGUILayout.LabelField("Region", deplInfo.Region);
+
+                            if (deplInfo.Workers.Count > 0)
+                            {
+                                EditorGUILayout.LabelField("Connected Workers");
+                                using (new EditorGUI.IndentLevelScope())
+                                {
+                                    foreach (var workerPair in deplInfo.Workers)
+                                    {
+                                        EditorGUILayout.LabelField(workerPair.Key, $"{workerPair.Value}");
+                                    }
+                                }
+                            }
+
+                            if (deplInfo.Tags.Count > 0)
+                            {
+                                EditorGUILayout.LabelField("Tags");
+                                using (new EditorGUI.IndentLevelScope())
+                                {
+                                    foreach (var tag in deplInfo.Tags)
+                                    {
+                                        EditorGUILayout.LabelField(tag);
+                                    }
+                                }
+                            }
+                        }
+
+                        DrawHorizontalLine(3);
+                    }
+                }
+
+                EditorGUIUtility.labelWidth = previousWidth;
+            }
+
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                GUILayout.FlexibleSpace();
+
+                using (new EditorGUI.DisabledScope(manager.IsActive))
+                {
+                    if (GUILayout.Button("Refresh"))
+                    {
+                        manager.List(projectName);
+                    }
+                }
+            }
+
+            if (listedDeployments.Count > 0)
+            {
+                using (new EditorGUILayout.HorizontalScope())
+                {
+                    selectedListedDeploymentIndex = EditorGUILayout.Popup("Deployment", selectedListedDeploymentIndex,
+                        listedDeployments.Select(config => config.Name).ToArray());
+
+                    using (new EditorGUI.DisabledScope(!IsSelectedValid(listedDeployments, selectedListedDeploymentIndex) || manager.IsActive))
+                    {
+                        if (GUILayout.Button("Stop deployment"))
+                        {
+                            manager.Stop(listedDeployments[selectedListedDeploymentIndex]);
+                        }
+                    }
+                }
+            }
         }
 
         private void UpdateSimulatedDeploymentNames(DeploymentConfig config)
@@ -512,98 +738,66 @@ namespace Improbable.Gdk.DeploymentManager
             }
         }
 
+        private bool TryAuthAndRetry(Ipc.Error error)
+        {
+            if (error.Code != Ipc.ErrorCode.Unauthenticated)
+            {
+                return false;
+            }
+
+            Debug.Log("Attempting to authenticate...");
+            manager.Auth();
+
+            return true;
+        }
+
+        private string GetStatusMessage()
+        {
+            if (!manager.IsActive)
+            {
+                return string.Empty;
+            }
+
+            var sb = new StringBuilder();
+
+            switch (manager.CurrentTask)
+            {
+                case UploadTask task:
+                    sb.AppendLine($"Uploading assembly \"{task.Context.AssemblyName}\".");
+                    break;
+                case LaunchTask task:
+                    sb.AppendLine($"Launching deployment \"{task.Context.Item3.Name}\" in project \"{task.Context.Item1}\".");
+                    break;
+                case ListTask task:
+                    sb.AppendLine($"Listing deployments in project \"{task.Context}\"");
+                    break;
+                case StopTask task:
+                    sb.AppendLine($"Stopping deployment \"{task.Context.Name}\"");
+                    break;
+                case AuthTask _:
+                    sb.AppendLine("Attempting to authenticate.");
+                    break;
+                default:
+                    sb.AppendLine("Unknown action running.");
+                    break;
+            }
+
+            sb.Append("Assembly reloading locked.");
+
+            return sb.ToString();
+        }
+
+        private bool IsSelectedValid<T>(List<T> list, int index)
+        {
+            return index >= 0 && index < list.Count;
+        }
+
         private void DrawSpinner(float value, Rect rect)
         {
             // There are 11 frames in the spinner animation, 0 till 11.
             var imageId = Mathf.RoundToInt(value) % 12;
             var icon = EditorGUIUtility.IconContent($"d_WaitSpin{imageId:D2}");
             EditorGUI.DrawPreviewTexture(rect, icon.image, spinnerMaterial, ScaleMode.ScaleToFit, 1);
-        }
-
-        private class TaskManager
-        {
-            public bool IsUploading { get; private set; }
-            public bool IsLaunching { get; private set; }
-
-            public readonly List<WrappedTask<RedirectedProcessResult, AssemblyConfig>> CompletedUploadTasks = new List<WrappedTask<RedirectedProcessResult, AssemblyConfig>>();
-            public readonly List<WrappedTask<Result<RedirectedProcessResult, Ipc.Error>, BaseDeploymentConfig>> CompletedLaunchTasks = new List<WrappedTask<Result<RedirectedProcessResult, Ipc.Error>, BaseDeploymentConfig>>();
-
-            private WrappedTask<RedirectedProcessResult, AssemblyConfig> uploadTask;
-            private WrappedTask<Result<RedirectedProcessResult, Ipc.Error>, BaseDeploymentConfig> launchTask;
-            private WrappedTask<Result<RedirectedProcessResult, Ipc.Error>, DeploymentInfo> stopTask;
-            private WrappedTask<Result<List<DeploymentInfo>, Ipc.Error>, string> listTask;
-
-            private Queue<(string, string, BaseDeploymentConfig)> queuedLaunches = new Queue<(string, string, BaseDeploymentConfig)>();
-
-            public void Upload(AssemblyConfig config)
-            {
-                EditorApplication.LockReloadAssemblies();
-                IsUploading = true;
-                uploadTask = Assembly.UploadAsync(config);
-            }
-
-            public void Launch(string projectName, string assemblyName, BaseDeploymentConfig config)
-            {
-                if (IsLaunching)
-                {
-                    queuedLaunches.Enqueue((projectName, assemblyName, config));
-                    return;
-                }
-
-                EditorApplication.LockReloadAssemblies();
-                IsLaunching = true;
-                launchTask = Deployment.LaunchAsync(projectName, assemblyName, config);
-            }
-
-            public void Update()
-            {
-                if (uploadTask?.Task.IsCompleted == true)
-                {
-                    IsUploading = false;
-                    EditorApplication.UnlockReloadAssemblies();
-                    CompletedUploadTasks.Add(uploadTask);
-                    uploadTask = null;
-                }
-
-                if (launchTask?.Task.IsCompleted == true)
-                {
-                    CompletedLaunchTasks.Add(launchTask);
-
-                    if (queuedLaunches.Count > 0)
-                    {
-                        var (projectName, assemblyName, config) = queuedLaunches.Dequeue();
-                        launchTask = Deployment.LaunchAsync(projectName, assemblyName, config);
-                    }
-                    else
-                    {
-                        launchTask = null;
-                        IsLaunching = false;
-                        EditorApplication.UnlockReloadAssemblies();
-                    }
-                }
-            }
-
-            public string GetStatusMessage()
-            {
-                var sb = new StringBuilder();
-
-                if (IsUploading)
-                {
-                    sb.AppendLine($"Uploading assembly \"{uploadTask.Context.AssemblyName}\".");
-                }
-
-                if (IsLaunching)
-                {
-                    sb.AppendLine($"Launching deployment \"{launchTask.Context.Name}\".");
-                }
-
-                if (IsLaunching || IsUploading)
-                {
-                    sb.Append("Assembly reloading locked.");
-                }
-
-                return sb.ToString();
-            }
         }
     }
 }

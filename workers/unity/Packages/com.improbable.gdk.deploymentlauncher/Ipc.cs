@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Improbable.Gdk.DeploymentManager
 {
-    public static class Ipc
+    internal static class Ipc
     {
         public enum ErrorCode : uint
         {
@@ -90,7 +90,7 @@ namespace Improbable.Gdk.DeploymentManager
                 {
                     var json = (Dictionary<string, object>) depl;
 
-                    return new DeploymentInfo(projectName, (string) json["Name"], (string) json["Id"]);
+                    return DeploymentInfo.FromJson(projectName, json);
                 }).ToList());
             }
             catch (InvalidCastException e)
