@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Improbable.Gdk.Core.Collections;
 using Improbable.Gdk.DeploymentManager.Commands;
 using UnityEditor;
-using AuthTask =
-    Improbable.Gdk.DeploymentManager.Commands.WrappedTask<Improbable.Gdk.Tools.RedirectedProcessResult, int>;
 
 namespace Improbable.Gdk.DeploymentManager
 {
