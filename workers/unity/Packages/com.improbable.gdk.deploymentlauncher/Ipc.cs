@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Improbable.Gdk.DeploymentManager
 {
-    public static class Ipc
+    internal static class Ipc
     {
         public enum ErrorCode : uint
         {

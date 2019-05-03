@@ -9,7 +9,7 @@ using UnityEngine.Serialization;
 namespace Improbable.Gdk.DeploymentManager
 {
     [Serializable]
-    public class DeploymentConfig
+    internal class DeploymentConfig
     {
         public class Errors
         {
@@ -124,7 +124,7 @@ namespace Improbable.Gdk.DeploymentManager
     ///     Configuration that is specific to simulated player deployments.
     /// </summary>
     [Serializable]
-    public class SimulatedPlayerDeploymentConfig : BaseDeploymentConfig
+    internal class SimulatedPlayerDeploymentConfig : BaseDeploymentConfig
     {
         /// <summary>
         ///     The name of the deployment that the simulated players should connect into.
@@ -178,7 +178,7 @@ namespace Improbable.Gdk.DeploymentManager
     }
 
     [Serializable]
-    public class BaseDeploymentConfig
+    internal class BaseDeploymentConfig
     {
         /// <summary>
         ///     The name of the deployment to launch.
@@ -354,13 +354,13 @@ namespace Improbable.Gdk.DeploymentManager
         }
     }
 
-    public enum DeploymentRegionCode
+    internal enum DeploymentRegionCode
     {
         US,
         EU
     }
 
-    public class DeploymentInfo
+    internal class DeploymentInfo
     {
         /// <summary>
         ///     The SpatialOS project that the deployment is running in.
@@ -418,7 +418,7 @@ namespace Improbable.Gdk.DeploymentManager
     }
 
     [Serializable]
-    public class AssemblyConfig
+    internal class AssemblyConfig
     {
         /// <summary>
         ///     The name of the SpatialOS project for this assembly.
