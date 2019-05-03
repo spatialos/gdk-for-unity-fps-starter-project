@@ -395,7 +395,7 @@ namespace Improbable.Gdk.DeploymentManager
         /// <summary>
         ///     Describes the types and counts of workers that are currently connected to this deployment.
         /// </summary>
-        public Dictionary<string, long> Workers { get; private set; }
+        public IReadOnlyDictionary<string, long> Workers { get; private set; }
 
         public static DeploymentInfo FromJson(string projectName, Dictionary<string, object> json)
         {
