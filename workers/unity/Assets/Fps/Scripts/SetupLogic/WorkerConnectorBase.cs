@@ -54,7 +54,7 @@ namespace Fps
         protected virtual IEnumerator LoadWorld()
         {
             var worldSize = GetWorldSize();
-            if (worldSize == 0)
+            if (worldSize <= 0)
             {
                 yield break;
             }

@@ -13,21 +13,22 @@ namespace Fps
         [SerializeField] internal TileTypeCollection defaultTileCollection;
         [SerializeField] internal float unitSize = 1;
 
-        private readonly Dictionary<Color32, TileTypeCollection> tileLookup = new Dictionary<Color32, TileTypeCollection>();
+        private readonly Dictionary<Color32, TileTypeCollection> tileLookup =
+            new Dictionary<Color32, TileTypeCollection>();
 
         public GameObject GetTileForLocation(Vector2 location, Random random)
         {
-            TileTypeCollection collection = defaultTileCollection;
+            var collection = defaultTileCollection;
 
             // Offset location so 0,0 is the middle of the bitmap
             location += new Vector2(templateBitmap.width / 2.0f - 1, templateBitmap.height / 2.0f - 1);
             location /= unitSize;
-            Vector2Int texelLocation = Vector2Int.FloorToInt(location);
+            var texelLocation = Vector2Int.FloorToInt(location);
 
             if (texelLocation.x >= 0 && texelLocation.x < templateBitmap.width &&
                 texelLocation.y >= 0 && texelLocation.y < templateBitmap.height)
             {
-                Color32 index = ColorToLookup(templateBitmap.GetPixel(texelLocation.x, texelLocation.y));
+                var index = ColorToLookup(templateBitmap.GetPixel(texelLocation.x, texelLocation.y));
                 if (index.a == 0xff)
                 {
                     if (!tileLookup.TryGetValue(index, out collection))
@@ -49,8 +50,7 @@ namespace Fps
 
         private void PrintColors()
         {
-            var message = tileLookup.Select(element => $"[{element.Key}]")
-                .Aggregate("", (current, next) => $"{current} {next}");
+            var message = string.Join(" ", tileLookup.Select(element => $"[{element.Key}]"));
             Debug.Log(message);
         }
 
@@ -72,7 +72,7 @@ namespace Fps
                 Debug.LogError($"Default Tile Collection must be set.");
             }
 
-            if (unitSize == 0)
+            if (unitSize <= 0)
             {
                 unitSize = 1;
             }
@@ -82,32 +82,39 @@ namespace Fps
 
         private void InitializeLookup()
         {
-            // Fill lookup map
             tileLookup.Clear();
-            if (tileCollections != null && tileCollections.Length > 0)
+            if (tileCollections == null || tileCollections.Length <= 0)
             {
-                foreach (var tileType in tileCollections)
+                return;
+            }
+
+            // Fill lookup map
+            foreach (var tileType in tileCollections)
+            {
+                if (tileType == null)
                 {
-                    if (tileType == null)
-                    {
-                        continue;
-                    }
-
-                    var index = ColorToLookup(tileType.DisplayColor);
-                    if (tileLookup.ContainsKey(index))
-                    {
-                        Debug.LogError($"Tile collection with color {ColorUtility.ToHtmlStringRGBA(tileType.DisplayColor)} already exists.");
-                        continue;
-                    }
-
-                    tileLookup.Add(index, tileType);
+                    continue;
                 }
+
+                var index = ColorToLookup(tileType.DisplayColor);
+                if (tileLookup.ContainsKey(index))
+                {
+                    Debug.LogError(
+                        $"Tile collection with color {ColorUtility.ToHtmlStringRGBA(tileType.DisplayColor)} already exists.");
+                    continue;
+                }
+
+                tileLookup.Add(index, tileType);
             }
         }
 
         private Color32 ColorToLookup(Color color)
         {
-            return new Color32((byte) Mathf.Clamp(Mathf.RoundToInt(color.r * (float) byte.MaxValue), 0, (int) byte.MaxValue), (byte) Mathf.Clamp(Mathf.RoundToInt(color.g * (float) byte.MaxValue), 0, (int) byte.MaxValue), (byte) Mathf.Clamp(Mathf.RoundToInt(color.b * (float) byte.MaxValue), 0, (int) byte.MaxValue), (byte) Mathf.Clamp(Mathf.RoundToInt(color.a * (float) byte.MaxValue), 0, (int) byte.MaxValue));
+            return new Color32(
+                (byte) Mathf.Clamp(Mathf.RoundToInt(color.r * (float) byte.MaxValue), 0, (int) byte.MaxValue),
+                (byte) Mathf.Clamp(Mathf.RoundToInt(color.g * (float) byte.MaxValue), 0, (int) byte.MaxValue),
+                (byte) Mathf.Clamp(Mathf.RoundToInt(color.b * (float) byte.MaxValue), 0, (int) byte.MaxValue),
+                (byte) Mathf.Clamp(Mathf.RoundToInt(color.a * (float) byte.MaxValue), 0, (int) byte.MaxValue));
         }
     }
 }

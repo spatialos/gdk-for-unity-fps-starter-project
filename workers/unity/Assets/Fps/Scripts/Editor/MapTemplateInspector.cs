@@ -8,7 +8,7 @@ namespace Fps.Editor
     [CustomEditor(typeof(MapTemplate))]
     public class MapTemplateInspector : UnityEditor.Editor
     {
-        MapTemplate template;
+        private MapTemplate template;
 
         public void OnEnable()
         {
@@ -38,67 +38,68 @@ namespace Fps.Editor
                 false);
 
             EditorGUILayout.LabelField("Tile Collections");
-            EditorGUI.indentLevel++;
-            for (int i = 0; i < template.tileCollections.Length; i++)
-            {
-                // Calculate positioning of the elements on this line
-                var collection = template.tileCollections[i];
-                var color = collection?.DisplayColor ?? Color.clear;
-                var rect = EditorGUILayout.GetControlRect(false, 16);
-                var colorRect = new Rect(rect.x + 16, rect.y, 16, rect.height);
-                var objectRect = new Rect(rect.x + 26, rect.y, rect.width - 58, rect.height);
-                var removeRect = new Rect(rect.width - 16, rect.y, 16, rect.height);
 
-                // Bitmap color
-                if (GUI.Button(colorRect, new GUIContent("", $"HTML RGB: {ColorUtility.ToHtmlStringRGBA(color)}"),
-                    GUIStyle.none))
+            using (new EditorGUI.IndentLevelScope())
+            {
+                for (int i = 0; i < template.tileCollections.Length; i++)
                 {
-                    GUIUtility.systemCopyBuffer = ColorUtility.ToHtmlStringRGBA(color);
+                    // Calculate positioning of the elements on this line
+                    var collection = template.tileCollections[i];
+                    var color = collection?.DisplayColor ?? Color.clear;
+                    var rect = EditorGUILayout.GetControlRect(false, 16);
+                    var colorRect = new Rect(rect.x + 16, rect.y, 16, rect.height);
+                    var objectRect = new Rect(rect.x + 26, rect.y, rect.width - 58, rect.height);
+                    var removeRect = new Rect(rect.width - 16, rect.y, 16, rect.height);
+
+                    // Bitmap color
+                    if (GUI.Button(colorRect, new GUIContent("", $"HTML RGB: {ColorUtility.ToHtmlStringRGBA(color)}"),
+                        GUIStyle.none))
+                    {
+                        GUIUtility.systemCopyBuffer = ColorUtility.ToHtmlStringRGBA(color);
+                    }
+
+                    EditorGUI.DrawRect(colorRect, color);
+
+                    // Collection asset
+                    template.tileCollections[i] = (TileTypeCollection) EditorGUI.ObjectField(
+                        objectRect,
+                        template.tileCollections[i],
+                        typeof(TileTypeCollection),
+                        false);
+
+                    // Remove entry
+                    if (GUI.Button(removeRect, EditorGUIUtility.IconContent("TreeEditor.Trash"), GUIStyle.none))
+                    {
+                        // Save element index to remove
+                        elementToRemove = i;
+                    }
                 }
 
-                EditorGUI.DrawRect(colorRect, color);
+                // Icon for new entry
+                var newRect = EditorGUILayout.GetControlRect(false, 16);
+                var boxRect = new Rect(newRect.x + 16, newRect.y, 16, newRect.height);
+                GUI.Button(boxRect, EditorGUIUtility.IconContent("d_Toolbar Plus"), GUIStyle.none);
 
-                // Collection asset
-                template.tileCollections[i] = (TileTypeCollection) EditorGUI.ObjectField(
-                    objectRect,
-                    template.tileCollections[i],
+                // New entry selector
+                var newCollection = (TileTypeCollection) EditorGUI.ObjectField(
+                    new Rect(newRect.x + 26, newRect.y, newRect.width - 58, newRect.height),
+                    null,
                     typeof(TileTypeCollection),
                     false);
 
-                // Remove entry
-                if (GUI.Button(removeRect, EditorGUIUtility.IconContent("TreeEditor.Trash"), GUIStyle.none))
+                if (newCollection != null)
                 {
-                    // Save element index to remove
-                    elementToRemove = i;
+                    Array.Resize(ref template.tileCollections, template.tileCollections.Length + 1);
+                }
+
+                // Remove requested element
+                if (elementToRemove.HasValue)
+                {
+                    var temp = new List<TileTypeCollection>(template.tileCollections);
+                    temp.RemoveAt(elementToRemove.Value);
+                    template.tileCollections = temp.ToArray();
                 }
             }
-
-            // Icon for new entry
-            var newRect = EditorGUILayout.GetControlRect(false, 16);
-            var boxRect = new Rect(newRect.x + 16, newRect.y, 16, newRect.height);
-            GUI.Button(boxRect, EditorGUIUtility.IconContent("d_Toolbar Plus"), GUIStyle.none);
-
-            // New entry selector
-            var newCollection = (TileTypeCollection) EditorGUI.ObjectField(
-                new Rect(newRect.x + 26, newRect.y, newRect.width - 58, newRect.height),
-                null,
-                typeof(TileTypeCollection),
-                false);
-
-            if (newCollection != null)
-            {
-                Array.Resize(ref template.tileCollections, template.tileCollections.Length + 1);
-            }
-
-            // Remove requested element
-            if (elementToRemove.HasValue)
-            {
-                var temp = new List<TileTypeCollection>(template.tileCollections);
-                temp.RemoveAt(elementToRemove.Value);
-                template.tileCollections = temp.ToArray();
-            }
-
-            EditorGUI.indentLevel--;
         }
     }
 }
