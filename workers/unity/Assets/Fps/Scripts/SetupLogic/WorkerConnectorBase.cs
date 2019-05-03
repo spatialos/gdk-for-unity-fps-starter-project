@@ -12,7 +12,7 @@ namespace Fps
     {
         public int TargetFrameRate = 60;
 
-        [SerializeField] protected MapBuilderSettings MapBuilderSettings;
+        [SerializeField] protected MapTemplate mapTemplate;
 
         [NonSerialized] internal GameObject LevelInstance;
 
@@ -53,13 +53,31 @@ namespace Fps
         // Get the world size from the config, and use it to generate the correct-sized level
         protected virtual IEnumerator LoadWorld()
         {
+            var worldSize = GetWorldSize();
+            if (worldSize <= 0)
+            {
+                yield break;
+            }
+
             yield return MapBuilder.GenerateMap(
-                MapBuilderSettings,
+                mapTemplate,
+                worldSize,
                 transform,
-                Worker.Connection,
                 Worker.WorkerType,
-                Worker.LogDispatcher,
                 this);
+        }
+
+        protected int GetWorldSize()
+        {
+            var flagValue = Worker.Connection.GetWorkerFlag("world_size");
+            if (!int.TryParse(flagValue, out var worldSize))
+            {
+                Worker.LogDispatcher.HandleLog(LogType.Error,
+                    new LogEvent($"Invalid world_size worker flag. Expected an integer, got \"{flagValue}\""));
+                return 0;
+            }
+
+            return worldSize;
         }
     }
 }

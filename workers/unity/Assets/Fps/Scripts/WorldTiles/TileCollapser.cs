@@ -3,48 +3,58 @@ using Improbable.Gdk.Core;
 using MeshUtilities;
 using UnityEngine;
 
-public class TileCollapser : MonoBehaviour
+public static class TileCollapser
 {
-    private readonly Dictionary<string, CombinedMeshAndMaterialsData> collapsedInstances =
+    private static readonly Dictionary<string, CombinedMeshAndMaterialsData> collapsedInstances =
         new Dictionary<string, CombinedMeshAndMaterialsData>();
 
-    public void CollapseMeshes()
+    private static readonly List<MeshRenderer> renderComponentsCache = new List<MeshRenderer>();
+    private static readonly List<MeshFilter> filterComponentsCache = new List<MeshFilter>();
+
+    public static void CollapseMeshes(GameObject tile)
     {
-        for (var i = 0; i < transform.childCount; i++)
+        if (!collapsedInstances.ContainsKey(tile.name))
         {
-            var child = transform.GetChild(i);
+            var combined = TileCombinedMeshProvider.GetCombinedMeshes(tile.transform);
+            combined.combinedMesh.name = $"{tile.name}_Mesh";
+            collapsedInstances.Add(tile.name, combined);
+        }
 
-            if (!collapsedInstances.ContainsKey(child.name))
-            {
-                var combined = TileCombinedMeshProvider.GetCombinedMeshes(child);
-                combined.combinedMesh.name = $"{child.name}_Mesh";
-                collapsedInstances.Add(child.name, combined);
-            }
+        DestroyMeshRenderers(tile);
+        ApplyCollapsed(tile);
 
-            DestroyMeshRenderers(child);
-            ApplyCollapsed(child);
+        renderComponentsCache.Clear();
+        filterComponentsCache.Clear();
+    }
+
+    public static void Clear()
+    {
+        collapsedInstances.Clear();
+    }
+
+    private static void DestroyMeshRenderers(GameObject tile)
+    {
+        tile.GetComponentsInChildren<MeshRenderer>(renderComponentsCache);
+        foreach (var meshRenderer in renderComponentsCache)
+        {
+            Object.DestroyImmediate(meshRenderer);
+        }
+
+        tile.GetComponentsInChildren<MeshFilter>(filterComponentsCache);
+        foreach (var meshFilter in filterComponentsCache)
+        {
+            Object.DestroyImmediate(meshFilter);
         }
     }
 
-    private void DestroyMeshRenderers(Transform obj)
+    private static void ApplyCollapsed(GameObject tile)
     {
-        foreach (var meshRenderer in obj.GetComponentsInChildren<MeshRenderer>())
-        {
-            UnityObjectDestroyer.Destroy(meshRenderer);
-        }
+        var mf = tile.gameObject.AddComponent<MeshFilter>();
+        var mr = tile.gameObject.AddComponent<MeshRenderer>();
 
-        foreach (var meshFilter in obj.GetComponentsInChildren<MeshFilter>())
-        {
-            UnityObjectDestroyer.Destroy(meshFilter);
-        }
-    }
+        var cachedInstance = collapsedInstances[tile.name];
 
-    private void ApplyCollapsed(Transform obj)
-    {
-        var mf = obj.gameObject.AddComponent<MeshFilter>();
-        var mr = obj.gameObject.AddComponent<MeshRenderer>();
-
-        mf.sharedMesh = collapsedInstances[obj.name].combinedMesh;
-        mr.materials = collapsedInstances[obj.name].materialsOnMesh;
+        mf.sharedMesh = cachedInstance.combinedMesh;
+        mr.materials = cachedInstance.materialsOnMesh;
     }
 }

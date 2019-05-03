@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a85985efa1ad9d244acbb1c15f16ad58, type: 3}
+  m_Name: MapTemplateTest
+  m_EditorClassIdentifier: 
+  templateBitmap: {fileID: 2800000, guid: ecd5c6aa195a9b2408bb7387e347a635, type: 3}
+  tileCollections:
+  - {fileID: 11400000, guid: d579003d03cace84b946844b8b32a969, type: 2}
+  - {fileID: 11400000, guid: e2b99364e886cc7479d598fb0d9cd160, type: 2}
+  - {fileID: 11400000, guid: 4681e612f68a36e4c883b205d7a4cfff, type: 2}
+  - {fileID: 11400000, guid: cf4b190a73d7e8141a4d3b6824cd611c, type: 2}
+  - {fileID: 11400000, guid: a36683dbe4a195c49a9a3653955da416, type: 2}
+  defaultTileCollection: {fileID: 11400000, guid: 946d46542bd201c4489e91b595f5a3c4,
+    type: 2}
+  unitSize: 1

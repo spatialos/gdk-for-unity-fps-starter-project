@@ -15,7 +15,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 123
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &4287935734642948
 Transform:
@@ -58,6 +58,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 8ade12abb28fc3249ad6298fc4bebfa2, type: 3}
       propertyPath: m_Name
       value: SM_Terrain_Mountain_02
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 8ade12abb28fc3249ad6298fc4bebfa2, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 8ade12abb28fc3249ad6298fc4bebfa2, type: 3}
       propertyPath: m_LocalPosition.x
