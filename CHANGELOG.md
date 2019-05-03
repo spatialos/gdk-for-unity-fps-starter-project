@@ -14,6 +14,7 @@
 - Changed connection and player-spawn flow.
 - Updated the available prefabs and textures.
 - Disabled anti-aliasing for mobile to improve performance.
+- Refactor map generator for better performance.
 
 ## `0.2.1` - 2019-04-15
 
