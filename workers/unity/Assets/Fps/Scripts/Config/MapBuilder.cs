@@ -77,7 +77,16 @@ namespace Fps
             InitializeGroupsAndComponents();
             Profiler.EndSample();
 
-            // TODO What is this? And why is it here..
+            // Initialize tiles
+            Profiler.BeginSample("CollapseTileMeshes");
+            foreach (var tileCollection in mapTemplate.tileCollections)
+            {
+                tileCollection.LoadAndOptimizeTiles();
+            }
+
+            mapTemplate.defaultTileCollection.LoadAndOptimizeTiles();
+            Profiler.EndSample();
+
             var originalPosition = parentGameObject.transform.position;
             var originalRotation = parentGameObject.transform.rotation;
             parentGameObject.transform.position = Vector3.zero;
@@ -95,22 +104,22 @@ namespace Fps
             FillSurround();
             Profiler.EndSample();
 
-            Profiler.BeginSample("CollapseTileMeshes");
-            //CollapseTileMeshes();
-            Profiler.EndSample();
-
             spawnPointSystemTransform.gameObject.GetComponent<SpawnPoints>()?.SetSpawnPoints();
 
-            // TODO Really?
             parentGameObject.transform.position = originalPosition;
             parentGameObject.transform.rotation = originalRotation;
 
-            //MakeLevelObjectStatic();
-        }
+            // Cleanup
+            Profiler.BeginSample("CleanupTileMeshes");
+            foreach (var tileCollection in mapTemplate.tileCollections)
+            {
+                tileCollection.Clear();
+            }
 
-        private void CollapseTileMeshes()
-        {
-            tileParentTransform.GetComponent<TileCollapser>().CollapseMeshes();
+            mapTemplate.defaultTileCollection.Clear();
+            Profiler.EndSample();
+
+            TileCollapser.Clear();
         }
 
         private void InitializeGroupsAndComponents()
@@ -126,7 +135,6 @@ namespace Fps
             surroundParentTransform = MakeChildGroup(SurroundParentName);
 
             tileParentTransform = MakeChildGroup(TileParentName);
-            tileParentTransform.gameObject.AddComponent<TileCollapser>();
         }
 
         private bool TryLoadResources()
@@ -358,15 +366,6 @@ namespace Fps
                 },
                 Quaternion.identity,
                 groundParentTransform.transform);
-        }
-
-        private void MakeLevelObjectStatic()
-        {
-            parentGameObject.isStatic = true;
-            foreach (var childTransform in parentGameObject.GetComponentsInChildren<Transform>(true))
-            {
-                childTransform.gameObject.isStatic = true;
-            }
         }
 
         public void Clean()

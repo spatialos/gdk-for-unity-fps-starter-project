@@ -73,7 +73,7 @@ namespace Fps
             if (!int.TryParse(flagValue, out var worldSize))
             {
                 Worker.LogDispatcher.HandleLog(LogType.Error,
-                    new LogEvent("Invalid world_size worker flag. Expected an integer, got \"{flagValue}\""));
+                    new LogEvent($"Invalid world_size worker flag. Expected an integer, got \"{flagValue}\""));
                 return 0;
             }
 

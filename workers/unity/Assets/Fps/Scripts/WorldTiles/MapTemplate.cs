@@ -20,7 +20,7 @@ namespace Fps
             TileTypeCollection collection = defaultTileCollection;
 
             // Offset location so 0,0 is the middle of the bitmap
-            location += new Vector2(templateBitmap.width / 2.0f, templateBitmap.height / 2.0f);
+            location += new Vector2(templateBitmap.width / 2.0f - 1, templateBitmap.height / 2.0f - 1);
             location /= unitSize;
             Vector2Int texelLocation = Vector2Int.FloorToInt(location);
 
@@ -28,11 +28,14 @@ namespace Fps
                 texelLocation.y >= 0 && texelLocation.y < templateBitmap.height)
             {
                 Color32 index = ColorToLookup(templateBitmap.GetPixel(texelLocation.x, texelLocation.y));
-                if (!tileLookup.TryGetValue(index, out collection))
+                if (index.a == 0xff)
                 {
-                    Debug.Log($"Unknown color: {index}\nThere are {tileLookup.Count} colors available.");
-                    PrintColors();
-                    collection = defaultTileCollection;
+                    if (!tileLookup.TryGetValue(index, out collection))
+                    {
+                        Debug.Log($"Unknown color: {index}\nThere are {tileLookup.Count} colors available.");
+                        PrintColors();
+                        collection = defaultTileCollection;
+                    }
                 }
             }
 
@@ -59,9 +62,9 @@ namespace Fps
                 Debug.LogError($"template bitmap {templateBitmap.name} must be Read/Write enabled.");
             }
 
-            if (templateBitmap.format != TextureFormat.RGB24)
+            if (templateBitmap.format != TextureFormat.RGBA32)
             {
-                Debug.LogError($"template bitmap {templateBitmap.name} must be RGB24.");
+                Debug.LogError($"template bitmap {templateBitmap.name} must be RGBA32.");
             }
 
             if (defaultTileCollection == null)

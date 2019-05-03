@@ -17,7 +17,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &7896099248444032128
 Transform:
@@ -108,7 +108,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &5389096769296723043
 Transform:
@@ -199,7 +199,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &2430967320233743658
 Transform:
@@ -282,14 +282,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9072415234965170469}
-  - component: {fileID: 1240395590236620894}
   - component: {fileID: 9059450689925837219}
   m_Layer: 0
-  m_Name: Tile_Bare_X
+  m_Name: Tile_StepHeights
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &9072415234965170469
 Transform:
@@ -311,20 +310,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1240395590236620894
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1853307461053178640}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 834cfda29cc04cfca5066eec0a4f98d6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PlayerTransform: {fileID: 0}
-  IsClient: 0
 --- !u!114 &9059450689925837219
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -337,7 +322,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0acc01bb717a0db49aaafaa4d2b8bdbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TileSize: 32
+  InnerTileSize: 32
   ConnectorLength: 8
   ConnectorDepth: 4
   Color: {r: 0.2, g: 0.7, b: 0.2, a: 0.4}
@@ -358,7 +343,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &5413451356413364630
 Transform:
@@ -449,7 +434,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &1188897684306420702
 Transform:
@@ -540,7 +525,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &6085382341279332167
 Transform:
