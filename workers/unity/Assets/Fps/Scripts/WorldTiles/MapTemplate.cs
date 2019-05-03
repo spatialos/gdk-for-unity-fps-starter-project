@@ -59,12 +59,12 @@ namespace Fps
             // Check for issues
             if (!templateBitmap.isReadable)
             {
-                Debug.LogError($"template bitmap {templateBitmap.name} must be Read/Write enabled.");
+                Debug.LogError($"Template bitmap {templateBitmap.name} must be Read/Write enabled.");
             }
 
             if (templateBitmap.format != TextureFormat.RGBA32)
             {
-                Debug.LogError($"template bitmap {templateBitmap.name} must be RGBA32.");
+                Debug.LogError($"Template bitmap {templateBitmap.name} must be RGBA32.");
             }
 
             if (defaultTileCollection == null)
