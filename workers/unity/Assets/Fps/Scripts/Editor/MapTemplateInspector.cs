@@ -41,7 +41,7 @@ namespace Fps.Editor
 
             using (new EditorGUI.IndentLevelScope())
             {
-                for (int i = 0; i < template.tileCollections.Length; i++)
+                for (var i = 0; i < template.tileCollections.Length; i++)
                 {
                     // Calculate positioning of the elements on this line
                     var collection = template.tileCollections[i];
