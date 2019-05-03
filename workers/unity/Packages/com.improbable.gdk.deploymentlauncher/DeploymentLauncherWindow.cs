@@ -94,7 +94,7 @@ namespace Improbable.Gdk.DeploymentManager
 
                     if (TryAuthAndRetry(error))
                     {
-                        manager.Launch(cachedProjectName, assemblyName, config, TaskManager.QueueMode.ForceNext);
+                        manager.Launch(cachedProjectName, assemblyName, config, TaskManager.QueueMode.RunNext);
                     }
                     else
                     {
@@ -118,7 +118,7 @@ namespace Improbable.Gdk.DeploymentManager
 
                     if (TryAuthAndRetry(error))
                     {
-                        manager.List(wrappedTask.Context, TaskManager.QueueMode.ForceNext);
+                        manager.List(wrappedTask.Context, TaskManager.QueueMode.RunNext);
                     }
                     else
                     {
@@ -141,7 +141,7 @@ namespace Improbable.Gdk.DeploymentManager
 
                     if (TryAuthAndRetry(error))
                     {
-                        manager.Stop(wrappedTask.Context, TaskManager.QueueMode.ForceNext);
+                        manager.Stop(wrappedTask.Context, TaskManager.QueueMode.RunNext);
                     }
                     else
                     {

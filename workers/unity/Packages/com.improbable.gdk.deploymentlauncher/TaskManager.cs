@@ -9,8 +9,8 @@ namespace Improbable.Gdk.DeploymentManager
     {
         public enum QueueMode
         {
-            Normal,
-            ForceNext
+            Enqueue,
+            RunNext
         }
 
         public bool IsActive => CurrentTask != null;
@@ -32,23 +32,23 @@ namespace Improbable.Gdk.DeploymentManager
             queuedTasks.Clear();
         }
 
-        public void Upload(AssemblyConfig config, QueueMode mode = QueueMode.Normal)
+        public void Upload(AssemblyConfig config, QueueMode mode = QueueMode.Enqueue)
         {
             AddTask(mode, () => Assembly.UploadAsync(config));
         }
 
         public void Launch(string projectName, string assemblyName, BaseDeploymentConfig config,
-            QueueMode mode = QueueMode.Normal)
+            QueueMode mode = QueueMode.Enqueue)
         {
             AddTask(mode, () => Deployment.LaunchAsync(projectName, assemblyName, config));
         }
 
-        public void List(string projectName, QueueMode mode = QueueMode.Normal)
+        public void List(string projectName, QueueMode mode = QueueMode.Enqueue)
         {
             AddTask(mode, () => Deployment.ListAsync(projectName));
         }
 
-        public void Stop(DeploymentInfo info, QueueMode mode = QueueMode.Normal)
+        public void Stop(DeploymentInfo info, QueueMode mode = QueueMode.Enqueue)
         {
             AddTask(mode, () => Deployment.StopAsync(info));
         }
@@ -62,17 +62,14 @@ namespace Improbable.Gdk.DeploymentManager
         {
             if (!IsActive)
             {
-                // Always prefer the auth task over any queued t asks.
+                var hasStartedTask = false;
+
+                // Always prefer the auth task over any queued tasks.
                 if (queuedAuthTask != null)
                 {
                     CurrentTask = queuedAuthTask();
                     queuedAuthTask = null;
-
-                    if (!isLocked)
-                    {
-                        EditorApplication.LockReloadAssemblies();
-                        isLocked = true;
-                    }
+                    hasStartedTask = true;
                 }
                 else if (queuedTasks.Count > 0)
                 {
@@ -80,7 +77,12 @@ namespace Improbable.Gdk.DeploymentManager
                     queuedTasks.RemoveAt(0);
 
                     CurrentTask = queuedTask();
+                    hasStartedTask = true;
+                }
 
+
+                if (hasStartedTask)
+                {
                     if (!isLocked)
                     {
                         EditorApplication.LockReloadAssemblies();
@@ -107,10 +109,10 @@ namespace Improbable.Gdk.DeploymentManager
         {
             switch (mode)
             {
-                case QueueMode.Normal:
+                case QueueMode.Enqueue:
                     queuedTasks.Add(closure);
                     break;
-                case QueueMode.ForceNext:
+                case QueueMode.RunNext:
                     queuedTasks.Insert(0, closure);
                     break;
                 default:
