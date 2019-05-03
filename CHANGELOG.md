@@ -3,6 +3,7 @@
 ## Unreleased
 
 ### Breaking Changes
+
 - Removed the `AndroidWorkerConnector` and `iOSWorkerConnector` and their specific scenes. You can now use the `MobileWorkerConnector` and its `FPS-MobileClientScene` to connect to a mobile device.
 
 ### Added
@@ -17,6 +18,7 @@
 - Refactor map generator for better performance.
 
 ### Fixed
+
 - Fixed a bug where your own gun would not appear until after you moved around for a while.
 
 ## `0.2.1` - 2019-04-15
