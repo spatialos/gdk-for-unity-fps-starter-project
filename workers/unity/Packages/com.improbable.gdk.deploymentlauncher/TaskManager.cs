@@ -26,6 +26,12 @@ namespace Improbable.Gdk.DeploymentManager
             CompletedTasks.Clear();
         }
 
+        public void Cancel()
+        {
+            CurrentTask?.Cancel();
+            queuedTasks.Clear();
+        }
+
         public void Upload(AssemblyConfig config, QueueMode mode = QueueMode.Normal)
         {
             AddTask(mode, () => Assembly.UploadAsync(config));

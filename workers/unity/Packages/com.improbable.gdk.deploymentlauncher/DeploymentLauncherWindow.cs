@@ -160,6 +160,8 @@ namespace Improbable.Gdk.DeploymentManager
                 }
                 else
                 {
+                    // Stop the potential infinite loop of retries.
+                    manager.Cancel();
                     Debug.LogError("Failed to authenticate with SpatialOS. Please run \"spatial auth login\" manually.");
                 }
             }
@@ -493,7 +495,7 @@ namespace Improbable.Gdk.DeploymentManager
                     dest.Tags[i] = EditorGUILayout.TextField($"Tag #{i + 1}", dest.Tags[i]);
                 }
 
-                dest.Tags.Add(EditorGUILayout.TextField($"Tag #{dest.Tags.Count + 1}", ""));
+                dest.Tags.Add(EditorGUILayout.TextField($"Tag #{dest.Tags.Count + 1}", string.Empty));
 
                 dest.Tags = dest.Tags.Where(tag => !string.IsNullOrEmpty(tag)).ToList();
             }
@@ -739,7 +741,7 @@ namespace Improbable.Gdk.DeploymentManager
         {
             if (!manager.IsActive)
             {
-                return "";
+                return string.Empty;
             }
 
             var sb = new StringBuilder();
