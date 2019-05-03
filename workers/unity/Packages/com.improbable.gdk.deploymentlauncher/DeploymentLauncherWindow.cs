@@ -4,13 +4,16 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Improbable.Gdk.Core.Collections;
 using Improbable.Gdk.Core.Editor;
-using Improbable.Gdk.DeploymentManager.Commands;
-using Improbable.Gdk.Tools;
 using Improbable.Gdk.Tools.MiniJSON;
 using UnityEditor;
 using UnityEngine;
+using UploadTask = Improbable.Gdk.DeploymentManager.Commands.WrappedTask<Improbable.Gdk.Tools.RedirectedProcessResult, Improbable.Gdk.DeploymentManager.AssemblyConfig>;
+using LaunchTask = Improbable.Gdk.DeploymentManager.Commands.WrappedTask<Improbable.Gdk.Core.Collections.Result<Improbable.Gdk.Tools.RedirectedProcessResult, Improbable.Gdk.DeploymentManager.Ipc.Error>, (string, string, Improbable.Gdk.DeploymentManager.BaseDeploymentConfig)>;
+using ListTask = Improbable.Gdk.DeploymentManager.Commands.WrappedTask<Improbable.Gdk.Core.Collections.Result<System.Collections.Generic.List<Improbable.Gdk.DeploymentManager.DeploymentInfo>, Improbable.Gdk.DeploymentManager.Ipc.Error>, string>;
+using StopTask = Improbable.Gdk.DeploymentManager.Commands.WrappedTask<Improbable.Gdk.Core.Collections.Result<Improbable.Gdk.Tools.RedirectedProcessResult, Improbable.Gdk.DeploymentManager.Ipc.Error>, Improbable.Gdk.DeploymentManager.DeploymentInfo>;
+using AuthTask = Improbable.Gdk.DeploymentManager.Commands.WrappedTask<Improbable.Gdk.Tools.RedirectedProcessResult, int>;
+
 
 namespace Improbable.Gdk.DeploymentManager
 {
@@ -34,8 +37,6 @@ namespace Improbable.Gdk.DeploymentManager
 
         private List<DeploymentInfo> listedDeployments = new List<DeploymentInfo>();
         private int selectedListedDeploymentIndex;
-
-        private Action postAuthTask;
 
         [MenuItem("SpatialOS/Deployment Launcher", false, 51)]
         private static void LaunchDeploymentMenu()
@@ -66,7 +67,7 @@ namespace Improbable.Gdk.DeploymentManager
         {
             manager.Update();
 
-            foreach (var wrappedTask in manager.CompletedUploadTasks)
+            foreach (var wrappedTask in manager.CompletedTasks.OfType<UploadTask>())
             {
                 if (wrappedTask.Task.Result.ExitCode != 0)
                 {
@@ -78,28 +79,31 @@ namespace Improbable.Gdk.DeploymentManager
                 }
             }
 
-            foreach (var wrappedTask in manager.CompletedLaunchTasks)
+            foreach (var wrappedTask in manager.CompletedTasks.OfType<LaunchTask>())
             {
-                var (projectName, assemblyName, config) = wrappedTask.Context;
+                var (cachedProjectName, assemblyName, config) = wrappedTask.Context;
 
                 var result = wrappedTask.Task.Result;
                 if (result.IsOkay)
                 {
-                    Application.OpenURL($"https://console.improbable.io/projects/{projectName}/deployments/{config.Name}/overview");
+                    Application.OpenURL($"https://console.improbable.io/projects/{cachedProjectName}/deployments/{config.Name}/overview");
                 }
                 else
                 {
                     var error = result.UnwrapError();
 
-                    Debug.LogError($"Launch of {config.Name} failed. Code: {error.Code} Message: {error.Message}");
-                    if (AuthenticateIfNeeded(error))
+                    if (TryAuthAndRetry(error))
                     {
-                        postAuthTask = () => manager.LaunchImmediate(projectName, assemblyName, config);
+                        manager.Launch(cachedProjectName, assemblyName, config, TaskManager.QueueMode.ForceNext);
+                    }
+                    else
+                    {
+                        Debug.LogError($"Launch of {config.Name} failed. Code: {error.Code} Message: {error.Message}");
                     }
                 }
             }
 
-            foreach (var wrappedTask in manager.CompletedListTasks)
+            foreach (var wrappedTask in manager.CompletedTasks.OfType<ListTask>())
             {
                 var result = wrappedTask.Task.Result;
                 if (result.IsOkay)
@@ -112,16 +116,18 @@ namespace Improbable.Gdk.DeploymentManager
                 {
                     var error = result.UnwrapError();
 
-                    Debug.LogError($"Failed to list deployments in project {wrappedTask.Context}. Code: {error.Code} Message: {error.Message}");
-
-                    if (AuthenticateIfNeeded(error))
+                    if (TryAuthAndRetry(error))
                     {
-                        postAuthTask = () => manager.List(wrappedTask.Context);
+                        manager.List(wrappedTask.Context, TaskManager.QueueMode.ForceNext);
+                    }
+                    else
+                    {
+                        Debug.LogError($"Failed to list deployments in project {wrappedTask.Context}. Code: {error.Code} Message: {error.Message}");
                     }
                 }
             }
 
-            foreach (var wrappedTask in manager.CompletedStopTasks)
+            foreach (var wrappedTask in manager.CompletedTasks.OfType<StopTask>())
             {
                 var result = wrappedTask.Task.Result;
                 var info = wrappedTask.Context;
@@ -133,28 +139,28 @@ namespace Improbable.Gdk.DeploymentManager
                 {
                     var error = result.UnwrapError();
 
-                    Debug.LogError($"Failed to stop deployment: \"{info.Name}\". Code: {error.Code} Message: {error.Message}.");
-                    if (AuthenticateIfNeeded(error))
+                    if (TryAuthAndRetry(error))
                     {
-                        postAuthTask = () => manager.Stop(wrappedTask.Context);
+                        manager.Stop(wrappedTask.Context, TaskManager.QueueMode.ForceNext);
+                    }
+                    else
+                    {
+                        Debug.LogError($"Failed to stop deployment: \"{info.Name}\". Code: {error.Code} Message: {error.Message}.");
                     }
                 }
             }
 
-            foreach (var wrappedTask in manager.CompletedAuthTasks)
+            foreach (var wrappedTask in manager.CompletedTasks.OfType<AuthTask>())
             {
                 var result = wrappedTask.Task.Result;
 
                 if (result.ExitCode == 0)
                 {
                     Debug.Log("Successfully authenticated with SpatialOS. Retrying previous action.");
-                    postAuthTask?.Invoke();
-                    postAuthTask = null;
                 }
                 else
                 {
                     Debug.LogError("Failed to authenticate with SpatialOS. Please run \"spatial auth login\" manually.");
-                    postAuthTask = null;
                 }
             }
 
@@ -281,7 +287,7 @@ namespace Improbable.Gdk.DeploymentManager
 
                 if (manager.IsActive)
                 {
-                    EditorGUILayout.HelpBox(manager.GetStatusMessage(), MessageType.Info);
+                    EditorGUILayout.HelpBox(GetStatusMessage(), MessageType.Info);
                     var rect = EditorGUILayout.GetControlRect(false, 20);
                     DrawSpinner(Time.realtimeSinceStartup * 10, rect);
                     Repaint();
@@ -716,16 +722,53 @@ namespace Improbable.Gdk.DeploymentManager
             }
         }
 
-        private bool AuthenticateIfNeeded(Ipc.Error error)
+        private bool TryAuthAndRetry(Ipc.Error error)
         {
-            if (error.Code == Ipc.ErrorCode.Unauthenticated)
+            if (error.Code != Ipc.ErrorCode.Unauthenticated)
             {
-                Debug.Log("Attempting to authenticate...");
-                manager.Auth();
-                return true;
+                return false;
             }
 
-            return false;
+            Debug.Log("Attempting to authenticate...");
+            manager.Auth();
+
+            return true;
+        }
+
+        private string GetStatusMessage()
+        {
+            if (!manager.IsActive)
+            {
+                return "";
+            }
+
+            var sb = new StringBuilder();
+
+            switch (manager.CurrentTask)
+            {
+                case UploadTask task:
+                    sb.AppendLine($"Uploading assembly \"{task.Context.AssemblyName}\".");
+                    break;
+                case LaunchTask task:
+                    sb.AppendLine($"Launching deployment \"{task.Context.Item3.Name}\" in project \"{task.Context.Item1}\".");
+                    break;
+                case ListTask task:
+                    sb.AppendLine($"Listing deployments in project \"{task.Context}\"");
+                    break;
+                case StopTask task:
+                    sb.AppendLine($"Stopping deployment \"{task.Context.Name}\"");
+                    break;
+                case AuthTask _:
+                    sb.AppendLine("Attempting to authenticate.");
+                    break;
+                default:
+                    sb.AppendLine("Unknown action running.");
+                    break;
+            }
+
+            sb.Append("Assembly reloading locked.");
+
+            return sb.ToString();
         }
 
         private bool IsSelectedValid<T>(List<T> list, int index)
@@ -739,174 +782,6 @@ namespace Improbable.Gdk.DeploymentManager
             var imageId = Mathf.RoundToInt(value) % 12;
             var icon = EditorGUIUtility.IconContent($"d_WaitSpin{imageId:D2}");
             EditorGUI.DrawPreviewTexture(rect, icon.image, spinnerMaterial, ScaleMode.ScaleToFit, 1);
-        }
-
-        private class TaskManager
-        {
-            public bool IsActive => isUploading || isLaunching || isListing || isStopping || isAuthing;
-
-            public readonly List<WrappedTask<RedirectedProcessResult, AssemblyConfig>> CompletedUploadTasks = new List<WrappedTask<RedirectedProcessResult, AssemblyConfig>>();
-            public readonly List<WrappedTask<Result<RedirectedProcessResult, Ipc.Error>, (string, string, BaseDeploymentConfig)>> CompletedLaunchTasks = new List<WrappedTask<Result<RedirectedProcessResult, Ipc.Error>, (string, string, BaseDeploymentConfig)>>();
-            public readonly List<WrappedTask<Result<List<DeploymentInfo>, Ipc.Error>, string>> CompletedListTasks = new List<WrappedTask<Result<List<DeploymentInfo>, Ipc.Error>, string>>();
-            public readonly List<WrappedTask<Result<RedirectedProcessResult, Ipc.Error>, DeploymentInfo>> CompletedStopTasks = new List<WrappedTask<Result<RedirectedProcessResult, Ipc.Error>, DeploymentInfo>>();
-            public readonly List<WrappedTask<RedirectedProcessResult, int>> CompletedAuthTasks = new List<WrappedTask<RedirectedProcessResult, int>>();
-
-            private WrappedTask<RedirectedProcessResult, AssemblyConfig> uploadTask;
-            private WrappedTask<Result<RedirectedProcessResult, Ipc.Error>, (string, string, BaseDeploymentConfig)> launchTask;
-            private WrappedTask<Result<RedirectedProcessResult, Ipc.Error>, DeploymentInfo> stopTask;
-            private WrappedTask<Result<List<DeploymentInfo>, Ipc.Error>, string> listTask;
-            private WrappedTask<RedirectedProcessResult, int> authTask;
-
-            private bool isUploading;
-            private bool isLaunching;
-            private bool isListing;
-            private bool isStopping;
-            private bool isAuthing;
-
-            private List<(string, string, BaseDeploymentConfig)> queuedLaunches = new List<(string, string, BaseDeploymentConfig)>();
-
-            public void ClearResults()
-            {
-                CompletedUploadTasks.Clear();
-                CompletedLaunchTasks.Clear();
-                CompletedListTasks.Clear();
-                CompletedStopTasks.Clear();
-                CompletedAuthTasks.Clear();
-            }
-
-            public void Upload(AssemblyConfig config)
-            {
-                EditorApplication.LockReloadAssemblies();
-                isUploading = true;
-                uploadTask = Assembly.UploadAsync(config);
-            }
-
-            public void Launch(string projectName, string assemblyName, BaseDeploymentConfig config)
-            {
-                queuedLaunches.Add((projectName, assemblyName, config));
-                EditorApplication.LockReloadAssemblies();
-                isLaunching = true;
-            }
-
-            public void LaunchImmediate(string projectName, string assemblyName, BaseDeploymentConfig config)
-            {
-                queuedLaunches.Insert(0, (projectName, assemblyName, config));
-            }
-
-            public void List(string projectName)
-            {
-                EditorApplication.LockReloadAssemblies();
-                isListing = true;
-                listTask = Deployment.ListAsync(projectName);
-            }
-
-            public void Stop(DeploymentInfo info)
-            {
-                EditorApplication.LockReloadAssemblies();
-                isStopping = true;
-                stopTask = Deployment.StopAsync(info);
-            }
-
-            public void Auth()
-            {
-                EditorApplication.LockReloadAssemblies();
-                isAuthing = true;
-                authTask = Authentication.Authenticate();
-            }
-
-            public void Update()
-            {
-                if (!IsActive)
-                {
-                    EditorApplication.UnlockReloadAssemblies();
-                }
-
-                // We are in the middle of a launching sequence and haven't been interrupted to re-auth.
-                if (isLaunching && launchTask == null && !isAuthing)
-                {
-                    if (queuedLaunches.Count > 0)
-                    {
-                        var (projectName, assemblyName, config) = queuedLaunches[0];
-                        queuedLaunches.RemoveAt(0);
-                        launchTask = Deployment.LaunchAsync(projectName, assemblyName, config);
-                    }
-                    else
-                    {
-                        isLaunching = false;
-                    }
-                }
-
-                if (uploadTask?.Task.IsCompleted == true)
-                {
-                    isUploading = false;
-                    CompletedUploadTasks.Add(uploadTask);
-                    uploadTask = null;
-                }
-
-                if (launchTask?.Task.IsCompleted == true)
-                {
-                    CompletedLaunchTasks.Add(launchTask);
-                    launchTask = null;
-                }
-
-                if (listTask?.Task.IsCompleted == true)
-                {
-                    isListing = false;
-                    CompletedListTasks.Add(listTask);
-                    listTask = null;
-                }
-
-                if (stopTask?.Task.IsCompleted == true)
-                {
-                    isStopping = false;
-                    CompletedStopTasks.Add(stopTask);
-                    stopTask = null;
-                }
-
-                if (authTask?.Task.IsCompleted == true)
-                {
-                    isAuthing = false;
-                    CompletedAuthTasks.Add(authTask);
-                    authTask = null;
-                }
-            }
-
-            public string GetStatusMessage()
-            {
-                var sb = new StringBuilder();
-
-                if (isUploading)
-                {
-                    sb.AppendLine($"Uploading assembly \"{uploadTask.Context.AssemblyName}\".");
-                }
-
-                if (isLaunching && launchTask != null)
-                {
-                    sb.AppendLine($"Launching deployment \"{launchTask.Context.Item3.Name}\" in project \"{launchTask.Context.Item1}\".");
-                }
-
-                if (isListing)
-                {
-                    sb.AppendLine($"Listing deployments in project \"{listTask.Context}\"");
-                }
-
-                if (isStopping)
-                {
-                    sb.AppendLine($"Stopping deployment \"{stopTask.Context.Name}\"");
-                }
-
-                if (isAuthing)
-                {
-                    sb.AppendLine("Attempting to authenticate.");
-                }
-
-                if (IsActive)
-                {
-                    sb.Append("Assembly reloading locked.");
-                }
-
-                return sb.ToString();
-            }
         }
     }
 }
