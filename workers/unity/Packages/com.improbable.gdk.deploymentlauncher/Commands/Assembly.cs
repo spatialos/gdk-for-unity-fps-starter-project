@@ -5,7 +5,7 @@ using Improbable.Gdk.Tools;
 
 namespace Improbable.Gdk.DeploymentManager.Commands
 {
-    public static class Assembly
+    internal static class Assembly
     {
         public static WrappedTask<RedirectedProcessResult, AssemblyConfig> UploadAsync(AssemblyConfig config)
         {

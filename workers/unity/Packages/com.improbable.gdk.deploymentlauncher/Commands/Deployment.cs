@@ -9,7 +9,7 @@ using Improbable.Gdk.Tools;
 
 namespace Improbable.Gdk.DeploymentManager.Commands
 {
-    public static class Deployment
+    internal static class Deployment
     {
         private static string DeploymentLauncherProjectPath = Path.GetFullPath(Path.Combine(
             Tools.Common.GetPackagePath("com.improbable.gdk.deploymentlauncher"),

@@ -4,7 +4,12 @@ using System.Threading.Tasks;
 
 namespace Improbable.Gdk.DeploymentManager.Commands
 {
-    public class WrappedTask<TResult, TContext> : IDisposable, IWrappedTask
+    /// <summary>
+    ///     Wraps a task, the context in which it was started, and a cancellation source for that task together.
+    /// </summary>
+    /// <typeparam name="TResult">The type of the task result.</typeparam>
+    /// <typeparam name="TContext">The context of the task.</typeparam>
+    internal class WrappedTask<TResult, TContext> : IDisposable, IWrappedTask
     {
         public Task<TResult> Task;
         public CancellationTokenSource CancelSource;
@@ -32,7 +37,10 @@ namespace Improbable.Gdk.DeploymentManager.Commands
         }
     }
 
-    public interface IWrappedTask
+    /// <summary>
+    ///     An interface that allows us to interact with a WrappedTask in a type erased way.
+    /// </summary>
+    internal interface IWrappedTask
     {
         bool IsDone();
         void Cancel();

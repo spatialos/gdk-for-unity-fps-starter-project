@@ -5,7 +5,7 @@ using Improbable.Gdk.Tools;
 
 namespace Improbable.Gdk.DeploymentManager.Commands
 {
-    public static class Authentication
+    internal static class Authentication
     {
         private static readonly string[] AuthArgs =
         {
