@@ -5,40 +5,32 @@ using Improbable.Gdk.Tools;
 
 namespace Improbable.Gdk.DeploymentManager.Commands
 {
-    internal static class Assembly
+    internal static class Authentication
     {
-        public static WrappedTask<RedirectedProcessResult, AssemblyConfig> UploadAsync(AssemblyConfig config)
+        private static readonly string[] AuthArgs =
+        {
+            "auth",
+            "login",
+            "--json_output"
+        };
+
+        public static WrappedTask<RedirectedProcessResult, int> Authenticate()
         {
             var source = new CancellationTokenSource();
             var token = source.Token;
 
-            var args = new List<string>
-            {
-                "cloud",
-                "upload",
-                config.AssemblyName,
-                "--project_name",
-                config.ProjectName,
-                "--json_output"
-            };
-
-            if (config.ShouldForceUpload)
-            {
-                args.Add("--force");
-            }
-
             var task = Task.Run(async () => await RedirectedProcess.Command(Tools.Common.SpatialBinary)
                 .InDirectory(Tools.Common.SpatialProjectRootDir)
-                .WithArgs(args.ToArray())
+                .WithArgs(AuthArgs)
                 .RedirectOutputOptions(OutputRedirectBehaviour.RedirectStdOut |
                     OutputRedirectBehaviour.RedirectStdErr | OutputRedirectBehaviour.ProcessSpatialOutput)
                 .RunAsync(token));
 
-            return new WrappedTask<RedirectedProcessResult, AssemblyConfig>
+            return new WrappedTask<RedirectedProcessResult, int>
             {
                 Task = task,
                 CancelSource = source,
-                Context = config.DeepCopy()
+                Context = 0
             };
         }
     }

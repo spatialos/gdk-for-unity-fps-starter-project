@@ -9,13 +9,13 @@ using Improbable.Gdk.Tools;
 
 namespace Improbable.Gdk.DeploymentManager.Commands
 {
-    public static class Deployment
+    internal static class Deployment
     {
         private static string DeploymentLauncherProjectPath = Path.GetFullPath(Path.Combine(
             Tools.Common.GetPackagePath("com.improbable.gdk.deploymentlauncher"),
             ".DeploymentLauncher/DeploymentLauncher.csproj"));
 
-        public static WrappedTask<Result<RedirectedProcessResult, Ipc.Error>, BaseDeploymentConfig> LaunchAsync(string projectName, string assemblyName, BaseDeploymentConfig config)
+        public static WrappedTask<Result<RedirectedProcessResult, Ipc.Error>, (string, string, BaseDeploymentConfig)> LaunchAsync(string projectName, string assemblyName, BaseDeploymentConfig config)
         {
             var source = new CancellationTokenSource();
             var token = source.Token;
@@ -26,13 +26,13 @@ namespace Improbable.Gdk.DeploymentManager.Commands
             args.Add($"--project_name={projectName}");
             args.Add($"--assembly_name={assemblyName}");
 
-            return new WrappedTask<Result<RedirectedProcessResult, Ipc.Error>, BaseDeploymentConfig>
+            return new WrappedTask<Result<RedirectedProcessResult, Ipc.Error>, (string, string, BaseDeploymentConfig)>
             {
                 Task = RunDeploymentLauncher(args,
                     OutputRedirectBehaviour.None, token,
                     RetrieveIpcError),
                 CancelSource = source,
-                Context = config.DeepCopy()
+                Context = (projectName, assemblyName, config.DeepCopy())
             };
         }
 
@@ -79,7 +79,7 @@ namespace Improbable.Gdk.DeploymentManager.Commands
 
             return new WrappedTask<Result<List<DeploymentInfo>, Ipc.Error>, string>
             {
-                Task = RunDeploymentLauncher(args, OutputRedirectBehaviour.RedirectStdErr, token,
+                Task = RunDeploymentLauncher(args, OutputRedirectBehaviour.None, token,
                     res => RetrieveDeploymentList(res, projectName)),
                 CancelSource = source,
                 Context = projectName

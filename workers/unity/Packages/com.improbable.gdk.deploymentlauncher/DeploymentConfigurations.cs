@@ -9,7 +9,7 @@ using UnityEngine.Serialization;
 namespace Improbable.Gdk.DeploymentManager
 {
     [Serializable]
-    public class DeploymentConfig
+    internal class DeploymentConfig
     {
         public class Errors
         {
@@ -124,7 +124,7 @@ namespace Improbable.Gdk.DeploymentManager
     ///     Configuration that is specific to simulated player deployments.
     /// </summary>
     [Serializable]
-    public class SimulatedPlayerDeploymentConfig : BaseDeploymentConfig
+    internal class SimulatedPlayerDeploymentConfig : BaseDeploymentConfig
     {
         /// <summary>
         ///     The name of the deployment that the simulated players should connect into.
@@ -178,7 +178,7 @@ namespace Improbable.Gdk.DeploymentManager
     }
 
     [Serializable]
-    public class BaseDeploymentConfig
+    internal class BaseDeploymentConfig
     {
         /// <summary>
         ///     The name of the deployment to launch.
@@ -354,39 +354,71 @@ namespace Improbable.Gdk.DeploymentManager
         }
     }
 
-    public enum DeploymentRegionCode
+    internal enum DeploymentRegionCode
     {
         US,
         EU
     }
 
-    public class DeploymentInfo
+    internal class DeploymentInfo
     {
         /// <summary>
         ///     The SpatialOS project that the deployment is running in.
         /// </summary>
-        public string ProjectName { get; }
+        public string ProjectName { get; private set; }
 
         /// <summary>
         ///     The name of the deployment.
         /// </summary>
-        public string Name { get; }
+        public string Name { get; private set; }
 
         /// <summary>
         ///     The id of the deployment.
         /// </summary>
-        public string Id { get; }
+        public string Id { get; private set; }
 
-        public DeploymentInfo(string projectName, string name, string id)
+        /// <summary>
+        ///     The start time of the deployment.
+        /// </summary>
+        public DateTime StartTime { get; private set; }
+
+        /// <summary>
+        ///     The region that the deployment is in.
+        /// </summary>
+        public string Region { get; private set; }
+
+        /// <summary>
+        ///     The tags on the deployment.
+        /// </summary>
+        public HashSet<string> Tags { get; private set; }
+
+        /// <summary>
+        ///     Describes the types and counts of workers that are currently connected to this deployment.
+        /// </summary>
+        public IReadOnlyDictionary<string, long> Workers { get; private set; }
+
+        public static DeploymentInfo FromJson(string projectName, Dictionary<string, object> json)
         {
-            ProjectName = projectName;
-            Name = name;
-            Id = id;
+            var workers = (Dictionary<string, object>) json["Workers"];
+
+            return new DeploymentInfo
+            {
+                ProjectName = projectName,
+                Name = (string) json["Name"],
+                Id = (string) json["Id"],
+                StartTime = DateTimeOffset.FromUnixTimeSeconds((long) json["StartTime"]).DateTime,
+                Region = (string) json["Region"],
+                Tags = new HashSet<string>(((List<object>) json["Tags"]).Select(str => (string) str)),
+                Workers = workers
+                    .Select(pair => (pair.Key, (long) pair.Value))
+                    .Where(pair => pair.Item2 > 0)
+                    .ToDictionary(pair => pair.Item1, pair => pair.Item2)
+            };
         }
     }
 
     [Serializable]
-    public class AssemblyConfig
+    internal class AssemblyConfig
     {
         /// <summary>
         ///     The name of the SpatialOS project for this assembly.
