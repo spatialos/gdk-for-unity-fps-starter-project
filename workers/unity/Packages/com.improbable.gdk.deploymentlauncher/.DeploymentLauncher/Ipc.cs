@@ -53,7 +53,7 @@ namespace Improbable.Gdk.DeploymentLauncher
         {
             public string Id;
             public string Name;
-            public string StartTime;
+            public long StartTime;
             public string Region;
             public List<string> Tags;
             public Dictionary<string, int> Workers;
@@ -62,10 +62,7 @@ namespace Improbable.Gdk.DeploymentLauncher
             {
                 Id = deployment.Id;
                 Name = deployment.Name;
-
-                var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-                StartTime = epoch.AddSeconds(deployment.StartTime.Seconds).ToString();
-
+                StartTime = deployment.StartTime.Seconds;
                 Region = deployment.RegionCode;
                 Tags = deployment.Tag.ToList();
                 Workers = deployment.WorkerConnectionCapacities

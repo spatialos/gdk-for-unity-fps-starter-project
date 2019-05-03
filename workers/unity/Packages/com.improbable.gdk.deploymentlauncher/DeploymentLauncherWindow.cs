@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -91,13 +92,12 @@ namespace Improbable.Gdk.DeploymentManager
                     var error = result.UnwrapError();
 
                     Debug.LogError($"Launch of {config.Name} failed. Code: {error.Code} Message: {error.Message}");
-                    if (CatchAuthenticationError(error))
+                    if (AuthenticateIfNeeded(error))
                     {
                         postAuthTask = () => manager.LaunchImmediate(projectName, assemblyName, config);
                     }
                 }
             }
-
 
             foreach (var wrappedTask in manager.CompletedListTasks)
             {
@@ -114,7 +114,7 @@ namespace Improbable.Gdk.DeploymentManager
 
                     Debug.LogError($"Failed to list deployments in project {wrappedTask.Context}. Code: {error.Code} Message: {error.Message}");
 
-                    if (CatchAuthenticationError(error))
+                    if (AuthenticateIfNeeded(error))
                     {
                         postAuthTask = () => manager.List(wrappedTask.Context);
                     }
@@ -134,7 +134,7 @@ namespace Improbable.Gdk.DeploymentManager
                     var error = result.UnwrapError();
 
                     Debug.LogError($"Failed to stop deployment: \"{info.Name}\". Code: {error.Code} Message: {error.Message}.");
-                    if (CatchAuthenticationError(error))
+                    if (AuthenticateIfNeeded(error))
                     {
                         postAuthTask = () => manager.Stop(wrappedTask.Context);
                     }
@@ -596,7 +596,7 @@ namespace Improbable.Gdk.DeploymentManager
                     {
                         if (foldoutState)
                         {
-                            EditorGUILayout.LabelField("Start Time", deplInfo.StartTime);
+                            EditorGUILayout.LabelField("Start Time", deplInfo.StartTime.ToString(CultureInfo.CurrentCulture));
                             EditorGUILayout.LabelField("Region", deplInfo.Region);
 
                             if (deplInfo.Workers.Count > 0)
@@ -716,7 +716,7 @@ namespace Improbable.Gdk.DeploymentManager
             }
         }
 
-        private bool CatchAuthenticationError(Ipc.Error error)
+        private bool AuthenticateIfNeeded(Ipc.Error error)
         {
             if (error.Code == Ipc.ErrorCode.Unauthenticated)
             {

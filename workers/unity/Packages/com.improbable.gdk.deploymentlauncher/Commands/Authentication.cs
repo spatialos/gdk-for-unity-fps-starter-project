@@ -7,21 +7,21 @@ namespace Improbable.Gdk.DeploymentManager.Commands
 {
     public static class Authentication
     {
+        private static readonly string[] AuthArgs =
+        {
+            "auth",
+            "login",
+            "--json_output"
+        };
+
         public static WrappedTask<RedirectedProcessResult, int> Authenticate()
         {
             var source = new CancellationTokenSource();
             var token = source.Token;
 
-            var args = new List<string>
-            {
-                "auth",
-                "login",
-                "--json_output"
-            };
-
             var task = Task.Run(async () => await RedirectedProcess.Command(Tools.Common.SpatialBinary)
                 .InDirectory(Tools.Common.SpatialProjectRootDir)
-                .WithArgs(args.ToArray())
+                .WithArgs(AuthArgs)
                 .RedirectOutputOptions(OutputRedirectBehaviour.RedirectStdOut |
                     OutputRedirectBehaviour.RedirectStdErr | OutputRedirectBehaviour.ProcessSpatialOutput)
                 .RunAsync(token));

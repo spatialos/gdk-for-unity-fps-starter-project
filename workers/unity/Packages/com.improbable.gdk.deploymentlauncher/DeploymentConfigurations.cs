@@ -380,7 +380,7 @@ namespace Improbable.Gdk.DeploymentManager
         /// <summary>
         ///     The start time of the deployment.
         /// </summary>
-        public string StartTime { get; private set; }
+        public DateTime StartTime { get; private set; }
 
         /// <summary>
         ///     The region that the deployment is in.
@@ -390,8 +390,11 @@ namespace Improbable.Gdk.DeploymentManager
         /// <summary>
         ///     The tags on the deployment.
         /// </summary>
-        public List<string> Tags { get; private set; }
+        public HashSet<string> Tags { get; private set; }
 
+        /// <summary>
+        ///     Describes the types and counts of workers that are currently connected to this deployment.
+        /// </summary>
         public Dictionary<string, long> Workers { get; private set; }
 
         public static DeploymentInfo FromJson(string projectName, Dictionary<string, object> json)
@@ -403,9 +406,9 @@ namespace Improbable.Gdk.DeploymentManager
                 ProjectName = projectName,
                 Name = (string) json["Name"],
                 Id = (string) json["Id"],
-                StartTime = (string) json["StartTime"],
+                StartTime = DateTimeOffset.FromUnixTimeSeconds((long) json["StartTime"]).DateTime,
                 Region = (string) json["Region"],
-                Tags = ((List<object>) json["Tags"]).Select(str => (string) str).ToList(),
+                Tags = new HashSet<string>(((List<object>) json["Tags"]).Select(str => (string) str)),
                 Workers = workers
                     .Select(pair => (pair.Key, (long) pair.Value))
                     .Where(pair => pair.Item2 > 0)
