@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Breaking Changes
+- Removed the `AndroidWorkerConnector` and `iOSWorkerConnector` and their specific scenes. You can now use the `MobileWorkerConnector` and its `FPS-MobileClientScene` to connect to a mobile device.
+
 ### Added
 
 - Added session-based gameplay, hidden behind the `Use Session Based Flow` feature flag.
@@ -11,7 +14,6 @@
 - Changed connection and player-spawn flow.
 - Updated the available prefabs and textures.
 - Disabled anti-aliasing for mobile to improve performance.
-- Removed the `AndroidWorkerConnector` and `iOSWorkerConnector` and their specific scenes. You can now use the `MobileWorkerConnector` and its `FPS-MobileClientScene` to connect to a mobile device.
 
 ## `0.2.1` - 2019-04-15
 

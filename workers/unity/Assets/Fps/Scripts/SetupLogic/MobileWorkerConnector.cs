@@ -63,7 +63,6 @@ namespace Fps
                     UseExternalIp = true,
                     Kcp = new KcpNetworkParameters
                     {
-                        // These are the last tested values
                         Heartbeat = new HeartbeatParameters()
                         {
                             IntervalMillis = 5000,
