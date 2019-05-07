@@ -58,6 +58,7 @@ namespace Fps
             shooting = GetComponent<ClientShooting>();
             shotRayProvider = GetComponent<ShotRayProvider>();
             fpsAnimator = GetComponent<FpsAnimator>();
+            fpsAnimator.InitializeOwnAnimator();
             currentGun = GetComponent<GunManager>();
             controller = GetComponent<IControlProvider>();
 

@@ -79,6 +79,14 @@ namespace Fps
             SetBoolParameter(aimingParameter, aiming);
         }
 
+        public void InitializeOwnAnimator()
+        {
+            foreach (var animator in animators)
+            {
+                animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+            }
+        }
+
         public void Jump()
         {
             foreach (var animator in animators)
