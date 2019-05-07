@@ -32,6 +32,23 @@ namespace Improbable.Gdk.DeploymentManager
             queuedTasks.Clear();
         }
 
+        public bool CancelCurrentTask(int originalTaskId)
+        {
+            if (CurrentTask == null)
+            {
+                return false;
+            }
+
+            if (originalTaskId != CurrentTask.GetId() || CurrentTask.IsDone())
+            {
+                return false;
+            }
+
+            CurrentTask?.Cancel();
+            CurrentTask = null;
+            return true;
+        }
+
         public void Upload(AssemblyConfig config, QueueMode mode = QueueMode.Enqueue)
         {
             AddTask(mode, () => Assembly.UploadAsync(config));
@@ -79,7 +96,6 @@ namespace Improbable.Gdk.DeploymentManager
                     CurrentTask = queuedTask();
                     hasStartedTask = true;
                 }
-
 
                 if (hasStartedTask)
                 {

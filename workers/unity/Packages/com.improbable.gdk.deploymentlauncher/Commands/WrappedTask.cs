@@ -21,6 +21,11 @@ namespace Improbable.Gdk.DeploymentManager.Commands
             CancelSource?.Dispose();
         }
 
+        public int GetId()
+        {
+            return Task?.Id ?? 0;
+        }
+
         public bool IsDone()
         {
             return Task.IsCompleted;
@@ -42,6 +47,7 @@ namespace Improbable.Gdk.DeploymentManager.Commands
     /// </summary>
     internal interface IWrappedTask
     {
+        int GetId();
         bool IsDone();
         void Cancel();
         void Wait();
