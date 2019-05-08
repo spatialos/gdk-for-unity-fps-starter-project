@@ -14,24 +14,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AssemblyConfig:
     ProjectName: unity_gdk
-    AssemblyName: shooty_shooty
+    AssemblyName: myassembly
     ShouldForceUpload: 0
   DeploymentConfigs:
   - ProjectName: unity_gdk
-    AssemblyName: shooty_shooty
+    AssemblyName: myassembly
     Deployment:
-      Name: my_first_deployment
+      Name: my_deployment
       SnapshotPath: snapshots/cloud.snapshot
       LaunchJson: cloud_launch_large.json
       Region: 1
       Tags:
       - dev_login
     SimulatedPlayerDeploymentConfigs:
-    - Name: my_first_deployment_sim1
+    - Name: my_deployment_sim1
       SnapshotPath: 
       LaunchJson: cloud_launch_large_sim_players.json
       Region: 1
       Tags: []
-      TargetDeploymentName: my_first_deployment
+      TargetDeploymentName: my_deployment
       FlagPrefix: fps
       WorkerType: SimulatedPlayerCoordinator
