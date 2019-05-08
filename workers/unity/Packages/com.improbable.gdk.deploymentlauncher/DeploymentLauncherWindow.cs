@@ -306,7 +306,9 @@ namespace Improbable.Gdk.DeploymentManager
                     using (new EditorGUILayout.HorizontalScope())
                     {
                         EditorGUILayout.HelpBox(GetStatusMessage(), MessageType.Info);
-                        if (GUILayout.Button("Cancel", GUILayout.Height(38), GUILayout.Width(75)))
+
+                        if (!(manager.CurrentTask is AuthTask) &&
+                            GUILayout.Button("Cancel", GUILayout.Height(38), GUILayout.Width(75)))
                         {
                             CancelCurrentTask();
                         }
@@ -338,9 +340,6 @@ namespace Improbable.Gdk.DeploymentManager
                 case StopTask task:
                     sb.Append("Are you sure you want to cancel stopping your deployment?");
                     break;
-                case AuthTask task:
-                    Debug.Log("Cannot cancel an authenticated task.");
-                    return;
                 default:
                     return;
             }
