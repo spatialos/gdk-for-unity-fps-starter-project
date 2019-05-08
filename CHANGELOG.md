@@ -9,6 +9,9 @@
 ### Added
 
 - Added session-based gameplay, hidden behind the `Use Session Based Flow` feature flag.
+- Deployment launcher is now an independent GDK feature module outside of the FPS Starter Project.
+    - Added `DeploymentLauncherConfig` asset.
+    - Updated location of deployment launcher in `manifest.json`.
 
 ### Changed
 
