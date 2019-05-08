@@ -303,10 +303,63 @@ namespace Improbable.Gdk.DeploymentManager
 
                 if (manager.IsActive)
                 {
-                    EditorGUILayout.HelpBox(GetStatusMessage(), MessageType.Info);
+                    using (new EditorGUILayout.HorizontalScope())
+                    {
+                        EditorGUILayout.HelpBox(GetStatusMessage(), MessageType.Info);
+
+                        if (!(manager.CurrentTask is AuthTask) &&
+                            GUILayout.Button("Cancel", GUILayout.Height(38), GUILayout.Width(75)))
+                        {
+                            CancelCurrentTask();
+                        }
+                    }
+
                     var rect = EditorGUILayout.GetControlRect(false, 20);
                     DrawSpinner(Time.realtimeSinceStartup * 10, rect);
+
                     Repaint();
+                }
+            }
+        }
+
+        private void CancelCurrentTask()
+        {
+            var sb = new StringBuilder();
+
+            switch (manager.CurrentTask)
+            {
+                case UploadTask task:
+                    sb.Append("Are you sure you want to cancel uploading your assembly?");
+                    break;
+                case LaunchTask task:
+                    sb.Append("Are you sure you want to cancel launching your deployment?");
+                    break;
+                case ListTask task:
+                    sb.Append("Are you sure you want to cancel listing live deployments?");
+                    break;
+                case StopTask task:
+                    sb.Append("Are you sure you want to cancel stopping your deployment?");
+                    break;
+                default:
+                    return;
+            }
+
+            sb.AppendLine(" Cancelling a running task can have unintended side-effects.");
+
+            var taskId = manager.CurrentTask.GetId();
+            if (EditorUtility.DisplayDialog(
+                "Cancel running task",
+                sb.ToString(),
+                "Cancel",
+                "Keep running task"))
+            {
+                if (manager.CancelCurrentTask(taskId))
+                {
+                    Debug.Log("Cancelled task.");
+                }
+                else
+                {
+                    Debug.LogWarning("Cannot cancel task as it has already reached completion.");
                 }
             }
         }
