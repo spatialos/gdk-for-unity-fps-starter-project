@@ -3,7 +3,7 @@ using Improbable.Gdk.Core.Editor;
 using Improbable.Gdk.Tools;
 using UnityEngine;
 
-namespace Improbable.Gdk.DeploymentManager
+namespace Improbable.Gdk.DeploymentLauncher
 {
     [CreateAssetMenu(fileName = "SpatialOS Deployment Launcher Config", menuName = EditorConfig.ParentMenu + "/Deployment Launcher Config")]
     internal class DeploymentLauncherConfig : SingletonScriptableObject<DeploymentLauncherConfig>

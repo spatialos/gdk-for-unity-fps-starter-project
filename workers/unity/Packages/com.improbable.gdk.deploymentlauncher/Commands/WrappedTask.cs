@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Improbable.Gdk.DeploymentManager.Commands
+namespace Improbable.Gdk.DeploymentLauncher.Commands
 {
     /// <summary>
     ///     Wraps a task, the context in which it was started, and a cancellation source for that task together.

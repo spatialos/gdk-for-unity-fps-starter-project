@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Improbable.Gdk.Core.Collections;
 using Improbable.Gdk.Tools;
 
-namespace Improbable.Gdk.DeploymentManager.Commands
+namespace Improbable.Gdk.DeploymentLauncher.Commands
 {
     internal static class Deployment
     {

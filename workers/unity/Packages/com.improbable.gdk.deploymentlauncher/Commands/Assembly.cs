@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Improbable.Gdk.Tools;
 
-namespace Improbable.Gdk.DeploymentManager.Commands
+namespace Improbable.Gdk.DeploymentLauncher.Commands
 {
     internal static class Assembly
     {

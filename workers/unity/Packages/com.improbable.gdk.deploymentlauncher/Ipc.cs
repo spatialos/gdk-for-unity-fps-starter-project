@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Improbable.Gdk.Core.Collections;
 using Improbable.Gdk.Tools.MiniJSON;
-using UnityEngine;
 
-namespace Improbable.Gdk.DeploymentManager
+namespace Improbable.Gdk.DeploymentLauncher
 {
     internal static class Ipc
     {

@@ -4,9 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using UnityEngine.Serialization;
 
-namespace Improbable.Gdk.DeploymentManager
+namespace Improbable.Gdk.DeploymentLauncher
 {
     [Serializable]
     internal class DeploymentConfig

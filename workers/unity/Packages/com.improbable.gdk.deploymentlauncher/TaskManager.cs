@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using Improbable.Gdk.DeploymentManager.Commands;
+using Improbable.Gdk.DeploymentLauncher.Commands;
 using UnityEditor;
 
-namespace Improbable.Gdk.DeploymentManager
+namespace Improbable.Gdk.DeploymentLauncher
 {
     internal class TaskManager
     {
