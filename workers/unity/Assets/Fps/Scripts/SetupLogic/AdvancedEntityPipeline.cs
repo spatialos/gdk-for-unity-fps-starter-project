@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Fps;
 using Improbable;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectCreation;
@@ -24,6 +25,8 @@ public class AdvancedEntityPipeline : IEntityGameObjectCreator
     private readonly Worker worker;
 
     private readonly Dictionary<EntityId, GameObject> gameObjectsCreated = new Dictionary<EntityId, GameObject>();
+
+    public event Action OnRemovedAuthoritativePlayer;
 
     private readonly Type[] componentsToAdd =
     {
@@ -91,6 +94,12 @@ public class AdvancedEntityPipeline : IEntityGameObjectCreator
         {
             fallback.OnEntityRemoved(entityId);
             return;
+        }
+
+        // Trigger a callback when authoritative player gets removed
+        if (go.GetComponent<FpsDriver>() != null)
+        {
+            OnRemovedAuthoritativePlayer?.Invoke();
         }
 
         gameObjectsCreated.Remove(entityId);

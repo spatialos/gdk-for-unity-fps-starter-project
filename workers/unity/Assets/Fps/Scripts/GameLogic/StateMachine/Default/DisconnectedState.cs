@@ -1,3 +1,5 @@
+using Improbable.Gdk.Core;
+
 namespace Fps
 {
     public class DisconnectedState : DefaultState
@@ -8,6 +10,7 @@ namespace Fps
 
         public override void StartState()
         {
+            UnityObjectDestroyer.Destroy(Blackboard.ClientConnector.gameObject);
             Blackboard.ClientConnector = null;
             ScreenManager.DefaultConnectButton.enabled = true;
             ScreenManager.DefaultConnectButton.onClick.AddListener(Connect);

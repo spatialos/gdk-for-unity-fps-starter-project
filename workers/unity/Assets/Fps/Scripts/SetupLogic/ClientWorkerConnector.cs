@@ -21,6 +21,8 @@ namespace Fps
 
         protected bool UseSessionFlow => !string.IsNullOrEmpty(deployment);
 
+        public event Action OnLostPlayerEntity;
+
         public async void Connect(string deployment = "")
         {
             this.deployment = deployment.Trim();
@@ -95,11 +97,12 @@ namespace Fps
 
             var fallback = new GameObjectCreatorFromMetadata(Worker.WorkerType, Worker.Origin, Worker.LogDispatcher);
 
+            var entityPipeline = new AdvancedEntityPipeline(Worker, GetAuthPlayerPrefabPath(),
+                GetNonAuthPlayerPrefabPath(), fallback);
+            entityPipeline.OnRemovedAuthoritativePlayer += RemovingAuthoritativePlayer;
+
             // Set the Worker gameObject to the ClientWorker so it can access PlayerCreater reader/writers
-            GameObjectCreationHelper.EnableStandardGameObjectCreation(
-                world,
-                new AdvancedEntityPipeline(Worker, GetAuthPlayerPrefabPath(), GetNonAuthPlayerPrefabPath(), fallback),
-                gameObject);
+            GameObjectCreationHelper.EnableStandardGameObjectCreation(world, entityPipeline, gameObject);
 
             if (UseSessionFlow)
             {
@@ -107,6 +110,12 @@ namespace Fps
             }
 
             base.HandleWorkerConnectionEstablished();
+        }
+
+        private void RemovingAuthoritativePlayer()
+        {
+            Debug.LogError($"Removing authoritative player.");
+            OnLostPlayerEntity?.Invoke();
         }
 
         protected override void HandleWorkerConnectionFailure(string errorMessage)

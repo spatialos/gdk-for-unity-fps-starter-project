@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace Fps
 {
     public class DefaultPlayState : DefaultState
@@ -9,6 +11,7 @@ namespace Fps
         public override void StartState()
         {
             Blackboard.ClientConnector.Worker.OnDisconnect += WorkerOnDisconnect;
+            Blackboard.ClientConnector.OnLostPlayerEntity += LostPlayerEntity;
             Manager.InGameManager.Timer.SetActive(false);
             Manager.ShowGameView();
         }
@@ -16,9 +19,15 @@ namespace Fps
         public override void ExitState()
         {
             Blackboard.ClientConnector.Worker.OnDisconnect -= WorkerOnDisconnect;
+            Blackboard.ClientConnector.OnLostPlayerEntity -= LostPlayerEntity;
         }
 
         private void WorkerOnDisconnect(string reason)
+        {
+            Owner.SetState(new DisconnectedState(Manager, Owner));
+        }
+
+        private void LostPlayerEntity()
         {
             Owner.SetState(new DisconnectedState(Manager, Owner));
         }
