@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace Fps
 {
     public class DefaultPlayState : DefaultState
