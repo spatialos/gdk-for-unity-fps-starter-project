@@ -1,4 +1,4 @@
-using Improbable.Gdk.Core;
+using UnityEngine;
 
 namespace Fps
 {
@@ -10,7 +10,7 @@ namespace Fps
 
         public override void StartState()
         {
-            UnityObjectDestroyer.Destroy(Blackboard.ClientConnector.gameObject);
+            Object.Destroy(Blackboard.ClientConnector.gameObject);
             Blackboard.ClientConnector = null;
             ScreenManager.DefaultConnectButton.enabled = true;
             ScreenManager.DefaultConnectButton.onClick.AddListener(Connect);

@@ -114,7 +114,7 @@ namespace Fps
 
         private void RemovingAuthoritativePlayer()
         {
-            Debug.LogError($"Removing authoritative player.");
+            Debug.LogError($"Player entity got removed while still being connected. Disconnecting...");
             OnLostPlayerEntity?.Invoke();
         }
 

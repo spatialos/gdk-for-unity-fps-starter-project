@@ -27,6 +27,9 @@ namespace Fps
 
         private void LostPlayerEntity()
         {
+            Manager.ShowFrontEnd();
+            ScreenManager.SwitchToDefaultScreen();
+            Animator.SetTrigger("Disconnected");
             Owner.SetState(new DisconnectedState(Manager, Owner));
         }
     }

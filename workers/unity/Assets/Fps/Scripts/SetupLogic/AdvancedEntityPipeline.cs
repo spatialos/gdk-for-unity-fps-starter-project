@@ -39,7 +39,7 @@ namespace Fps
         {
             this.worker = worker;
             this.fallback = fallback;
-            workerIdAttribute = string.Format(WorkerAttributeFormat, worker.WorkerId);
+            workerIdAttribute = EntityTemplate.GetWorkerAccessAttribute(worker.WorkerId);
             cachedAuthPlayer = Resources.Load<GameObject>(authPlayer);
             cachedNonAuthPlayer = Resources.Load<GameObject>(nonAuthPlayer);
         }
