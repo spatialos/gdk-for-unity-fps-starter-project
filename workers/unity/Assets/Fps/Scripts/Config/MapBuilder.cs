@@ -279,7 +279,6 @@ namespace Fps
             var timeLimit = TimeSpan.FromSeconds(1.0f / targetFramerate);
             var timeStart = DateTime.UtcNow;
 
-
             // Tiles are built in a spiral manner from the centre outward to ensure increasing the # of tile layers doesn't
             // alter the existing tile types.
             SceneManager.SetActiveScene(tempScene);
