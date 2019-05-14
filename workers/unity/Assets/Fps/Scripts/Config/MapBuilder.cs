@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Improbable.Gdk.Core;
 using UnityEngine;
 using UnityEngine.Profiling;
+using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 using Random = System.Random;
 
@@ -16,6 +17,8 @@ namespace Fps
 
         private int layers;
         private Random random;
+        private Scene tempScene;
+        private Scene activeScene;
 
         private GameObject groundTile;
         private GameObject groundEdge;
@@ -50,7 +53,7 @@ namespace Fps
 
         public MapBuilder(MapTemplate mapTemplate, GameObject parentGameObject)
         {
-            this.mapTemplate = mapTemplate;
+            this.mapTemplate = mapTemplate.Copy();
             this.parentGameObject = parentGameObject;
         }
 
@@ -64,6 +67,8 @@ namespace Fps
 
             layers = worldLayers;
             random = new Random(seed.GetHashCode());
+            tempScene = SceneManager.CreateScene(parentGameObject.name, new CreateSceneParameters(LocalPhysicsMode.None));
+            activeScene = SceneManager.GetActiveScene();
 
             if (!TryLoadResources())
             {
@@ -73,36 +78,31 @@ namespace Fps
 
             Clean();
 
-            Profiler.BeginSample("InitializeGroupsAndComponents");
             InitializeGroupsAndComponents();
-            Profiler.EndSample();
 
             // Initialize tiles
-            Profiler.BeginSample("CollapseTileMeshes");
+            SceneManager.SetActiveScene(tempScene);
             foreach (var tileCollection in mapTemplate.tileCollections)
             {
                 tileCollection.LoadAndOptimizeTiles();
             }
 
             mapTemplate.defaultTileCollection.LoadAndOptimizeTiles();
-            Profiler.EndSample();
+            SceneManager.SetActiveScene(activeScene);
+
+            yield return null;
 
             var originalPosition = parentGameObject.transform.position;
             var originalRotation = parentGameObject.transform.rotation;
             parentGameObject.transform.position = Vector3.zero;
             parentGameObject.transform.rotation = Quaternion.identity;
 
-            Profiler.BeginSample("PlaceTiles");
-            PlaceTiles();
-            Profiler.EndSample();
+            yield return PlaceTiles();
 
-            Profiler.BeginSample("PlaceGround");
+            SceneManager.SetActiveScene(tempScene);
+
             PlaceGround();
-            Profiler.EndSample();
-
-            Profiler.BeginSample("FillSurround");
             FillSurround();
-            Profiler.EndSample();
 
             spawnPointSystemTransform.gameObject.GetComponent<SpawnPoints>()?.SetSpawnPoints();
 
@@ -110,16 +110,16 @@ namespace Fps
             parentGameObject.transform.rotation = originalRotation;
 
             // Cleanup
-            Profiler.BeginSample("CleanupTileMeshes");
             foreach (var tileCollection in mapTemplate.tileCollections)
             {
                 tileCollection.Clear();
             }
 
             mapTemplate.defaultTileCollection.Clear();
-            Profiler.EndSample();
 
-            TileCollapser.Clear();
+            // Merge building temp scene into active scene
+            SceneManager.SetActiveScene(activeScene);
+            SceneManager.MergeScenes(tempScene, activeScene);
         }
 
         private void InitializeGroupsAndComponents()
@@ -268,15 +268,21 @@ namespace Fps
                 surroundParentTransform);
         }
 
-        private void PlaceTiles()
+        private IEnumerator PlaceTiles()
         {
             var tileCoord = new Vector2Int(0, 0);
             var diff = new Vector2Int(0, -1);
 
             var tileCount = Math.Pow(2 * layers, 2);
 
+            var targetFramerate = 10.0f;
+            var timeLimit = TimeSpan.FromSeconds(1.0f / targetFramerate);
+            var timeStart = DateTime.UtcNow;
+
+
             // Tiles are built in a spiral manner from the centre outward to ensure increasing the # of tile layers doesn't
             // alter the existing tile types.
+            SceneManager.SetActiveScene(tempScene);
             for (var i = 0; i < tileCount; i++)
             {
                 // -layers < x <= layers AND -layers < y <= layers
@@ -294,7 +300,17 @@ namespace Fps
                 }
 
                 tileCoord += diff;
+
+                if (DateTime.UtcNow.Subtract(timeStart) >= timeLimit)
+                {
+                    SceneManager.SetActiveScene(activeScene);
+                    yield return null;
+                    timeStart = DateTime.UtcNow;
+                    SceneManager.SetActiveScene(tempScene);
+                }
             }
+
+            SceneManager.SetActiveScene(activeScene);
 
             tileParentTransform.position = new Vector3
             {

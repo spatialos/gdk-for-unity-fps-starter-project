@@ -1,17 +1,17 @@
 ﻿using System.Collections.Generic;
-using Improbable.Gdk.Core;
 using MeshUtilities;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
-public static class TileCollapser
+public class TileCollapser
 {
-    private static readonly Dictionary<string, CombinedMeshAndMaterialsData> collapsedInstances =
+    private readonly Dictionary<string, CombinedMeshAndMaterialsData> collapsedInstances =
         new Dictionary<string, CombinedMeshAndMaterialsData>();
 
-    private static readonly List<MeshRenderer> renderComponentsCache = new List<MeshRenderer>();
-    private static readonly List<MeshFilter> filterComponentsCache = new List<MeshFilter>();
+    private readonly List<MeshRenderer> renderComponentsCache = new List<MeshRenderer>();
+    private readonly List<MeshFilter> filterComponentsCache = new List<MeshFilter>();
 
-    public static void CollapseMeshes(GameObject tile)
+    public void CollapseMeshes(GameObject tile)
     {
         if (!collapsedInstances.ContainsKey(tile.name))
         {
@@ -27,12 +27,7 @@ public static class TileCollapser
         filterComponentsCache.Clear();
     }
 
-    public static void Clear()
-    {
-        collapsedInstances.Clear();
-    }
-
-    private static void DestroyMeshRenderers(GameObject tile)
+    private void DestroyMeshRenderers(GameObject tile)
     {
         tile.GetComponentsInChildren<MeshRenderer>(renderComponentsCache);
         foreach (var meshRenderer in renderComponentsCache)
@@ -47,7 +42,7 @@ public static class TileCollapser
         }
     }
 
-    private static void ApplyCollapsed(GameObject tile)
+    private void ApplyCollapsed(GameObject tile)
     {
         var mf = tile.gameObject.AddComponent<MeshFilter>();
         var mr = tile.gameObject.AddComponent<MeshRenderer>();
