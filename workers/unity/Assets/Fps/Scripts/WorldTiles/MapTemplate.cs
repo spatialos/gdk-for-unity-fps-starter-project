@@ -16,6 +16,24 @@ namespace Fps
         private readonly Dictionary<Color32, TileTypeCollection> tileLookup =
             new Dictionary<Color32, TileTypeCollection>();
 
+        public MapTemplate Copy()
+        {
+            var clone = ScriptableObject.CreateInstance<MapTemplate>();
+            clone.templateBitmap = templateBitmap;
+
+            clone.tileCollections = new TileTypeCollection[tileCollections.Length];
+            for (var i = 0; i < tileCollections.Length; i++)
+            {
+                clone.tileCollections[i] = tileCollections[i].Copy();
+            }
+
+            clone.defaultTileCollection = defaultTileCollection.Copy();
+
+            clone.InitializeLookup();
+
+            return clone;
+        }
+
         public GameObject GetTileForLocation(Vector2 location, Random random)
         {
             var collection = defaultTileCollection;

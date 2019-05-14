@@ -1,6 +1,4 @@
-﻿using System;
-using Improbable.Gdk.Core;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Profiling;
 using Random = System.Random;
 
@@ -16,12 +14,17 @@ namespace Fps
 
         private GameObject[] optimizedTiles;
 
+        public TileTypeCollection Copy()
+        {
+            return Object.Instantiate(this);
+        }
+
         public GameObject GetRandomTile(Random random)
         {
             var rand = random.NextDouble();
             if (chanceOfEmptyTile == 0f || rand > chanceOfEmptyTile)
             {
-                return optimizedTiles[random.Next(0, tiles.Length)];
+                return optimizedTiles[random.Next(0, optimizedTiles.Length)];
             }
 
             return null;
@@ -29,13 +32,15 @@ namespace Fps
 
         public void LoadAndOptimizeTiles()
         {
+            var collapser = new TileCollapser();
             optimizedTiles = new GameObject[tiles.Length];
+
             for (var i = 0; i < tiles.Length; i++)
             {
                 Profiler.BeginSample("OptimizeTile");
                 var tile = Instantiate(tiles[i]);
                 tile.name = tiles[i].name;
-                TileCollapser.CollapseMeshes(tile);
+                collapser.CollapseMeshes(tile);
                 optimizedTiles[i] = tile;
                 Profiler.EndSample();
             }
