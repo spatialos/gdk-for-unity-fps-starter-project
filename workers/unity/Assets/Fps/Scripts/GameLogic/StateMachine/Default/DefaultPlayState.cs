@@ -9,6 +9,7 @@ namespace Fps
         public override void StartState()
         {
             Blackboard.ClientConnector.Worker.OnDisconnect += WorkerOnDisconnect;
+            Blackboard.ClientConnector.OnLostPlayerEntity += LostPlayerEntity;
             Manager.InGameManager.Timer.SetActive(false);
             Manager.ShowGameView();
         }
@@ -16,10 +17,19 @@ namespace Fps
         public override void ExitState()
         {
             Blackboard.ClientConnector.Worker.OnDisconnect -= WorkerOnDisconnect;
+            Blackboard.ClientConnector.OnLostPlayerEntity -= LostPlayerEntity;
         }
 
         private void WorkerOnDisconnect(string reason)
         {
+            Owner.SetState(new DisconnectedState(Manager, Owner));
+        }
+
+        private void LostPlayerEntity()
+        {
+            Manager.ShowFrontEnd();
+            ScreenManager.SwitchToDefaultScreen();
+            Animator.SetTrigger("Disconnected");
             Owner.SetState(new DisconnectedState(Manager, Owner));
         }
     }
