@@ -2,8 +2,11 @@
 
 ## Unreleased
 
+## `0.2.2` - 2019-05-15
+
 ### Breaking Changes
 
+- The `w4_r1000_e1` template has now been deprecated. If you use this template, update your launch configuration to use the new `w4_r1000_e10` template.
 - Removed the `AndroidWorkerConnector` and `iOSWorkerConnector` and their specific scenes. You can now use the `MobileWorkerConnector` and its `FPS-MobileClientScene` to connect to a mobile device.
 
 ### Added
