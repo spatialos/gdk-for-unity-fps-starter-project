@@ -18,7 +18,9 @@ namespace Fps
             var uiManager = GameObject.FindGameObjectWithTag("OnScreenUI")?.GetComponent<UIManager>();
             if (uiManager == null)
             {
-                throw new NullReferenceException("Was not able to find the OnScreenUI prefab in the scene.");
+                Debug.LogWarning("Was not able to find the OnScreenUI prefab in the scene.");
+                enabled = false;
+                return;
             }
 
             uiManager.ShowGameView();
