@@ -51,15 +51,15 @@ steps:
       BUILD_TARGET: "cloud"
       SCRIPTING_TYPE: "mono"
 
-  - label: "build UnityClient il2cpp"
-    command: bash -c .shared-ci/scripts/build-worker.sh
-    <<: *common
-    artifact_paths:
-      - logs/**/*
-    env:
-      WORKER_TYPE: "UnityClient"
-      BUILD_TARGET: "local"
-      SCRIPTING_TYPE: "il2cpp"
+#  - label: "build UnityClient il2cpp"
+#    command: bash -c .shared-ci/scripts/build-worker.sh
+#    <<: *common
+#    artifact_paths:
+#      - logs/**/*
+#    env:
+#      WORKER_TYPE: "UnityClient"
+#      BUILD_TARGET: "local"
+#      SCRIPTING_TYPE: "il2cpp"
 
   - label: "build UnityGameLogic mono"
     command: bash -c .shared-ci/scripts/build-worker.sh
