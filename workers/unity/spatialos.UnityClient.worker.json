@@ -43,6 +43,8 @@
           "http://127.0.0.1:21000",
           "+projectName",
           "${IMPROBABLE_PROJECT_NAME}",
+          "+linkProtocol",
+          "Kcp",
           "-logfile",
           "../../logs/external-default-unityclient.log"
         ]
@@ -61,6 +63,8 @@
           "http://127.0.0.1:21000",
           "+projectName",
           "${IMPROBABLE_PROJECT_NAME}",
+          "+linkProtocol",
+          "Kcp",
           "-logfile",
           "../../logs/external-default-unityclient.log"
         ]

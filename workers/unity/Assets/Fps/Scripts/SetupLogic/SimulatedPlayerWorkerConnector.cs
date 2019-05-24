@@ -7,8 +7,10 @@ using Fps;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.PlayerLifecycle;
+using Improbable.Worker.CInterop;
 using Improbable.Worker.CInterop.Alpha;
 using UnityEngine;
+using LocatorParameters = Improbable.Worker.CInterop.Alpha.LocatorParameters;
 
 public class SimulatedPlayerWorkerConnector : DefaultWorkerConnector
 {
@@ -112,5 +114,18 @@ public class SimulatedPlayerWorkerConnector : DefaultWorkerConnector
         }
 
         return selectedLoginToken;
+    }
+
+    protected override ConnectionParameters GetConnectionParameters(string workerType, ConnectionService service)
+    {
+        var connectionParameters = base.GetConnectionParameters(workerType, service);
+        connectionParameters.Network.ConnectionType = RuntimeConfigDefaults.LinkProtocol;
+        connectionParameters.Network.Kcp = new KcpNetworkParameters
+        {
+            RecvWindowSize = 10000,
+            SendWindowSize = 10000,
+        };
+        Debug.Log($"LINK PROTOCOL {connectionParameters.Network.ConnectionType}");
+        return connectionParameters;
     }
 }
