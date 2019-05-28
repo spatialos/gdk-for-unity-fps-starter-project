@@ -5,6 +5,7 @@
 ### Changed
 
 - Upgraded the project to be compatible with `2019.1.3f1`.
+- Marked the Linux builds for the GameLogic worker and the Simulated Player Coordinator as required.
 
 ## `0.2.2` - 2019-05-15
 
