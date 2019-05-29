@@ -1,6 +1,6 @@
 package improbable.gdk.movement;
 
-import "from_gdk_packages/com.improbable.gdk.standardtypes/standardtypes.schema";
+import "improbable/gdk/standardtypes/standardtypes.schema";
 
 type ClientRequest {
 	improbable.gdk.standardtypes.IntDelta movement = 1;
@@ -33,7 +33,7 @@ component ServerMovement {
   id = 2021;
 
   ServerResponse latest = 1;
-  event RotationUpdate forced_rotation; 
+  event RotationUpdate forced_rotation;
 }
 
 component ClientRotation {

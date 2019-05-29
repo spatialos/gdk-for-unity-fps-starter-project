@@ -1,6 +1,6 @@
 package improbable.gdk.session;
 
-import "from_gdk_packages/com.improbable.gdk.core/common.schema";
+import "improbable/gdk/core/common.schema";
 
 component PlayerState {
     id = 1003;
@@ -8,5 +8,5 @@ component PlayerState {
     int32 kills = 3;
     int32 deaths = 4;
 
-    command improbable.common.Empty gained_kill(improbable.common.Empty);
+    command improbable.gdk.core.Empty gained_kill(improbable.gdk.core.Empty);
 }

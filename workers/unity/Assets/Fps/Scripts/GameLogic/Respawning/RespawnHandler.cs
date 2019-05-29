@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using Improbable;
-using Improbable.Common;
+using Improbable.Gdk.Core;
 using Improbable.Gdk.Subscriptions;
 using Improbable.Gdk.Health;
 using Improbable.Gdk.Movement;

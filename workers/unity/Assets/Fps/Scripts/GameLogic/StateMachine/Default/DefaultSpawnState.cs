@@ -1,4 +1,4 @@
-using Improbable.PlayerLifecycle;
+using Improbable.Gdk.PlayerLifecycle;
 using Improbable.Worker.CInterop;
 
 namespace Fps
