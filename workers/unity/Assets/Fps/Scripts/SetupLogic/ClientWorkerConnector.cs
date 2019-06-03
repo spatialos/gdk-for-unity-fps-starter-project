@@ -6,7 +6,7 @@ using Improbable.Gdk.Core;
 using UnityEngine;
 using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.PlayerLifecycle;
-using Improbable.PlayerLifecycle;
+using Improbable.Gdk.PlayerLifecycle;
 using Improbable.Worker.CInterop.Alpha;
 
 namespace Fps

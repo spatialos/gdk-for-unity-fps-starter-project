@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Text;
 using Improbable;
 using Improbable.Gdk.Core;
@@ -9,8 +8,6 @@ using Improbable.Gdk.PlayerLifecycle;
 using Improbable.Gdk.QueryBasedInterest;
 using Improbable.Gdk.Session;
 using Improbable.Gdk.StandardTypes;
-using Improbable.PlayerLifecycle;
-using UnityEngine;
 
 namespace Fps
 {
