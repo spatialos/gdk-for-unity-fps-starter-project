@@ -217,7 +217,7 @@ namespace Fps
             {
                 var update = new GunStateComponent.Update
                 {
-                    IsAiming = new Option<BlittableBool>(shouldBeAiming)
+                    IsAiming = shouldBeAiming
                 };
                 gunState.SendUpdate(update);
             }

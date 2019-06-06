@@ -3,7 +3,6 @@ using System.Collections;
 using System.Threading.Tasks;
 using Improbable.Gdk.Core;
 using Improbable.Worker.CInterop;
-using Improbable.Worker.CInterop.Alpha;
 using UnityEngine;
 
 namespace Fps

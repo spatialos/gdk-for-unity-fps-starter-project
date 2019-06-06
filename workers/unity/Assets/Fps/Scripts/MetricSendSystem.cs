@@ -31,7 +31,7 @@ namespace Fps
         protected override void OnCreateManager()
         {
             base.OnCreateManager();
-            connection = World.GetExistingManager<WorkerSystem>().Connection;
+            connection = World.GetExistingSystem<WorkerSystem>().Connection;
 
             targetFps = Application.targetFrameRate == -1
                 ? DefaultTargetFrameRate

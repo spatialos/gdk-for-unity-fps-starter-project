@@ -3,6 +3,7 @@ using Improbable.Gdk.Core;
 using Improbable.Worker.CInterop;
 using Unity.Entities;
 using UnityEngine;
+using Entity = Unity.Entities.Entity;
 
 namespace Improbable.Gdk.Health
 {
@@ -15,8 +16,8 @@ namespace Improbable.Gdk.Health
         private ComponentUpdateSystem componentUpdateSystem;
         private CommandSystem commandSystem;
 
-        private ComponentGroup initGroup;
-        private ComponentGroup regenGroup;
+        private EntityQuery initGroup;
+        private EntityQuery regenGroup;
 
         private HashSet<EntityId> recentlyDamagedCache = new HashSet<EntityId>();
 
@@ -24,20 +25,20 @@ namespace Improbable.Gdk.Health
         {
             base.OnCreateManager();
 
-            workerSystem = World.GetExistingManager<WorkerSystem>();
-            componentUpdateSystem = World.GetExistingManager<ComponentUpdateSystem>();
-            commandSystem = World.GetExistingManager<CommandSystem>();
+            workerSystem = World.GetExistingSystem<WorkerSystem>();
+            componentUpdateSystem = World.GetExistingSystem<ComponentUpdateSystem>();
+            commandSystem = World.GetExistingSystem<CommandSystem>();
 
-            initGroup = GetComponentGroup(
+            initGroup = GetEntityQuery(
                 ComponentType.ReadOnly<HealthRegenComponent.Component>(),
-                ComponentType.Subtractive<HealthRegenData>(),
+                ComponentType.Exclude<HealthRegenData>(),
                 ComponentType.ReadOnly<HealthComponent.ComponentAuthority>()
             );
             initGroup.SetFilter(HealthComponent.ComponentAuthority.Authoritative);
 
-            regenGroup = GetComponentGroup(
-                ComponentType.Create<HealthRegenComponent.Component>(),
-                ComponentType.Create<HealthRegenData>(),
+            regenGroup = GetEntityQuery(
+                ComponentType.ReadWrite<HealthRegenComponent.Component>(),
+                ComponentType.ReadWrite<HealthRegenData>(),
                 ComponentType.ReadOnly<HealthComponent.Component>(),
                 ComponentType.ReadOnly<SpatialEntityId>(),
                 ComponentType.ReadOnly<HealthComponent.ComponentAuthority>()
@@ -61,14 +62,8 @@ namespace Improbable.Gdk.Health
                 return;
             }
 
-            var entities = initGroup.GetEntityArray();
-            var regenComponentData = initGroup.GetComponentDataArray<HealthRegenComponent.Component>();
-
-            // Add the HealthRegenData if you don't currently have it.
-            for (var i = 0; i < entities.Length; i++)
+            Entities.With(initGroup).ForEach((Entity entity, ref HealthRegenComponent.Component healthRegenComponent) =>
             {
-                var healthRegenComponent = regenComponentData[i];
-
                 var regenData = new HealthRegenData();
 
                 if (healthRegenComponent.DamagedRecently)
@@ -77,8 +72,8 @@ namespace Improbable.Gdk.Health
                     regenData.NextSpatialSyncTimer = healthRegenComponent.CooldownSyncInterval;
                 }
 
-                PostUpdateCommands.AddComponent(entities[i], regenData);
-            }
+                PostUpdateCommands.AddComponent(entity, regenData);
+            });
         }
 
         private void ProcessDamageEvents()
@@ -131,75 +126,63 @@ namespace Improbable.Gdk.Health
                 return;
             }
 
-            var spatialIdData = regenGroup.GetComponentDataArray<SpatialEntityId>();
-            var healthComponentData = regenGroup.GetComponentDataArray<HealthComponent.Component>();
-            var healthRegenComponentData = regenGroup.GetComponentDataArray<HealthRegenComponent.Component>();
-            var healthRegenData = regenGroup.GetComponentDataArray<HealthRegenData>();
-
-            // Count down the timers, and update the HealthComponent accordingly.
-            for (var i = 0; i < spatialIdData.Length; i++)
-            {
-                var healthComponent = healthComponentData[i];
-                var regenComponent = healthRegenComponentData[i];
-                var regenData = healthRegenData[i];
-
-                // Don't regen if dead.
-                if (healthComponent.Health == 0)
+            Entities.With(regenGroup).ForEach(
+                (ref SpatialEntityId spatialEntityId,
+                    ref HealthComponent.Component healthComponent,
+                    ref HealthRegenComponent.Component regenComponent,
+                    ref HealthRegenData regenData) =>
                 {
-                    continue;
-                }
-
-                // If damaged recently, tick down the timer.
-                if (regenComponent.DamagedRecently)
-                {
-                    regenData.DamagedRecentlyTimer -= Time.deltaTime;
-
-                    if (regenData.DamagedRecentlyTimer <= 0)
+                    // Don't regen if dead.
+                    if (healthComponent.Health == 0)
                     {
-                        regenData.DamagedRecentlyTimer = 0;
-                        regenComponent.DamagedRecently = false;
-                        regenComponent.RegenCooldownTimer = 0;
-                        healthRegenComponentData[i] = regenComponent;
+                        return;
                     }
-                    else
+
+                    // If damaged recently, tick down the timer.
+                    if (regenComponent.DamagedRecently)
                     {
-                        // Send a spatial update once every CooldownSyncInterval.
-                        regenData.NextSpatialSyncTimer -= Time.deltaTime;
-                        if (regenData.NextSpatialSyncTimer <= 0)
+                        regenData.DamagedRecentlyTimer -= Time.deltaTime;
+
+                        if (regenData.DamagedRecentlyTimer <= 0)
                         {
-                            regenData.NextSpatialSyncTimer += regenComponent.CooldownSyncInterval;
-                            regenComponent.RegenCooldownTimer = regenData.DamagedRecentlyTimer;
-                            healthRegenComponentData[i] = regenComponent;
+                            regenData.DamagedRecentlyTimer = 0;
+                            regenComponent.DamagedRecently = false;
+                            regenComponent.RegenCooldownTimer = 0;
+                        }
+                        else
+                        {
+                            // Send a spatial update once every CooldownSyncInterval.
+                            regenData.NextSpatialSyncTimer -= Time.deltaTime;
+                            if (regenData.NextSpatialSyncTimer <= 0)
+                            {
+                                regenData.NextSpatialSyncTimer += regenComponent.CooldownSyncInterval;
+                                regenComponent.RegenCooldownTimer = regenData.DamagedRecentlyTimer;
+                            }
+                        }
+
+                        return;
+                    }
+
+                    // If not damaged recently, and not already fully healed, regen.
+                    if (healthComponent.Health < healthComponent.MaxHealth)
+                    {
+                        regenData.NextRegenTimer -= Time.deltaTime;
+                        if (regenData.NextRegenTimer <= 0)
+                        {
+                            regenData.NextRegenTimer += regenComponent.RegenInterval;
+
+                            // Send command to regen entity.
+                            var modifyHealthRequest = new HealthComponent.ModifyHealth.Request(
+                                spatialEntityId.EntityId,
+                                new HealthModifier()
+                                {
+                                    Amount = regenComponent.RegenAmount
+                                }
+                            );
+                            commandSystem.SendCommand(modifyHealthRequest);
                         }
                     }
-
-                    healthRegenData[i] = regenData;
-
-                    return;
-                }
-
-                // If not damaged recently, and not already fully healed, regen.
-                if (healthComponent.Health < healthComponent.MaxHealth)
-                {
-                    regenData.NextRegenTimer -= Time.deltaTime;
-                    if (regenData.NextRegenTimer <= 0)
-                    {
-                        regenData.NextRegenTimer += regenComponent.RegenInterval;
-
-                        // Send command to regen entity.
-                        var modifyHealthRequest = new HealthComponent.ModifyHealth.Request(
-                            spatialIdData[i].EntityId,
-                            new HealthModifier()
-                            {
-                                Amount = regenComponent.RegenAmount
-                            }
-                        );
-                        commandSystem.SendCommand(modifyHealthRequest);
-                    }
-
-                    healthRegenData[i] = regenData;
-                }
-            }
+                });
         }
     }
 }

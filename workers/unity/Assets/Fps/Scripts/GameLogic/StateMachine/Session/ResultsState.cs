@@ -10,7 +10,7 @@ namespace Fps
 
         public ResultsState(UIManager manager, ConnectionStateMachine owner) : base(manager, owner)
         {
-            trackPlayerSystem = Blackboard.ClientConnector.Worker.World.GetExistingManager<TrackPlayerSystem>();
+            trackPlayerSystem = Blackboard.ClientConnector.Worker.World.GetExistingSystem<TrackPlayerSystem>();
         }
 
         public override void StartState()
