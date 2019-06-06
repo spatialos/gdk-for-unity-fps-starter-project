@@ -1,4 +1,6 @@
+using Improbable.Gdk.Core;
 using Improbable.Gdk.PlayerLifecycle;
+using Unity.Entities;
 using UnityEngine;
 
 namespace Fps
@@ -16,6 +18,7 @@ namespace Fps
             }
 
             initialized = true;
+            PlayerLoopManager.RegisterDomainUnload(WorldsInitializationHelper.DomainUnloadShutdown, 1000);
 
             // Setup template to use for player on connecting client
             PlayerLifecycleConfig.CreatePlayerEntityTemplate = FpsEntityTemplates.Player;
