@@ -8,6 +8,7 @@
 - Marked the Linux builds for the GameLogic worker and the Simulated Player Coordinator as required.
 - Updated `GdkToolsConfiguration.json` following the [no-more-schema-copying change in the GDK](https://github.com/spatialos/gdk-for-unity/pull/953).
     - Updated the package names of FPS project schema.
+- Upgrade to Unity Entities preview.33
 
 ## `0.2.2` - 2019-05-15
 
