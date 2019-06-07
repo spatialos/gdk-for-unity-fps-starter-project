@@ -4,7 +4,6 @@ using Improbable.Gdk.Subscriptions;
 using Improbable.Gdk.Guns;
 using Improbable.Gdk.Health;
 using Improbable.Gdk.Movement;
-using Unity.Entities;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -226,7 +225,7 @@ public class SimulatedPlayerDriver : MonoBehaviour
         }
 
         var linkedComponent = target.GetComponent<LinkedEntityComponent>();
-        var entityManager = linkedComponent.World.GetExistingManager<EntityManager>();
+        var entityManager = linkedComponent.World.EntityManager;
         linkedComponent.Worker.TryGetEntity(linkedComponent.EntityId, out var entity);
         if (entityManager.Exists(entity) && entityManager.HasComponent<HealthComponent.Component>(entity))
         {

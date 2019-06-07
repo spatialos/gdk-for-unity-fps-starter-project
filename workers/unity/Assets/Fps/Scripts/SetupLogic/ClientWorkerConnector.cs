@@ -6,7 +6,6 @@ using Improbable.Gdk.Core;
 using UnityEngine;
 using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.PlayerLifecycle;
-using Improbable.Gdk.PlayerLifecycle;
 using Improbable.Worker.CInterop.Alpha;
 
 namespace Fps
@@ -18,6 +17,7 @@ namespace Fps
         private bool isReadyToSpawn;
         private bool wantsSpawn;
         private Action<PlayerCreator.CreatePlayer.ReceivedResponse> onPlayerResponse;
+        private AdvancedEntityPipeline entityPipeline;
 
         protected bool UseSessionFlow => !string.IsNullOrEmpty(deployment);
 
@@ -97,7 +97,7 @@ namespace Fps
 
             var fallback = new GameObjectCreatorFromMetadata(Worker.WorkerType, Worker.Origin, Worker.LogDispatcher);
 
-            var entityPipeline = new AdvancedEntityPipeline(Worker, GetAuthPlayerPrefabPath(),
+            entityPipeline = new AdvancedEntityPipeline(Worker, GetAuthPlayerPrefabPath(),
                 GetNonAuthPlayerPrefabPath(), fallback);
             entityPipeline.OnRemovedAuthoritativePlayer += RemovingAuthoritativePlayer;
 
@@ -106,7 +106,7 @@ namespace Fps
 
             if (UseSessionFlow)
             {
-                world.GetOrCreateManager<TrackPlayerSystem>();
+                world.GetOrCreateSystem<TrackPlayerSystem>();
             }
 
             base.HandleWorkerConnectionEstablished();
@@ -139,10 +139,20 @@ namespace Fps
             }
         }
 
+        public override void Dispose()
+        {
+            if (entityPipeline != null)
+            {
+                entityPipeline.OnRemovedAuthoritativePlayer -= RemovingAuthoritativePlayer;
+            }
+
+            base.Dispose();
+        }
+
         private void SendRequest()
         {
             var serializedArgs = Encoding.ASCII.GetBytes(playerName);
-            Worker.World.GetExistingManager<SendCreatePlayerRequestSystem>()
+            Worker.World.GetExistingSystem<SendCreatePlayerRequestSystem>()
                 .RequestPlayerCreation(serializedArgs, onPlayerResponse);
         }
     }

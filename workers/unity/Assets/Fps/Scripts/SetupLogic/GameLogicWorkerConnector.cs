@@ -30,17 +30,17 @@ namespace Fps
             GameObjectCreationHelper.EnableStandardGameObjectCreation(world);
 
             // Shooting
-            world.GetOrCreateManager<ServerShootingSystem>();
+            world.GetOrCreateSystem<ServerShootingSystem>();
 
             // Session
-            world.GetOrCreateManager<PlayerStateServerSystem>();
+            world.GetOrCreateSystem<PlayerStateServerSystem>();
 
             // Metrics
-            world.GetOrCreateManager<MetricSendSystem>();
+            world.GetOrCreateSystem<MetricSendSystem>();
 
             // Health
-            world.GetOrCreateManager<ServerHealthModifierSystem>();
-            world.GetOrCreateManager<HealthRegenSystem>();
+            world.GetOrCreateSystem<ServerHealthModifierSystem>();
+            world.GetOrCreateSystem<HealthRegenSystem>();
 
             base.HandleWorkerConnectionEstablished();
         }

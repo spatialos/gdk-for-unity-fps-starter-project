@@ -88,7 +88,7 @@ namespace Fps
             SetHealthBar(currentHealth);
         }
 
-        private void AimingUpdated(BlittableBool isAiming)
+        private void AimingUpdated(bool isAiming)
         {
             // Inform the ScreenUIController of the aiming update.
             inGameScreenManager.SetPlayerAiming(isAiming);

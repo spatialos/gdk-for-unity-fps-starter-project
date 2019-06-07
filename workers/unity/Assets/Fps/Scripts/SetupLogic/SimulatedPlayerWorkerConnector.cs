@@ -48,7 +48,7 @@ public class SimulatedPlayerWorkerConnector : DefaultWorkerConnector
     public void SpawnPlayer(int number)
     {
         var serializedArgs = Encoding.ASCII.GetBytes($"Simulated Player {number}");
-        var sendSystem = Worker.World.GetExistingManager<SendCreatePlayerRequestSystem>();
+        var sendSystem = Worker.World.GetExistingSystem<SendCreatePlayerRequestSystem>();
         sendSystem.RequestPlayerCreation(serializedArgs);
     }
 

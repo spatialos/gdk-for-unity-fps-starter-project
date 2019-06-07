@@ -6,6 +6,7 @@ using Improbable.Worker.CInterop;
 using Improbable.Worker.CInterop.Query;
 using Unity.Entities;
 using UnityEngine;
+using EntityQuery = Improbable.Worker.CInterop.Query.EntityQuery;
 
 namespace Fps
 {
@@ -13,7 +14,7 @@ namespace Fps
     public class TrackPlayerSystem : ComponentSystem
     {
         private long? sentPlayerStateQueryId;
-        private ComponentGroup sessionGroup;
+        private Unity.Entities.EntityQuery sessionGroup;
         private CommandSystem commandSystem;
         private ILogDispatcher logDispatcher;
 
@@ -30,9 +31,9 @@ namespace Fps
         {
             base.OnCreateManager();
 
-            commandSystem = World.GetExistingManager<CommandSystem>();
-            logDispatcher = World.GetExistingManager<WorkerSystem>().LogDispatcher;
-            sessionGroup = GetComponentGroup(ComponentType.ReadOnly<Session.Component>());
+            commandSystem = World.GetExistingSystem<CommandSystem>();
+            logDispatcher = World.GetExistingSystem<WorkerSystem>().LogDispatcher;
+            sessionGroup = GetEntityQuery(ComponentType.ReadOnly<Session.Component>());
 
             PlayerResults = new List<ResultsData>();
         }
@@ -45,7 +46,10 @@ namespace Fps
             }
             else
             {
-                SessionStatus = sessionGroup.GetComponentDataArray<Session.Component>()[0].Status;
+                Entities.With(sessionGroup).ForEach((ref Session.Component session) =>
+                {
+                    SessionStatus = session.Status;
+                });
             }
 
             if (SessionStatus != Status.STOPPING)
@@ -55,7 +59,8 @@ namespace Fps
 
             if (sentPlayerStateQueryId == null && PlayerResults.Count == 0)
             {
-                sentPlayerStateQueryId = commandSystem.SendCommand(new WorldCommands.EntityQuery.Request(playerStateQuery));
+                sentPlayerStateQueryId =
+                    commandSystem.SendCommand(new WorldCommands.EntityQuery.Request(playerStateQuery));
             }
 
             var entityQueryResponses = commandSystem.GetResponses<WorldCommands.EntityQuery.ReceivedResponse>();

@@ -55,7 +55,7 @@ namespace Fps
             }
         }
 
-        private void OnAiming(BlittableBool isAiming)
+        private void OnAiming(bool isAiming)
         {
             fpsAnimator.SetAiming(isAiming);
         }
@@ -72,7 +72,7 @@ namespace Fps
             {
                 pitch -= 360;
             }
-            
+
             // AnimController treats negative pitch as pointing downwards
             fpsAnimator.SetPitch(-pitch);
         }

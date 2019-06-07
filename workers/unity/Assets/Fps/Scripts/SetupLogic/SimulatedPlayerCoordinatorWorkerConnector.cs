@@ -41,7 +41,7 @@ public class SimulatedPlayerCoordinatorWorkerConnector : WorkerConnectorBase
     {
         base.HandleWorkerConnectionEstablished();
 
-        Worker.World.GetOrCreateManager<MetricSendSystem>();
+        Worker.World.GetOrCreateSystem<MetricSendSystem>();
 
         CheckWorkerFlags();
 

@@ -14,7 +14,7 @@ namespace Fps
 
         public QuerySessionStatusState(State nextState, UIManager manager, ConnectionStateMachine owner) : base(manager, owner)
         {
-            commandSystem = Blackboard.ClientConnector.Worker.World.GetExistingManager<CommandSystem>();
+            commandSystem = Blackboard.ClientConnector.Worker.World.GetExistingSystem<CommandSystem>();
             this.nextState = nextState;
         }
 

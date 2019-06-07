@@ -14,8 +14,8 @@ namespace Fps
         {
             base.OnCreateManager();
 
-            commandSystem = World.GetExistingManager<CommandSystem>();
-            workerSystem = World.GetExistingManager<WorkerSystem>();
+            commandSystem = World.GetExistingSystem<CommandSystem>();
+            workerSystem = World.GetExistingSystem<WorkerSystem>();
         }
 
         protected override void OnUpdate()

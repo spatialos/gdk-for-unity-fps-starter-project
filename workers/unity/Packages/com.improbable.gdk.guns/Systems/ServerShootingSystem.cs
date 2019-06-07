@@ -16,9 +16,9 @@ namespace Improbable.Gdk.Guns
         {
             base.OnCreateManager();
 
-            workerSystem = World.GetExistingManager<WorkerSystem>();
-            commandSystem = World.GetExistingManager<CommandSystem>();
-            componentUpdateSystem = World.GetExistingManager<ComponentUpdateSystem>();
+            workerSystem = World.GetExistingSystem<WorkerSystem>();
+            commandSystem = World.GetExistingSystem<CommandSystem>();
+            componentUpdateSystem = World.GetExistingSystem<ComponentUpdateSystem>();
         }
 
         protected override void OnUpdate()

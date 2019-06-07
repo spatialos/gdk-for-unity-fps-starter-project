@@ -46,7 +46,7 @@ namespace Fps
             }
         }
 
-        private void OnAimingChanged(BlittableBool _)
+        private void OnAimingChanged(bool _)
         {
             RecalculateFov();
         }
