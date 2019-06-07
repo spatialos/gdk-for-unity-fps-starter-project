@@ -43,6 +43,7 @@
 - Reactive Components are no longer used. They have been disabled by adding the `DISABLE_REACTIVE_COMPONENTS` define symbol.
 - Updated to Unity version `2018.3.11`.
 - Updated to use the GDK for Unity version `0.2.1`.
+- The `default_launch.json` launch configuration now uses the `w2_r0500_e5` template instead of the `small` template which was deprecated.
 
 ### Internal
 
