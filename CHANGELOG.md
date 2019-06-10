@@ -4,11 +4,15 @@
 
 ### Changed
 
-- Upgraded the project to be compatible with `2019.1.3f1`.
-- Marked the Linux builds for the GameLogic worker and the Simulated Player Coordinator as required.
-- Updated `GdkToolsConfiguration.json` following the [no-more-schema-copying change in the GDK](https://github.com/spatialos/gdk-for-unity/pull/953).
+- Upgraded the project to be compatible with `2019.1.3f1`. [#185](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/185)
+- Marked the Linux builds for the GameLogic worker and the Simulated Player Coordinator as required. [#189](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/189)
+- Updated `GdkToolsConfiguration.json` following the [no-more-schema-copying change in the GDK](https://github.com/spatialos/gdk-for-unity/pull/953). [#190](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/190)
     - Updated the package names of FPS project schema.
-- Upgrade to Unity Entities preview.33
+- Upgrade to Unity Entities preview.33 [#191](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/191)
+
+### Fixed
+
+- Fixed clients hanging when quitting the game [#188](https://github.com/spatialos/gdk-for-unity-fps-starter-project/issues/188)
 
 ## `0.2.2` - 2019-05-15
 
