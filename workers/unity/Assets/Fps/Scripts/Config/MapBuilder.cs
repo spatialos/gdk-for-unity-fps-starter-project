@@ -283,33 +283,30 @@ namespace Fps
 
             // Tiles are built in a spiral manner from the centre outward to ensure increasing the # of tile layers doesn't
             // alter the existing tile types.
-            using (new SceneScope(tempScene))
+            for (var i = 0; i < tileCount; i++)
             {
-                for (var i = 0; i < tileCount; i++)
+                // -layers < x <= layers AND -layers < y <= layers
+                if (-layers < tileCoord.x && tileCoord.x <= layers
+                    && -layers < tileCoord.y && tileCoord.y <= layers)
                 {
-                    // -layers < x <= layers AND -layers < y <= layers
-                    if (-layers < tileCoord.x && tileCoord.x <= layers
-                        && -layers < tileCoord.y && tileCoord.y <= layers)
-                    {
-                        PlaceTemplatedTile(tileCoord);
-                    }
+                    PlaceTemplatedTile(tileCoord);
+                }
 
-                    if (tileCoord.x == tileCoord.y ||
-                        tileCoord.x < 0 && tileCoord.x == -tileCoord.y ||
-                        tileCoord.x > 0 && tileCoord.x == 1 - tileCoord.y)
-                    {
-                        diff = new Vector2Int(-diff.y, diff.x);
-                    }
+                if (tileCoord.x == tileCoord.y ||
+                    tileCoord.x < 0 && tileCoord.x == -tileCoord.y ||
+                    tileCoord.x > 0 && tileCoord.x == 1 - tileCoord.y)
+                {
+                    diff = new Vector2Int(-diff.y, diff.x);
+                }
 
-                    tileCoord += diff;
+                tileCoord += diff;
 
-                    if (Application.isPlaying && DateTime.UtcNow.Subtract(timeStart) >= timeLimit)
+                if (Application.isPlaying && DateTime.UtcNow.Subtract(timeStart) >= timeLimit)
+                {
+                    using (new SceneScope(mainScene))
                     {
-                        using (new SceneScope(mainScene))
-                        {
-                            yield return null;
-                            timeStart = DateTime.UtcNow;
-                        }
+                        yield return null;
+                        timeStart = DateTime.UtcNow;
                     }
                 }
             }
