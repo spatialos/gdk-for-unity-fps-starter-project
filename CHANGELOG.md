@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## `0.2.3` - 2019-06-12
+
 ### Changed
 
 - Upgraded the project to be compatible with `2019.1.3f1`. [#185](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/185)
