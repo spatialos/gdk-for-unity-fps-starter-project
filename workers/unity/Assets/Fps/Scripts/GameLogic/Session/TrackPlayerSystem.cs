@@ -27,9 +27,9 @@ namespace Fps
         public Status? SessionStatus { get; private set; }
         public List<ResultsData> PlayerResults { get; private set; }
 
-        protected override void OnCreateManager()
+        protected override void OnCreate()
         {
-            base.OnCreateManager();
+            base.OnCreate();
 
             commandSystem = World.GetExistingSystem<CommandSystem>();
             logDispatcher = World.GetExistingSystem<WorkerSystem>().LogDispatcher;

@@ -21,9 +21,9 @@ namespace Improbable.Gdk.Health
 
         private HashSet<EntityId> recentlyDamagedCache = new HashSet<EntityId>();
 
-        protected override void OnCreateManager()
+        protected override void OnCreate()
         {
-            base.OnCreateManager();
+            base.OnCreate();
 
             workerSystem = World.GetExistingSystem<WorkerSystem>();
             componentUpdateSystem = World.GetExistingSystem<ComponentUpdateSystem>();

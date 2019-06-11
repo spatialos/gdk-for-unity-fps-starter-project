@@ -13,9 +13,9 @@ namespace Improbable.Gdk.Health
         private CommandSystem commandSystem;
         private ComponentUpdateSystem componentUpdateSystem;
 
-        protected override void OnCreateManager()
+        protected override void OnCreate()
         {
-            base.OnCreateManager();
+            base.OnCreate();
 
             workerSystem = World.GetExistingSystem<WorkerSystem>();
             commandSystem = World.GetExistingSystem<CommandSystem>();
