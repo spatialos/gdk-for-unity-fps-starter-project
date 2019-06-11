@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Improbable.Gdk.Core;
 using UnityEngine;
-using UnityEngine.Profiling;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 using Random = System.Random;
@@ -18,7 +17,7 @@ namespace Fps
         private int layers;
         private Random random;
         private Scene tempScene;
-        private Scene activeScene;
+        private Scene mainScene;
 
         private GameObject groundTile;
         private GameObject groundEdge;
@@ -67,8 +66,12 @@ namespace Fps
 
             layers = worldLayers;
             random = new Random(seed.GetHashCode());
-            tempScene = SceneManager.CreateScene(parentGameObject.name, new CreateSceneParameters(LocalPhysicsMode.None));
-            activeScene = SceneManager.GetActiveScene();
+            if (Application.isPlaying)
+            {
+                tempScene = SceneManager.CreateScene(parentGameObject.name,
+                    new CreateSceneParameters(LocalPhysicsMode.None));
+                mainScene = SceneManager.GetActiveScene();
+            }
 
             if (!TryLoadResources())
             {
@@ -81,45 +84,44 @@ namespace Fps
             InitializeGroupsAndComponents();
 
             // Initialize tiles
-            SceneManager.SetActiveScene(tempScene);
-            foreach (var tileCollection in mapTemplate.tileCollections)
+            using (new SceneScope(tempScene))
             {
-                tileCollection.LoadAndOptimizeTiles();
+                foreach (var tileCollection in mapTemplate.tileCollections)
+                {
+                    tileCollection.LoadAndOptimizeTiles();
+                }
+
+                mapTemplate.defaultTileCollection.LoadAndOptimizeTiles();
+
+                var originalPosition = parentGameObject.transform.position;
+                var originalRotation = parentGameObject.transform.rotation;
+                parentGameObject.transform.position = Vector3.zero;
+                parentGameObject.transform.rotation = Quaternion.identity;
+
+                yield return PlaceTiles();
+
+                PlaceGround();
+                FillSurround();
+
+                spawnPointSystemTransform.gameObject.GetComponent<SpawnPoints>()?.SetSpawnPoints();
+
+                parentGameObject.transform.position = originalPosition;
+                parentGameObject.transform.rotation = originalRotation;
+
+                // Cleanup
+                foreach (var tileCollection in mapTemplate.tileCollections)
+                {
+                    tileCollection.Clear();
+                }
+
+                mapTemplate.defaultTileCollection.Clear();
             }
-
-            mapTemplate.defaultTileCollection.LoadAndOptimizeTiles();
-            SceneManager.SetActiveScene(activeScene);
-
-            yield return null;
-
-            var originalPosition = parentGameObject.transform.position;
-            var originalRotation = parentGameObject.transform.rotation;
-            parentGameObject.transform.position = Vector3.zero;
-            parentGameObject.transform.rotation = Quaternion.identity;
-
-            yield return PlaceTiles();
-
-            SceneManager.SetActiveScene(tempScene);
-
-            PlaceGround();
-            FillSurround();
-
-            spawnPointSystemTransform.gameObject.GetComponent<SpawnPoints>()?.SetSpawnPoints();
-
-            parentGameObject.transform.position = originalPosition;
-            parentGameObject.transform.rotation = originalRotation;
-
-            // Cleanup
-            foreach (var tileCollection in mapTemplate.tileCollections)
-            {
-                tileCollection.Clear();
-            }
-
-            mapTemplate.defaultTileCollection.Clear();
 
             // Merge building temp scene into active scene
-            SceneManager.SetActiveScene(activeScene);
-            SceneManager.MergeScenes(tempScene, activeScene);
+            if (Application.isPlaying)
+            {
+                SceneManager.MergeScenes(tempScene, mainScene);
+            }
         }
 
         private void InitializeGroupsAndComponents()
@@ -281,35 +283,36 @@ namespace Fps
 
             // Tiles are built in a spiral manner from the centre outward to ensure increasing the # of tile layers doesn't
             // alter the existing tile types.
-            SceneManager.SetActiveScene(tempScene);
-            for (var i = 0; i < tileCount; i++)
+            using (new SceneScope(tempScene))
             {
-                // -layers < x <= layers AND -layers < y <= layers
-                if (-layers < tileCoord.x && tileCoord.x <= layers
-                    && -layers < tileCoord.y && tileCoord.y <= layers)
+                for (var i = 0; i < tileCount; i++)
                 {
-                    PlaceTemplatedTile(tileCoord);
-                }
+                    // -layers < x <= layers AND -layers < y <= layers
+                    if (-layers < tileCoord.x && tileCoord.x <= layers
+                        && -layers < tileCoord.y && tileCoord.y <= layers)
+                    {
+                        PlaceTemplatedTile(tileCoord);
+                    }
 
-                if (tileCoord.x == tileCoord.y ||
-                    tileCoord.x < 0 && tileCoord.x == -tileCoord.y ||
-                    tileCoord.x > 0 && tileCoord.x == 1 - tileCoord.y)
-                {
-                    diff = new Vector2Int(-diff.y, diff.x);
-                }
+                    if (tileCoord.x == tileCoord.y ||
+                        tileCoord.x < 0 && tileCoord.x == -tileCoord.y ||
+                        tileCoord.x > 0 && tileCoord.x == 1 - tileCoord.y)
+                    {
+                        diff = new Vector2Int(-diff.y, diff.x);
+                    }
 
-                tileCoord += diff;
+                    tileCoord += diff;
 
-                if (DateTime.UtcNow.Subtract(timeStart) >= timeLimit)
-                {
-                    SceneManager.SetActiveScene(activeScene);
-                    yield return null;
-                    timeStart = DateTime.UtcNow;
-                    SceneManager.SetActiveScene(tempScene);
+                    if (Application.isPlaying && DateTime.UtcNow.Subtract(timeStart) >= timeLimit)
+                    {
+                        using (new SceneScope(mainScene))
+                        {
+                            yield return null;
+                            timeStart = DateTime.UtcNow;
+                        }
+                    }
                 }
             }
-
-            SceneManager.SetActiveScene(activeScene);
 
             tileParentTransform.position = new Vector3
             {
@@ -441,6 +444,32 @@ namespace Fps
             yield return mapBuilder.CleanAndBuild(mapSize);
 
             worker.LevelInstance = levelInstance;
+        }
+
+        private class SceneScope : IDisposable
+        {
+            private readonly Scene activeScene;
+
+            public SceneScope(Scene newActive)
+            {
+#if UNITY_EDITOR
+                if (Application.isPlaying)
+#endif
+                {
+                    activeScene = SceneManager.GetActiveScene();
+                    SceneManager.SetActiveScene(newActive);
+                }
+            }
+
+            public void Dispose()
+            {
+#if UNITY_EDITOR
+                if (Application.isPlaying)
+#endif
+                {
+                    SceneManager.SetActiveScene(activeScene);
+                }
+            }
         }
     }
 }
