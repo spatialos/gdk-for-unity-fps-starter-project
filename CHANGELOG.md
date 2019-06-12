@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## `0.2.3` - 2019-06-12
+
 ### Changed
 
 - Upgraded the project to be compatible with `2019.1.3f1`. [#185](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/185)
@@ -38,6 +40,11 @@
 ### Fixed
 
 - Fixed a bug where your own gun would not appear until after you moved around for a while.
+
+### Internal
+
+- Disabled Burst compilation for all platforms except for iOS, because Burst throws benign errors when building workers for other platforms than the one you are currently using. [#977](https://github.com/spatialos/gdk-for-unity/pull/977)
+- Enabled Burst compilation for iOS, because disabling results in an invalid XCode project. [#975](https://github.com/spatialos/gdk-for-unity/pull/975)
 
 ## `0.2.1` - 2019-04-15
 

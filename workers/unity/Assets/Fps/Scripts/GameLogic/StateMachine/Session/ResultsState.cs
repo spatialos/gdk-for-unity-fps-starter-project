@@ -49,15 +49,13 @@ namespace Fps
 
             var results = trackPlayerSystem.PlayerResults;
             var playerRank = results.FirstOrDefault(res => res.PlayerName == Blackboard.PlayerName).Rank;
-            Debug.Log($"playerRank {playerRank}");
-            Debug.Log($"player name {Blackboard.PlayerName}");
 
             ScreenManager.ResultsScreenDoneButton.onClick.AddListener(Restart);
             ScreenManager.InformOfResults(results, playerRank);
             Manager.ShowFrontEnd();
             ScreenManager.SwitchToResultsScreen();
 
-            UnityObjectDestroyer.Destroy(Blackboard.ClientConnector);
+            Blackboard.ClientConnector.DisconnectPlayer();
             Blackboard.ClientConnector = null;
         }
     }

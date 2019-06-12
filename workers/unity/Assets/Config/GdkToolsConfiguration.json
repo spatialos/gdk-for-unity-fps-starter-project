@@ -1,10 +1,9 @@
 {
     "SchemaStdLibDir": "../../build/dependencies/schema/standard_library",
-    "SchemaSourceDirs": [
-        "../../schema"
-    ],
+    "SchemaSourceDirs": [],
     "CodegenOutputDir": "Assets/Generated/Source",
-    "RuntimeIp": "",
+    "DescriptorOutputDir": "../../build/assembly/schema",
     "DevAuthTokenDir": "Resources",
-    "DevAuthTokenLifetimeDays": 1
+    "DevAuthTokenLifetimeDays": 1,
+    "SaveDevAuthTokenToFile": false
 }
