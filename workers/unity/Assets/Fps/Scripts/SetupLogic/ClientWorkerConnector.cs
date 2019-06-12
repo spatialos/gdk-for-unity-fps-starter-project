@@ -6,7 +6,9 @@ using Improbable.Gdk.Core;
 using UnityEngine;
 using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.PlayerLifecycle;
+using Improbable.Worker.CInterop;
 using Improbable.Worker.CInterop.Alpha;
+using Unity.Entities;
 
 namespace Fps
 {
@@ -39,6 +41,11 @@ namespace Fps
         public bool HasConnected()
         {
             return Worker != null;
+        }
+
+        public void DisconnectPlayer()
+        {
+            StartCoroutine(PrepareDestroy());
         }
 
         protected override string GetWorkerType()
@@ -147,6 +154,12 @@ namespace Fps
             }
 
             base.Dispose();
+        }
+
+        private IEnumerator PrepareDestroy()
+        {
+            yield return DeferredDisposeWorker();
+            Destroy(gameObject);
         }
 
         private void SendRequest()
