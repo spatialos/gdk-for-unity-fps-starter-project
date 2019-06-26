@@ -1,4 +1,5 @@
 using System.Collections;
+using Improbable.Gdk.Core;
 using UnityEngine;
 using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.Guns;
@@ -17,9 +18,21 @@ namespace Fps
             await AttemptConnect();
         }
 
-        protected override string GetWorkerType()
+        protected override IConnectionHandlerBuilder GetConnectionHandlerBuilder()
         {
-            return WorkerUtils.UnityGameLogic;
+            var builder = new SpatialOSConnectionHandlerBuilder()
+                .SetConnectionParameters(CreateConnectionParameters(WorkerUtils.UnityGameLogic));
+
+            if (Application.isEditor)
+            {
+                builder.SetConnectionFlow(new ReceptionistFlow(CreateNewWorkerId(WorkerUtils.UnityGameLogic)));
+            }
+            else
+            {
+                builder.SetConnectionFlow(new ReceptionistFlow(CreateNewWorkerId(WorkerUtils.UnityGameLogic), new CommandLineConnectionFlowInitializer()));
+            }
+
+            return builder;
         }
 
         protected override void HandleWorkerConnectionEstablished()
