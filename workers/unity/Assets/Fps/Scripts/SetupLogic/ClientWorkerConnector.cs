@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Improbable.Gdk.Core;
 using UnityEngine;
@@ -8,19 +9,20 @@ using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.PlayerLifecycle;
 using Improbable.Worker.CInterop;
 using Improbable.Worker.CInterop.Alpha;
-using Unity.Entities;
 
 namespace Fps
 {
     public class ClientWorkerConnector : WorkerConnectorBase
     {
-        private string deployment;
+        protected string deployment;
+
         private string playerName;
         private bool isReadyToSpawn;
         private bool wantsSpawn;
         private Action<PlayerCreator.CreatePlayer.ReceivedResponse> onPlayerResponse;
         private AdvancedEntityPipeline entityPipeline;
 
+        public bool HasConnected => Worker != null;
         protected bool UseSessionFlow => !string.IsNullOrEmpty(deployment);
 
         public event Action OnLostPlayerEntity;
@@ -38,19 +40,9 @@ namespace Fps
             wantsSpawn = true;
         }
 
-        public bool HasConnected()
-        {
-            return Worker != null;
-        }
-
         public void DisconnectPlayer()
         {
             StartCoroutine(PrepareDestroy());
-        }
-
-        protected override string GetWorkerType()
-        {
-            return WorkerUtils.UnityClient;
         }
 
         protected virtual string GetAuthPlayerPrefabPath()
@@ -63,36 +55,49 @@ namespace Fps
             return "Prefabs/UnityClient/NonAuthoritative/Player";
         }
 
-        protected override AlphaLocatorConfig GetAlphaLocatorConfig(string workerType)
+        protected override IConnectionHandlerBuilder GetConnectionHandlerBuilder()
         {
-            return UseSessionFlow
-                ? GetAlphaLocatorConfigViaDevAuthFlow(workerType)
-                : base.GetAlphaLocatorConfig(workerType);
-        }
+            var connectionParams = new ConnectionParameters
+            {
+                DefaultComponentVtable = new ComponentVtable(),
+                WorkerType = WorkerUtils.UnityClient
+            };
 
-        protected override string SelectLoginToken(List<LoginTokenDetails> loginTokens)
-        {
+            var builder = new SpatialOSConnectionHandlerBuilder()
+                .SetConnectionParameters(connectionParams);
+
             if (UseSessionFlow)
             {
-                foreach (var loginToken in loginTokens)
-                {
-                    if (loginToken.DeploymentName == deployment)
-                    {
-                        return loginToken.LoginToken;
-                    }
-                }
+                connectionParams.Network.UseExternalIp = true;
+                builder.SetConnectionFlow(new ChosenDeploymentAlphaLocatorFlow(deployment, new SessionConnectionFlowInitializer(new CommandLineConnectionFlowInitializer())));
+            }
+            else if (Application.isEditor)
+            {
+                builder.SetConnectionFlow(new ReceptionistFlow(CreateNewWorkerId(WorkerUtils.UnityClient)));
             }
             else
             {
-                return base.SelectLoginToken(loginTokens);
+                var initializer = new CommandLineConnectionFlowInitializer();
+
+                switch (initializer.GetConnectionService())
+                {
+                    case ConnectionService.Receptionist:
+                        builder.SetConnectionFlow(new ReceptionistFlow(CreateNewWorkerId(WorkerUtils.UnityClient), initializer));
+                        break;
+                    case ConnectionService.Locator:
+                        connectionParams.Network.UseExternalIp = true;
+                        builder.SetConnectionFlow(new LocatorFlow(initializer));
+                        break;
+                    case ConnectionService.AlphaLocator:
+                        connectionParams.Network.UseExternalIp = true;
+                        builder.SetConnectionFlow(new AlphaLocatorFlow(initializer));
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
 
-            throw new ArgumentException("Was not able to connect to deployment.");
-        }
-
-        protected override ConnectionService GetConnectionService()
-        {
-            return UseSessionFlow ? ConnectionService.AlphaLocator : base.GetConnectionService();
+            return builder;
         }
 
         protected override void HandleWorkerConnectionEstablished()
@@ -167,6 +172,61 @@ namespace Fps
             var serializedArgs = Encoding.ASCII.GetBytes(playerName);
             Worker.World.GetExistingSystem<SendCreatePlayerRequestSystem>()
                 .RequestPlayerCreation(serializedArgs, onPlayerResponse);
+        }
+    }
+
+    internal class ChosenDeploymentAlphaLocatorFlow : AlphaLocatorFlow
+    {
+        private readonly string targetDeployment;
+
+        public ChosenDeploymentAlphaLocatorFlow(string targetDeployment, IConnectionFlowInitializer<AlphaLocatorFlow> initializer = null) : base(initializer)
+        {
+            this.targetDeployment = targetDeployment;
+        }
+
+        protected override string SelectLoginToken(List<LoginTokenDetails> loginTokens)
+        {
+            var token = loginTokens.FirstOrDefault(loginToken => loginToken.DeploymentName == targetDeployment);
+
+            return token.LoginToken ?? throw new ArgumentException("Was not able to connect to deployment");
+        }
+    }
+
+    internal class SessionConnectionFlowInitializer : IConnectionFlowInitializer<AlphaLocatorFlow>
+    {
+        private IConnectionFlowInitializer<AlphaLocatorFlow> initializer;
+
+        public SessionConnectionFlowInitializer(IConnectionFlowInitializer<AlphaLocatorFlow> standaloneInitializer)
+        {
+            initializer = standaloneInitializer;
+        }
+
+        public void Initialize(AlphaLocatorFlow flow)
+        {
+            if (Application.isEditor)
+            {
+                if (PlayerPrefs.HasKey(RuntimeConfigNames.DevAuthTokenKey))
+                {
+                    flow.DevAuthToken = PlayerPrefs.GetString(RuntimeConfigNames.DevAuthTokenKey);
+                    return;
+                }
+
+                var textAsset = Resources.Load<TextAsset>("DevAuthToken");
+
+                if (textAsset == null)
+                {
+                    throw new MissingReferenceException("Unable to find DevAuthToken.txt in the Resources folder. " +
+                        "You can generate one via SpatialOS > Generate Dev Authentication Token.");
+                }
+
+                flow.DevAuthToken = textAsset.text;
+
+                return;
+            }
+            else
+            {
+                initializer.Initialize(flow);
+            }
         }
     }
 }
