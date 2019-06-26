@@ -2,12 +2,13 @@ using System;
 using System.Collections;
 using System.Threading.Tasks;
 using Improbable.Gdk.Core;
+using Improbable.Gdk.Subscriptions;
 using Improbable.Worker.CInterop;
 using UnityEngine;
 
 namespace Fps
 {
-    public abstract class WorkerConnectorBase : DefaultWorkerConnector
+    public abstract class WorkerConnectorBase : WorkerConnector
     {
         public int TargetFrameRate = 60;
 
@@ -15,7 +16,7 @@ namespace Fps
 
         [NonSerialized] internal GameObject LevelInstance;
 
-        protected abstract string GetWorkerType();
+        protected abstract IConnectionHandlerBuilder GetConnectionHandlerBuilder();
 
         protected virtual void Start()
         {
@@ -24,13 +25,7 @@ namespace Fps
 
         protected async Task AttemptConnect()
         {
-            await Connect(GetWorkerType(), new ForwardingDispatcher()).ConfigureAwait(false);
-        }
-
-        protected override string SelectDeploymentName(DeploymentList deployments)
-        {
-            // This could be replaced with a splash screen asking to select a deployment or some other user-defined logic.
-            return deployments.Deployments[0].DeploymentName;
+            await Connect(GetConnectionHandlerBuilder(), new ForwardingDispatcher()).ConfigureAwait(false);
         }
 
         protected override void HandleWorkerConnectionEstablished()
@@ -52,6 +47,9 @@ namespace Fps
         // Get the world size from the config, and use it to generate the correct-sized level
         protected virtual IEnumerator LoadWorld()
         {
+            // Defer a frame to allow worker flags to propagate.
+            yield return null;
+
             var worldSize = GetWorldSize();
             if (worldSize <= 0)
             {
@@ -68,7 +66,8 @@ namespace Fps
 
         protected int GetWorldSize()
         {
-            var flagValue = Worker.Connection.GetWorkerFlag("world_size");
+            var flagValue = Worker.GetWorkerFlag("world_size");
+
             if (!int.TryParse(flagValue, out var worldSize))
             {
                 Worker.LogDispatcher.HandleLog(LogType.Error,
