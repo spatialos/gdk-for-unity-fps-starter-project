@@ -41,7 +41,7 @@ namespace Fps
 
         public override void Tick()
         {
-            if (!Blackboard.ClientConnector.HasConnected())
+            if (!Blackboard.ClientConnector.HasConnected)
             {
                 return;
             }

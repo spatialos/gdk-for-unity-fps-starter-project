@@ -32,7 +32,7 @@ namespace Fps
                 return;
             }
 
-            if (!Blackboard.ClientConnector.HasConnected())
+            if (!Blackboard.ClientConnector.HasConnected)
             {
                 return;
             }
