@@ -22,7 +22,7 @@ namespace Fps
 
         private readonly IEntityGameObjectCreator fallback;
         private readonly string workerIdAttribute;
-        private readonly Worker worker;
+        private readonly WorkerInWorld worker;
 
         private readonly Dictionary<EntityId, GameObject> gameObjectsCreated = new Dictionary<EntityId, GameObject>();
 
@@ -34,7 +34,7 @@ namespace Fps
             typeof(Rigidbody)
         };
 
-        public AdvancedEntityPipeline(Worker worker, string authPlayer, string nonAuthPlayer,
+        public AdvancedEntityPipeline(WorkerInWorld worker, string authPlayer, string nonAuthPlayer,
             IEntityGameObjectCreator fallback)
         {
             this.worker = worker;

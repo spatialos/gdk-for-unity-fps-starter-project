@@ -8,7 +8,7 @@ namespace Fps
 {
     public class MetricSendSystem : ComponentSystem
     {
-        private Connection connection;
+        private WorkerSystem worker;
 
         private DateTime timeOfNextUpdate;
         private DateTime timeOfLastUpdate;
@@ -31,7 +31,7 @@ namespace Fps
         protected override void OnCreate()
         {
             base.OnCreate();
-            connection = World.GetExistingSystem<WorkerSystem>().Connection;
+            worker = World.GetExistingSystem<WorkerSystem>();
 
             targetFps = Application.targetFrameRate == -1
                 ? DefaultTargetFrameRate
@@ -46,11 +46,6 @@ namespace Fps
 
         protected override void OnUpdate()
         {
-            if (connection == null)
-            {
-                return;
-            }
-
             if (DateTime.Now >= timeOfNextUpdate)
             {
                 CalculateFps();
@@ -58,7 +53,7 @@ namespace Fps
                 WorkerMetrics.GaugeMetrics["Unity used heap size"] = GC.GetTotalMemory(false);
                 WorkerMetrics.Load = CalculateLoad();
 
-                connection.SendMetrics(WorkerMetrics);
+                worker.SendMetrics(WorkerMetrics);
 
                 timeOfLastUpdate = DateTime.Now;
                 timeOfNextUpdate = timeOfLastUpdate.AddSeconds(TimeBetweenMetricUpdatesSecs);
