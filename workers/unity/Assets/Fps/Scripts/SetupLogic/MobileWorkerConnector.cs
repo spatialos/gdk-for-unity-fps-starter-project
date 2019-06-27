@@ -10,7 +10,6 @@ namespace Fps
     {
 #pragma warning disable 649
         [SerializeField] private string IpAddress;
-        [SerializeField] private bool ShouldConnectLocally;
 #pragma warning restore 649
 
         protected override string GetAuthPlayerPrefabPath()
@@ -38,21 +37,25 @@ namespace Fps
                 }
             };
 
-            var initializer = new MobileConnectionFlowInitializer(new MobileConnectionFlowInitializer.PlayerPrefsSettingsProvider(), new MobileConnectionFlowInitializer.CommandLineSettingsProvider(), this);
+            var initializer = new MobileConnectionFlowInitializer(
+                new MobileConnectionFlowInitializer.PlayerPrefsSettingsProvider(),
+                new MobileConnectionFlowInitializer.CommandLineSettingsProvider(), this);
 
             var builder = new SpatialOSConnectionHandlerBuilder()
                 .SetConnectionParameters(connParams);
 
             if (UseSessionFlow)
             {
-                builder.SetConnectionFlow(new ChosenDeploymentAlphaLocatorFlow(deployment, new SessionConnectionFlowInitializer(initializer)));
+                builder.SetConnectionFlow(new ChosenDeploymentAlphaLocatorFlow(deployment,
+                    new SessionConnectionFlowInitializer(initializer)));
                 return builder;
             }
 
             switch (initializer.GetConnectionService())
             {
                 case ConnectionService.Receptionist:
-                    builder.SetConnectionFlow(new ReceptionistFlow(CreateNewWorkerId(WorkerUtils.MobileClient), initializer));
+                    builder.SetConnectionFlow(new ReceptionistFlow(CreateNewWorkerId(WorkerUtils.MobileClient),
+                        initializer));
                     break;
                 case ConnectionService.AlphaLocator:
                     builder.SetConnectionFlow(new AlphaLocatorFlow(initializer));
@@ -78,7 +81,6 @@ namespace Fps
 
         public Option<ConnectionService> GetConnectionService()
         {
-            // TODO: Should connect locally.
             return Option<ConnectionService>.Empty;
         }
     }

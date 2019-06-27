@@ -1,12 +1,11 @@
 using System;
-using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.Subscriptions;
-using Improbable.Worker.CInterop;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Fps
@@ -24,7 +23,6 @@ namespace Fps
 
         public GameObject SimulatedPlayerWorkerConnector;
 
-        // TODO: Nice Unity tooltips
         public int MaxSimulatedPlayerCount = 1;
         public int SimulatedPlayerCreationInterval = 5;
         public bool UseSessionFlow;
@@ -37,12 +35,13 @@ namespace Fps
         private bool connectPlayersWithDevAuth;
 
         private CancellationTokenSource tokenSource;
+        private int TimeBetweenCycleSecs = 2;
 
         protected override async void Start()
         {
             var args = CommandLineArgs.FromCommandLine();
 
-            string deploymentName = string.Empty;
+            var deploymentName = string.Empty;
 
             if (args.TryGetCommandLineValue(DeploymentNameFlag, ref deploymentName))
             {
@@ -63,13 +62,15 @@ namespace Fps
             var builder = new SpatialOSConnectionHandlerBuilder()
                 .SetConnectionParameters(CreateConnectionParameters(WorkerUtils.SimulatedPlayerCoordinator));
 
+            var workerId = CreateNewWorkerId(WorkerUtils.SimulatedPlayerCoordinator);
+
             if (Application.isEditor)
             {
-                builder.SetConnectionFlow(new ReceptionistFlow(CreateNewWorkerId(WorkerUtils.SimulatedPlayerCoordinator)));
+                builder.SetConnectionFlow(new ReceptionistFlow(workerId));
             }
             else
             {
-                builder.SetConnectionFlow(new ReceptionistFlow(CreateNewWorkerId(WorkerUtils.SimulatedPlayerCoordinator), new CommandLineConnectionFlowInitializer()));
+                builder.SetConnectionFlow(new ReceptionistFlow(workerId, new CommandLineConnectionFlowInitializer()));
             }
 
             return builder;
@@ -99,17 +100,21 @@ namespace Fps
                     int.TryParse(Worker.GetWorkerFlag(flagCreationInterval), out var originalInterval);
                     int.TryParse(Worker.GetWorkerFlag(flagClientCount), out var originalCount);
 
-                    var workerFlagTracker = new WorkerFlagTracker(Worker.World.GetExistingSystem<WorkerFlagCallbackSystem>());
-
-                    await Monitor(originalCount, originalInterval,
-                        connector => connector.ConnectSimulatedPlayer(),
-                        (ref int count, ref int interval) => MonitorWorkerFlags(workerFlagTracker, ref count, ref interval));
+                    using (var workerFlagTracker =
+                        new WorkerFlagTracker(Worker.World.GetExistingSystem<WorkerFlagCallbackSystem>()))
+                    {
+                        await Monitor(originalCount, originalInterval,
+                            connector => connector.ConnectSimulatedPlayer(),
+                            (ref int count, ref int interval) =>
+                                MonitorWorkerFlags(workerFlagTracker, ref count, ref interval));
+                    }
                 }
                 // If we connect via dev auth. We are connecting via the Alpha Locator & we want to use worker flags
                 // to change the parameters..
                 else if (connectPlayersWithDevAuth)
                 {
-                    await WaitForWorkerFlags(flagDevAuthTokenId, flagTargetDeployment, flagClientCount, flagCreationInterval);
+                    await WaitForWorkerFlags(flagDevAuthTokenId, flagTargetDeployment, flagClientCount,
+                        flagCreationInterval);
 
                     var simulatedPlayerDevAuthTokenId = Worker.GetWorkerFlag(flagDevAuthTokenId);
                     var simulatedPlayerTargetDeployment = Worker.GetWorkerFlag(flagTargetDeployment);
@@ -117,13 +122,16 @@ namespace Fps
                     int.TryParse(Worker.GetWorkerFlag(flagCreationInterval), out var originalInterval);
                     int.TryParse(Worker.GetWorkerFlag(flagClientCount), out var originalCount);
 
-                    var workerFlagTracker = new WorkerFlagTracker(Worker.World.GetExistingSystem<WorkerFlagCallbackSystem>());
-
-                    await Monitor(originalCount, originalInterval,
-                        connector =>
-                            connector.ConnectSimulatedPlayer(simulatedPlayerDevAuthTokenId,
-                                simulatedPlayerTargetDeployment),
-                        (ref int count, ref int interval) => MonitorWorkerFlags(workerFlagTracker, ref count, ref interval));
+                    using (var workerFlagTracker =
+                        new WorkerFlagTracker(Worker.World.GetExistingSystem<WorkerFlagCallbackSystem>()))
+                    {
+                        await Monitor(originalCount, originalInterval,
+                            connector =>
+                                connector.ConnectSimulatedPlayer(simulatedPlayerDevAuthTokenId,
+                                    simulatedPlayerTargetDeployment),
+                            (ref int count, ref int interval) =>
+                                MonitorWorkerFlags(workerFlagTracker, ref count, ref interval));
+                    }
                 }
                 // If we are in neither. We are in the editor or standalone worker on a local deployment.
                 // Connect via receptionist & use prefabs to change the parameters.
@@ -166,19 +174,21 @@ namespace Fps
                 }
 
                 Worker.LogDispatcher.HandleLog(LogType.Log, new LogEvent("Waiting for required worker flags.."));
-                await Task.Delay(TimeSpan.FromSeconds(2), token);
+                await Task.Delay(TimeSpan.FromSeconds(TimeBetweenCycleSecs), token);
             }
         }
 
         // Update worker flags if they have changed.
         private void MonitorWorkerFlags(WorkerFlagTracker tracker, ref int count, ref int interval)
         {
-            if (tracker.TryGetFlagChange(flagCreationInterval, out var intervalStr) && int.TryParse(intervalStr, out var newInterval))
+            if (tracker.TryGetFlagChange(flagCreationInterval, out var intervalStr) &&
+                int.TryParse(intervalStr, out var newInterval))
             {
                 interval = newInterval;
             }
 
-            if (tracker.TryGetFlagChange(flagClientCount, out var newCountStr) && int.TryParse(newCountStr, out var newCount))
+            if (tracker.TryGetFlagChange(flagClientCount, out var newCountStr) &&
+                int.TryParse(newCountStr, out var newCount))
             {
                 count = newCount;
             }
@@ -186,7 +196,8 @@ namespace Fps
             tracker.Reset();
         }
 
-        private async Task Monitor(int count, int interval, Func<SimulatedPlayerWorkerConnector, Task> connectMethod, UpdateCoordinatorParams updateParams)
+        private async Task Monitor(int count, int interval, Func<SimulatedPlayerWorkerConnector, Task> connectMethod,
+            UpdateCoordinatorParams updateParams)
         {
             var token = tokenSource.Token;
 
@@ -209,11 +220,12 @@ namespace Fps
                     RemoveSimPlayer();
                 }
 
-                await Task.Delay(TimeSpan.FromSeconds(2), token);
+                await Task.Delay(TimeSpan.FromSeconds(TimeBetweenCycleSecs), token);
             }
         }
 
-        private async Task CreateSimPlayer(int delayInterval, Func<SimulatedPlayerWorkerConnector, Task> connectMethod, CancellationToken token)
+        private async Task CreateSimPlayer(int delayInterval, Func<SimulatedPlayerWorkerConnector, Task> connectMethod,
+            CancellationToken token)
         {
             await Task.Delay(TimeSpan.FromSeconds(Random.Range(delayInterval, 1.25f * delayInterval)), token);
             var simPlayer = Instantiate(SimulatedPlayerWorkerConnector, transform.position, transform.rotation);
@@ -311,13 +323,17 @@ namespace Fps
             return new Bounds(Worker.Origin, MapBuilder.GetWorldDimensions(worldSize));
         }
 
-        private class WorkerFlagTracker
+        private class WorkerFlagTracker : IDisposable
         {
             private readonly Dictionary<string, string> flagChanges = new Dictionary<string, string>();
 
+            private readonly WorkerFlagCallbackSystem callbackSystem;
+            private readonly ulong callbackKey;
+
             public WorkerFlagTracker(WorkerFlagCallbackSystem callbackSystem)
             {
-                callbackSystem.RegisterWorkerFlagChangeCallback(OnWorkerFlagChange);
+                this.callbackSystem = callbackSystem;
+                callbackKey = callbackSystem.RegisterWorkerFlagChangeCallback(OnWorkerFlagChange);
             }
 
             public bool TryGetFlagChange(string key, out string value)
@@ -333,6 +349,11 @@ namespace Fps
             private void OnWorkerFlagChange((string, string) pair)
             {
                 flagChanges[pair.Item1] = pair.Item2;
+            }
+
+            public void Dispose()
+            {
+                callbackSystem.UnregisterWorkerFlagChangeCallback(callbackKey);
             }
         }
     }

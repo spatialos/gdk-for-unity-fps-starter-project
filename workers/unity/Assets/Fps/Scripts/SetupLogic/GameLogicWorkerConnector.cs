@@ -1,10 +1,10 @@
 using System.Collections;
 using Improbable.Gdk.Core;
-using UnityEngine;
 using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.Guns;
 using Improbable.Gdk.Health;
 using Improbable.Gdk.PlayerLifecycle;
+using UnityEngine;
 
 namespace Fps
 {
@@ -29,7 +29,8 @@ namespace Fps
             }
             else
             {
-                builder.SetConnectionFlow(new ReceptionistFlow(CreateNewWorkerId(WorkerUtils.UnityGameLogic), new CommandLineConnectionFlowInitializer()));
+                builder.SetConnectionFlow(new ReceptionistFlow(CreateNewWorkerId(WorkerUtils.UnityGameLogic),
+                    new CommandLineConnectionFlowInitializer()));
             }
 
             return builder;

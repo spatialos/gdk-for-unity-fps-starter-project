@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Improbable.Gdk.Core;
-using UnityEngine;
 using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.PlayerLifecycle;
 using Improbable.Worker.CInterop;
 using Improbable.Worker.CInterop.Alpha;
+using UnityEngine;
 
 namespace Fps
 {
@@ -69,7 +69,8 @@ namespace Fps
             if (UseSessionFlow)
             {
                 connectionParams.Network.UseExternalIp = true;
-                builder.SetConnectionFlow(new ChosenDeploymentAlphaLocatorFlow(deployment, new SessionConnectionFlowInitializer(new CommandLineConnectionFlowInitializer())));
+                builder.SetConnectionFlow(new ChosenDeploymentAlphaLocatorFlow(deployment,
+                    new SessionConnectionFlowInitializer(new CommandLineConnectionFlowInitializer())));
             }
             else if (Application.isEditor)
             {
@@ -82,7 +83,8 @@ namespace Fps
                 switch (initializer.GetConnectionService())
                 {
                     case ConnectionService.Receptionist:
-                        builder.SetConnectionFlow(new ReceptionistFlow(CreateNewWorkerId(WorkerUtils.UnityClient), initializer));
+                        builder.SetConnectionFlow(new ReceptionistFlow(CreateNewWorkerId(WorkerUtils.UnityClient),
+                            initializer));
                         break;
                     case ConnectionService.Locator:
                         connectionParams.Network.UseExternalIp = true;
@@ -104,7 +106,7 @@ namespace Fps
         {
             var world = Worker.World;
 
-            PlayerLifecycleHelper.AddClientSystems(world, autoRequestPlayerCreation: false);
+            PlayerLifecycleHelper.AddClientSystems(world, false);
             PlayerLifecycleConfig.MaxPlayerCreationRetries = 0;
 
             var fallback = new GameObjectCreatorFromMetadata(Worker.WorkerType, Worker.Origin, Worker.LogDispatcher);
@@ -179,7 +181,8 @@ namespace Fps
     {
         private readonly string targetDeployment;
 
-        public ChosenDeploymentAlphaLocatorFlow(string targetDeployment, IConnectionFlowInitializer<AlphaLocatorFlow> initializer = null) : base(initializer)
+        public ChosenDeploymentAlphaLocatorFlow(string targetDeployment,
+            IConnectionFlowInitializer<AlphaLocatorFlow> initializer = null) : base(initializer)
         {
             this.targetDeployment = targetDeployment;
         }
