@@ -223,8 +223,6 @@ namespace Fps
                 }
 
                 flow.DevAuthToken = textAsset.text;
-
-                return;
             }
             else
             {
