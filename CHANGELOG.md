@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Changed
+
+- Updated the worker connectors following the [refactor in the GDK](https://github.com/spatialos/gdk-for-unity/pull/981). [#203](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/203).
+- Refactored the simulated player flow to closer align with the worker connector changes mentioned above. [#203](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/203)
+
 ## `0.2.3` - 2019-06-12
 
 ### Changed
