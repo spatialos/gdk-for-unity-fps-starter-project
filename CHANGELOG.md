@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## `0.2.4` - 2019-06-28
+
 ### Changed
 
 - Updated the worker connectors following the [refactor in the GDK](https://github.com/spatialos/gdk-for-unity/pull/981). [#203](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/203).
