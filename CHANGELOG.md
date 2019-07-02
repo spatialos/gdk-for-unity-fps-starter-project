@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## `test` - 2019-07-02
+
+### Changed
+
+- Upgraded to GDK for Unity version `test`
+
 ## `0.2.4` - 2019-06-28
 
 ### Changed
