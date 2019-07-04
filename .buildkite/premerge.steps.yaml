@@ -35,15 +35,27 @@ common: &common
 # These are then relied on to have stable names by other things, so once named, please beware renaming has consequences.
 
 steps:
-  - label: "build :android: and iOS"
+  - label: "build :android:"
     command: bash -c .shared-ci/scripts/build-worker.sh
     <<: *common
     artifact_paths:
       - logs/**/*
     env:
       WORKER_TYPE: "MobileClient"
-      BUILD_TARGET: "local"
-      SCRIPTING_TYPE: "mono"
+      BUILD_ENVIRONMENT: "local"
+      BUILD_TARGET_FILTER: "android"
+      SCRIPTING_BACKEND: "mono"
+
+  - label: "build iOS"
+    command: bash -c .shared-ci/scripts/build-worker.sh
+    <<: *common
+    artifact_paths:
+      - logs/**/*
+    env:
+      WORKER_TYPE: "MobileClient"
+      BUILD_ENVIRONMENT: "local"
+      BUILD_TARGET_FILTER: "ios"
+      SCRIPTING_BACKEND: "il2cpp"
 
   - label: "build UnityClient mono"
     command: bash -c .shared-ci/scripts/build-worker.sh
@@ -52,8 +64,8 @@ steps:
       - logs/**/*
     env:
       WORKER_TYPE: "UnityClient"
-      BUILD_TARGET: "cloud"
-      SCRIPTING_TYPE: "mono"
+      BUILD_ENVIRONMENT: "cloud"
+      SCRIPTING_BACKEND: "mono"
 
 #  - label: "build UnityClient il2cpp"
 #    command: bash -c .shared-ci/scripts/build-worker.sh
@@ -62,8 +74,8 @@ steps:
 #      - logs/**/*
 #    env:
 #      WORKER_TYPE: "UnityClient"
-#      BUILD_TARGET: "local"
-#      SCRIPTING_TYPE: "il2cpp"
+#      BUILD_ENVIRONMENT: "local"
+#      SCRIPTING_BACKEND: "il2cpp"
 
   - label: "build UnityGameLogic mono"
     command: bash -c .shared-ci/scripts/build-worker.sh
@@ -72,8 +84,8 @@ steps:
       - logs/**/*
     env:
       WORKER_TYPE: "UnityGameLogic"
-      BUILD_TARGET: "cloud"
-      SCRIPTING_TYPE: "mono"
+      BUILD_ENVIRONMENT: "cloud"
+      SCRIPTING_BACKEND: "mono"
 
   - label: "build SimulatedPlayerCoordinator mono"
     command: bash -c .shared-ci/scripts/build-worker.sh
@@ -82,5 +94,5 @@ steps:
       - logs/**/*
     env:
       WORKER_TYPE: "SimulatedPlayerCoordinator"
-      BUILD_TARGET: "cloud"
-      SCRIPTING_TYPE: "mono"
+      BUILD_ENVIRONMENT: "cloud"
+      SCRIPTING_BACKEND: "mono"
