@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Internal
+
+- Split the `MobileClient` build into separate `iOS` and `Android` buildkite steps.
+
 ## `0.2.4` - 2019-06-28
 
 ### Changed

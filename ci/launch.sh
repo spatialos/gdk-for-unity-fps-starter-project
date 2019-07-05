@@ -4,7 +4,6 @@ set -e -u -x -o pipefail
 
 cd "$(dirname "$0")/../"
 
-source ".shared-ci/scripts/profiling.sh"
 source ".shared-ci/scripts/pinned-tools.sh"
 
 # Download the artifacts and reconstruct the build/assemblies folder.
@@ -12,7 +11,7 @@ buildkite-agent artifact download "build\assembly\**\*" .
 
 uploadAssembly "${ASSEMBLY_PREFIX}" "${PROJECT_NAME}"
 
-markStartOfBlock "Launching deployments"
+echo "Launching deployments"
 
 dotnet run -p ../gdk-for-unity/workers/unity/Packages/com.improbable.gdk.deploymentlauncher/.DeploymentLauncher/DeploymentLauncher.csproj -- \
     create \
@@ -42,5 +41,3 @@ dotnet run -p ../gdk-for-unity/workers/unity/Packages/com.improbable.gdk.deploym
 CONSOLE_URL_SIM_PLAYERS="https://console.improbable.io/projects/${PROJECT_NAME}/deployments/${ASSEMBLY_NAME}_sim_players/overview"
 
 buildkite-agent annotate --style "success" "Simulated Player Deployment URL: ${CONSOLE_URL_SIM_PLAYERS}" --append
-
-markEndOfBlock "Launching deployments"
