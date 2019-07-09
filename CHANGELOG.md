@@ -2,9 +2,15 @@
 
 ## Unreleased
 
+## `0.2.5` - 2019-07-09
+
 ### Internal
 
 - Split the `MobileClient` build into separate `iOS` and `Android` buildkite steps.
+
+### Changed
+
+- Upgraded to GDK for Unity version `0.2.5`
 
 ## `0.2.4` - 2019-06-28
 
