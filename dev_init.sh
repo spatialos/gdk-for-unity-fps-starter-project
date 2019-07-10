@@ -108,6 +108,12 @@ popd
 
 echo_with_color "Finished cloning the GDK for Unity." "${LOG_SUCCESS}"
 
+echo "Downloading SDK for GDK for Unity.."
+
+"${TARGET_DIRECTORY}/init.sh"
+
+echo_with_color "Finished downloading SDK for the GDK for Unity." "${LOG_SUCCESS}"
+
 PKG_PATH="workers/unity/Packages"
 SRC_PATH="${TARGET_DIRECTORY}/workers-unity/Packages"
 

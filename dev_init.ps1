@@ -94,6 +94,13 @@ Pop-Location
 
 Write-Host "Finished cloning the GDK for Unity." -ForegroundColor Green
 
+Write-Host "Downloading SDK for GDK for Unity.." -ForegroundColor Yellow
+
+& "$TargetDirectory/init.ps1"
+
+Write-Host "Finished downloading SDK for GDK for Unity.." -ForegroundColor Green
+
+
 # Resolve gdk-for-unity packages path
 $PKGPath = Resolve-Path $(Join-Path $PSScriptRoot "workers/unity/Packages")
 $PKGSrc = Resolve-Path $(Join-Path $TargetDirectory "workers/unity/Packages")
