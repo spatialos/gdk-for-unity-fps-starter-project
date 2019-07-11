@@ -20,7 +20,6 @@ EXTRA_ARGS=""
 if isWindows; then
     if [[ -z ${BUILDKITE:-} ]]; then
         EXTRA_ARGS="--copy"
-    fi
     else
         echo "Cannot run bootstrap.sh on Windows machines (without copying). Invoking the powershell one.."
         powershell ./ci/bootstrap.ps1
