@@ -15,6 +15,11 @@ function isWindows() {
 
 cd "$(dirname "$0")/../"
 
+if isWindows; then
+    echo "Cannot run bootstrap.sh on Windows machines. Invoking the powershell one.."
+    powershell ./ci/bootstrap.ps1
+fi
+
 SHARED_CI_DIR="$(pwd)/.shared-ci"
 CLONE_URL="git@github.com:spatialos/gdk-for-unity-shared-ci.git"
 PINNED_SHARED_CI_VERSION=$(cat ./ci/shared-ci.pinned)
@@ -53,7 +58,6 @@ pushd "${TARGET_DIRECTORY}"
     git checkout "${PINNED_VERSION}"
     ./init.sh
 popd
-
 
 dotnet run -p ./.shared-ci/tools/PackageSymLinker/PackageSymLinker.csproj -- \
     --s "${TARGET_DIRECTORY}/workers/unity/Packages" \
