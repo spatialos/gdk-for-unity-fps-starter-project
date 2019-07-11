@@ -8,6 +8,8 @@ if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
  }
 }
 
+Exit
+
 $ProjectRoot = (Resolve-Path $(Join-Path $PSScriptRoot "../")).Path
 cd $ProjectRoot
 
