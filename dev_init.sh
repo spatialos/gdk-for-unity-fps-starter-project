@@ -35,7 +35,7 @@ function isWindows() {
 cd "$(dirname "$0")"
 
 if isWindows; then
-  echo "Cannot run symlink_packages.sh on Windows. Invoking the powershell version..."
+  echo "Cannot run dev_init.sh on Windows. Invoking the powershell version..."
   powershell "dev_init.ps1"
   exit 0
 fi

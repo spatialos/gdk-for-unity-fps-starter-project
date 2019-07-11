@@ -1,6 +1,18 @@
 #!/usr/bin/env bash
 set -e -u -x -o pipefail
 
+function isLinux() {
+  [[ "$(uname -s)" == "Linux" ]];
+}
+
+function isMacOS() {
+  [[ "$(uname -s)" == "Darwin" ]];
+}
+
+function isWindows() {
+  ! ( isLinux || isMacOS );
+}
+
 cd "$(dirname "$0")/../"
 
 SHARED_CI_DIR="$(pwd)/.shared-ci"
@@ -37,6 +49,12 @@ mkdir "${TARGET_DIRECTORY}"
 pushd "${TARGET_DIRECTORY}"
     git init
     git remote add origin "${CLONE_URI}"
-    git fetch --depth 20 origin develop
+    git fetch --depth 20 origin feature/npm-test
     git checkout "${PINNED_VERSION}"
+    ./init.sh
 popd
+
+
+dotnet run -p ./.shared-ci/tools/PackageSymLinker/PackageSymLinker.csproj -- \
+    --s "${TARGET_DIRECTORY}/workers/unity/Packages" \
+    --t "$(pwd)/workers/unity/Packages"
