@@ -2,13 +2,10 @@
 if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator')) {
     if ([int](Get-CimInstance -Class Win32_OperatingSystem | Select-Object -ExpandProperty BuildNumber) -ge 6000) {
         $CommandLine = "-File `"" + $MyInvocation.MyCommand.Path + "`" " + $MyInvocation.UnboundArguments
-        Write-Host "Starting elevated.."
         Start-Process -Wait -FilePath PowerShell.exe -Verb Runas -ArgumentList $CommandLine
         Exit
  }
 }
-
-Exit
 
 $ProjectRoot = (Resolve-Path $(Join-Path $PSScriptRoot "../")).Path
 cd $ProjectRoot
@@ -63,4 +60,4 @@ $PackageSource = Resolve-Path $(Join-Path $TargetGdkDirectory "/workers/unity/Pa
 
 dotnet run -p ./.shared-ci/tools/PackageSymLinker/PackageSymLinker.csproj -- `
     --s $PackageSource `
-    --t $PackageTarget
+    --t $PackageTarget `

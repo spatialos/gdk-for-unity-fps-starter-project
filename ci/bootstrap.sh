@@ -15,10 +15,17 @@ function isWindows() {
 
 cd "$(dirname "$0")/../"
 
+EXTRA_ARGS=""
+
 if isWindows; then
-    echo "Cannot run bootstrap.sh on Windows machines. Invoking the powershell one.."
-    powershell ./ci/bootstrap.ps1
-    exit 0
+    if [[ -z ${BUILDKITE:-} ]]; then
+        EXTRA_ARGS="--copy"
+    fi
+    else
+        echo "Cannot run bootstrap.sh on Windows machines (without copying). Invoking the powershell one.."
+        powershell ./ci/bootstrap.ps1
+        exit 0
+    fi
 fi
 
 SHARED_CI_DIR="$(pwd)/.shared-ci"
@@ -62,4 +69,4 @@ popd
 
 dotnet run -p ./.shared-ci/tools/PackageSymLinker/PackageSymLinker.csproj -- \
     --s "${TARGET_DIRECTORY}/workers/unity/Packages" \
-    --t "$(pwd)/workers/unity/Packages"
+    --t "$(pwd)/workers/unity/Packages" "${EXTRA_ARGS}"
