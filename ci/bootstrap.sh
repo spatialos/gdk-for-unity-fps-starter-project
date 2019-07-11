@@ -18,6 +18,7 @@ cd "$(dirname "$0")/../"
 if isWindows; then
     echo "Cannot run bootstrap.sh on Windows machines. Invoking the powershell one.."
     powershell ./ci/bootstrap.ps1
+    exit 0
 fi
 
 SHARED_CI_DIR="$(pwd)/.shared-ci"
