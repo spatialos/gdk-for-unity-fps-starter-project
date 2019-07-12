@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Changed
+
+- Changed manifest to use GDK Packages with NPM instead of sideloading.
+
 ### Internal
 
 - Split the `MobileClient` build into separate `iOS` and `Android` buildkite steps.
