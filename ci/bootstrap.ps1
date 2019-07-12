@@ -1,3 +1,5 @@
+$ErrorActionPreference = "Stop"
+
 # Self-elevate the script if required
 if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator')) {
     if ([int](Get-CimInstance -Class Win32_OperatingSystem | Select-Object -ExpandProperty BuildNumber) -ge 6000) {
@@ -35,6 +37,17 @@ Pop-Location
 
 
 $TargetGdkDirectory = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($ProjectRoot + "\..\gdk-for-unity")
+
+if (-not (Test-Path env:BUILDKITE))
+{
+    Write-host "Warning: About to delete $TargetGdkDirectory. Please confirm. (Default is Cancel)" -ForegroundColor Yellow 
+    $Readhost = Read-Host "(Y/N) > " 
+    Switch ($ReadHost) 
+        { 
+            Y { Write-Host "Deleting..." } 
+            Default { exit 1 } 
+        } 
+}
 
 if (Test-Path -Path $TargetGdkDirectory)
 {
