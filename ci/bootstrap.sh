@@ -75,7 +75,7 @@ fi
 EXTRA_ARGS=""
 
 if [[ -n ${BUILDKITE:-} ]]; then
-    EXTRA_ARGS="--copy" ./ci/bootstrap.ps1
+    EXTRA_ARGS="--copy"
 fi
 
 dotnet run -p ./.shared-ci/tools/PackageSymLinker/PackageSymLinker.csproj -- \
