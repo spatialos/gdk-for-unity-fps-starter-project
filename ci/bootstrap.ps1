@@ -30,6 +30,7 @@ Push-Location $TargetSharedCiDirectory
     git init
     git remote add origin git@github.com:spatialos/gdk-for-unity-shared-ci.git
     git fetch --depth 20 origin master
+    if ($LASTEXITCODE -ne 0) { throw "Unable to fetch from git." }
     git checkout $SharedCiVersion
 Pop-Location
 
@@ -63,6 +64,7 @@ Push-Location $TargetGdkDirectory
     git init
     git remote add origin git@github.com:spatialos/gdk-for-unity.git
     git fetch --depth 20 origin feature/npm-test
+    if ($LASTEXITCODE -ne 0) { throw "Unable to fetch from git." }
     git checkout $TargetGdkVersion
     & ./init.ps1
 Pop-Location
