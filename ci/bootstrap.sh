@@ -67,5 +67,5 @@ pushd "${TARGET_DIRECTORY}"
 popd
 
 dotnet run -p ./.shared-ci/tools/PackageSymLinker/PackageSymLinker.csproj -- \
-    --s "${TARGET_DIRECTORY}/workers/unity/Packages" \
-    --t "$(pwd)/workers/unity/Packages" "${EXTRA_ARGS}"
+    --packages-source-dir "${TARGET_DIRECTORY}/workers/unity/Packages" \
+    --package-target-dir "$(pwd)/workers/unity/Packages" "${EXTRA_ARGS}"

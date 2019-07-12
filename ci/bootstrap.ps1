@@ -59,5 +59,5 @@ $PackageTarget = Resolve-Path $(Join-Path $ProjectRoot "/workers/unity/Packages"
 $PackageSource = Resolve-Path $(Join-Path $TargetGdkDirectory "/workers/unity/Packages")
 
 dotnet run -p ./.shared-ci/tools/PackageSymLinker/PackageSymLinker.csproj -- `
-    --s $PackageSource `
-    --t $PackageTarget `
+    --packages-source-dir $PackageSource `
+    --package-target-dir $PackageTarget `
