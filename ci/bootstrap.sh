@@ -15,18 +15,6 @@ function isWindows() {
 
 cd "$(dirname "$0")/../"
 
-EXTRA_ARGS=""
-
-if isWindows; then
-    if [[ -z ${BUILDKITE:-} ]]; then
-        echo "Cannot run bootstrap.sh on Windows machines (without copying). Invoking the powershell one.."
-        powershell ./ci/bootstrap.ps1
-        exit 0
-    else
-        EXTRA_ARGS="--copy"
-    fi
-fi
-
 SHARED_CI_DIR="$(pwd)/.shared-ci"
 CLONE_URL="git@github.com:spatialos/gdk-for-unity-shared-ci.git"
 PINNED_SHARED_CI_VERSION=$(cat ./ci/shared-ci.pinned)
@@ -76,6 +64,19 @@ pushd "${TARGET_DIRECTORY}"
     git checkout "${PINNED_VERSION}"
     ./init.sh
 popd
+
+if isWindows; then
+    if [[ -z ${BUILDKITE:-} ]]; then
+        powershell Start-Process -Verb RunAs -WindowStyle Hidden -Wait -FilePath dotnet.exe -ArgumentList "run", "-p", "$(pwd)/.shared-ci/tools/PackageSymLinker/PackageSymLinker.csproj", "\-\-", "--packages-source-dir", "${TARGET_DIRECTORY}/workers/unity/Packages", "--package-target-dir", "$(pwd)/workers/unity/Packages"
+        exit 0
+    fi
+fi
+
+EXTRA_ARGS=""
+
+if [[ -n ${BUILDKITE:-} ]]; then
+    EXTRA_ARGS="--copy" ./ci/bootstrap.ps1
+fi
 
 dotnet run -p ./.shared-ci/tools/PackageSymLinker/PackageSymLinker.csproj -- \
     --packages-source-dir "${TARGET_DIRECTORY}/workers/unity/Packages" \
