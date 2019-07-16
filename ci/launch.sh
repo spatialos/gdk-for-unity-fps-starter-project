@@ -13,7 +13,7 @@ uploadAssembly "${ASSEMBLY_PREFIX}" "${PROJECT_NAME}"
 
 echo "Launching deployments"
 
-dotnet run -p ../gdk-for-unity/workers/unity/Packages/com.improbable.gdk.deploymentlauncher/.DeploymentLauncher/DeploymentLauncher.csproj -- \
+dotnet run -p workers/unity/Packages/io.improbable.gdk.deploymentlauncher/.DeploymentLauncher/DeploymentLauncher.csproj -- \
     create \
     --project_name "${PROJECT_NAME}" \
     --assembly_name "${ASSEMBLY_NAME}" \
@@ -27,7 +27,7 @@ CONSOLE_URL="https://console.improbable.io/projects/${PROJECT_NAME}/deployments/
 
 buildkite-agent annotate --style "success" "Deployment URL: ${CONSOLE_URL}<br/>"
 
-dotnet run -p ../gdk-for-unity/workers/unity/Packages/com.improbable.gdk.deploymentlauncher/.DeploymentLauncher/DeploymentLauncher.csproj -- \
+dotnet run -p workers/unity/Packages/io.improbable.gdk.deploymentlauncher/.DeploymentLauncher/DeploymentLauncher.csproj -- \
     create-sim \
     --project_name "${PROJECT_NAME}" \
     --assembly_name "${ASSEMBLY_NAME}" \
