@@ -2,9 +2,12 @@
 
 ## Unreleased
 
+## `0.2.5` - 2019-07-17
+
 ### Changed
 
 - Changed manifest to use GDK Packages with NPM instead of sideloading.
+- Upgraded to GDK for Unity version `0.2.5`
 
 ### Internal
 
