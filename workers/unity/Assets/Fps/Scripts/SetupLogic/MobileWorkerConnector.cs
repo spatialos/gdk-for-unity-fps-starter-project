@@ -38,8 +38,9 @@ namespace Fps
             };
 
             var initializer = new MobileConnectionFlowInitializer(
+                new MobileConnectionFlowInitializer.CommandLineSettingsProvider(),
                 new MobileConnectionFlowInitializer.PlayerPrefsSettingsProvider(),
-                new MobileConnectionFlowInitializer.CommandLineSettingsProvider(), this);
+                this);
 
             var builder = new SpatialOSConnectionHandlerBuilder()
                 .SetConnectionParameters(connParams);

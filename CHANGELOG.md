@@ -10,6 +10,10 @@
 
 - Split the `MobileClient` build into separate `iOS` and `Android` buildkite steps.
 
+### Fixed
+
+- Fixed a bug where you had to fully uninstall and reinstall a mobile app to swap between local and cloud workflows.
+
 ## `0.2.4` - 2019-06-28
 
 ### Changed
