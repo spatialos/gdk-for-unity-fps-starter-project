@@ -8,6 +8,8 @@ using Improbable.Gdk.PlayerLifecycle;
 using Improbable.Gdk.QueryBasedInterest;
 using Improbable.Gdk.Session;
 using Improbable.Gdk.StandardTypes;
+using Improbable.Gdk.TransformSynchronization;
+using UnityEngine;
 
 namespace Fps
 {
@@ -55,23 +57,22 @@ namespace Fps
         {
             var client = EntityTemplate.GetWorkerAccessAttribute(workerId);
 
-            var (spawnPosition, spawnYaw, spawnPitch) = SpawnPoints.GetRandomSpawnPoint();
+            var (spawnPosition, spawnRotation) = SpawnPoints.GetRandomSpawnPoint();
 
-            var serverResponse = new ServerResponse
+            var movementInfo = new MovementInfo
             {
-                Position = spawnPosition.ToIntAbsolute()
+                Position = TransformUtils.ToFixedPointVector3(spawnPosition)
             };
 
-            var rotationUpdate = new RotationUpdate
+            var rotationInfo = new RotationInfo
             {
-                Yaw = spawnYaw.ToInt1k(),
-                Pitch = spawnPitch.ToInt1k()
+                Rotation = TransformUtils.ToCompressedQuaternion(spawnRotation)
             };
 
             var pos = new Position.Snapshot { Coords = spawnPosition.ToSpatialCoordinates() };
-            var serverMovement = new ServerMovement.Snapshot { Latest = serverResponse };
-            var clientMovement = new ClientMovement.Snapshot { Latest = new ClientRequest() };
-            var clientRotation = new ClientRotation.Snapshot { Latest = rotationUpdate };
+            var serverMovement = new ServerMovement.Snapshot { Movement = movementInfo };
+            var clientMovement = new ClientMovement.Snapshot { Movement = new MovementInfo() };
+            var clientRotation = new ClientRotation.Snapshot { Rotation = rotationInfo };
             var shootingComponent = new ShootingComponent.Snapshot();
             var gunComponent = new GunComponent.Snapshot { GunId = PlayerGunSettings.DefaultGunIndex };
             var gunStateComponent = new GunStateComponent.Snapshot { IsAiming = false };

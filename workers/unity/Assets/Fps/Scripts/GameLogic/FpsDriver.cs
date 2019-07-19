@@ -5,7 +5,7 @@ using Improbable.Gdk.Subscriptions;
 using Improbable.Gdk.Guns;
 using Improbable.Gdk.Health;
 using Improbable.Gdk.Movement;
-using Improbable.Gdk.StandardTypes;
+using Improbable.Gdk.TransformSynchronization;
 using UnityEngine;
 
 namespace Fps
@@ -78,7 +78,7 @@ namespace Fps
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
-            serverMovement.OnForcedRotationEvent += OnForcedRotation;
+            serverMovement.OnForcedRotationEvent += ForcedRotation;
             health.OnRespawnEvent += OnRespawn;
         }
 
@@ -105,11 +105,13 @@ namespace Fps
 
             if (health.Data.Health == 0)
             {
-                if (controller.RespawnPressed)
+                if (!controller.RespawnPressed)
                 {
-                    isRequestingRespawn = true;
-                    requestingRespawnCoroutine = StartCoroutine(RequestRespawn());
+                    return;
                 }
+
+                isRequestingRespawn = true;
+                requestingRespawnCoroutine = StartCoroutine(RequestRespawn());
 
                 return;
             }
@@ -236,10 +238,10 @@ namespace Fps
             }
         }
 
-        private void OnForcedRotation(RotationUpdate forcedRotation)
+        private void ForcedRotation(RotationInfo rotationInfo)
         {
-            var newPitch = Mathf.Clamp(forcedRotation.Pitch.ToFloat1k(), -cameraSettings.MaxPitch,
-                -cameraSettings.MinPitch);
+            var pitch = TransformUtils.ToUnityQuaternion(rotationInfo.Rotation).eulerAngles.x;
+            var newPitch = Mathf.Clamp(pitch, -cameraSettings.MaxPitch, -cameraSettings.MinPitch);
             pitchTransform.localRotation = Quaternion.Euler(newPitch, 0, 0);
         }
     }

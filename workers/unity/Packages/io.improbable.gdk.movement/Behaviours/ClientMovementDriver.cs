@@ -1,15 +1,14 @@
-using Improbable.Gdk.Core;
 using Improbable.Gdk.Subscriptions;
-using Improbable.Gdk.StandardTypes;
+using Improbable.Gdk.TransformSynchronization;
 using UnityEngine;
 
 namespace Improbable.Gdk.Movement
 {
     public class ClientMovementDriver : GroundCheckingDriver
     {
-        [Require] private ClientMovementWriter client;
-        [Require] private ClientRotationWriter rotation;
-        [Require] private ServerMovementReader server;
+        [Require] private ClientMovementWriter clientMovementWriter;
+        [Require] private ClientRotationWriter clientRotationWriter;
+        [Require] private ServerMovementReader serverMovementReader;
 
         [SerializeField] private float transformUpdateHz = 15.0f;
         [SerializeField] private float rotationUpdateHz = 15.0f;
@@ -51,52 +50,10 @@ namespace Improbable.Gdk.Movement
         private bool lastMovementStationary;
 
         private float cumulativeRotationTimeDelta;
-        private float currentPitch;
-        private float currentYaw;
-        private float currentRoll;
-        private bool yawDirty;
-        private bool rollDirty;
-        private bool pitchDirty;
+        private Quaternion currentRotation;
+        private bool rotationDirty;
+
         private float sprintCooldownExpires;
-
-        public float CurrentYaw
-        {
-            set
-            {
-                if (value != currentYaw)
-                {
-                    currentYaw = value;
-                    yawDirty = true;
-                }
-            }
-            get => currentYaw;
-        }
-
-        public float CurrentPitch
-        {
-            set
-            {
-                if (value != currentPitch)
-                {
-                    currentPitch = value;
-                    pitchDirty = true;
-                }
-            }
-            get => currentPitch;
-        }
-
-        public float CurrentRoll
-        {
-            set
-            {
-                if (value != currentRoll)
-                {
-                    currentRoll = value;
-                    rollDirty = true;
-                }
-            }
-            get => currentRoll;
-        }
 
         public bool HasSprintedRecently => Time.time < sprintCooldownExpires;
 
@@ -129,7 +86,7 @@ namespace Improbable.Gdk.Movement
         protected override void Awake()
         {
             base.Awake();
-            // There will only be one client movement driver, but there will always be one.
+            // There will only be one clientMovementWriter movement driver, but there will always be one.
             // Therefore it should be safe to set shared movement settings here.
             MovementSpeedSettings.SharedSettings = movementSettings.MovementSpeed;
         }
@@ -138,35 +95,34 @@ namespace Improbable.Gdk.Movement
         {
             LinkedEntityComponent = GetComponent<LinkedEntityComponent>();
             origin = LinkedEntityComponent.Worker.Origin;
-            server.OnLatestUpdate += OnServerUpdate;
-            server.OnForcedRotationEvent += OnForcedRotation;
+            serverMovementReader.OnMovementUpdate += MovementUpdate;
+            serverMovementReader.OnForcedRotationEvent += ForcedRotation;
         }
 
-        private void OnForcedRotation(RotationUpdate forcedRotation)
+        private void ForcedRotation(RotationInfo forcedRotation)
         {
-            var rotationUpdate = new RotationUpdate
+            clientRotationWriter.SendUpdate(new ClientRotation.Update
             {
-                Pitch = forcedRotation.Pitch,
-                Roll = forcedRotation.Roll,
-                Yaw = forcedRotation.Yaw,
-                TimeDelta = forcedRotation.TimeDelta
-            };
-            var update = new ClientRotation.Update { Latest = new Option<RotationUpdate>(rotationUpdate) };
-            rotation.SendUpdate(update);
+                Rotation = forcedRotation
+            });
+
+            var eulerRotation = TransformUtils.ToUnityQuaternion(forcedRotation.Rotation).eulerAngles;
 
             cumulativeRotationTimeDelta = 0;
-            pitchDirty = rollDirty = yawDirty = false;
+            rotationDirty = false;
 
-            //Apply the forced rotation
-            var x = rotationConstraints.XAxisRotation ? forcedRotation.Pitch.ToFloat1k() : 0;
-            var y = rotationConstraints.YAxisRotation ? forcedRotation.Yaw.ToFloat1k() : 0;
-            var z = rotationConstraints.ZAxisRotation ? forcedRotation.Roll.ToFloat1k() : 0;
+            //Apply the forced clientRotationWriter
+            var x = rotationConstraints.XAxisRotation ? eulerRotation.x : 0;
+            var y = rotationConstraints.YAxisRotation ? eulerRotation.y : 0;
+            var z = rotationConstraints.ZAxisRotation ? eulerRotation.z : 0;
             transform.rotation = Quaternion.Euler(x, y, z);
         }
 
-        private void OnServerUpdate(ServerResponse update)
+        private void MovementUpdate(MovementInfo movementInfo)
         {
-            Reconcile(update.Position.ToVector3() + origin, update.Timestamp);
+            Reconcile(
+                TransformUtils.ToUnityVector3(movementInfo.Position) + origin,
+                serverMovementReader.Data.Timestamp);
         }
 
         public void ApplyMovement(Vector3 movement, Quaternion rotation, MovementSpeed movementSpeed, bool startJump)
@@ -261,9 +217,9 @@ namespace Improbable.Gdk.Movement
             var y = rotationConstraints.YAxisRotation ? rotation.eulerAngles.y : 0;
             var z = rotationConstraints.ZAxisRotation ? rotation.eulerAngles.z : 0;
             transform.rotation = Quaternion.Euler(x, y, z);
-            CurrentPitch = rotation.eulerAngles.x;
-            CurrentYaw = rotation.eulerAngles.y;
-            CurrentRoll = rotation.eulerAngles.z;
+
+            currentRotation = rotation;
+            rotationDirty = true;
         }
 
         public float GetSpeed(MovementSpeed requestedSpeed)
@@ -285,32 +241,37 @@ namespace Improbable.Gdk.Movement
         private bool SendPositionUpdate()
         {
             //Send network data if required (If moved, or was still moving last update)
-            var anyUpdate = false;
-            if (HasEnoughMovement(transformUpdateDelta,
+            if (!HasEnoughMovement(transformUpdateDelta,
                 out var movement,
                 out var timeDelta,
                 out var anyMovement,
                 out var messageStamp))
             {
-                Reset();
-                if (anyMovement || !lastMovementStationary)
-                {
-                    var clientRequest = new ClientRequest
-                    {
-                        IncludesJump = didJump,
-                        Movement = movement.ToIntDelta(),
-                        TimeDelta = timeDelta,
-                        Timestamp = messageStamp
-                    };
-                    var update = new ClientMovement.Update { Latest = new Option<ClientRequest>(clientRequest) };
-                    client.SendUpdate(update);
-                    lastMovementStationary = !anyMovement;
-                    didJump = false;
-                    anyUpdate = true;
-                }
+                return false;
             }
 
-            return anyUpdate;
+            Reset();
+
+            if (!anyMovement && lastMovementStationary)
+            {
+                return false;
+            }
+
+            clientMovementWriter.SendUpdate(new ClientMovement.Update
+            {
+                Movement = new MovementInfo
+                {
+                    IncludesJump = didJump,
+                    Position = TransformUtils.ToFixedPointVector3(movement),
+                    TimeDelta = timeDelta
+                },
+                Timestamp = messageStamp
+            });
+
+            lastMovementStationary = !anyMovement;
+            didJump = false;
+
+            return true;
         }
 
         // Returns true if an update needs to be sent.
@@ -321,22 +282,22 @@ namespace Improbable.Gdk.Movement
 
             if (cumulativeRotationTimeDelta > rotationUpdateDelta)
             {
-                if (pitchDirty || rollDirty || yawDirty)
+                if (rotationDirty)
                 {
-                    var rotationUpdate = new RotationUpdate
+                    clientRotationWriter.SendUpdate(new ClientRotation.Update
                     {
-                        Pitch = currentPitch.ToInt1k(),
-                        Roll = currentRoll.ToInt1k(),
-                        Yaw = currentYaw.ToInt1k(),
-                        TimeDelta = cumulativeRotationTimeDelta
-                    };
-                    var update = new ClientRotation.Update { Latest = new Option<RotationUpdate>(rotationUpdate) };
-                    rotation.SendUpdate(update);
+                        Rotation = new RotationInfo
+                        {
+                            Rotation = TransformUtils.ToCompressedQuaternion(currentRotation),
+                            TimeDelta = cumulativeRotationTimeDelta
+                        }
+                    });
+
                     anyUpdate = true;
                 }
 
                 cumulativeRotationTimeDelta = 0;
-                pitchDirty = rollDirty = yawDirty = false;
+                rotationDirty = false;
             }
             else
             {

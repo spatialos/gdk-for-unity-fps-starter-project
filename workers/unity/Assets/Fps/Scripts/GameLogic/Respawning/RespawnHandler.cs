@@ -5,6 +5,7 @@ using Improbable.Gdk.Subscriptions;
 using Improbable.Gdk.Health;
 using Improbable.Gdk.Movement;
 using Improbable.Gdk.StandardTypes;
+using Improbable.Gdk.TransformSynchronization;
 using UnityEngine;
 
 namespace Fps
@@ -39,27 +40,25 @@ namespace Fps
             health.SendUpdate(healthUpdate);
 
             // Move to a spawn point (position and rotation)
-            var (spawnPosition, spawnYaw, spawnPitch) = SpawnPoints.GetRandomSpawnPoint();
-            var newLatest = new ServerResponse
-            {
-                Position = spawnPosition.ToIntAbsolute(),
-                IncludesJump = false,
-                Timestamp = serverMovement.Data.Latest.Timestamp,
-                TimeDelta = 0
-            };
+            var (spawnPosition, spawnRotation) = SpawnPoints.GetRandomSpawnPoint();
 
             var serverMovementUpdate = new ServerMovement.Update
             {
-                Latest = newLatest
+                Movement = new MovementInfo
+                {
+                    Position = TransformUtils.ToFixedPointVector3(spawnPosition),
+                    IncludesJump = false,
+                    TimeDelta = 0
+                },
+                Timestamp = serverMovement.Data.Timestamp
             };
             serverMovement.SendUpdate(serverMovementUpdate);
 
             transform.position = spawnPosition + spatial.Worker.Origin;
 
-            var forceRotationRequest = new RotationUpdate
+            var forceRotationRequest = new RotationInfo
             {
-                Yaw = spawnYaw.ToInt1k(),
-                Pitch = spawnPitch.ToInt1k(),
+                Rotation = TransformUtils.ToCompressedQuaternion(spawnRotation),
                 TimeDelta = 0
             };
             serverMovement.SendForcedRotationEvent(forceRotationRequest);

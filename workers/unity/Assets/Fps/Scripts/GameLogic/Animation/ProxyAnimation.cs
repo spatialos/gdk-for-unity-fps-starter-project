@@ -3,6 +3,7 @@ using Improbable.Gdk.Subscriptions;
 using Improbable.Gdk.Guns;
 using Improbable.Gdk.Movement;
 using Improbable.Gdk.StandardTypes;
+using Improbable.Gdk.TransformSynchronization;
 using UnityEngine;
 
 namespace Fps
@@ -11,8 +12,8 @@ namespace Fps
     public class ProxyAnimation : MonoBehaviour
     {
         [Require] private GunStateComponentReader gunState;
-        [Require] private ServerMovementReader serverMovement;
-        [Require] private ClientRotationReader clientRotation;
+        [Require] private ServerMovementReader serverMovementReader;
+        [Require] private ClientRotationReader clientRotationReader;
 
         [Tooltip(
             "If proxy players do not receive ServerMovement component updates for this many Unity updates, they will return to idle.")]
@@ -33,36 +34,41 @@ namespace Fps
 
         private void OnEnable()
         {
-            gunState.OnIsAimingUpdate += OnAiming;
-            serverMovement.OnLatestUpdate += OnMovement;
-            clientRotation.OnLatestUpdate += OnRotation;
+            gunState.OnIsAimingUpdate += SetAiming;
+            serverMovementReader.OnMovementUpdate += MovementUpdate;
+            clientRotationReader.OnRotationUpdate += RotationUpdate;
 
-            OnAiming(gunState.Data.IsAiming);
-            OnRotation(clientRotation.Data.Latest);
+            SetAiming(gunState.Data.IsAiming);
+            RotationUpdate(clientRotationReader.Data.Rotation);
         }
 
         private void Update()
         {
             fpsAnimator.SetGrounded(driver.IsGrounded);
-            if (isMoving)
+            if (!isMoving)
             {
-                movementTimeout -= Time.deltaTime;
-                if (movementTimeout <= 0)
-                {
-                    fpsAnimator.StopMovement();
-                    isMoving = false;
-                }
+                return;
             }
+
+            movementTimeout -= Time.deltaTime;
+            if (movementTimeout > 0)
+            {
+                return;
+            }
+
+            fpsAnimator.StopMovement();
+            isMoving = false;
         }
 
-        private void OnAiming(bool isAiming)
+        private void SetAiming(bool isAiming)
         {
             fpsAnimator.SetAiming(isAiming);
         }
 
-        private void OnRotation(RotationUpdate rotation)
+        private void RotationUpdate(RotationInfo rotationInfo)
         {
-            var pitch = rotation.Pitch.ToFloat1k();
+            var pitch = TransformUtils.ToUnityQuaternion(rotationInfo.Rotation).eulerAngles.x;
+
             if (pitch < -180)
             {
                 pitch += 360;
@@ -77,15 +83,18 @@ namespace Fps
             fpsAnimator.SetPitch(-pitch);
         }
 
-        private void OnMovement(ServerResponse movement)
+        private void MovementUpdate(MovementInfo movementInfo)
         {
-            fpsAnimator.SetMovement(movement.Position.ToVector3(), movement.TimeDelta);
-            if (movement.IncludesJump)
+            fpsAnimator.SetMovement(
+                TransformUtils.ToUnityVector3(movementInfo.Position),
+                movementInfo.TimeDelta);
+
+            if (movementInfo.IncludesJump)
             {
                 fpsAnimator.Jump();
             }
 
-            movementTimeout = movement.TimeDelta * stopAnimatingAfterUpdates;
+            movementTimeout = movementInfo.TimeDelta * stopAnimatingAfterUpdates;
             isMoving = true;
         }
     }

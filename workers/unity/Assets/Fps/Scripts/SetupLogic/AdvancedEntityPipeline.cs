@@ -6,6 +6,7 @@ using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.Movement;
 using Improbable.Gdk.StandardTypes;
 using Improbable.Gdk.Subscriptions;
+using Improbable.Gdk.TransformSynchronization;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -68,7 +69,7 @@ namespace Fps
                     }
 
                     var serverPosition = entity.GetComponent<ServerMovement.Component>();
-                    var position = serverPosition.Latest.Position.ToVector3() + worker.Origin;
+                    var position = TransformUtils.ToUnityVector3(serverPosition.Movement.Position) + worker.Origin;
 
                     var prefab = authority ? cachedAuthPlayer : cachedNonAuthPlayer;
                     var gameObject = Object.Instantiate(prefab, position, Quaternion.identity);

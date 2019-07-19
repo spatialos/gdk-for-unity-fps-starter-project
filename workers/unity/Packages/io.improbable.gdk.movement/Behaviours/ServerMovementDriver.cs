@@ -1,14 +1,15 @@
 using Improbable.Gdk.Subscriptions;
 using Improbable.Gdk.StandardTypes;
+using Improbable.Gdk.TransformSynchronization;
 using UnityEngine;
 
 namespace Improbable.Gdk.Movement
 {
     public class ServerMovementDriver : CharacterControllerMotor
     {
-        [Require] private ServerMovementWriter server;
-        [Require] private ClientMovementReader client;
-        [Require] private PositionWriter spatialPosition;
+        [Require] private ServerMovementWriter serverMovementWriter;
+        [Require] private ClientMovementReader clientMovementReader;
+        [Require] private PositionWriter spatialPositionWriter;
 
         [SerializeField] private float spatialPositionUpdateHz = 1.0f;
         [SerializeField, HideInInspector] private float spatialPositionUpdateDelta;
@@ -16,7 +17,7 @@ namespace Improbable.Gdk.Movement
         private LinkedEntityComponent LinkedEntityComponent;
 
         private Vector3 lastPosition;
-        private Vector3 origin;
+        private Vector3 workerOrigin;
         private float lastSpatialPositionTime;
 
         // Cache the update delta values.
@@ -36,35 +37,39 @@ namespace Improbable.Gdk.Movement
         private void OnEnable()
         {
             LinkedEntityComponent = GetComponent<LinkedEntityComponent>();
-            origin = LinkedEntityComponent.Worker.Origin;
+            workerOrigin = LinkedEntityComponent.Worker.Origin;
 
-            client.OnLatestUpdate += OnClientUpdate;
+            clientMovementReader.OnMovementUpdate += OnClientUpdate;
         }
 
-        private void OnClientUpdate(ClientRequest request)
+        private void OnClientUpdate(MovementInfo request)
         {
             // Move the player by the given delta.
-            Move(request.Movement.ToVector3());
+            Move(TransformUtils.ToUnityVector3(request.Position));
 
-            var positionNoOffset = transform.position - origin;
+            var positionNoOffset = transform.position - workerOrigin;
 
-            // Send the update using the new position.
-            var response = new ServerResponse
+            serverMovementWriter.SendUpdate(new ServerMovement.Update
             {
-                Position = positionNoOffset.ToIntAbsolute(),
-                IncludesJump = request.IncludesJump,
-                Timestamp = request.Timestamp,
-                TimeDelta = request.TimeDelta
-            };
-            var update = new ServerMovement.Update { Latest = response };
-            server.SendUpdate(update);
+                Movement = new MovementInfo
+                {
+                    Position = TransformUtils.ToFixedPointVector3(positionNoOffset),
+                    IncludesJump = request.IncludesJump,
+                    TimeDelta = request.TimeDelta
+                }
+            });
 
-            if (Time.time - lastSpatialPositionTime > spatialPositionUpdateDelta)
+            if (!(Time.time - lastSpatialPositionTime > spatialPositionUpdateDelta))
             {
-                var positionUpdate = new Position.Update { Coords = positionNoOffset.ToSpatialCoordinates() };
-                spatialPosition.SendUpdate(positionUpdate);
-                lastSpatialPositionTime = Time.time;
+                return;
             }
+
+            spatialPositionWriter.SendUpdate(new Position.Update
+            {
+                Coords = positionNoOffset.ToSpatialCoordinates()
+            });
+
+            lastSpatialPositionTime = Time.time;
         }
     }
 }

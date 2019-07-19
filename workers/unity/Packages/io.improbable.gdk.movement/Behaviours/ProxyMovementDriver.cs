@@ -1,5 +1,5 @@
 using Improbable.Gdk.Subscriptions;
-using Improbable.Gdk.StandardTypes;
+using Improbable.Gdk.TransformSynchronization;
 using Improbable.Worker.CInterop;
 using UnityEngine;
 
@@ -7,8 +7,8 @@ namespace Improbable.Gdk.Movement
 {
     public class ProxyMovementDriver : GroundCheckingDriver
     {
-        [Require] private ServerMovementReader server;
-        [Require] private ClientRotationReader client;
+        [Require] private ServerMovementReader serverMovementReader;
+        [Require] private ClientRotationReader clientRotationReader;
 
         [SerializeField] private RotationConstraints rotationConstraints = new RotationConstraints
         {
@@ -32,38 +32,29 @@ namespace Improbable.Gdk.Movement
             LinkedEntityComponent = GetComponent<LinkedEntityComponent>();
             origin = LinkedEntityComponent.Worker.Origin;
 
-            server.OnLatestUpdate += OnServerUpdate;
-            client.OnLatestUpdate += OnClientUpdate;
+            serverMovementReader.OnMovementUpdate += ServerMovementUpdate;
+            clientRotationReader.OnRotationUpdate += ClientRotationUpdate;
 
-            OnClientUpdate(client.Data.Latest);
-            OnServerUpdate(server.Data.Latest);
+            ClientRotationUpdate(clientRotationReader.Data.Rotation);
+            ServerMovementUpdate(serverMovementReader.Data.Movement);
         }
 
-        private void OnClientUpdate(RotationUpdate rotation)
+        private void ClientRotationUpdate(RotationInfo rotationInfo)
         {
-            var x = rotationConstraints.XAxisRotation ? rotation.Pitch.ToFloat1k() : 0;
-            var y = rotationConstraints.YAxisRotation ? rotation.Yaw.ToFloat1k() : 0;
-            var z = rotationConstraints.ZAxisRotation ? rotation.Roll.ToFloat1k() : 0;
-
-            UpdateRotation(Quaternion.Euler(x, y, z), rotation.TimeDelta);
+            hasRotationLeft = true;
+            lastFullTime = timeLeftToRotate = rotationInfo.TimeDelta;
+            target = TransformUtils.ToUnityQuaternion(rotationInfo.Rotation);
+            source = transform.rotation;
         }
 
-        private void OnServerUpdate(ServerResponse movement)
+        private void ServerMovementUpdate(MovementInfo movementInfo)
         {
-            if (server.Authority != Authority.NotAuthoritative)
+            if (serverMovementReader.Authority != Authority.NotAuthoritative)
             {
                 return;
             }
 
-            Interpolate(movement.Position.ToVector3() + origin, movement.TimeDelta);
-        }
-
-        public void UpdateRotation(Quaternion targetQuaternion, float timeDelta)
-        {
-            hasRotationLeft = true;
-            lastFullTime = timeLeftToRotate = timeDelta;
-            target = targetQuaternion;
-            source = transform.rotation;
+            Interpolate(TransformUtils.ToUnityVector3(movementInfo.Position) + origin, movementInfo.TimeDelta);
         }
 
         protected override void Update()

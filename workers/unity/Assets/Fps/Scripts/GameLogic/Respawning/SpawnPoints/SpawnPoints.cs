@@ -7,14 +7,12 @@ namespace Fps
         public class SpawnPoint
         {
             public Vector3 SpawnPosition;
-            public float SpawnYaw;
-            public float SpawnPitch;
+            public Quaternion SpawnRotation;
 
-            public void Deconstruct(out Vector3 position, out float yaw, out float pitch)
+            public void Deconstruct(out Vector3 position, out Quaternion rotation)
             {
                 position = SpawnPosition;
-                yaw = SpawnYaw;
-                pitch = SpawnPitch;
+                rotation = SpawnRotation;
             }
         }
 
@@ -47,11 +45,13 @@ namespace Fps
                     spawnPointPosition = SnapToGround(spawnPointPosition);
                 }
 
+                var spawnRotation = spawnPointTransform.rotation;
+                spawnRotation.x = 0;
+
                 spawnPointList[n] = new SpawnPoint
                 {
                     SpawnPosition = spawnPointPosition - worldOffset,
-                    SpawnYaw = spawnPointTransform.eulerAngles.y,
-                    SpawnPitch = 0
+                    SpawnRotation = spawnRotation,
                 };
 
                 if (Application.isPlaying)
