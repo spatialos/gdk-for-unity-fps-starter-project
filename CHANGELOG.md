@@ -2,20 +2,24 @@
 
 ## Unreleased
 
+### Fixed
+
+- Fixed a bug where shooting a health pickup throws an exception. [#220](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/220)
+
 ## `0.2.5` - 2019-07-18
 
 ### Changed
 
-- Changed manifest to use GDK Packages with NPM instead of sideloading.
-- Upgraded to GDK for Unity version `0.2.5`
+- Changed manifest to use GDK Packages with NPM instead of sideloading. [#211](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/211)
+- Upgraded to GDK for Unity version `0.2.5`. [#219](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/219)
 
 ### Internal
 
-- Split the `MobileClient` build into separate `iOS` and `Android` buildkite steps.
+- Split the `MobileClient` build into separate `iOS` and `Android` buildkite steps. [#209](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/209)
 
 ### Fixed
 
-- Fixed a bug where you had to fully uninstall and reinstall a mobile app to swap between local and cloud workflows.
+- Fixed a bug where you had to fully uninstall and reinstall a mobile app to swap between local and cloud workflows. [#218](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/218)
 
 ## `0.2.4` - 2019-06-28
 

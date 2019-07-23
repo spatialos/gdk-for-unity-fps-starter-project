@@ -1,7 +1,6 @@
 using Improbable.Gdk.Core;
 using Improbable.Gdk.Health;
 using Unity.Entities;
-using UnityEngine;
 
 namespace Improbable.Gdk.Guns
 {
@@ -24,6 +23,11 @@ namespace Improbable.Gdk.Guns
         protected override void OnUpdate()
         {
             var events = componentUpdateSystem.GetEventsReceived<ShootingComponent.Shots.Event>();
+            if (events.Count == 0)
+            {
+                return;
+            }
+
             var gunDataForEntity = GetComponentDataFromEntity<GunComponent.Component>();
 
             for (var i = 0; i < events.Count; ++i)
@@ -41,12 +45,17 @@ namespace Improbable.Gdk.Guns
                     continue;
                 }
 
+                if (!gunDataForEntity.Exists(shooterEntity))
+                {
+                    continue;
+                }
+
                 var gunComponent = gunDataForEntity[shooterEntity];
                 var damage = GunDictionary.Get(gunComponent.GunId).ShotDamage;
 
                 var modifyHealthRequest = new HealthComponent.ModifyHealth.Request(
                     new EntityId(shotInfo.EntityId),
-                    new HealthModifier()
+                    new HealthModifier
                     {
                         Amount = -damage,
                         Origin = shotInfo.HitOrigin,
