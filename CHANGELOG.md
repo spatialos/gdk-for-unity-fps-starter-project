@@ -4,7 +4,7 @@
 
 ### Fixed
 
-- Fixed a bug where shooting a health pickup throws an exception. [#212](https://github.com/spatialos/gdk-for-unity-fps-starter-project/issues/212)
+- Fixed a bug where shooting a health pickup throws an exception. [#220](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/220)
 
 ## `0.2.5` - 2019-07-18
 
