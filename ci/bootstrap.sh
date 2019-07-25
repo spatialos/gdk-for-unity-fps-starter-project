@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
-set -e -u -x -o pipefail
+set -e -u -o pipefail
+
+if [[ -n "${DEBUG-}" ]]; then
+  set -x
+fi
 
 function isLinux() {
   [[ "$(uname -s)" == "Linux" ]];
@@ -14,6 +18,8 @@ function isWindows() {
 }
 
 cd "$(dirname "$0")/../"
+
+echo "--- Bootstrapping :boot:"
 
 SHARED_CI_DIR="$(pwd)/.shared-ci"
 CLONE_URL="git@github.com:spatialos/gdk-for-unity-shared-ci.git"
@@ -62,8 +68,11 @@ pushd "${TARGET_DIRECTORY}"
     git remote add origin "${CLONE_URI}"
     git fetch --depth 20 origin develop
     git checkout "${PINNED_VERSION}"
+    echo "--- Hit init :right-facing_fist::red_button:"
     ./init.sh
 popd
+
+echo "--- Symlinking packages :package:"
 
 if isWindows; then
     if [[ -z ${BUILDKITE:-} ]]; then
