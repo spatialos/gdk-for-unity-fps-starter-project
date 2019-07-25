@@ -1,17 +1,22 @@
 #!/usr/bin/env bash
 
-set -e -u -x -o pipefail
+set -e -u -o pipefail
+
+if [[ -n "${DEBUG-}" ]]; then
+  set -x
+fi
 
 cd "$(dirname "$0")/../"
 
 source ".shared-ci/scripts/pinned-tools.sh"
 
 # Download the artifacts and reconstruct the build/assemblies folder.
+echo "--- Downloading assembly :inbox_tray:"
 buildkite-agent artifact download "build\assembly\**\*" .
 
 uploadAssembly "${ASSEMBLY_PREFIX}" "${PROJECT_NAME}"
 
-echo "Launching deployments"
+echo "--- Launching main deployment :airplane_departure:"
 
 dotnet run -p workers/unity/Packages/io.improbable.gdk.deploymentlauncher/.DeploymentLauncher/DeploymentLauncher.csproj -- \
     create \
@@ -26,6 +31,8 @@ dotnet run -p workers/unity/Packages/io.improbable.gdk.deploymentlauncher/.Deplo
 CONSOLE_URL="https://console.improbable.io/projects/${PROJECT_NAME}/deployments/${ASSEMBLY_NAME}/overview"
 
 buildkite-agent annotate --style "success" "Deployment URL: ${CONSOLE_URL}<br/>"
+
+echo "--- Launching sim player deployment :robot_face:"
 
 dotnet run -p workers/unity/Packages/io.improbable.gdk.deploymentlauncher/.DeploymentLauncher/DeploymentLauncher.csproj -- \
     create-sim \
