@@ -72,7 +72,7 @@ pushd "${TARGET_DIRECTORY}"
     ./init.sh
 popd
 
-echo "--- Symlinking packages :package:"
+echo "--- Symlinking packages :link::package:"
 
 if isWindows; then
     if [[ -z ${BUILDKITE:-} ]]; then
