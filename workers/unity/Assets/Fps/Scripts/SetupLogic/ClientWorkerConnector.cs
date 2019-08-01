@@ -109,10 +109,7 @@ namespace Fps
             PlayerLifecycleHelper.AddClientSystems(world, autoRequestPlayerCreation: false);
             PlayerLifecycleConfig.MaxPlayerCreationRetries = 0;
 
-            var fallback = new GameObjectCreatorFromMetadata(Worker.WorkerType, Worker.Origin, Worker.LogDispatcher);
-
-            entityPipeline = new AdvancedEntityPipeline(Worker, GetAuthPlayerPrefabPath(),
-                GetNonAuthPlayerPrefabPath(), fallback);
+            entityPipeline = new AdvancedEntityPipeline(Worker, GetAuthPlayerPrefabPath(), GetNonAuthPlayerPrefabPath());
             entityPipeline.OnRemovedAuthoritativePlayer += RemovingAuthoritativePlayer;
 
             // Set the Worker gameObject to the ClientWorker so it can access PlayerCreater reader/writers

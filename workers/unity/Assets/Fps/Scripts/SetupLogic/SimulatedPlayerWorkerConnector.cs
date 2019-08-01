@@ -56,12 +56,8 @@ namespace Fps
         {
             PlayerLifecycleHelper.AddClientSystems(Worker.World, false);
 
-            var fallback = new GameObjectCreatorFromMetadata(Worker.WorkerType,
-                Worker.Origin, Worker.LogDispatcher);
-
-            GameObjectCreationHelper.EnableStandardGameObjectCreation(
-                Worker.World,
-                new AdvancedEntityPipeline(Worker, AuthPlayer, NonAuthPlayer, fallback));
+            GameObjectCreationHelper.EnableStandardGameObjectCreation(Worker.World,
+                new AdvancedEntityPipeline(Worker, AuthPlayer, NonAuthPlayer));
         }
     }
 }
