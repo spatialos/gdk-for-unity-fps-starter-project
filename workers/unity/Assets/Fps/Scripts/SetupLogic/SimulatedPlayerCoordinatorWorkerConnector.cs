@@ -201,7 +201,7 @@ namespace Fps
         {
             var token = tokenSource.Token;
 
-            while (Worker.IsConnected)
+            while (Worker != null && Worker.IsConnected)
             {
                 if (token.IsCancellationRequested)
                 {
