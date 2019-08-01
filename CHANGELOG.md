@@ -2,8 +2,24 @@
 
 ## Unreleased
 
+### Breaking Changes
+
+- The `AdvancedEntityPipeline` no longer takes an `IEntityGameObjectCreator` instance as a parameter when it is being constructed. [#222](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/222)
+    - Instead it instantiates an `GameObjectCreatorFromMetadata` as the fallback.
+    - This change was made as the `GameObjectCreatorFromMetadata` was being used at all call sites for the constructor.
+
+### Added
+
+- Added the `io.improbable.gdk.debug` package as a dependency. [#222](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/222)
+
+### Changed
+
+- The `AdvancedEntityPipeline` now uses the `OwningWorker` component from the PlayerLifecycle feature module [#222](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/222)
+- Removed the `DISABLE_REACTIVE_COMPONENTS` scripting define as it is no longer used. [#222](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/222)
+
 ### Fixed
 
+- Fixed a bug where the `SimulatedPlayerWorkerCoordinator` could throw a null reference exception once the worker had disconnected. [#222](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/222)
 - Fixed a bug where shooting a health pickup throws an exception. [#220](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/220)
 
 ## `0.2.5` - 2019-07-18
