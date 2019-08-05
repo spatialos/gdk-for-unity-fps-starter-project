@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## `0.2.6` - 2019-08-05
+
 ### Breaking Changes
 
 - The `AdvancedEntityPipeline` no longer takes an `IEntityGameObjectCreator` instance as a parameter when it is being constructed. [#222](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/222)
@@ -13,6 +15,7 @@
 - Added the `io.improbable.gdk.debug` package as a dependency. [#222](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/222)
 
 ### Changed
+- Upgraded to GDK for Unity version `0.2.6`
 
 - The `AdvancedEntityPipeline` now uses the `OwningWorker` component from the PlayerLifecycle feature module [#222](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/222)
 - Removed the `DISABLE_REACTIVE_COMPONENTS` scripting define as it is no longer used. [#222](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/222)
