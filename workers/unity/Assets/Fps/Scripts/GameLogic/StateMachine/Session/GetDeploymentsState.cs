@@ -18,7 +18,7 @@ namespace Fps
         {
             loginTokensResponse = DevelopmentAuthentication.CreateDevelopmentLoginTokensAsync(
                 RuntimeConfigDefaults.LocatorHost,
-                RuntimeConfigDefaults.AnonymousAuthenticationPort,
+                RuntimeConfigDefaults.LocatorPort,
                 new LoginTokensRequest
                 {
                     WorkerType = WorkerUtils.UnityClient,
