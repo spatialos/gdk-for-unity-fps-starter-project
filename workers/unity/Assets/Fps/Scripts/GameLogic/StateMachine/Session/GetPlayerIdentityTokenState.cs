@@ -18,7 +18,7 @@ namespace Fps
         {
             pitResponse = DevelopmentAuthentication.CreateDevelopmentPlayerIdentityTokenAsync(
                 RuntimeConfigDefaults.LocatorHost,
-                RuntimeConfigDefaults.AnonymousAuthenticationPort,
+                RuntimeConfigDefaults.LocatorPort,
                 new PlayerIdentityTokenRequest
                 {
                     DevelopmentAuthenticationToken = Blackboard.DevAuthToken,
