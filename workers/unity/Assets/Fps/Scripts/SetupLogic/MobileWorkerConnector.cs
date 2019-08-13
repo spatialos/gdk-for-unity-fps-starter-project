@@ -1,4 +1,5 @@
 using System;
+using Fps.Connection;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.Mobile;
 using Improbable.Worker.CInterop;

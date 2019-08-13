@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Fps.Connection;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.PlayerLifecycle;
@@ -171,60 +172,6 @@ namespace Fps
             var serializedArgs = Encoding.ASCII.GetBytes(playerName);
             Worker.World.GetExistingSystem<SendCreatePlayerRequestSystem>()
                 .RequestPlayerCreation(serializedArgs, onPlayerResponse);
-        }
-    }
-
-    internal class ChosenDeploymentAlphaLocatorFlow : AlphaLocatorFlow
-    {
-        private readonly string targetDeployment;
-
-        public ChosenDeploymentAlphaLocatorFlow(string targetDeployment,
-            IConnectionFlowInitializer<AlphaLocatorFlow> initializer = null) : base(initializer)
-        {
-            this.targetDeployment = targetDeployment;
-        }
-
-        protected override string SelectLoginToken(List<LoginTokenDetails> loginTokens)
-        {
-            var token = loginTokens.FirstOrDefault(loginToken => loginToken.DeploymentName == targetDeployment);
-
-            return token.LoginToken ?? throw new ArgumentException("Was not able to connect to deployment");
-        }
-    }
-
-    internal class SessionConnectionFlowInitializer : IConnectionFlowInitializer<AlphaLocatorFlow>
-    {
-        private IConnectionFlowInitializer<AlphaLocatorFlow> initializer;
-
-        public SessionConnectionFlowInitializer(IConnectionFlowInitializer<AlphaLocatorFlow> standaloneInitializer)
-        {
-            initializer = standaloneInitializer;
-        }
-
-        public void Initialize(AlphaLocatorFlow flow)
-        {
-            if (Application.isEditor)
-            {
-                if (PlayerPrefs.HasKey(RuntimeConfigNames.DevAuthTokenKey))
-                {
-                    flow.DevAuthToken = PlayerPrefs.GetString(RuntimeConfigNames.DevAuthTokenKey);
-                    return;
-                }
-
-                var textAsset = Resources.Load<TextAsset>("DevAuthToken");
-
-                if (textAsset == null)
-                {
-                    throw new MissingReferenceException("Unable to find DevAuthToken.txt in the Resources folder. " +
-                        "You can generate one via SpatialOS > Generate Dev Authentication Token.");
-                }
-
-                flow.DevAuthToken = textAsset.text;
-            }
-            else
-            {
-                initializer.Initialize(flow);
-            }
         }
     }
 }
