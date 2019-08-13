@@ -35,6 +35,12 @@ common: &common
 # These are then relied on to have stable names by other things, so once named, please beware renaming has consequences.
 
 steps:
+  - label: "test"
+    command: bash -c ci/test.sh
+    <<: *common
+    artifact_paths:
+      - logs/**/*
+
   - label: "build :android:"
     command: bash -c .shared-ci/scripts/build-worker.sh
     <<: *common
