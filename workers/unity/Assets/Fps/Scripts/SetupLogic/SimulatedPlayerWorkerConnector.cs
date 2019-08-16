@@ -1,5 +1,6 @@
 using System.Text;
 using System.Threading.Tasks;
+using Fps.Connection;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.PlayerLifecycle;
