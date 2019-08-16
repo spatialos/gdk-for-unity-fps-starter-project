@@ -3,16 +3,16 @@ using UnityEngine;
 
 namespace Fps.Connection
 {
-    public class SessionConnectionFlowInitializer : IConnectionFlowInitializer<AlphaLocatorFlow>
+    public class SessionConnectionFlowInitializer : IConnectionFlowInitializer<LocatorFlow>
     {
-        private readonly IConnectionFlowInitializer<AlphaLocatorFlow> initializer;
+        private readonly IConnectionFlowInitializer<LocatorFlow> initializer;
 
-        public SessionConnectionFlowInitializer(IConnectionFlowInitializer<AlphaLocatorFlow> standaloneInitializer)
+        public SessionConnectionFlowInitializer(IConnectionFlowInitializer<LocatorFlow> standaloneInitializer)
         {
             initializer = standaloneInitializer;
         }
 
-        public void Initialize(AlphaLocatorFlow flow)
+        public void Initialize(LocatorFlow flow)
         {
             if (Application.isEditor)
             {

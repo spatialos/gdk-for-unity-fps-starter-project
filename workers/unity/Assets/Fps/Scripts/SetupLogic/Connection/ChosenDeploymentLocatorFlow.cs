@@ -6,12 +6,12 @@ using Improbable.Worker.CInterop.Alpha;
 
 namespace Fps.Connection
 {
-    public class ChosenDeploymentAlphaLocatorFlow : AlphaLocatorFlow
+    public class ChosenDeploymentLocatorFlow : LocatorFlow
     {
         private readonly string targetDeployment;
 
-        public ChosenDeploymentAlphaLocatorFlow(string targetDeployment,
-            IConnectionFlowInitializer<AlphaLocatorFlow> initializer = null) : base(initializer)
+        public ChosenDeploymentLocatorFlow(string targetDeployment,
+            IConnectionFlowInitializer<LocatorFlow> initializer = null) : base(initializer)
         {
             this.targetDeployment = targetDeployment;
         }

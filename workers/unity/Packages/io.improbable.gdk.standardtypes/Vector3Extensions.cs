@@ -44,40 +44,5 @@ namespace Improbable.Gdk.StandardTypes
         {
             return new Vector3(value.X.ToFloat1k(), value.Y.ToFloat1k(), value.Z.ToFloat1k());
         }
-
-        public static Vector3 ToUnityVector3(this Vector3f vector3f)
-        {
-            return new Vector3(vector3f.X, vector3f.Y, vector3f.Z);
-        }
-
-        public static Vector3f ToSpatialVector3f(this Vector3 unityVector3)
-        {
-            return new Vector3f
-            {
-                X = unityVector3.x,
-                Y = unityVector3.y,
-                Z = unityVector3.z
-            };
-        }
-
-        public static Vector3d ToSpatialVector3d(this Vector3 unityVector3)
-        {
-            return new Vector3d
-            {
-                X = unityVector3.x,
-                Y = unityVector3.y,
-                Z = unityVector3.z
-            };
-        }
-
-        public static Coordinates ToSpatialCoordinates(this Vector3 unityVector3)
-        {
-            return new Coordinates
-            {
-                X = unityVector3.x,
-                Y = unityVector3.y,
-                Z = unityVector3.z
-            };
-        }
     }
 }

@@ -48,7 +48,7 @@ namespace Fps
 
             if (UseSessionFlow)
             {
-                builder.SetConnectionFlow(new ChosenDeploymentAlphaLocatorFlow(deployment,
+                builder.SetConnectionFlow(new ChosenDeploymentLocatorFlow(deployment,
                     new SessionConnectionFlowInitializer(initializer)));
                 return builder;
             }
@@ -59,8 +59,8 @@ namespace Fps
                     builder.SetConnectionFlow(new ReceptionistFlow(CreateNewWorkerId(WorkerUtils.MobileClient),
                         initializer));
                     break;
-                case ConnectionService.AlphaLocator:
-                    builder.SetConnectionFlow(new AlphaLocatorFlow(initializer));
+                case ConnectionService.Locator:
+                    builder.SetConnectionFlow(new LocatorFlow(initializer));
                     break;
                 default:
                     throw new ArgumentException("Received unsupported connection service.");

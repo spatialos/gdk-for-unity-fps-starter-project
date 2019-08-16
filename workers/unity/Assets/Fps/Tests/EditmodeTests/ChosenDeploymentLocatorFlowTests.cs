@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace Fps.EditmodeTests
 {
     [TestFixture]
-    public class ChosenDeploymentAlphaLocatorFlowTests
+    public class ChosenDeploymentLocatorFlowTests
     {
         private const string LaunchConfigName = "default_launch.json";
 
@@ -69,16 +69,13 @@ namespace Fps.EditmodeTests
             }
         }
 
-        private static ChosenDeploymentAlphaLocatorFlow GetFlow(string targetDeployment)
+        private static ChosenDeploymentLocatorFlow GetFlow(string targetDeployment)
         {
-            return new ChosenDeploymentAlphaLocatorFlow(targetDeployment)
+            return new ChosenDeploymentLocatorFlow(targetDeployment)
             {
                 LocatorHost = "localhost",
                 LocatorPort = 9876,
-                LocatorParameters =
-                {
-                    UseInsecureConnection = true
-                }
+                UseInsecureConnection = true
             };
         }
 

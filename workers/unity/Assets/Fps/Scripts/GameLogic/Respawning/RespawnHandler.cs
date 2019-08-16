@@ -76,7 +76,7 @@ namespace Fps
             yield return null;
             var spatialPositionUpdate = new Position.Update
             {
-                Coords = position.ToSpatialCoordinates()
+                Coords = Coordinates.FromUnityVector(position)
             };
             spatialPosition.SendUpdate(spatialPositionUpdate);
         }

@@ -5,10 +5,15 @@
 ### Breaking Changes
 
 - Moved `ChosenDeploymentAlphaLocatorFlow` and `SessionConnectionFlowInitializer` into the `Fps.Connection` namespace and made them `public`. [#225](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/225)
+- Renamed `ChosenDeploymentAlphaLocatorFlow` to `ChosenDeploymentLocatorFlow`. [#226](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/226)
+- Removed `Improbable.Gdk.StandardTypes.Vector3Extensions.ToVector3(this Coordinates coordinates)` since there is now the option of:
+    - Using the `Coordinates.FromUnityVector(Vector3 vector)` static method.
+    - Using the `TransformUtils.ToCoordinates(this Vector3 vector)` extension method in the Transform Synchronization feature module.
 
 ### Internal
 
-- Added tests for the `ChosenDeploymentAlphaLocatorFlow`. [#225](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/225)
+- Added tests for the `ChosenDeploymentLocatorFlow`. [#225](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/225)
+- Removed old arguments from the worker JSON files. [#226](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/226)
 
 ## `0.2.6` - 2019-08-05
 
