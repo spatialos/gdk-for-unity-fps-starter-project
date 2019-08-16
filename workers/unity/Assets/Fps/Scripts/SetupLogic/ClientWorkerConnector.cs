@@ -91,10 +91,6 @@ namespace Fps
                         connectionParams.Network.UseExternalIp = true;
                         builder.SetConnectionFlow(new LocatorFlow(initializer));
                         break;
-                    case ConnectionService.AlphaLocator:
-                        connectionParams.Network.UseExternalIp = true;
-                        builder.SetConnectionFlow(new AlphaLocatorFlow(initializer));
-                        break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }

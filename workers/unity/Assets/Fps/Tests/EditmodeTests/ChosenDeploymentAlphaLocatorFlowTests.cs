@@ -75,10 +75,7 @@ namespace Fps.EditmodeTests
             {
                 LocatorHost = "localhost",
                 LocatorPort = 9876,
-                LocatorParameters =
-                {
-                    UseInsecureConnection = true
-                }
+                UseInsecureConnection = true
             };
         }
 
