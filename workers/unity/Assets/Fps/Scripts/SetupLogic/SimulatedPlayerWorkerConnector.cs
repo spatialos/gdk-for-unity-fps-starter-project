@@ -22,7 +22,7 @@ namespace Fps
 
             var builder = new SpatialOSConnectionHandlerBuilder()
                 .SetConnectionParameters(connectionParams)
-                .SetConnectionFlow(new ChosenDeploymentAlphaLocatorFlow(simulatedPlayerTargetDeployment)
+                .SetConnectionFlow(new ChosenDeploymentLocatorFlow(simulatedPlayerTargetDeployment)
                 {
                     DevAuthToken = simulatedPlayerDevAuthToken
                 });

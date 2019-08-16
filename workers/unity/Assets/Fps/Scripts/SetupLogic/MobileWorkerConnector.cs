@@ -48,7 +48,7 @@ namespace Fps
 
             if (UseSessionFlow)
             {
-                builder.SetConnectionFlow(new ChosenDeploymentAlphaLocatorFlow(deployment,
+                builder.SetConnectionFlow(new ChosenDeploymentLocatorFlow(deployment,
                     new SessionConnectionFlowInitializer(initializer)));
                 return builder;
             }

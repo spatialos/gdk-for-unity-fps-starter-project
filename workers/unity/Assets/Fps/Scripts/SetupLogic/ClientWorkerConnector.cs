@@ -70,7 +70,7 @@ namespace Fps
             if (UseSessionFlow)
             {
                 connectionParams.Network.UseExternalIp = true;
-                builder.SetConnectionFlow(new ChosenDeploymentAlphaLocatorFlow(deployment,
+                builder.SetConnectionFlow(new ChosenDeploymentLocatorFlow(deployment,
                     new SessionConnectionFlowInitializer(new CommandLineConnectionFlowInitializer())));
             }
             else if (Application.isEditor)
