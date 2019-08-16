@@ -10,6 +10,8 @@ namespace Fps.EditmodeTests
     [TestFixture]
     public class ChosenDeploymentAlphaLocatorFlowTests
     {
+        private const string LaunchConfigName = "default_launch.json";
+
         private SpatialdManager spatiald;
         private Improbable.Worker.CInterop.Connection connection;
 
@@ -18,7 +20,7 @@ namespace Fps.EditmodeTests
         {
             if (!DevAuthTokenUtils.TryGenerate())
             {
-                throw new ArgumentException("Could not generate a dev auth token.");
+                throw new Exception("Could not generate a dev auth token.");
             }
 
             spatiald = SpatialdManager.Start().Result;
@@ -40,7 +42,7 @@ namespace Fps.EditmodeTests
         [Test]
         public void CreateAsync_succeeds_if_there_is_matching_deployment()
         {
-            using (var depl = spatiald.StartLocalDeployment("target_deployment", "default_launch.json").Result)
+            using (var depl = spatiald.StartLocalDeployment("target_deployment", LaunchConfigName).Result)
             {
                 depl.AddDevLoginTag().Wait();
 
@@ -55,7 +57,7 @@ namespace Fps.EditmodeTests
         [Test]
         public void CreateAsync_fails_if_no_matching_deployment()
         {
-            using (var depl = spatiald.StartLocalDeployment("a_different_deployment", "default_launch.json").Result)
+            using (var depl = spatiald.StartLocalDeployment("a_different_deployment", LaunchConfigName).Result)
             {
                 depl.AddDevLoginTag().Wait();
 
