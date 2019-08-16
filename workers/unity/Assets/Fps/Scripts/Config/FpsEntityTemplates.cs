@@ -68,7 +68,7 @@ namespace Fps
                 Pitch = spawnPitch.ToInt1k()
             };
 
-            var pos = new Position.Snapshot { Coords = spawnPosition.ToSpatialCoordinates() };
+            var pos = new Position.Snapshot { Coords = Coordinates.FromUnityVector(spawnPosition) };
             var serverMovement = new ServerMovement.Snapshot { Latest = serverResponse };
             var clientMovement = new ClientMovement.Snapshot { Latest = new ClientRequest() };
             var clientRotation = new ClientRotation.Snapshot { Latest = rotationUpdate };

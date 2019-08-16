@@ -61,7 +61,7 @@ namespace Improbable.Gdk.Movement
 
             if (Time.time - lastSpatialPositionTime > spatialPositionUpdateDelta)
             {
-                var positionUpdate = new Position.Update { Coords = positionNoOffset.ToSpatialCoordinates() };
+                var positionUpdate = new Position.Update { Coords = Coordinates.FromUnityVector(positionNoOffset) };
                 spatialPosition.SendUpdate(positionUpdate);
                 lastSpatialPositionTime = Time.time;
             }
