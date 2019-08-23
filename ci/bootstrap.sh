@@ -37,7 +37,7 @@ mkdir "${SHARED_CI_DIR}"
 pushd "${SHARED_CI_DIR}"
     git init
     git remote add origin "${CLONE_URL}"
-    git fetch --depth 20 origin master
+    git fetch --depth 20 origin feature/unity-2019.2.0f1
     git checkout "${PINNED_SHARED_CI_VERSION}"
 popd
 
@@ -46,31 +46,37 @@ popd
 CLONE_URI="git@github.com:spatialos/gdk-for-unity.git"
 TARGET_DIRECTORY="$(realpath $(pwd)/../gdk-for-unity)"
 PINNED_VERSION=$(cat ./gdk.pinned)
+OVERWRITE_GDK=false
 
 if [[ -z ${BUILDKITE:-} ]]; then
     echo "Warning: About to delete ${TARGET_DIRECTORY}. Please confirm. (Default is Cancel)"
-    read -p "Y/N > " -r
+    read -p "Y/N/S > " -r
     echo    # (optional) move to a new line
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         echo "Deleting..."
+        OVERWRITE_GDK=true
+    elif [[ $REPLY =~ ^[Ss]$ ]]; then
+        echo "Skipping..."
     else
         exit 1
     fi
 fi
 
-rm -rf "${TARGET_DIRECTORY}"
+if [ "$OVERWRITE_GDK" = true ] ; then
+    rm -rf "${TARGET_DIRECTORY}"
 
-mkdir "${TARGET_DIRECTORY}"
+    mkdir "${TARGET_DIRECTORY}"
 
-# Workaround for being unable to clone a specific commit with depth of 1.
-pushd "${TARGET_DIRECTORY}"
-    git init
-    git remote add origin "${CLONE_URI}"
-    git fetch --depth 20 origin develop
-    git checkout "${PINNED_VERSION}"
-    echo "--- Hit init :right-facing_fist::red_button:"
-    ./init.sh
-popd
+    # Workaround for being unable to clone a specific commit with depth of 1.
+    pushd "${TARGET_DIRECTORY}"
+        git init
+        git remote add origin "${CLONE_URI}"
+        git fetch --depth 20 origin develop
+        git checkout "${PINNED_VERSION}"
+        echo "--- Hit init :right-facing_fist::red_button:"
+        ./init.sh
+    popd
+fi
 
 echo "--- Symlinking packages :link::package:"
 
