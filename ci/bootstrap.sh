@@ -23,8 +23,8 @@ echo "--- Bootstrapping :boot:"
 
 SHARED_CI_DIR="$(pwd)/.shared-ci"
 CLONE_URL="git@github.com:spatialos/gdk-for-unity-shared-ci.git"
-PINNED_SHARED_CI_BRANCH=$(cat ./ci/shared-ci.pinned) | cut -d' ' -f 1
-PINNED_SHARED_CI_VERSION=$(cat ./ci/shared-ci.pinned) | cut -d' ' -f 2
+PINNED_SHARED_CI_BRANCH=$(cat ./ci/shared-ci.pinned | cut -d' ' -f 1)
+PINNED_SHARED_CI_VERSION=$(cat ./ci/shared-ci.pinned | cut -d' ' -f 2)
 
 # Clone the HEAD of the shared CI repo into ".shared-ci"
 
@@ -46,8 +46,8 @@ popd
 
 CLONE_URI="git@github.com:spatialos/gdk-for-unity.git"
 TARGET_DIRECTORY="$(realpath $(pwd)/../gdk-for-unity)"
-PINNED_BRANCH=$(cat ./gdk.pinned) | cut -d' ' -f 1
-PINNED_VERSION=$(cat ./gdk.pinned) | cut -d' ' -f 2
+PINNED_BRANCH=$(cat ./gdk.pinned | cut -d' ' -f 1)
+PINNED_VERSION=$(cat ./gdk.pinned | cut -d' ' -f 2)
 SKIP_GDK=false
 
 if [[ -z ${BUILDKITE:-} ]]; then
