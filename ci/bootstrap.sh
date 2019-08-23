@@ -46,7 +46,7 @@ popd
 CLONE_URI="git@github.com:spatialos/gdk-for-unity.git"
 TARGET_DIRECTORY="$(realpath $(pwd)/../gdk-for-unity)"
 PINNED_VERSION=$(cat ./gdk.pinned)
-OVERWRITE_GDK=false
+SKIP_GDK=false
 
 if [[ -z ${BUILDKITE:-} ]]; then
     echo "Warning: About to delete ${TARGET_DIRECTORY}. Please confirm. (Default is Cancel)"
@@ -54,15 +54,15 @@ if [[ -z ${BUILDKITE:-} ]]; then
     echo    # (optional) move to a new line
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         echo "Deleting..."
-        OVERWRITE_GDK=true
     elif [[ $REPLY =~ ^[Ss]$ ]]; then
         echo "Skipping..."
+        SKIP_GDK=true
     else
         exit 1
     fi
 fi
 
-if [ "$OVERWRITE_GDK" = true ] ; then
+if [ "$SKIP_GDK" = false ] ; then
     rm -rf "${TARGET_DIRECTORY}"
 
     mkdir "${TARGET_DIRECTORY}"
