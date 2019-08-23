@@ -23,7 +23,8 @@ echo "--- Bootstrapping :boot:"
 
 SHARED_CI_DIR="$(pwd)/.shared-ci"
 CLONE_URL="git@github.com:spatialos/gdk-for-unity-shared-ci.git"
-PINNED_SHARED_CI_VERSION=$(cat ./ci/shared-ci.pinned)
+PINNED_SHARED_CI_BRANCH=$(cat ./ci/shared-ci.pinned) | cut -d' ' -f 1
+PINNED_SHARED_CI_VERSION=$(cat ./ci/shared-ci.pinned) | cut -d' ' -f 2
 
 # Clone the HEAD of the shared CI repo into ".shared-ci"
 
@@ -37,7 +38,7 @@ mkdir "${SHARED_CI_DIR}"
 pushd "${SHARED_CI_DIR}"
     git init
     git remote add origin "${CLONE_URL}"
-    git fetch --depth 20 origin feature/unity-2019.2.0f1
+    git fetch --depth 20 origin "${PINNED_SHARED_CI_BRANCH}"
     git checkout "${PINNED_SHARED_CI_VERSION}"
 popd
 
@@ -45,7 +46,8 @@ popd
 
 CLONE_URI="git@github.com:spatialos/gdk-for-unity.git"
 TARGET_DIRECTORY="$(realpath $(pwd)/../gdk-for-unity)"
-PINNED_VERSION=$(cat ./gdk.pinned)
+PINNED_BRANCH=$(cat ./gdk.pinned) | cut -d' ' -f 1
+PINNED_VERSION=$(cat ./gdk.pinned) | cut -d' ' -f 2
 SKIP_GDK=false
 
 if [[ -z ${BUILDKITE:-} ]]; then
@@ -71,7 +73,7 @@ if [ "$SKIP_GDK" = false ] ; then
     pushd "${TARGET_DIRECTORY}"
         git init
         git remote add origin "${CLONE_URI}"
-        git fetch --depth 20 origin develop
+        git fetch --depth 20 origin "${PINNED_BRANCH}"
         git checkout "${PINNED_VERSION}"
         echo "--- Hit init :right-facing_fist::red_button:"
         ./init.sh
