@@ -2,11 +2,16 @@
 
 ## Unreleased
 
+### Changed
+
+- Upgraded the project to be compatible with `2019.2.0f1`.
+
 ## `0.2.7` - 2019-08-19
 
 ### Changed
 
 - Upgraded to GDK for Unity version `0.2.7`
+
 ### Breaking Changes
 
 - Moved `ChosenDeploymentAlphaLocatorFlow` and `SessionConnectionFlowInitializer` into the `Fps.Connection` namespace and made them `public`. [#225](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/225)
