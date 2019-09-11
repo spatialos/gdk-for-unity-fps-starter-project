@@ -13,7 +13,7 @@ source .shared-ci/scripts/pinned-tools.sh
 PROJECT_DIR="$(pwd)"
 mkdir -p "${PROJECT_DIR}/logs/"
 
-EDITMODE_TEST_RESULTS_FILE="${PROJECT_DIR}/logs/editmode-test-results.xml"
+EDITMODE_TEST_RESULTS_FILE="${PROJECT_DIR}/logs/nunit/editmode-test-results.xml"
 
 echo "--- Testing Unity: Editmode :writing_hand:"
 
