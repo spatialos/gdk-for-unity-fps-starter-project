@@ -1,7 +1,7 @@
 using Improbable.Gdk.ObjectPooling;
 using UnityEngine;
 
-namespace Improbable.Gdk.Guns
+namespace Fps.Guns
 {
     [CreateAssetMenu(menuName = "Improbable/Gun Config/Gun Settings", order = 1)]
     public class GunSettings : ScriptableObject

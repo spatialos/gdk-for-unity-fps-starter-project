@@ -1,10 +1,10 @@
 using UnityEngine;
 
-namespace Improbable.Gdk.Guns
+namespace Fps.Guns
 {
     public class FirstPersonRecoil : MonoBehaviour, IRecoil
     {
-        [SerializeField] private UnityEngine.Transform socketOffset;
+        [SerializeField] private Transform socketOffset;
         private Vector3 socketInitialOffset;
 
         private Vector3 aimOffset;

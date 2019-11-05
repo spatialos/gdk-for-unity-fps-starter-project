@@ -1,12 +1,13 @@
-using Fps;
 using Improbable.Gdk.Subscriptions;
 using UnityEngine;
 
-namespace Improbable.Gdk.Guns
+namespace Fps.Guns
 {
     public class GunManager : MonoBehaviour
     {
+#pragma warning disable 649
         [Require] private GunComponentReader gun;
+#pragma warning restore 649
 
         public GunSettings CurrentGunSettings { get; private set; }
 

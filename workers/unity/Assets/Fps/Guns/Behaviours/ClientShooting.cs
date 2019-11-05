@@ -1,12 +1,13 @@
-using Fps;
 using Improbable.Gdk.Subscriptions;
 using UnityEngine;
 
-namespace Improbable.Gdk.Guns
+namespace Fps.Guns
 {
     public class ClientShooting : MonoBehaviour, IRequiresGun
     {
+#pragma warning disable 649
         [Require] private ShootingComponentWriter shooting;
+#pragma warning restore 649
 
         [SerializeField] private LayerMask shootingLayerMask;
 
@@ -14,13 +15,14 @@ namespace Improbable.Gdk.Guns
         private float nextShotTime;
         private GunSettings gunSettings;
         private Trigger shotTrigger;
-        private LinkedEntityComponent spatial;
+        private Vector3 workerOrigin;
 
-        public bool IsOnCooldown => nextShotTime > Time.time;
+        private bool IsOnCooldown => nextShotTime > Time.time;
 
         private void OnEnable()
         {
-            spatial = GetComponent<LinkedEntityComponent>();
+            var linkedEntityComponent = GetComponent<LinkedEntityComponent>();
+            workerOrigin = linkedEntityComponent.Worker.Origin;
         }
 
         private void Start()
@@ -86,8 +88,8 @@ namespace Improbable.Gdk.Guns
             {
                 EntityId = entityId,
                 HitSomething = hitSomething,
-                HitLocation = (hitLocation - spatial.Worker.Origin).ToVector3Int(),
-                HitOrigin = (ray.origin - spatial.Worker.Origin).ToVector3Int(),
+                HitLocation = (hitLocation - workerOrigin).ToVector3Int(),
+                HitOrigin = (ray.origin - workerOrigin).ToVector3Int(),
             };
 
             shooting.SendShotsEvent(shotInfo);

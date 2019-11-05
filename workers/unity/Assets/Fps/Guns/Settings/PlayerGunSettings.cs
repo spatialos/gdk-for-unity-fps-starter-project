@@ -1,4 +1,4 @@
-namespace Improbable.Gdk.Guns
+namespace Fps.Guns
 {
     public static class PlayerGunSettings
     {

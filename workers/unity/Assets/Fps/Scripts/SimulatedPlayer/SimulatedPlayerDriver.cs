@@ -2,7 +2,7 @@
 using Fps;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.Subscriptions;
-using Improbable.Gdk.Guns;
+using Fps.Guns;
 using Improbable.Gdk.Health;
 using Fps.Movement;
 using UnityEngine;

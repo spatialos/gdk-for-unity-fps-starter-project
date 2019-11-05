@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace Improbable.Gdk.Guns
+namespace Fps.Guns
 {
     public class GunSocket : MonoBehaviour, IRequiresGun
     {

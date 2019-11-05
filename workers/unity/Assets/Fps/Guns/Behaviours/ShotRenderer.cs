@@ -5,7 +5,7 @@ using Improbable.Gdk.ObjectPooling;
 using Improbable.Gdk.Subscriptions;
 using UnityEngine;
 
-namespace Improbable.Gdk.Guns
+namespace Fps.Guns
 {
     [RequireComponent(typeof(GunSocket))]
     public class ShotRenderer : MonoBehaviour, IRequiresGun
@@ -53,7 +53,7 @@ namespace Improbable.Gdk.Guns
         private GunSocket gunSocket;
         private LinkedEntityComponent spatial;
 
-        private UnityEngine.Transform GunBarrel => gunSocket.Gun.Barrel != null
+        private Transform GunBarrel => gunSocket.Gun.Barrel != null
             ? gunSocket.Gun.Barrel
             : gunSocket.Gun.transform;
 
@@ -135,7 +135,7 @@ namespace Improbable.Gdk.Guns
             }
         }
 
-        public void VisualGunShot(Vector3 hitPoint, bool hit)
+        private void VisualGunShot(Vector3 hitPoint, bool hit)
         {
             PlayMuzzleFlash();
             VisualBullet(hitPoint, hit);

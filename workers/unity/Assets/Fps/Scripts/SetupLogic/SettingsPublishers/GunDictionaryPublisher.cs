@@ -1,4 +1,4 @@
-﻿using Improbable.Gdk.Guns;
+﻿using Fps.Guns;
 using UnityEngine;
 
 namespace Fps

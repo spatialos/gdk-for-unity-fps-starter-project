@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Improbable.Gdk.Guns
+namespace Fps.Guns
 {
     [RequireComponent(typeof(GunSocket))]
     public class ShotRayProvider : MonoBehaviour, IRequiresGun

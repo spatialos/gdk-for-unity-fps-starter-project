@@ -2,7 +2,7 @@
 using System.Collections;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.Subscriptions;
-using Improbable.Gdk.Guns;
+using Fps.Guns;
 using Fps.Movement;
 using UnityEngine;
 

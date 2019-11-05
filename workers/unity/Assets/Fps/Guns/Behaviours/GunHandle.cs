@@ -1,13 +1,13 @@
 using UnityEngine;
 
-namespace Improbable.Gdk.Guns
+namespace Fps.Guns
 {
     public class GunHandle : MonoBehaviour
     {
-        public UnityEngine.Transform Handle;
-        public UnityEngine.Transform Barrel;
-        public UnityEngine.Transform FirstPersonGrip;
-        public UnityEngine.Transform Grip;
-        public UnityEngine.Transform Scope;
+        public Transform Handle;
+        public Transform Barrel;
+        public Transform FirstPersonGrip;
+        public Transform Grip;
+        public Transform Scope;
     }
 }

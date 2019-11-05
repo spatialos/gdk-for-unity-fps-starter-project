@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Improbable.Gdk.Guns
+namespace Fps.Guns
 {
     public class Trigger
     {

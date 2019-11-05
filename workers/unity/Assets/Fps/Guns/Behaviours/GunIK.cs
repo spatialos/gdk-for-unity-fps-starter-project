@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Improbable.Gdk.Guns
+namespace Fps.Guns
 {
     [RequireComponent(typeof(Animator))]
     public class GunIK : MonoBehaviour, IRecoil
@@ -102,7 +102,7 @@ namespace Improbable.Gdk.Guns
             return recoilOffset;
         }
 
-        private void SetSocketIK(AvatarIKGoal goal, UnityEngine.Transform socket, Vector3 offset)
+        private void SetSocketIK(AvatarIKGoal goal, Transform socket, Vector3 offset)
         {
             SetSocketIK(goal, socket.position, socket.rotation, offset);
         }

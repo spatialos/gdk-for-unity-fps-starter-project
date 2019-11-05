@@ -1,8 +1,7 @@
-using Fps;
 using Improbable.Gdk.Core;
 using Unity.Entities;
 
-namespace Improbable.Gdk.Guns
+namespace Fps.Guns
 {
     [UpdateInGroup(typeof(SpatialOSUpdateGroup))]
     public class ServerShootingSystem : ComponentSystem

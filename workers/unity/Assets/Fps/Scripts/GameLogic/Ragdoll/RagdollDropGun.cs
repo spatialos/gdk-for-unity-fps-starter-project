@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Improbable.Gdk.Guns;
+using Fps.Guns;
 using Improbable.Gdk.Ragdoll;
 using UnityEngine;
 

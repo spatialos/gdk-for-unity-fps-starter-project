@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Improbable.Gdk.Guns
+namespace Fps.Guns
 {
     [CreateAssetMenu(menuName = "Improbable/Gun Config/Gun Dictionary", order = 0)]
     public class GunDictionary : ScriptableObject
@@ -26,6 +26,6 @@ namespace Improbable.Gdk.Guns
             return Instance.gunsList[index];
         }
 
-        public static int Count => Instance.gunsList.Length;
+        private static int Count => Instance.gunsList.Length;
     }
 }

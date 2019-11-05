@@ -1,7 +1,7 @@
 using System.Text;
 using Improbable;
 using Improbable.Gdk.Core;
-using Improbable.Gdk.Guns;
+using Fps.Guns;
 using Improbable.Gdk.PlayerLifecycle;
 using Improbable.Gdk.QueryBasedInterest;
 using Improbable.Gdk.Session;
