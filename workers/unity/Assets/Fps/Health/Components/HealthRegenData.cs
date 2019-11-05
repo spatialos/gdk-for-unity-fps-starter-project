@@ -1,6 +1,6 @@
 using Unity.Entities;
 
-namespace Improbable.Gdk.Health
+namespace Fps.Health
 {
     public struct HealthRegenData : IComponentData
     {

@@ -1,12 +1,11 @@
 using System.Collections.Generic;
-using Fps;
 using Improbable.Gdk.Core;
 using Improbable.Worker.CInterop;
 using Unity.Entities;
 using UnityEngine;
 using Entity = Unity.Entities.Entity;
 
-namespace Improbable.Gdk.Health
+namespace Fps.Health
 {
     [UpdateInGroup(typeof(SpatialOSUpdateGroup))]
     [UpdateAfter(typeof(ServerHealthModifierSystem))]
@@ -20,7 +19,7 @@ namespace Improbable.Gdk.Health
         private EntityQuery initGroup;
         private EntityQuery regenGroup;
 
-        private HashSet<EntityId> recentlyDamagedCache = new HashSet<EntityId>();
+        private readonly HashSet<EntityId> recentlyDamagedCache = new HashSet<EntityId>();
 
         protected override void OnCreate()
         {
@@ -175,7 +174,7 @@ namespace Improbable.Gdk.Health
                             // Send command to regen entity.
                             var modifyHealthRequest = new HealthComponent.ModifyHealth.Request(
                                 spatialEntityId.EntityId,
-                                new HealthModifier()
+                                new HealthModifier
                                 {
                                     Amount = regenComponent.RegenAmount
                                 }

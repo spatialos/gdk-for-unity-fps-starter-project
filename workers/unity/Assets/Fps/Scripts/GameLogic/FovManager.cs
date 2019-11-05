@@ -1,7 +1,7 @@
 ﻿using Improbable.Gdk.Core;
 using Improbable.Gdk.Subscriptions;
 using Fps.Guns;
-using Improbable.Gdk.Health;
+using Fps.Health;
 using UnityEngine;
 
 namespace Fps

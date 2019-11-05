@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Improbable.Gdk.Subscriptions;
-using Improbable.Gdk.Health;
+using Fps.Health;
 using UnityEngine;
 
 namespace Fps

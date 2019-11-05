@@ -1,10 +1,9 @@
-using Fps;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.Session;
 using Unity.Entities;
 using UnityEngine;
 
-namespace Improbable.Gdk.Health
+namespace Fps.Health
 {
     [UpdateInGroup(typeof(SpatialOSUpdateGroup))]
     public class ServerHealthModifierSystem : ComponentSystem

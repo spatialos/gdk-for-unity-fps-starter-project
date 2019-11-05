@@ -2,7 +2,7 @@ using System.Collections;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectCreation;
 using Fps.Guns;
-using Improbable.Gdk.Health;
+using Fps.Health;
 using Improbable.Gdk.PlayerLifecycle;
 using Improbable.Worker.CInterop;
 using UnityEngine;

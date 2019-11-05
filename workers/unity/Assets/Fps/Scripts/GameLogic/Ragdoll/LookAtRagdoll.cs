@@ -1,6 +1,6 @@
 ﻿using Improbable.Gdk.Core;
 using Improbable.Gdk.Subscriptions;
-using Improbable.Gdk.Health;
+using Fps.Health;
 using Improbable.Gdk.Ragdoll;
 using UnityEngine;
 
