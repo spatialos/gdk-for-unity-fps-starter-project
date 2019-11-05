@@ -4,6 +4,7 @@ using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.Guns;
 using Improbable.Gdk.Health;
 using Improbable.Gdk.PlayerLifecycle;
+using Improbable.Worker.CInterop;
 using UnityEngine;
 
 namespace Fps
@@ -20,20 +21,26 @@ namespace Fps
 
         protected override IConnectionHandlerBuilder GetConnectionHandlerBuilder()
         {
-            var builder = new SpatialOSConnectionHandlerBuilder()
-                .SetConnectionParameters(CreateConnectionParameters(WorkerUtils.UnityGameLogic));
+            IConnectionFlow connectionFlow;
+            ConnectionParameters connectionParameters;
+
+            var workerId = CreateNewWorkerId(WorkerUtils.UnityGameLogic);
 
             if (Application.isEditor)
             {
-                builder.SetConnectionFlow(new ReceptionistFlow(CreateNewWorkerId(WorkerUtils.UnityGameLogic)));
+                connectionFlow = new ReceptionistFlow(workerId);
+                connectionParameters = CreateConnectionParameters(WorkerUtils.UnityGameLogic);
             }
             else
             {
-                builder.SetConnectionFlow(new ReceptionistFlow(CreateNewWorkerId(WorkerUtils.UnityGameLogic),
-                    new CommandLineConnectionFlowInitializer()));
+                connectionFlow = new ReceptionistFlow(workerId, new CommandLineConnectionFlowInitializer());
+                connectionParameters = CreateConnectionParameters(WorkerUtils.UnityGameLogic,
+                    new CommandLineConnectionParameterInitializer());
             }
 
-            return builder;
+            return new SpatialOSConnectionHandlerBuilder()
+                .SetConnectionFlow(connectionFlow)
+                .SetConnectionParameters(connectionParameters);
         }
 
         protected override void HandleWorkerConnectionEstablished()

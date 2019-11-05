@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.Subscriptions;
+using Improbable.Worker.CInterop;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -59,21 +60,26 @@ namespace Fps
 
         protected override IConnectionHandlerBuilder GetConnectionHandlerBuilder()
         {
-            var builder = new SpatialOSConnectionHandlerBuilder()
-                .SetConnectionParameters(CreateConnectionParameters(WorkerUtils.SimulatedPlayerCoordinator));
+            IConnectionFlow connectionFlow;
+            ConnectionParameters connectionParameters;
 
             var workerId = CreateNewWorkerId(WorkerUtils.SimulatedPlayerCoordinator);
 
             if (Application.isEditor)
             {
-                builder.SetConnectionFlow(new ReceptionistFlow(workerId));
+                connectionFlow = new ReceptionistFlow(workerId);
+                connectionParameters = CreateConnectionParameters(WorkerUtils.SimulatedPlayerCoordinator);
             }
             else
             {
-                builder.SetConnectionFlow(new ReceptionistFlow(workerId, new CommandLineConnectionFlowInitializer()));
+                connectionFlow = new ReceptionistFlow(workerId, new CommandLineConnectionFlowInitializer());
+                connectionParameters = CreateConnectionParameters(WorkerUtils.SimulatedPlayerCoordinator,
+                    new CommandLineConnectionParameterInitializer());
             }
 
-            return builder;
+            return new SpatialOSConnectionHandlerBuilder()
+                .SetConnectionFlow(connectionFlow)
+                .SetConnectionParameters(connectionParameters);
         }
 
         protected override async void HandleWorkerConnectionEstablished()

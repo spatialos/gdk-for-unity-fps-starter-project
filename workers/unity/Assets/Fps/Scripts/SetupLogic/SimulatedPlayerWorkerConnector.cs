@@ -18,7 +18,6 @@ namespace Fps
         {
             var connectionParams = CreateConnectionParameters(WorkerUtils.UnityClient);
             connectionParams.Network.UseExternalIp = true;
-            connectionParams.Network.ConnectionType = NetworkConnectionType.RakNet;
 
             var builder = new SpatialOSConnectionHandlerBuilder()
                 .SetConnectionParameters(connectionParams)

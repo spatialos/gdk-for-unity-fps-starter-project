@@ -58,24 +58,19 @@ namespace Fps
 
         protected override IConnectionHandlerBuilder GetConnectionHandlerBuilder()
         {
-            var connectionParams = new ConnectionParameters
-            {
-                DefaultComponentVtable = new ComponentVtable(),
-                WorkerType = WorkerUtils.UnityClient
-            };
-
-            var builder = new SpatialOSConnectionHandlerBuilder()
-                .SetConnectionParameters(connectionParams);
+            IConnectionFlow connectionFlow;
+            var connectionParams = CreateConnectionParameters(WorkerUtils.UnityClient);
+            var workerId = CreateNewWorkerId(WorkerUtils.UnityClient);
 
             if (UseSessionFlow)
             {
                 connectionParams.Network.UseExternalIp = true;
-                builder.SetConnectionFlow(new ChosenDeploymentLocatorFlow(deployment,
-                    new SessionConnectionFlowInitializer(new CommandLineConnectionFlowInitializer())));
+                connectionFlow = new ChosenDeploymentLocatorFlow(deployment,
+                    new SessionConnectionFlowInitializer(new CommandLineConnectionFlowInitializer()));
             }
             else if (Application.isEditor)
             {
-                builder.SetConnectionFlow(new ReceptionistFlow(CreateNewWorkerId(WorkerUtils.UnityClient)));
+                connectionFlow = new ReceptionistFlow(workerId);
             }
             else
             {
@@ -84,19 +79,20 @@ namespace Fps
                 switch (initializer.GetConnectionService())
                 {
                     case ConnectionService.Receptionist:
-                        builder.SetConnectionFlow(new ReceptionistFlow(CreateNewWorkerId(WorkerUtils.UnityClient),
-                            initializer));
+                        connectionFlow = new ReceptionistFlow(workerId, initializer);
                         break;
                     case ConnectionService.Locator:
                         connectionParams.Network.UseExternalIp = true;
-                        builder.SetConnectionFlow(new LocatorFlow(initializer));
+                        connectionFlow = new LocatorFlow(initializer);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
             }
 
-            return builder;
+            return new SpatialOSConnectionHandlerBuilder()
+                .SetConnectionFlow(connectionFlow)
+                .SetConnectionParameters(connectionParams);
         }
 
         protected override void HandleWorkerConnectionEstablished()
