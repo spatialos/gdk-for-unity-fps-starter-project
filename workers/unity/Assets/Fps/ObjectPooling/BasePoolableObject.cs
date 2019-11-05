@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Improbable.Gdk.ObjectPooling
+namespace Fps.ObjectPooling
 {
     public class BasePoolableObject : MonoBehaviour, IPoolableObject
     {

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Improbable.Gdk.ObjectPooling
+namespace Fps.ObjectPooling
 {
     [RequireComponent(typeof(LineRenderer))]
     public class PoolableLineRenderer : BasePoolableObject

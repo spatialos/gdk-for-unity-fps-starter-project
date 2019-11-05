@@ -1,9 +1,8 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace Improbable.Gdk.ObjectPooling
+namespace Fps.ObjectPooling
 {
     [RequireComponent(typeof(ParticleSystem))]
     public class PoolableParticleEffect : BasePoolableObject

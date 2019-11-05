@@ -1,4 +1,4 @@
-using Improbable.Gdk.ObjectPooling;
+using Fps.ObjectPooling;
 using UnityEngine;
 
 namespace Fps.Guns

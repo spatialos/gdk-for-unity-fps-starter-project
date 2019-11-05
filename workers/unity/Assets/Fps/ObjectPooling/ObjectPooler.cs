@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Improbable.Gdk.ObjectPooling
+namespace Fps.ObjectPooling
 {
     public class ObjectPooler : MonoBehaviour
     {
@@ -23,7 +23,7 @@ namespace Improbable.Gdk.ObjectPooling
         }
 
         public static ObjectPool<T> GetOrCreateObjectPool<T>(GameObject prefab, int prePoolCount = 0)
-            where T : IPoolableObject
+            where T : Component, IPoolableObject
         {
             if (Instance == null)
             {
@@ -35,7 +35,7 @@ namespace Improbable.Gdk.ObjectPooling
         }
 
         private ObjectPool<T> GetOrCreateObjectPoolInternal<T>(GameObject prefab, int prePoolCount)
-            where T : IPoolableObject
+            where T : Component, IPoolableObject
         {
             if (!objectPools.TryGetValue(prefab, out var objectPool))
             {

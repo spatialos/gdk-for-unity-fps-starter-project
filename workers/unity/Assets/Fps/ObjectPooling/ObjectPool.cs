@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Improbable.Gdk.ObjectPooling
+namespace Fps.ObjectPooling
 {
     public interface IObjectPool
     {
     }
 
-    public class ObjectPool<T> : IObjectPool where T : IPoolableObject
+    public class ObjectPool<T> : IObjectPool where T : Component, IPoolableObject
     {
         private readonly GameObject prefab;
         private readonly Transform instanceParent;

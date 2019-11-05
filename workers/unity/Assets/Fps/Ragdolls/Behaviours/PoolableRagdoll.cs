@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Fps;
-using Improbable.Gdk.ObjectPooling;
+using Fps.ObjectPooling;
 using UnityEngine;
 
 namespace Improbable.Gdk.Ragdoll

@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Fps;
-using Improbable.Gdk.ObjectPooling;
+using Fps.ObjectPooling;
 using Improbable.Gdk.Subscriptions;
 using UnityEngine;
 
