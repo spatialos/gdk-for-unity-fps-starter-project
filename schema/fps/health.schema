@@ -1,0 +1,33 @@
+package fps;
+
+import "improbable/gdk/core/common.schema";
+import "fps/common.schema";
+
+type HealthModifier {
+  uint32 type = 1;
+  float amount = 2;
+  fps.Vector3Int applied_location = 3;
+  fps.Vector3Int origin = 4;
+  int64 owner = 5;
+}
+
+type HealthModifiedInfo {
+  HealthModifier modifier = 1;
+  float health_before = 2;
+  float health_after = 3;
+  bool died = 4;
+  int64 owner = 5;
+}
+
+component HealthComponent {
+  id = 2040;
+
+  float health = 1;
+  float max_health = 2;
+
+  command improbable.gdk.core.Empty modify_health(HealthModifier);
+  event HealthModifiedInfo health_modified;
+
+  command improbable.gdk.core.Empty request_respawn(improbable.gdk.core.Empty);
+  event improbable.gdk.core.Empty respawn;
+}

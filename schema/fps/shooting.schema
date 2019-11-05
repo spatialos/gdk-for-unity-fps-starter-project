@@ -1,0 +1,16 @@
+package fps;
+
+import "fps/common.schema";
+
+type ShotInfo {
+  bool hit_something = 1;
+  int64 entity_id = 2;
+  fps.Vector3Int hit_location = 3;
+  fps.Vector3Int hit_origin = 4;
+}
+
+component ShootingComponent {
+  id = 2050;
+
+  event ShotInfo shots;
+}

@@ -2,12 +2,9 @@ using System.Text;
 using Improbable;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.Guns;
-using Improbable.Gdk.Health;
-using Improbable.Gdk.Movement;
 using Improbable.Gdk.PlayerLifecycle;
 using Improbable.Gdk.QueryBasedInterest;
 using Improbable.Gdk.Session;
-using Improbable.Gdk.StandardTypes;
 
 namespace Fps
 {
@@ -59,7 +56,7 @@ namespace Fps
 
             var serverResponse = new ServerResponse
             {
-                Position = spawnPosition.ToIntAbsolute()
+                Position = spawnPosition.ToVector3Int()
             };
 
             var rotationUpdate = new RotationUpdate

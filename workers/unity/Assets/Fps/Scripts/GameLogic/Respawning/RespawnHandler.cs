@@ -2,9 +2,6 @@
 using Improbable;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.Subscriptions;
-using Improbable.Gdk.Health;
-using Improbable.Gdk.Movement;
-using Improbable.Gdk.StandardTypes;
 using UnityEngine;
 
 namespace Fps
@@ -42,7 +39,7 @@ namespace Fps
             var (spawnPosition, spawnYaw, spawnPitch) = SpawnPoints.GetRandomSpawnPoint();
             var newLatest = new ServerResponse
             {
-                Position = spawnPosition.ToIntAbsolute(),
+                Position = spawnPosition.ToVector3Int(),
                 IncludesJump = false,
                 Timestamp = serverMovement.Data.Latest.Timestamp,
                 TimeDelta = 0

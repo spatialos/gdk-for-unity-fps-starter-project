@@ -1,0 +1,43 @@
+package fps;
+
+import "fps/common.schema";
+
+type ClientRequest {
+	fps.Vector3Int movement = 1;
+	int32 timestamp = 2;
+	float time_delta = 3;
+	bool includes_jump = 4;
+}
+
+type ServerResponse {
+	fps.Vector3Int position = 1;
+	int32 timestamp = 2;
+	float time_delta = 3;
+	bool includes_jump = 4;
+}
+
+type RotationUpdate {
+	int32 yaw = 1;
+	int32 pitch = 2;
+	int32 roll = 3;
+	float time_delta = 4;
+}
+
+component ClientMovement {
+  id = 2020;
+
+  ClientRequest latest = 1;
+}
+
+component ServerMovement {
+  id = 2021;
+
+  ServerResponse latest = 1;
+  event RotationUpdate forced_rotation;
+}
+
+component ClientRotation {
+  id = 2022;
+
+  RotationUpdate latest = 1;
+}

@@ -1,8 +1,5 @@
-﻿using Improbable.Gdk.Core;
-using Improbable.Gdk.Subscriptions;
-using Improbable.Gdk.Guns;
+﻿using Improbable.Gdk.Subscriptions;
 using Improbable.Gdk.Movement;
-using Improbable.Gdk.StandardTypes;
 using UnityEngine;
 
 namespace Fps
