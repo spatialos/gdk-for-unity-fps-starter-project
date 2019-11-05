@@ -1,5 +1,5 @@
 ﻿using Fps.Guns;
-using Improbable.Gdk.Ragdoll;
+using Fps.Ragdoll;
 using UnityEngine;
 
 namespace Fps

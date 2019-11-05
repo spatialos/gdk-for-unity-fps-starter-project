@@ -1,9 +1,8 @@
-﻿using Fps;
-using Improbable.Gdk.Subscriptions;
+﻿using Improbable.Gdk.Subscriptions;
 using Fps.ObjectPooling;
 using UnityEngine;
 
-namespace Improbable.Gdk.Ragdoll
+namespace Fps.Ragdoll
 {
     public class RagdollSpawner : MonoBehaviour
     {

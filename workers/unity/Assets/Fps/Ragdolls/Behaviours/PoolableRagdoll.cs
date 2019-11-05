@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Fps;
 using Fps.ObjectPooling;
 using UnityEngine;
 
-namespace Improbable.Gdk.Ragdoll
+namespace Fps.Ragdoll
 {
     public class PoolableRagdoll : BasePoolableObject
     {

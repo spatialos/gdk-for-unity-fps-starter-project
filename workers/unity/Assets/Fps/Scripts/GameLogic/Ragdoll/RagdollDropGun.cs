@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Fps.Guns;
-using Improbable.Gdk.Ragdoll;
+using Fps.Ragdoll;
 using UnityEngine;
 
 namespace Fps
