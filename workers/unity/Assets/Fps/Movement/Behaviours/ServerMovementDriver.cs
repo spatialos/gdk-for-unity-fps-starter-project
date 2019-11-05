@@ -1,19 +1,19 @@
-using Fps;
+using Improbable;
 using Improbable.Gdk.Subscriptions;
 using UnityEngine;
 
-namespace Improbable.Gdk.Movement
+namespace Fps.Movement
 {
     public class ServerMovementDriver : CharacterControllerMotor
     {
+#pragma warning disable 649
         [Require] private ServerMovementWriter server;
         [Require] private ClientMovementReader client;
         [Require] private PositionWriter spatialPosition;
+#pragma warning restore 649
 
         [SerializeField] private float spatialPositionUpdateHz = 1.0f;
         [SerializeField, HideInInspector] private float spatialPositionUpdateDelta;
-
-        private LinkedEntityComponent LinkedEntityComponent;
 
         private Vector3 lastPosition;
         private Vector3 origin;
@@ -35,8 +35,8 @@ namespace Improbable.Gdk.Movement
 
         private void OnEnable()
         {
-            LinkedEntityComponent = GetComponent<LinkedEntityComponent>();
-            origin = LinkedEntityComponent.Worker.Origin;
+            var linkedEntityComponent = GetComponent<LinkedEntityComponent>();
+            origin = linkedEntityComponent.Worker.Origin;
 
             client.OnLatestUpdate += OnClientUpdate;
         }
@@ -56,6 +56,7 @@ namespace Improbable.Gdk.Movement
                 Timestamp = request.Timestamp,
                 TimeDelta = request.TimeDelta
             };
+
             var update = new ServerMovement.Update { Latest = response };
             server.SendUpdate(update);
 

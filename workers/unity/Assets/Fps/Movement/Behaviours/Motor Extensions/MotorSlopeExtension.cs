@@ -1,14 +1,13 @@
 ﻿using UnityEngine;
 
-namespace Improbable.Gdk.Movement
+namespace Fps.Movement
 {
     [RequireComponent(typeof(CharacterController), typeof(CharacterControllerMotor))]
-    public class MotorSlopeExtension : MonoBehaviour, IMotorExtension
+    public class MotorSlopeExtension : MonoBehaviour
     {
         [Range(0, 1)] [SerializeField] private float slideFriction;
 
         private CharacterController characterController;
-        private CharacterControllerMotor motor;
         private Vector3 hitNormal;
         private bool isGrounded;
         private bool overrideInAir;
@@ -18,7 +17,6 @@ namespace Improbable.Gdk.Movement
         private void Awake()
         {
             characterController = GetComponent<CharacterController>();
-            motor = GetComponent<CharacterControllerMotor>();
         }
 
         // Record the hits of the CharacterController
@@ -42,7 +40,7 @@ namespace Improbable.Gdk.Movement
             }
         }
 
-        void IMotorExtension.BeforeMove(Vector3 toMove)
+        public void BeforeMove(Vector3 toMove)
         {
             //Character sliding off surfaces. - push away from the surface before moving down.
             // Scale by toMove.y, such that you slide faster down as you pick up fall speed.
@@ -58,7 +56,7 @@ namespace Improbable.Gdk.Movement
             }
         }
 
-        bool IMotorExtension.IsOverrideAir()
+        public bool IsOverrideAir()
         {
             return overrideInAir;
         }

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Improbable.Gdk.Movement
+namespace Fps.Movement
 {
     [RequireComponent(typeof(CharacterController))]
     public class CharacterControllerMotor : MonoBehaviour
@@ -25,15 +25,15 @@ namespace Improbable.Gdk.Movement
         private float teleportDistanceSqrd = 25f;
 
         private CharacterController characterController;
-        protected IMotorExtension[] MotorExtensions;
+        protected MotorSlopeExtension MotorExtension;
 
         protected virtual void Awake()
         {
             characterController = GetComponent<CharacterController>();
-            MotorExtensions = GetComponents<IMotorExtension>();
+            MotorExtension = GetComponent<MotorSlopeExtension>();
         }
 
-        public bool HasEnoughMovement(float threshold, out Vector3 movement, out float timeDelta, out bool anyMovement,
+        protected bool HasEnoughMovement(float threshold, out Vector3 movement, out float timeDelta, out bool anyMovement,
             out int messageStamp)
         {
             movement = cumulativeMovement;
@@ -52,7 +52,7 @@ namespace Improbable.Gdk.Movement
             messageStamp++;
         }
 
-        public void MoveFrame(Vector3 toMove)
+        protected void MoveFrame(Vector3 toMove)
         {
             cumulativeTimeDelta += Time.deltaTime;
             var before = transform.position;
@@ -67,7 +67,7 @@ namespace Improbable.Gdk.Movement
             cumulativeTimeDelta += Time.deltaTime;
         }
 
-        public void Reconcile(Vector3 position, int timestamp)
+        protected void Reconcile(Vector3 position, int timestamp)
         {
             transform.position = position;
             foreach (var each in requests.ToList())
@@ -85,7 +85,7 @@ namespace Improbable.Gdk.Movement
             Move(cumulativeMovement);
         }
 
-        public virtual void Move(Vector3 toMove)
+        protected virtual void Move(Vector3 toMove)
         {
             if (characterController.enabled)
             {
@@ -94,26 +94,24 @@ namespace Improbable.Gdk.Movement
         }
 
         // Separate from regular move, as we only want the extensions applied to the movement once.
-        public void MoveWithExtensions(Vector3 toMove)
+        private void MoveWithExtensions(Vector3 toMove)
         {
             if (!characterController.enabled)
             {
                 return;
             }
 
-            foreach (var extension in MotorExtensions)
-            {
-                extension.BeforeMove(toMove);
-            }
+            MotorExtension.BeforeMove(toMove);
 
             Move(toMove);
         }
 
-        public void Interpolate(Vector3 target, float timeDelta)
+        protected void Interpolate(Vector3 target, float timeDelta)
         {
             distanceLeftToMove = target - transform.position;
             var sqrMagnitude = distanceLeftToMove.sqrMagnitude;
             hasMovementLeft = sqrMagnitude < teleportDistanceSqrd || timeDelta != 0;
+
             if (hasMovementLeft)
             {
                 timeLeftToMove = timeDelta;
@@ -126,21 +124,23 @@ namespace Improbable.Gdk.Movement
 
         protected virtual void Update()
         {
-            if (hasMovementLeft)
+            if (!hasMovementLeft)
             {
-                if (Time.deltaTime < timeLeftToMove)
-                {
-                    var percentageToMove = Time.deltaTime / timeLeftToMove;
-                    var distanceToMove = distanceLeftToMove * percentageToMove;
-                    Move(distanceToMove);
-                    distanceLeftToMove -= distanceToMove;
-                    timeLeftToMove -= Time.deltaTime;
-                }
-                else
-                {
-                    Move(distanceLeftToMove);
-                    hasMovementLeft = false;
-                }
+                return;
+            }
+
+            if (Time.deltaTime < timeLeftToMove)
+            {
+                var percentageToMove = Time.deltaTime / timeLeftToMove;
+                var distanceToMove = distanceLeftToMove * percentageToMove;
+                Move(distanceToMove);
+                distanceLeftToMove -= distanceToMove;
+                timeLeftToMove -= Time.deltaTime;
+            }
+            else
+            {
+                Move(distanceLeftToMove);
+                hasMovementLeft = false;
             }
         }
     }

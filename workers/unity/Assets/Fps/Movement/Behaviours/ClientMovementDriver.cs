@@ -3,13 +3,15 @@ using Improbable.Gdk.Core;
 using Improbable.Gdk.Subscriptions;
 using UnityEngine;
 
-namespace Improbable.Gdk.Movement
+namespace Fps.Movement
 {
     public class ClientMovementDriver : GroundCheckingDriver
     {
+#pragma warning disable 649
         [Require] private ClientMovementWriter client;
         [Require] private ClientRotationWriter rotation;
         [Require] private ServerMovementReader server;
+#pragma warning restore 649
 
         [SerializeField] private float transformUpdateHz = 15.0f;
         [SerializeField] private float rotationUpdateHz = 15.0f;
@@ -59,7 +61,7 @@ namespace Improbable.Gdk.Movement
         private bool pitchDirty;
         private float sprintCooldownExpires;
 
-        public float CurrentYaw
+        private float CurrentYaw
         {
             set
             {
@@ -72,7 +74,7 @@ namespace Improbable.Gdk.Movement
             get => currentYaw;
         }
 
-        public float CurrentPitch
+        private float CurrentPitch
         {
             set
             {
@@ -85,7 +87,7 @@ namespace Improbable.Gdk.Movement
             get => currentPitch;
         }
 
-        public float CurrentRoll
+        private float CurrentRoll
         {
             set
             {
@@ -99,8 +101,6 @@ namespace Improbable.Gdk.Movement
         }
 
         public bool HasSprintedRecently => Time.time < sprintCooldownExpires;
-
-        private LinkedEntityComponent LinkedEntityComponent;
 
         // Cache the update delta values.
         private void OnValidate()
@@ -136,8 +136,8 @@ namespace Improbable.Gdk.Movement
 
         private void OnEnable()
         {
-            LinkedEntityComponent = GetComponent<LinkedEntityComponent>();
-            origin = LinkedEntityComponent.Worker.Origin;
+            var linkedEntityComponent = GetComponent<LinkedEntityComponent>();
+            origin = linkedEntityComponent.Worker.Origin;
             server.OnLatestUpdate += OnServerUpdate;
             server.OnForcedRotationEvent += OnForcedRotation;
         }
@@ -176,7 +176,7 @@ namespace Improbable.Gdk.Movement
             SendRotationUpdate();
         }
 
-        public void ProcessInput(Vector3 movement, Quaternion rotation, MovementSpeed movementSpeed, bool startJump)
+        private void ProcessInput(Vector3 movement, Quaternion rotation, MovementSpeed movementSpeed, bool startJump)
         {
             var isJumping = verticalVelocity > 0;
 
@@ -284,33 +284,37 @@ namespace Improbable.Gdk.Movement
         // Returns true if an update is sent.
         private bool SendPositionUpdate()
         {
-            //Send network data if required (If moved, or was still moving last update)
-            var anyUpdate = false;
-            if (HasEnoughMovement(transformUpdateDelta,
+            // Send network data if required (If moved, or was still moving last update)
+            if (!HasEnoughMovement(transformUpdateDelta,
                 out var movement,
                 out var timeDelta,
                 out var anyMovement,
                 out var messageStamp))
             {
-                Reset();
-                if (anyMovement || !lastMovementStationary)
-                {
-                    var clientRequest = new ClientRequest
-                    {
-                        IncludesJump = didJump,
-                        Movement = movement.ToVector3Int(),
-                        TimeDelta = timeDelta,
-                        Timestamp = messageStamp
-                    };
-                    var update = new ClientMovement.Update { Latest = new Option<ClientRequest>(clientRequest) };
-                    client.SendUpdate(update);
-                    lastMovementStationary = !anyMovement;
-                    didJump = false;
-                    anyUpdate = true;
-                }
+                return false;
             }
 
-            return anyUpdate;
+            Reset();
+
+            if (!anyMovement && lastMovementStationary)
+            {
+                return false;
+            }
+
+            var clientRequest = new ClientRequest
+            {
+                IncludesJump = didJump,
+                Movement = movement.ToVector3Int(),
+                TimeDelta = timeDelta,
+                Timestamp = messageStamp
+            };
+
+            var update = new ClientMovement.Update { Latest = clientRequest };
+            client.SendUpdate(update);
+            lastMovementStationary = !anyMovement;
+            didJump = false;
+
+            return true;
         }
 
         // Returns true if an update needs to be sent.
@@ -330,7 +334,8 @@ namespace Improbable.Gdk.Movement
                         Yaw = currentYaw.ToInt1k(),
                         TimeDelta = cumulativeRotationTimeDelta
                     };
-                    var update = new ClientRotation.Update { Latest = new Option<RotationUpdate>(rotationUpdate) };
+
+                    var update = new ClientRotation.Update { Latest = rotationUpdate };
                     rotation.SendUpdate(update);
                     anyUpdate = true;
                 }

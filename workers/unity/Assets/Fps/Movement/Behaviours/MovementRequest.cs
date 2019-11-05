@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Improbable.Gdk.Movement
+namespace Fps.Movement
 {
     public struct MovementRequest
     {

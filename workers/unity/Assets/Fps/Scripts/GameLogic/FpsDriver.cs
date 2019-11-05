@@ -3,7 +3,7 @@ using System.Collections;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.Subscriptions;
 using Improbable.Gdk.Guns;
-using Improbable.Gdk.Movement;
+using Fps.Movement;
 using UnityEngine;
 
 namespace Fps

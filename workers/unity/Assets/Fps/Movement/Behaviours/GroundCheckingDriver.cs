@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Improbable.Gdk.Movement
+namespace Fps.Movement
 {
     public class GroundCheckingDriver : CharacterControllerMotor
     {
@@ -20,7 +20,7 @@ namespace Improbable.Gdk.Movement
                 groundLayerMask) > 0;
         }
 
-        public override void Move(Vector3 toMove)
+        protected override void Move(Vector3 toMove)
         {
             base.Move(toMove);
             CheckGrounded();
@@ -28,13 +28,9 @@ namespace Improbable.Gdk.Movement
 
         protected void CheckExtensionsForOverrides()
         {
-            foreach (var extension in MotorExtensions)
+            if (MotorExtension.IsOverrideAir())
             {
-                if (extension.IsOverrideAir())
-                {
-                    IsGrounded = false;
-                    return;
-                }
+                IsGrounded = false;
             }
         }
     }

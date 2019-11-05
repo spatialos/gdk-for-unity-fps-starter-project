@@ -1,14 +1,15 @@
-using Fps;
 using Improbable.Gdk.Subscriptions;
 using Improbable.Worker.CInterop;
 using UnityEngine;
 
-namespace Improbable.Gdk.Movement
+namespace Fps.Movement
 {
     public class ProxyMovementDriver : GroundCheckingDriver
     {
+#pragma warning disable 649
         [Require] private ServerMovementReader server;
         [Require] private ClientRotationReader client;
+#pragma warning restore 649
 
         [SerializeField] private RotationConstraints rotationConstraints = new RotationConstraints
         {
@@ -58,7 +59,7 @@ namespace Improbable.Gdk.Movement
             Interpolate(movement.Position.ToVector3() + origin, movement.TimeDelta);
         }
 
-        public void UpdateRotation(Quaternion targetQuaternion, float timeDelta)
+        private void UpdateRotation(Quaternion targetQuaternion, float timeDelta)
         {
             hasRotationLeft = true;
             lastFullTime = timeLeftToRotate = timeDelta;

@@ -1,5 +1,5 @@
 ﻿using Improbable.Gdk.Subscriptions;
-using Improbable.Gdk.Movement;
+using Fps.Movement;
 using UnityEngine;
 
 namespace Fps
