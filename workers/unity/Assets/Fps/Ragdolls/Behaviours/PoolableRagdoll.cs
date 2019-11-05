@@ -11,7 +11,7 @@ namespace Improbable.Gdk.Ragdoll
     {
         private struct InitialBonePosition
         {
-            public UnityEngine.Transform Bone;
+            public Transform Bone;
             public Vector3 LocalPosition;
             public Quaternion LocalRotation;
 
@@ -70,7 +70,7 @@ namespace Improbable.Gdk.Ragdoll
         {
             initialBonePositions.Clear();
 
-            foreach (var childTransform in GetComponentsInChildren<UnityEngine.Transform>())
+            foreach (var childTransform in GetComponentsInChildren<Transform>())
             {
                 initialBonePositions.Add(new InitialBonePosition
                 {
@@ -109,13 +109,13 @@ namespace Improbable.Gdk.Ragdoll
             }
         }
 
-        public void MatchTransforms(UnityEngine.Transform reference)
+        public void MatchTransforms(Transform reference)
         {
             MatchTransforms(reference, transform);
         }
 
         // Recursively match the skeleton (transforms) of the ragdoll to the reference.
-        private void MatchTransforms(UnityEngine.Transform reference, UnityEngine.Transform ragdoll)
+        private void MatchTransforms(Transform reference, Transform ragdoll)
         {
             ragdoll.position = reference.position;
             ragdoll.rotation = reference.rotation;
@@ -130,17 +130,11 @@ namespace Improbable.Gdk.Ragdoll
         public void LaunchRagdoll(HealthModifier deathDetails)
         {
             // Launch the ragdoll in direction of modifier.
-            var launchVector = MakeLaunchVector(
-                deathDetails.Origin.ToVector3(),
-                deathDetails.AppliedLocation.ToVector3());
+            var forceOrigin = deathDetails.Origin.ToVector3();
+            var launchDirection = (deathDetails.AppliedLocation.ToVector3() - forceOrigin).normalized;
+            var launchVector = launchDirection * ragdollLaunchForce;
 
             centreBone.AddForce(launchVector, ForceMode.Impulse);
-        }
-
-        private Vector3 MakeLaunchVector(Vector3 start, Vector3 end)
-        {
-            var launchVector = (end - start).normalized;
-            return launchVector * ragdollLaunchForce;
         }
     }
 }

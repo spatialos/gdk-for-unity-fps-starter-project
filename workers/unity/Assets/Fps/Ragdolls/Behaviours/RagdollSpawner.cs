@@ -10,7 +10,7 @@ namespace Improbable.Gdk.Ragdoll
         [Require] private HealthComponentReader health;
 
         [SerializeField] private GameObject ragdollPrefab;
-        [SerializeField] private UnityEngine.Transform transformToMatch;
+        [SerializeField] private Transform transformToMatch;
 
         public delegate void RagdollSpawned(GameObject ragdoll);
 
