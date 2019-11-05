@@ -68,7 +68,7 @@ namespace Improbable.Gdk.Health
                     playerStateData[entity] = playerState;
 
                     commandSystem.SendCommand(new PlayerState.GainedKill.Request(
-                        new EntityId(modifier.Owner),
+                        modifier.Owner,
                         new Empty())
                     );
                 }

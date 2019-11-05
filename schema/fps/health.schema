@@ -8,7 +8,7 @@ type HealthModifier {
   float amount = 2;
   fps.Vector3Int applied_location = 3;
   fps.Vector3Int origin = 4;
-  int64 owner = 5;
+  EntityId owner = 5;
 }
 
 type HealthModifiedInfo {
@@ -16,7 +16,7 @@ type HealthModifiedInfo {
   float health_before = 2;
   float health_after = 3;
   bool died = 4;
-  int64 owner = 5;
+  EntityId owner = 5;
 }
 
 component HealthComponent {

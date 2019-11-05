@@ -1,3 +1,4 @@
+using Improbable.Gdk.Core;
 using Improbable.Gdk.Subscriptions;
 using UnityEngine;
 
@@ -71,7 +72,7 @@ namespace Fps.Guns
         {
             var hitLocation = ray.origin + ray.direction * range;
             var hitSomething = false;
-            var entityId = 0L;
+            EntityId entityId = new EntityId(0);
 
             if (Physics.Raycast(ray, out var hit, range, shootingLayerMask))
             {
@@ -80,7 +81,7 @@ namespace Fps.Guns
                 var spatialEntity = hit.transform.root.GetComponent<LinkedEntityComponent>();
                 if (spatialEntity != null)
                 {
-                    entityId = spatialEntity.EntityId.Id;
+                    entityId = spatialEntity.EntityId;
                 }
             }
 

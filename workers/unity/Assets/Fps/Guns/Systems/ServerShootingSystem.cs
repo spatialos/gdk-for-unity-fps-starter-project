@@ -33,12 +33,12 @@ namespace Fps.Guns
             {
                 ref readonly var shotEvent = ref events[i];
                 var shotInfo = shotEvent.Event.Payload;
-                if (!shotInfo.HitSomething || shotInfo.EntityId <= 0)
+                if (!shotInfo.HitSomething || !shotInfo.EntityId.IsValid())
                 {
                     continue;
                 }
 
-                var shooterSpatialID = new EntityId(shotInfo.EntityId);
+                var shooterSpatialID = shotInfo.EntityId;
                 if (!workerSystem.TryGetEntity(shooterSpatialID, out var shooterEntity))
                 {
                     continue;
@@ -53,7 +53,7 @@ namespace Fps.Guns
                 var damage = GunDictionary.Get(gunComponent.GunId).ShotDamage;
 
                 var modifyHealthRequest = new HealthComponent.ModifyHealth.Request(
-                    new EntityId(shotInfo.EntityId),
+                    shotInfo.EntityId,
                     new HealthModifier
                     {
                         Amount = -damage,
