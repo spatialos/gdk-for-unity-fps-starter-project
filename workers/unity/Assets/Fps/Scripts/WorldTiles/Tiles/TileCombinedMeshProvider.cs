@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace MeshUtilities
+namespace Fps.WorldTiles
 {
     /// <summary>
     ///     Container class for a combined mesh and an array of materials used in the mesh

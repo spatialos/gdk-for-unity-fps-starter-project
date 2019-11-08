@@ -1,10 +1,12 @@
 using System.Collections;
+using Fps.SchemaExtensions;
+using Fps.UI;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.Subscriptions;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 
-namespace Fps
+namespace Fps.UI
 {
     public class Hud : MonoBehaviour
     {

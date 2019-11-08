@@ -1,10 +1,8 @@
 ﻿using Improbable.Gdk.Core;
 using Improbable.Gdk.Subscriptions;
-using Fps.Health;
-using Fps.Ragdoll;
 using UnityEngine;
 
-namespace Fps
+namespace Fps.Ragdoll
 {
     [RequireComponent(typeof(RagdollSpawner))]
     public class LookAtRagdoll : MonoBehaviour

@@ -1,8 +1,9 @@
 ﻿using Fps.Movement;
+using Fps.SchemaExtensions;
 using Improbable.Gdk.Subscriptions;
 using UnityEngine;
 
-namespace Fps.Scripts.Animation
+namespace Fps.Animation
 {
     [RequireComponent(typeof(FpsAnimator), typeof(ProxyMovementDriver))]
     public class ProxyAnimation : MonoBehaviour

@@ -1,13 +1,16 @@
 using System.Collections;
-using Improbable.Gdk.Core;
-using Improbable.Gdk.GameObjectCreation;
+using Fps.Config;
 using Fps.Guns;
 using Fps.Health;
+using Fps.Metrics;
+using Fps.Session;
+using Improbable.Gdk.Core;
+using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.PlayerLifecycle;
 using Improbable.Worker.CInterop;
 using UnityEngine;
 
-namespace Fps
+namespace Fps.WorkerConnectors
 {
     public class GameLogicWorkerConnector : WorkerConnectorBase
     {

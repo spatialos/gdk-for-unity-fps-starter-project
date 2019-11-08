@@ -1,10 +1,9 @@
-﻿using Improbable.Gdk.Core;
+﻿using Fps.Guns;
+using Improbable.Gdk.Core;
 using Improbable.Gdk.Subscriptions;
-using Fps.Guns;
-using Fps.Health;
 using UnityEngine;
 
-namespace Fps
+namespace Fps.Visibility
 {
     public class FovManager : MonoBehaviour
     {

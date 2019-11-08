@@ -1,6 +1,7 @@
+using Fps.UI;
 using UnityEngine;
 
-namespace Fps
+namespace Fps.StateMachine
 {
     public class DisconnectedState : DefaultState
     {

@@ -1,7 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using Fps;
+using Fps.Guns;
 using Fps.ObjectPooling;
+using Fps.SchemaExtensions;
 using Improbable.Gdk.Subscriptions;
 using UnityEngine;
 

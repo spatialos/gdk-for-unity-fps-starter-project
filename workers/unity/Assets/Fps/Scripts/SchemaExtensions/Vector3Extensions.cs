@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Fps
+namespace Fps.SchemaExtensions
 {
     public static class Vector3Extensions
     {

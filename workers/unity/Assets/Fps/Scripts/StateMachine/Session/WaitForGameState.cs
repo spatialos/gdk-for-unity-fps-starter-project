@@ -1,8 +1,9 @@
 using System;
+using Fps.UI;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.Session;
 
-namespace Fps
+namespace Fps.StateMachine
 {
     public class WaitForGameState : SessionState
     {

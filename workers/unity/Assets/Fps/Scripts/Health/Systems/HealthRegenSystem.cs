@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Fps.Health;
 using Improbable.Gdk.Core;
 using Improbable.Worker.CInterop;
 using Unity.Entities;

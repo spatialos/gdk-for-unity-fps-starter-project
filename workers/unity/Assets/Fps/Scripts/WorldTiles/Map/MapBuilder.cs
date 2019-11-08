@@ -1,13 +1,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Fps.Respawning;
+using Fps.WorkerConnectors;
 using Improbable.Gdk.Core;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 using Random = System.Random;
 
-namespace Fps
+namespace Fps.WorldTiles
 {
     public class MapBuilder
     {

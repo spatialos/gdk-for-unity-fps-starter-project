@@ -2,7 +2,7 @@
 using UnityEngine.Profiling;
 using Random = System.Random;
 
-namespace Fps
+namespace Fps.WorldTiles
 {
     [CreateAssetMenu(fileName = "New TileTypeCollection", menuName = "Improbable/Tile Type Collection")]
     public class TileTypeCollection : ScriptableObject

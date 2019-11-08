@@ -1,7 +1,8 @@
+using Fps.UI;
 using Improbable.Gdk.PlayerLifecycle;
 using Improbable.Worker.CInterop;
 
-namespace Fps
+namespace Fps.StateMachine
 {
     public class DefaultSpawnState : DefaultState
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using Improbable.Gdk.Core;
 using Improbable.Worker.CInterop.Alpha;
 
-namespace Fps.Connection
+namespace Fps.WorkerConnectors
 {
     public class ChosenDeploymentLocatorFlow : LocatorFlow
     {

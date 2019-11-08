@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Fps
+namespace Fps.Visibility
 {
     [RequireComponent(typeof(Camera))]
     public class SkyboxCamera : MonoBehaviour

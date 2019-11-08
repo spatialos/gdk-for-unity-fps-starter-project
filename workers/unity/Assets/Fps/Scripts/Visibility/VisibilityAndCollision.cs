@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 using Improbable.Gdk.Subscriptions;
-using Fps.Health;
 using UnityEngine;
 
-namespace Fps
+namespace Fps.Visibility
 {
     public class VisibilityAndCollision : MonoBehaviour
     {

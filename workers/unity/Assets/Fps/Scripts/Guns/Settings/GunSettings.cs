@@ -1,3 +1,4 @@
+using Fps.Guns;
 using Fps.ObjectPooling;
 using UnityEngine;
 

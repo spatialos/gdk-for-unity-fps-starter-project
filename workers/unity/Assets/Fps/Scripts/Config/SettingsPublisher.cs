@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using Fps.Config;
+using UnityEngine;
 
-namespace Fps
+namespace Fps.Config
 {
     public class SettingsPublisher : MonoBehaviour
     {

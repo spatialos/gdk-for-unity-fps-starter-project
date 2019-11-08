@@ -1,7 +1,7 @@
 ﻿using Fps.Movement;
 using UnityEngine;
 
-namespace Fps.Scripts.Animation
+namespace Fps.Animation
 {
     public class FpsAnimator : MonoBehaviour
     {

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Fps.Guns;
+using UnityEngine;
 using UnityEngine.Rendering;
 
 namespace Fps.Guns

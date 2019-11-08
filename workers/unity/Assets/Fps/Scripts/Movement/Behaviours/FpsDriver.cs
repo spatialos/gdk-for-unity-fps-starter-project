@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections;
-using Improbable.Gdk.Core;
-using Improbable.Gdk.Subscriptions;
+using Fps.Animation;
 using Fps.Guns;
 using Fps.Movement;
-using Fps.Scripts.Animation;
+using Fps.PlayerControls;
+using Fps.SchemaExtensions;
+using Fps.UI;
+using Improbable.Gdk.Core;
+using Improbable.Gdk.Subscriptions;
 using UnityEngine;
 
-namespace Fps
+namespace Fps.Movement
 {
     public class FpsDriver : MonoBehaviour
     {

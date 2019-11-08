@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Fps
+namespace Fps.UI
 {
     public class ScreenManager : MonoBehaviour
     {

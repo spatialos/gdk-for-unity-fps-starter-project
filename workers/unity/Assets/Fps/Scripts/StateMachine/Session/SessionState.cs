@@ -1,4 +1,6 @@
-namespace Fps
+using Fps.UI;
+
+namespace Fps.StateMachine
 {
     public abstract class SessionState : State
     {

@@ -1,8 +1,8 @@
-﻿using Improbable.Gdk.Subscriptions;
-using Improbable.Gdk.Session;
+﻿using Improbable.Gdk.Session;
+using Improbable.Gdk.Subscriptions;
 using UnityEngine;
 
-namespace Fps
+namespace Fps.Session
 {
     public class SessionObserver : MonoBehaviour
     {
@@ -26,14 +26,14 @@ namespace Fps
             var status = sessionWriter.Data.Status;
             if (status == Status.STOPPING && sessionTimer > cooldownTime)
             {
-                sessionWriter.SendUpdate(new Session.Update { Status = Status.STOPPED });
+                sessionWriter.SendUpdate(new Improbable.Gdk.Session.Session.Update { Status = Status.STOPPED });
                 sessionTimer = 0;
             }
             else if (status == Status.RUNNING)
             {
                 if (sessionTimer > maxSessionTime)
                 {
-                    sessionWriter.SendUpdate(new Session.Update { Status = Status.STOPPING });
+                    sessionWriter.SendUpdate(new Improbable.Gdk.Session.Session.Update { Status = Status.STOPPING });
                     sessionTimer = 0;
                 }
 
@@ -45,7 +45,7 @@ namespace Fps
             }
             else if (status == Status.LOBBY && sessionTimer > lobbyTime)
             {
-                sessionWriter.SendUpdate(new Session.Update { Status = Status.RUNNING });
+                sessionWriter.SendUpdate(new Improbable.Gdk.Session.Session.Update { Status = Status.RUNNING });
                 sessionTimer = 0;
                 lastUpdate = 0;
             }

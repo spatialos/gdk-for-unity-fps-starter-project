@@ -1,9 +1,10 @@
-using System;
-using Improbable.Gdk.Subscriptions;
+using Fps.Config;
+using Fps.UI;
 using Improbable.Gdk.Session;
+using Improbable.Gdk.Subscriptions;
 using UnityEngine;
 
-namespace Fps
+namespace Fps.Session
 {
     [WorkerType(WorkerUtils.UnityClient, WorkerUtils.MobileClient)]
     public class SessionListener : MonoBehaviour

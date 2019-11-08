@@ -1,6 +1,8 @@
+using Fps.Session;
+using Fps.UI;
 using Improbable.Gdk.Session;
 
-namespace Fps
+namespace Fps.StateMachine
 {
     public class PlayState : SessionState
     {

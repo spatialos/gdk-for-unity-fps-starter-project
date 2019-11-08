@@ -1,4 +1,5 @@
-using Fps;
+using Fps.Movement;
+using Fps.SchemaExtensions;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.Subscriptions;
 using UnityEngine;

@@ -1,8 +1,9 @@
 using System.Linq;
-using Improbable.Gdk.Core;
+using Fps.Session;
+using Fps.UI;
 using UnityEngine;
 
-namespace Fps
+namespace Fps.StateMachine
 {
     public class ResultsState : SessionState
     {

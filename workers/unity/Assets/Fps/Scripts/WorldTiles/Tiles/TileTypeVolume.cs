@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Fps
+namespace Fps.WorldTiles
 {
     [RequireComponent(typeof(BoxCollider))]
     public class TileTypeVolume : MonoBehaviour

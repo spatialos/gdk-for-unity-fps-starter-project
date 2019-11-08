@@ -1,6 +1,8 @@
+using Fps.UI;
+using Fps.WorkerConnectors;
 using UnityEngine;
 
-namespace Fps
+namespace Fps.StateMachine
 {
     public class SessionConnectState : SessionState
     {

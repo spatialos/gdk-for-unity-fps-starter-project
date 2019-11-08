@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Fps
+namespace Fps.WorldTiles
 {
     [CreateAssetMenu(fileName = "MapQualitySettings", menuName = "Improbable/Map Quality Settings")]
     public class MapQualitySettings : ScriptableObject

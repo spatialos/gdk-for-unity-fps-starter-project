@@ -1,8 +1,10 @@
+using Fps.Config;
+using Fps.UI;
 using Improbable.Gdk.Core;
 using Improbable.Worker.CInterop;
 using Improbable.Worker.CInterop.Alpha;
 
-namespace Fps
+namespace Fps.StateMachine
 {
     public class GetDeploymentsState : SessionState
     {

@@ -1,4 +1,4 @@
-namespace Fps
+namespace Fps.StateMachine
 {
     public abstract class State
     {

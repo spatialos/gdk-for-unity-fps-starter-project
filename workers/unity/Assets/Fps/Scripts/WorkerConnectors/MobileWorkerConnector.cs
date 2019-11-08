@@ -1,11 +1,12 @@
 using System;
-using Fps.Connection;
+using Fps.Config;
+using Fps.WorkerConnectors;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.Mobile;
 using Improbable.Worker.CInterop;
 using UnityEngine;
 
-namespace Fps
+namespace Fps.WorkerConnectors
 {
     public class MobileWorkerConnector : ClientWorkerConnector, MobileConnectionFlowInitializer.IMobileSettingsProvider
     {

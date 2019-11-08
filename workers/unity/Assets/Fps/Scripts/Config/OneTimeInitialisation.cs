@@ -3,7 +3,7 @@ using Improbable.Gdk.PlayerLifecycle;
 using Unity.Entities;
 using UnityEngine;
 
-namespace Fps
+namespace Fps.Config
 {
     public static class OneTimeInitialisation
     {

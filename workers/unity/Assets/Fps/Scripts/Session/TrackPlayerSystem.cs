@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Fps.UI;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.Core.Commands;
 using Improbable.Gdk.Session;
@@ -8,7 +9,7 @@ using Unity.Entities;
 using UnityEngine;
 using EntityQuery = Improbable.Worker.CInterop.Query.EntityQuery;
 
-namespace Fps
+namespace Fps.Session
 {
     [DisableAutoCreation]
     public class TrackPlayerSystem : ComponentSystem
@@ -33,7 +34,7 @@ namespace Fps
 
             commandSystem = World.GetExistingSystem<CommandSystem>();
             logDispatcher = World.GetExistingSystem<WorkerSystem>().LogDispatcher;
-            sessionGroup = GetEntityQuery(ComponentType.ReadOnly<Session.Component>());
+            sessionGroup = GetEntityQuery(ComponentType.ReadOnly<Improbable.Gdk.Session.Session.Component>());
 
             PlayerResults = new List<ResultsData>();
         }
@@ -46,7 +47,7 @@ namespace Fps
             }
             else
             {
-                Entities.With(sessionGroup).ForEach((ref Session.Component session) =>
+                Entities.With(sessionGroup).ForEach((ref Improbable.Gdk.Session.Session.Component session) =>
                 {
                     SessionStatus = session.Status;
                 });

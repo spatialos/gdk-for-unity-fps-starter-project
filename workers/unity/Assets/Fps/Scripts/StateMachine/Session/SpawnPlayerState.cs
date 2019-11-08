@@ -1,8 +1,9 @@
+using Fps.UI;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.PlayerLifecycle;
 using Improbable.Worker.CInterop;
 
-namespace Fps
+namespace Fps.StateMachine
 {
     public class SpawnPlayerState : SessionState
     {

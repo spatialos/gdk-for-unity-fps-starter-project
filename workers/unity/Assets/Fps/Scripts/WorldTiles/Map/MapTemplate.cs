@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Fps.WorldTiles;
 using UnityEngine;
 using Random = System.Random;
 
-namespace Fps
+namespace Fps.WorldTiles
 {
     [CreateAssetMenu(fileName = "MapTemplate", menuName = "Improbable/Map Template")]
     public class MapTemplate : ScriptableObject

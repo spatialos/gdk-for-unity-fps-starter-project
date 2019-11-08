@@ -1,3 +1,4 @@
+using Fps.Guns;
 using UnityEngine;
 
 namespace Fps.Guns

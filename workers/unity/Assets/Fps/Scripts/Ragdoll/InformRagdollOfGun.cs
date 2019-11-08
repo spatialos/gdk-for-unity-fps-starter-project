@@ -1,8 +1,7 @@
 ﻿using Fps.Guns;
-using Fps.Ragdoll;
 using UnityEngine;
 
-namespace Fps
+namespace Fps.Ragdoll
 {
     [RequireComponent(typeof(RagdollSpawner), typeof(GunManager))]
     public class InformRagdollOfGun : MonoBehaviour

@@ -1,3 +1,4 @@
+using Fps.Guns;
 using Improbable.Gdk.Subscriptions;
 using UnityEngine;
 

@@ -1,4 +1,4 @@
-﻿namespace Fps
+﻿namespace Fps.UI
 {
     public struct ResultsData
     {

@@ -1,10 +1,11 @@
 ﻿using System.Collections;
+using Fps.SchemaExtensions;
 using Improbable;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.Subscriptions;
 using UnityEngine;
 
-namespace Fps
+namespace Fps.Respawning
 {
     public class RespawnHandler : MonoBehaviour
     {
@@ -36,7 +37,7 @@ namespace Fps
             health.SendUpdate(healthUpdate);
 
             // Move to a spawn point (position and rotation)
-            var (spawnPosition, spawnYaw, spawnPitch) = SpawnPoints.GetRandomSpawnPoint();
+            var (spawnPosition, spawnYaw, spawnPitch) = Respawning.SpawnPoints.GetRandomSpawnPoint();
             var newLatest = new ServerResponse
             {
                 Position = spawnPosition.ToVector3Int(),

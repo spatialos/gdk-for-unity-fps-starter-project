@@ -1,8 +1,9 @@
 ﻿using System;
+using Fps.Config;
 using Improbable.Gdk.Subscriptions;
 using UnityEngine;
 
-namespace Fps
+namespace Fps.HealthPickup
 {
     [WorkerType(WorkerUtils.UnityClient)]
     public class HealthPickupMovement : MonoBehaviour

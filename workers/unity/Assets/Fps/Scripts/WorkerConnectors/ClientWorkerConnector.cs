@@ -1,17 +1,15 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using Fps.Connection;
+using Fps.Config;
+using Fps.Session;
+using Fps.WorkerConnectors;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.PlayerLifecycle;
-using Improbable.Worker.CInterop;
-using Improbable.Worker.CInterop.Alpha;
 using UnityEngine;
 
-namespace Fps
+namespace Fps.WorkerConnectors
 {
     public class ClientWorkerConnector : WorkerConnectorBase
     {

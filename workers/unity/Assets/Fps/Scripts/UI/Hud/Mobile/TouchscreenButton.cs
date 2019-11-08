@@ -2,176 +2,179 @@
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-[SelectionBase]
-public class TouchscreenButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
+namespace Fps.UI
 {
-    [Tooltip("How long after pressing the button will register another press")]
-    public float CooldownTime;
-
-    [Tooltip("Whether a click dragged out of the button area ends the press or not")]
-    public bool RestrictPressToButtonArea;
-
-    [Tooltip("The hitbox used to detect if click is dragged out of the button area")]
-    public Graphic Hitbox;
-
-    public bool Togglable;
-
-    public bool IsPressed { get; private set; }
-
-    public delegate void ButtonEvent();
-
-    public ButtonEvent OnButtonDown;
-    public ButtonEvent OnButtonUp;
-    public ButtonEvent OnButtonDrag;
-
-    private float lastPressedTime;
-
-    private TouchscreenButtonAnimator[] animators;
-
-    private void OnValidate()
+    [SelectionBase]
+    public class TouchscreenButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
     {
-        CooldownTime = Mathf.Max(0, CooldownTime);
-        OnValidateCheckHitbox();
-    }
+        [Tooltip("How long after pressing the button will register another press")]
+        public float CooldownTime;
 
-    private void OnValidateCheckHitbox()
-    {
-        if (Hitbox != null)
+        [Tooltip("Whether a click dragged out of the button area ends the press or not")]
+        public bool RestrictPressToButtonArea;
+
+        [Tooltip("The hitbox used to detect if click is dragged out of the button area")]
+        public Graphic Hitbox;
+
+        public bool Togglable;
+
+        public bool IsPressed { get; private set; }
+
+        public delegate void ButtonEvent();
+
+        public ButtonEvent OnButtonDown;
+        public ButtonEvent OnButtonUp;
+        public ButtonEvent OnButtonDrag;
+
+        private float lastPressedTime;
+
+        private TouchscreenButtonAnimator[] animators;
+
+        private void OnValidate()
         {
-            return;
+            CooldownTime = Mathf.Max(0, CooldownTime);
+            OnValidateCheckHitbox();
         }
 
-        var allGraphics = GetComponentsInChildren<Graphic>();
-        foreach (var graphic in allGraphics)
+        private void OnValidateCheckHitbox()
         {
-            if (!graphic.raycastTarget)
+            if (Hitbox != null)
             {
-                continue;
+                return;
             }
 
-            Hitbox = graphic;
-            Debug.LogWarning(
-                $"Automatically located and added Hitbox reference to button {gameObject.name}.\n" +
-                $"You may want to assign your own!\n");
-            break;
+            var allGraphics = GetComponentsInChildren<Graphic>();
+            foreach (var graphic in allGraphics)
+            {
+                if (!graphic.raycastTarget)
+                {
+                    continue;
+                }
+
+                Hitbox = graphic;
+                Debug.LogWarning(
+                    $"Automatically located and added Hitbox reference to button {gameObject.name}.\n" +
+                    $"You may want to assign your own!\n");
+                break;
+            }
+
+            Debug.LogWarning($"No hitbox found for button {gameObject.name}!\n");
         }
 
-        Debug.LogWarning($"No hitbox found for button {gameObject.name}!\n");
-    }
-
-    private void Awake()
-    {
-        animators = GetComponentsInChildren<TouchscreenButtonAnimator>();
-    }
-
-    // Presently it is assumed the player is dead if the UI is disabled, so reset everything
-    private void OnDisable()
-    {
-        Release();
-    }
-
-    private void Start()
-    {
-        foreach (var anim in animators)
+        private void Awake()
         {
-            anim.PlayAnimation(IsPressed
-                ? TouchscreenButtonAnimator.AnimType.Pressed
-                : TouchscreenButtonAnimator.AnimType.Idle);
-        }
-    }
-
-    public void OnPointerDown(PointerEventData data)
-    {
-        if (Time.time - lastPressedTime < CooldownTime)
-        {
-            return;
+            animators = GetComponentsInChildren<TouchscreenButtonAnimator>();
         }
 
-        if (Togglable)
-        {
-            Toggle();
-        }
-        else
-        {
-            Press();
-        }
-    }
-
-    public void OnPointerUp(PointerEventData eventData)
-    {
-        if (!IsPressed || Togglable)
-        {
-            return;
-        }
-
-        Release();
-    }
-
-    private void Toggle()
-    {
-        if (IsPressed)
+        // Presently it is assumed the player is dead if the UI is disabled, so reset everything
+        private void OnDisable()
         {
             Release();
         }
-        else
-        {
-            Press();
-        }
-    }
 
-    private void Press()
-    {
-        if (IsPressed)
+        private void Start()
         {
-            return;
+            foreach (var anim in animators)
+            {
+                anim.PlayAnimation(IsPressed
+                    ? TouchscreenButtonAnimator.AnimType.Pressed
+                    : TouchscreenButtonAnimator.AnimType.Idle);
+            }
         }
 
-        IsPressed = true;
-        foreach (var anim in animators)
+        public void OnPointerDown(PointerEventData data)
         {
-            anim.PlayAnimation(TouchscreenButtonAnimator.AnimType.OnDown);
-            anim.QueueAnimation(TouchscreenButtonAnimator.AnimType.Pressed);
+            if (Time.time - lastPressedTime < CooldownTime)
+            {
+                return;
+            }
+
+            if (Togglable)
+            {
+                Toggle();
+            }
+            else
+            {
+                Press();
+            }
         }
 
-        lastPressedTime = Time.time;
-        OnButtonDown?.Invoke();
-    }
-
-    private void Release()
-    {
-        if (!IsPressed)
+        public void OnPointerUp(PointerEventData eventData)
         {
-            return;
+            if (!IsPressed || Togglable)
+            {
+                return;
+            }
+
+            Release();
         }
 
-        IsPressed = false;
-        foreach (var anim in animators)
+        private void Toggle()
         {
-            anim.PlayAnimation(TouchscreenButtonAnimator.AnimType.OnUp);
-            anim.QueueAnimation(TouchscreenButtonAnimator.AnimType.Idle);
-        }
-
-        OnButtonUp?.Invoke();
-    }
-
-    public void OnDrag(PointerEventData eventData)
-    {
-        if (!IsPressed || Togglable)
-        {
-            return;
-        }
-
-        if (RestrictPressToButtonArea)
-        {
-            var relativeCursorPoint = Hitbox.rectTransform.InverseTransformPoint(eventData.position);
-            if (!Hitbox.rectTransform.rect.Contains(relativeCursorPoint))
+            if (IsPressed)
             {
                 Release();
             }
-
-            return;
+            else
+            {
+                Press();
+            }
         }
 
-        OnButtonDrag?.Invoke();
+        private void Press()
+        {
+            if (IsPressed)
+            {
+                return;
+            }
+
+            IsPressed = true;
+            foreach (var anim in animators)
+            {
+                anim.PlayAnimation(TouchscreenButtonAnimator.AnimType.OnDown);
+                anim.QueueAnimation(TouchscreenButtonAnimator.AnimType.Pressed);
+            }
+
+            lastPressedTime = Time.time;
+            OnButtonDown?.Invoke();
+        }
+
+        private void Release()
+        {
+            if (!IsPressed)
+            {
+                return;
+            }
+
+            IsPressed = false;
+            foreach (var anim in animators)
+            {
+                anim.PlayAnimation(TouchscreenButtonAnimator.AnimType.OnUp);
+                anim.QueueAnimation(TouchscreenButtonAnimator.AnimType.Idle);
+            }
+
+            OnButtonUp?.Invoke();
+        }
+
+        public void OnDrag(PointerEventData eventData)
+        {
+            if (!IsPressed || Togglable)
+            {
+                return;
+            }
+
+            if (RestrictPressToButtonArea)
+            {
+                var relativeCursorPoint = Hitbox.rectTransform.InverseTransformPoint(eventData.position);
+                if (!Hitbox.rectTransform.rect.Contains(relativeCursorPoint))
+                {
+                    Release();
+                }
+
+                return;
+            }
+
+            OnButtonDrag?.Invoke();
+        }
     }
 }

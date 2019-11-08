@@ -1,4 +1,6 @@
-namespace Fps
+using Fps.UI;
+
+namespace Fps.StateMachine
 {
     public class DefaultInitState : DefaultState
     {

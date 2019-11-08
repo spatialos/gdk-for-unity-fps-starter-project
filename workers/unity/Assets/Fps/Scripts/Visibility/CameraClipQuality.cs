@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using Fps.WorldTiles;
+using UnityEngine;
 
-namespace Fps
+namespace Fps.Visibility
 {
     [RequireComponent(typeof(Camera))]
     public class CameraClipQuality : MonoBehaviour

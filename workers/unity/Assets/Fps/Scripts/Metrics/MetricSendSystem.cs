@@ -1,10 +1,9 @@
 using System;
 using Improbable.Gdk.Core;
-using Improbable.Worker.CInterop;
 using Unity.Entities;
 using UnityEngine;
 
-namespace Fps
+namespace Fps.Metrics
 {
     public class MetricSendSystem : ComponentSystem
     {
@@ -26,7 +25,7 @@ namespace Fps
         // 0 <= smoothing < 1
         private const double smoothing = 0;
 
-        private static readonly Metrics WorkerMetrics = new Metrics();
+        private static readonly Improbable.Worker.CInterop.Metrics WorkerMetrics = new Improbable.Worker.CInterop.Metrics();
 
         protected override void OnCreate()
         {

@@ -1,7 +1,7 @@
 using Improbable.Gdk.Core;
 using UnityEngine;
 
-namespace Fps.Connection
+namespace Fps.WorkerConnectors
 {
     public class SessionConnectionFlowInitializer : IConnectionFlowInitializer<LocatorFlow>
     {

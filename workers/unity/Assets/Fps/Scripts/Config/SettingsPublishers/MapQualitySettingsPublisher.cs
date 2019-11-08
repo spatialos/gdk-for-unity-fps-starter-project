@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using Fps.WorldTiles;
+using UnityEngine;
 
-namespace Fps
+namespace Fps.Config
 {
     public class MapQualitySettingsPublisher : MonoBehaviour, ISettingsPublisher
     {

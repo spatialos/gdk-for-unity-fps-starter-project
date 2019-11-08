@@ -1,29 +1,32 @@
-﻿using Fps;
+﻿using Fps.WorkerConnectors;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.Subscriptions;
 using UnityEngine;
 
-public class SimulatedPlayerProxyManager : MonoBehaviour
+namespace Fps.SimulatedPlayer
 {
-    private EntityId entityId;
-    private SimulatedPlayerCoordinatorWorkerConnector coordinator;
-
-    private void Start()
+    public class SimulatedPlayerProxyManager : MonoBehaviour
     {
-        coordinator = FindObjectOfType<SimulatedPlayerCoordinatorWorkerConnector>();
-        if (coordinator != null)
+        private EntityId entityId;
+        private SimulatedPlayerCoordinatorWorkerConnector coordinator;
+
+        private void Start()
         {
-            var spatial = GetComponent<LinkedEntityComponent>();
-            entityId = spatial.EntityId;
-            coordinator.RegisterProxyPrefabForEntity(entityId, gameObject);
+            coordinator = FindObjectOfType<SimulatedPlayerCoordinatorWorkerConnector>();
+            if (coordinator != null)
+            {
+                var spatial = GetComponent<LinkedEntityComponent>();
+                entityId = spatial.EntityId;
+                coordinator.RegisterProxyPrefabForEntity(entityId, gameObject);
+            }
         }
-    }
 
-    private void OnDestroy()
-    {
-        if (coordinator != null)
+        private void OnDestroy()
         {
-            coordinator.UnregisterProxyPrefabForEntity(entityId, gameObject);
+            if (coordinator != null)
+            {
+                coordinator.UnregisterProxyPrefabForEntity(entityId, gameObject);
+            }
         }
     }
 }

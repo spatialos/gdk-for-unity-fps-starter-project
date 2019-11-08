@@ -1,12 +1,11 @@
 using System;
 using System.Collections;
 using System.Threading.Tasks;
+using Fps.WorldTiles;
 using Improbable.Gdk.Core;
-using Improbable.Gdk.Subscriptions;
-using Improbable.Worker.CInterop;
 using UnityEngine;
 
-namespace Fps
+namespace Fps.WorkerConnectors
 {
     public abstract class WorkerConnectorBase : WorkerConnector
     {

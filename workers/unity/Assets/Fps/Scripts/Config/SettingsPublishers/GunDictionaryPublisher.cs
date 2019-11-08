@@ -1,7 +1,7 @@
 ﻿using Fps.Guns;
 using UnityEngine;
 
-namespace Fps
+namespace Fps.Config
 {
     public class GunDictionaryPublisher : MonoBehaviour, ISettingsPublisher
     {

@@ -1,3 +1,4 @@
+using Fps.SchemaExtensions;
 using Improbable;
 using Improbable.Gdk.Subscriptions;
 using UnityEngine;

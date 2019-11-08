@@ -1,7 +1,9 @@
 using System;
+using Fps.StateMachine;
+using Fps.UI;
 using UnityEngine;
 
-namespace Fps
+namespace Fps.StateMachine
 {
     public class ConnectionStateMachine : MonoBehaviour
     {

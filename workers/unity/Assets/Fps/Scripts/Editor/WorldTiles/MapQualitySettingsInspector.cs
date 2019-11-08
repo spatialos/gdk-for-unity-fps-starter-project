@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using Fps.WorldTiles;
 using UnityEditor;
 using UnityEngine;
 
-namespace Fps
+namespace Fps.Editor
 {
     [CustomEditor(typeof(MapQualitySettings))]
     public class MapQualitySettingsInspector : UnityEditor.Editor

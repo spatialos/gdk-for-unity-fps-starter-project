@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Fps.Movement;
+using Fps.SchemaExtensions;
 using Improbable;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectCreation;
@@ -8,7 +10,7 @@ using Improbable.Gdk.Subscriptions;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Fps
+namespace Fps.Config
 {
     public class AdvancedEntityPipeline : IEntityGameObjectCreator
     {

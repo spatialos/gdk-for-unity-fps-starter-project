@@ -1,7 +1,8 @@
-﻿using UnityEngine;
+﻿using Fps.UI;
+using UnityEngine;
 using UnityEngine.UI;
 
-namespace Fps
+namespace Fps.UI
 {
     public class InGameScreenManager : MonoBehaviour
     {

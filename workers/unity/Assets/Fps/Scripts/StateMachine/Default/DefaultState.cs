@@ -1,6 +1,7 @@
+using Fps.UI;
 using UnityEngine;
 
-namespace Fps
+namespace Fps.StateMachine
 {
     public abstract class DefaultState : State
     {

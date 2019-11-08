@@ -1,5 +1,5 @@
 using System;
-using Fps.Connection;
+using Fps.WorkerConnectors;
 using Improbable.Gdk.TestUtils.Editor;
 using Improbable.Gdk.Tools;
 using Improbable.Worker.CInterop;

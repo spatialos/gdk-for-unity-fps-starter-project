@@ -1,8 +1,9 @@
 using System.Collections.Generic;
-using Improbable.Worker.CInterop.Alpha;
+using Fps.WorkerConnectors;
 using Improbable.Gdk.Session;
+using Improbable.Worker.CInterop.Alpha;
 
-namespace Fps
+namespace Fps.StateMachine
 {
     [System.Serializable]
     public class Blackboard

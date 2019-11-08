@@ -1,12 +1,12 @@
 using System.Text;
 using System.Threading.Tasks;
-using Fps.Connection;
+using Fps.Config;
+using Fps.WorkerConnectors;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.PlayerLifecycle;
-using Improbable.Worker.CInterop;
 
-namespace Fps
+namespace Fps.WorkerConnectors
 {
     public class SimulatedPlayerWorkerConnector : WorkerConnector
     {

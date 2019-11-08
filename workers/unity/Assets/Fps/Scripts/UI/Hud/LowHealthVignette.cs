@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 
-namespace Fps
+namespace Fps.UI
 {
     [Serializable]
     [PostProcess(typeof(LowHealthVignetteProcessor), PostProcessEvent.AfterStack, "FPS/Low Health Vignette")]

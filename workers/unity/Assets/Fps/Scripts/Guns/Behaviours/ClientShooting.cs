@@ -1,3 +1,5 @@
+using Fps.Guns;
+using Fps.SchemaExtensions;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.Subscriptions;
 using UnityEngine;

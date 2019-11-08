@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Fps.Config;
+using Fps.Metrics;
+using Fps.WorldTiles;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.Subscriptions;
 using Improbable.Worker.CInterop;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Fps
+namespace Fps.WorkerConnectors
 {
     public class SimulatedPlayerCoordinatorWorkerConnector : WorkerConnectorBase
     {

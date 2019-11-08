@@ -1,6 +1,7 @@
 using System.Linq;
+using Fps.UI;
 
-namespace Fps
+namespace Fps.StateMachine
 {
     public class PrepareDeploymentsListState : SessionState
     {

@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Fps.Guns;
-using Fps.Ragdoll;
 using UnityEngine;
 
-namespace Fps
+namespace Fps.Ragdoll
 {
     [RequireComponent(typeof(PoolableRagdoll), typeof(GunSocket))]
     public class RagdollDropGun : MonoBehaviour

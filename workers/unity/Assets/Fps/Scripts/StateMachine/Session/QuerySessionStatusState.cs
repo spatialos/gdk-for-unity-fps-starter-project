@@ -1,10 +1,11 @@
 using System.Linq;
+using Fps.UI;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.Core.Commands;
 using Improbable.Gdk.Session;
 using Improbable.Worker.CInterop.Query;
 
-namespace Fps
+namespace Fps.StateMachine
 {
     public class QuerySessionStatusState : SessionState
     {
@@ -24,7 +25,7 @@ namespace Fps
             {
                 EntityQuery = new EntityQuery
                 {
-                    Constraint = new ComponentConstraint(Session.ComponentId),
+                    Constraint = new ComponentConstraint(Improbable.Gdk.Session.Session.ComponentId),
                     ResultType = new SnapshotResultType()
                 }
             };
@@ -50,7 +51,7 @@ namespace Fps
             if (messages.Count > 0)
             {
                 var message = messages[0];
-                var sessionSnapshot = message.Result.First().Value.GetComponentSnapshot<Session.Snapshot>();
+                var sessionSnapshot = message.Result.First().Value.GetComponentSnapshot<Improbable.Gdk.Session.Session.Snapshot>();
                 return sessionSnapshot.Value.Status;
             }
 

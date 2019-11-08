@@ -1,5 +1,5 @@
-﻿using Improbable.Gdk.Subscriptions;
-using Fps.ObjectPooling;
+﻿using Fps.ObjectPooling;
+using Improbable.Gdk.Subscriptions;
 using UnityEngine;
 
 namespace Fps.Ragdoll

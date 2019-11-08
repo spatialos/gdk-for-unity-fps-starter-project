@@ -1,3 +1,5 @@
+using Fps.Movement;
+using Fps.SchemaExtensions;
 using Improbable.Gdk.Subscriptions;
 using Improbable.Worker.CInterop;
 using UnityEngine;

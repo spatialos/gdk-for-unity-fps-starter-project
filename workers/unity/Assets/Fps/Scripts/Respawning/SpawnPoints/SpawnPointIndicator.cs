@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Fps
+namespace Fps.Respawning
 {
     public class SpawnPointIndicator : MonoBehaviour
     {

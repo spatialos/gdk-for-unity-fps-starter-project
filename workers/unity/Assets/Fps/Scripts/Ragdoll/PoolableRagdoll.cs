@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Fps.ObjectPooling;
+using Fps.SchemaExtensions;
 using UnityEngine;
 
 namespace Fps.Ragdoll
