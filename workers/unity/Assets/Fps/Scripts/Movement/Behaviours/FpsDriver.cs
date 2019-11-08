@@ -4,6 +4,7 @@ using Improbable.Gdk.Core;
 using Improbable.Gdk.Subscriptions;
 using Fps.Guns;
 using Fps.Movement;
+using Fps.Scripts.Animation;
 using UnityEngine;
 
 namespace Fps
