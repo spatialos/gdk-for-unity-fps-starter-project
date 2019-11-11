@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## `0.3.0` - 2019-11-11
+
 ### Breaking Changes
 
 - Restructured the project's layout. [#239](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/239)
@@ -11,6 +13,7 @@
 
 ### Changed
 
+- Upgraded to GDK for Unity version `0.3.0`
 - Changed the default client and simulated player network connection types to Modular UDP with compression enabled. [#238](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/238)
 - Changed the default `UnityGameLogic` and `SimulatedPlayerCoordinator` network connection types to TCP. [#238](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/238)
 
