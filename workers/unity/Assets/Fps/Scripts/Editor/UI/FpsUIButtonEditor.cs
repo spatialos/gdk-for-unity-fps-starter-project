@@ -1,8 +1,9 @@
+using Fps.UI;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Fps
+namespace Fps.Editor
 {
     [CustomEditor(typeof(FpsUIButton))]
     public class FpsUIButtonEditor : UnityEditor.UI.ButtonEditor

@@ -1,10 +1,11 @@
 using System.IO;
+using Fps.Config;
 using Improbable;
 using Improbable.Gdk.Core;
 using UnityEditor;
 using UnityEngine;
 
-namespace Fps
+namespace Fps.Editor
 {
     public class SnapshotMenu : MonoBehaviour
     {

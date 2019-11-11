@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
+using Fps.UI;
 using UnityEngine;
 
-namespace Fps
+namespace Fps.UI
 {
     public class ResultsScreenManager : MonoBehaviour
     {

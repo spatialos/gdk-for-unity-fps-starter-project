@@ -1,15 +1,15 @@
 using System.Text;
+using Fps.Guns;
+using Fps.Health;
+using Fps.Respawning;
+using Fps.SchemaExtensions;
 using Improbable;
 using Improbable.Gdk.Core;
-using Improbable.Gdk.Guns;
-using Improbable.Gdk.Health;
-using Improbable.Gdk.Movement;
 using Improbable.Gdk.PlayerLifecycle;
 using Improbable.Gdk.QueryBasedInterest;
 using Improbable.Gdk.Session;
-using Improbable.Gdk.StandardTypes;
 
-namespace Fps
+namespace Fps.Config
 {
     public static class FpsEntityTemplates
     {
@@ -24,7 +24,7 @@ namespace Fps
             template.AddComponent(position, WorkerUtils.UnityGameLogic);
             template.AddComponent(metadata, WorkerUtils.UnityGameLogic);
             template.AddComponent(new Persistence.Snapshot(), WorkerUtils.UnityGameLogic);
-            template.AddComponent(new Session.Snapshot(Status.LOBBY), WorkerUtils.UnityGameLogic);
+            template.AddComponent(new Improbable.Gdk.Session.Session.Snapshot(Status.LOBBY), WorkerUtils.UnityGameLogic);
             template.AddComponent(new Deployment.Snapshot(), WorkerUtils.DeploymentManager);
             template.AddComponent(new Timer.Snapshot(0, sessionTimeSeconds), WorkerUtils.UnityGameLogic);
 
@@ -59,7 +59,7 @@ namespace Fps
 
             var serverResponse = new ServerResponse
             {
-                Position = spawnPosition.ToIntAbsolute()
+                Position = spawnPosition.ToVector3Int()
             };
 
             var rotationUpdate = new RotationUpdate
@@ -91,7 +91,7 @@ namespace Fps
                 RegenPauseTime = 0,
             };
 
-            var sessionQuery = InterestQuery.Query(Constraint.Component<Session.Component>());
+            var sessionQuery = InterestQuery.Query(Constraint.Component<Improbable.Gdk.Session.Session.Component>());
             var checkoutQuery = InterestQuery.Query(Constraint.RelativeCylinder(150));
 
             var interestTemplate = InterestTemplate.Create().AddQueries<ClientMovement.Component>(sessionQuery, checkoutQuery);

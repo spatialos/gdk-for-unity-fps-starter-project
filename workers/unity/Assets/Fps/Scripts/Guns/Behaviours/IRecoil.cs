@@ -1,0 +1,12 @@
+﻿using Fps.Guns;
+
+namespace Fps.Guns
+{
+    public interface IRecoil
+    {
+        void Recoil(bool aiming);
+
+        void SetRecoilSettings(GunSettings.RecoilSettings hipRecoilSettings,
+            GunSettings.RecoilSettings aimRecoilSettings);
+    }
+}

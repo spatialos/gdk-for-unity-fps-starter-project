@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Breaking Changes
+
+- Restructured the project's layout. [#239](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/239)
+    - Moved all code and schema from FPS "packages" into the project directly.
+    - Cleaned up namespaces to make it clearer that this is game-specific schema and code.
+    - Flattened and tidied up the `Assets/Fps/Scripts` folder.
+
 ### Changed
 
 - Changed the default client and simulated player network connection types to Modular UDP with compression enabled. [#238](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/238)

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Fps
+namespace Fps.UI
 {
     public class HealthBarController : MonoBehaviour
     {
