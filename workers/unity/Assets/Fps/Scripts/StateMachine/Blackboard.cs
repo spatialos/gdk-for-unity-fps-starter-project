@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Fps.WorkerConnectors;
-using Improbable.Gdk.Session;
 using Improbable.Worker.CInterop.Alpha;
 
 namespace Fps.StateMachine
@@ -9,7 +8,6 @@ namespace Fps.StateMachine
     public class Blackboard
     {
         public bool UseSessionBasedFlow;
-        public Status SessionStatus;
         public string PlayerName;
         public string DevAuthToken;
         public string PlayerIdentityToken;

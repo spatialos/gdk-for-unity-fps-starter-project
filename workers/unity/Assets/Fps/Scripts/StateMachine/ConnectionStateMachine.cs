@@ -1,5 +1,4 @@
 using System;
-using Fps.StateMachine;
 using Fps.UI;
 using UnityEngine;
 
@@ -38,14 +37,7 @@ namespace Fps.StateMachine
 
         private void Start()
         {
-            if (Blackboard.UseSessionBasedFlow)
-            {
-                StartState = new SessionInitState(uiManager, this);
-            }
-            else
-            {
-                StartState = new DefaultInitState(uiManager, this);
-            }
+            StartState = new DefaultInitState(uiManager, this);
 
             currentState = StartState;
             currentState.StartState();

@@ -15,29 +15,17 @@ namespace Fps.Editor
         private static readonly string CloudSnapshotPath =
             Path.Combine(Application.dataPath, "../../../snapshots/cloud.snapshot");
 
-        private static readonly string SessionSnapshotPath =
-            Path.Combine(Application.dataPath, "../../../snapshots/session.snapshot");
-
         [MenuItem("SpatialOS/Generate FPS Snapshot")]
         private static void GenerateFpsSnapshot()
         {
             SaveSnapshot(DefaultSnapshotPath, GenerateDefaultSnapshot());
             SaveSnapshot(CloudSnapshotPath, GenerateDefaultSnapshot());
-            SaveSnapshot(SessionSnapshotPath, GenerateSessionSnapshot());
         }
 
         private static Snapshot GenerateDefaultSnapshot()
         {
             var snapshot = new Snapshot();
             snapshot.AddEntity(FpsEntityTemplates.Spawner(Coordinates.Zero));
-            return snapshot;
-        }
-
-        private static Snapshot GenerateSessionSnapshot()
-        {
-            var snapshot = new Snapshot();
-            snapshot.AddEntity(FpsEntityTemplates.Spawner(Coordinates.Zero));
-            snapshot.AddEntity(FpsEntityTemplates.DeploymentState());
             return snapshot;
         }
 
