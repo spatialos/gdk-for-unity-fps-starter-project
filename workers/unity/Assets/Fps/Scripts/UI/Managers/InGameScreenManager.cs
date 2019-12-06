@@ -1,5 +1,4 @@
-﻿using Fps.UI;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace Fps.UI
@@ -10,7 +9,6 @@ namespace Fps.UI
         public GameObject Reticle;
         public GameObject Hud;
         public GameObject EscapeScreen;
-        public GameObject Timer;
         public Button QuitButton;
 
         public bool InEscapeMenu { private set; get; }
@@ -37,11 +35,6 @@ namespace Fps.UI
             if (EscapeScreen == null)
             {
                 throw new MissingReferenceException("Missing reference to the escape screen.");
-            }
-
-            if (Timer == null || Timer.GetComponent<GameUITimer>() == null)
-            {
-                throw new MissingReferenceException("Missing reference to the timer.");
             }
 
             if (QuitButton == null)

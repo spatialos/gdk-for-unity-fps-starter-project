@@ -12,7 +12,6 @@ namespace Fps.StateMachine
         {
             Blackboard.ClientConnector.Worker.OnDisconnect += WorkerOnDisconnect;
             Blackboard.ClientConnector.OnLostPlayerEntity += LostPlayerEntity;
-            Manager.InGameManager.Timer.SetActive(false);
             Manager.ShowGameView();
         }
 
