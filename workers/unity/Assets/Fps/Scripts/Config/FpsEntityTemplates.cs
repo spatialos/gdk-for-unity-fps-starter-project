@@ -1,4 +1,3 @@
-using System.Text;
 using Fps.Guns;
 using Fps.Health;
 using Fps.Respawning;
@@ -6,7 +5,6 @@ using Fps.SchemaExtensions;
 using Improbable;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.PlayerLifecycle;
-using Improbable.Gdk.QueryBasedInterest;
 
 namespace Fps.Config
 {
@@ -69,11 +67,6 @@ namespace Fps.Config
                 RegenPauseTime = 0,
             };
 
-            var checkoutQuery = InterestQuery.Query(Constraint.RelativeCylinder(150));
-
-            var interestTemplate = InterestTemplate.Create().AddQueries<ClientMovement.Component>(checkoutQuery);
-            var interestComponent = interestTemplate.ToSnapshot();
-
             var template = new EntityTemplate();
             template.AddComponent(pos, WorkerUtils.UnityGameLogic);
             template.AddComponent(new Metadata.Snapshot { EntityType = "Player" }, WorkerUtils.UnityGameLogic);
@@ -85,7 +78,6 @@ namespace Fps.Config
             template.AddComponent(gunStateComponent, client);
             template.AddComponent(healthComponent, WorkerUtils.UnityGameLogic);
             template.AddComponent(healthRegenComponent, WorkerUtils.UnityGameLogic);
-            template.AddComponent(interestComponent, WorkerUtils.UnityGameLogic);
 
             PlayerLifecycleHelper.AddPlayerLifecycleComponents(template, workerId, WorkerUtils.UnityGameLogic);
 

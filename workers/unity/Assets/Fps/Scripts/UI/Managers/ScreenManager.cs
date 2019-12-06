@@ -1,14 +1,15 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace Fps.UI
 {
     public class ScreenManager : MonoBehaviour
     {
-        [Header("Screens")] public GameObject DefaultScreen;
+        [Header("Screens")]
+        public GameObject DefaultScreen;
 
-        [Header("Buttons")] public Button QuitButton;
+        [Header("Buttons")]
+        public Button QuitButton;
         public Button DefaultConnectButton;
 
         [SerializeField] private GameObject FrontEndCamera;

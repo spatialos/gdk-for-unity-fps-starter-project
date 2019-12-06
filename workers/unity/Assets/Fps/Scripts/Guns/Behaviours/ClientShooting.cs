@@ -1,4 +1,3 @@
-using Fps.Guns;
 using Fps.SchemaExtensions;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.Subscriptions;
@@ -74,7 +73,7 @@ namespace Fps.Guns
         {
             var hitLocation = ray.origin + ray.direction * range;
             var hitSomething = false;
-            EntityId entityId = new EntityId(0);
+            var entityId = new EntityId(0);
 
             if (Physics.Raycast(ray, out var hit, range, shootingLayerMask))
             {

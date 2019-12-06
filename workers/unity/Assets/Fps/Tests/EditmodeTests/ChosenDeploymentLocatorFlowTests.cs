@@ -13,7 +13,7 @@ namespace Fps.EditmodeTests
         private const string LaunchConfigName = "default_launch.json";
 
         private SpatialdManager spatiald;
-        private Improbable.Worker.CInterop.Connection connection;
+        private Connection connection;
 
         [OneTimeSetUp]
         public void OneTimeSetup()
