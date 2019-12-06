@@ -1,12 +1,13 @@
 using System;
 using Fps.UI;
+using Fps.WorkerConnectors;
 using UnityEngine;
 
 namespace Fps.StateMachine
 {
     public class ConnectionStateMachine : MonoBehaviour
     {
-        public Blackboard Blackboard;
+        public ClientWorkerConnector ClientConnector;
         public State StartState;
 
         public GameObject ClientWorkerConnectorPrefab;

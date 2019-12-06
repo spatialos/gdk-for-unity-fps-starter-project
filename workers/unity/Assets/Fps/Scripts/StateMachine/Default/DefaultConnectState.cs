@@ -18,7 +18,7 @@ namespace Fps.StateMachine
 
         public override void Tick()
         {
-            if (Blackboard.ClientConnector == null)
+            if (Owner.ClientConnector == null)
             {
                 if (!ScreenManager.DefaultConnectButton.enabled)
                 {
@@ -34,7 +34,7 @@ namespace Fps.StateMachine
                 return;
             }
 
-            if (!Blackboard.ClientConnector.HasConnected)
+            if (!Owner.ClientConnector.HasConnected)
             {
                 return;
             }
@@ -57,8 +57,8 @@ namespace Fps.StateMachine
         {
             ScreenManager.DefaultConnectButton.enabled = false;
             var clientWorker = Object.Instantiate(Owner.ClientWorkerConnectorPrefab, Owner.transform.position, Quaternion.identity);
-            Blackboard.ClientConnector = clientWorker.GetComponent<ClientWorkerConnector>();
-            Blackboard.ClientConnector.Connect();
+            Owner.ClientConnector = clientWorker.GetComponent<ClientWorkerConnector>();
+            Owner.ClientConnector.Connect();
         }
     }
 }
