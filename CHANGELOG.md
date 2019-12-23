@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Changed
+
+- Updated the project app identifiers to `io.improbable.gdk.starterproject`. [#244](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/244)
+
 ## `0.3.2` - 2019-12-23
 
 ### Changed
