@@ -47,13 +47,6 @@ namespace Fps.WorkerConnectors
             var builder = new SpatialOSConnectionHandlerBuilder()
                 .SetConnectionParameters(connParams);
 
-            if (UseSessionFlow)
-            {
-                builder.SetConnectionFlow(new ChosenDeploymentLocatorFlow(deployment,
-                    new SessionConnectionFlowInitializer(initializer)));
-                return builder;
-            }
-
             switch (initializer.GetConnectionService())
             {
                 case ConnectionService.Receptionist:
@@ -69,7 +62,6 @@ namespace Fps.WorkerConnectors
 
             return builder;
         }
-
 
         public Option<string> GetReceptionistHostIp()
         {

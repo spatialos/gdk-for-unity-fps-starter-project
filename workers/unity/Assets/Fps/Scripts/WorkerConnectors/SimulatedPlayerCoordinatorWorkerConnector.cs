@@ -29,7 +29,6 @@ namespace Fps.WorkerConnectors
 
         public int MaxSimulatedPlayerCount = 1;
         public int SimulatedPlayerCreationInterval = 5;
-        public bool UseSessionFlow;
 
         private readonly Dictionary<EntityId, List<GameObject>> proxies = new Dictionary<EntityId, List<GameObject>>();
         private readonly List<EntityId> localSimulatedPlayers = new List<EntityId>();
@@ -100,27 +99,9 @@ namespace Fps.WorkerConnectors
 
             try
             {
-                // If we use the session flow. We are connecting via the receptionist, but we want to use worker flags
-                // to change the parameters.
-                if (UseSessionFlow)
-                {
-                    await WaitForWorkerFlags(flagClientCount, flagCreationInterval);
-
-                    int.TryParse(Worker.GetWorkerFlag(flagCreationInterval), out var originalInterval);
-                    int.TryParse(Worker.GetWorkerFlag(flagClientCount), out var originalCount);
-
-                    using (var workerFlagTracker =
-                        new WorkerFlagTracker(Worker.World.GetExistingSystem<WorkerFlagCallbackSystem>()))
-                    {
-                        await Monitor(originalCount, originalInterval,
-                            connector => connector.ConnectSimulatedPlayer(),
-                            (ref int count, ref int interval) =>
-                                MonitorWorkerFlags(workerFlagTracker, ref count, ref interval));
-                    }
-                }
                 // If we connect via dev auth. We are connecting via the Alpha Locator & we want to use worker flags
                 // to change the parameters..
-                else if (connectPlayersWithDevAuth)
+                if (connectPlayersWithDevAuth)
                 {
                     await WaitForWorkerFlags(flagDevAuthTokenId, flagTargetDeployment, flagClientCount,
                         flagCreationInterval);
@@ -142,7 +123,7 @@ namespace Fps.WorkerConnectors
                                 MonitorWorkerFlags(workerFlagTracker, ref count, ref interval));
                     }
                 }
-                // If we are in neither. We are in the editor or standalone worker on a local deployment.
+                // If not using dev auth flow, we are in the editor or standalone worker on a local deployment.
                 // Connect via receptionist & use prefabs to change the parameters.
                 else
                 {

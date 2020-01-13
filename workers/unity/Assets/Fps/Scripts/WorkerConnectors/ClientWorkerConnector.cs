@@ -20,7 +20,6 @@ namespace Fps.WorkerConnectors
         private AdvancedEntityPipeline entityPipeline;
 
         public bool HasConnected => Worker != null;
-        protected bool UseSessionFlow => !string.IsNullOrEmpty(deployment);
 
         public event Action OnLostPlayerEntity;
 
@@ -58,13 +57,7 @@ namespace Fps.WorkerConnectors
             var connectionParams = CreateConnectionParameters(WorkerUtils.UnityClient);
             var workerId = CreateNewWorkerId(WorkerUtils.UnityClient);
 
-            if (UseSessionFlow)
-            {
-                connectionParams.Network.UseExternalIp = true;
-                connectionFlow = new ChosenDeploymentLocatorFlow(deployment,
-                    new SessionConnectionFlowInitializer(new CommandLineConnectionFlowInitializer()));
-            }
-            else if (Application.isEditor)
+            if (Application.isEditor)
             {
                 connectionFlow = new ReceptionistFlow(workerId);
             }
