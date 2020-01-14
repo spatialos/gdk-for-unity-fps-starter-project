@@ -1,5 +1,4 @@
-﻿using Fps.Config;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Fps.Config
 {

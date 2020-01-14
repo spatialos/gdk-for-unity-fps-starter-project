@@ -1,12 +1,11 @@
-﻿using Fps.Guns;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Rendering;
 
 namespace Fps.Guns
 {
     public class GunSocket : MonoBehaviour, IRequiresGun
     {
-        [SerializeField] private UnityEngine.Transform gunSocket;
+        [SerializeField] private Transform gunSocket;
         [SerializeField] private bool gunCollidersEnabled;
         [SerializeField] private ShadowCastingMode shadowMode;
 

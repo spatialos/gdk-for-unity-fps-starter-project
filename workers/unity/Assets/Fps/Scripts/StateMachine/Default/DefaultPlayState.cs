@@ -10,16 +10,15 @@ namespace Fps.StateMachine
 
         public override void StartState()
         {
-            Blackboard.ClientConnector.Worker.OnDisconnect += WorkerOnDisconnect;
-            Blackboard.ClientConnector.OnLostPlayerEntity += LostPlayerEntity;
-            Manager.InGameManager.Timer.SetActive(false);
+            Owner.ClientConnector.Worker.OnDisconnect += WorkerOnDisconnect;
+            Owner.ClientConnector.OnLostPlayerEntity += LostPlayerEntity;
             Manager.ShowGameView();
         }
 
         public override void ExitState()
         {
-            Blackboard.ClientConnector.Worker.OnDisconnect -= WorkerOnDisconnect;
-            Blackboard.ClientConnector.OnLostPlayerEntity -= LostPlayerEntity;
+            Owner.ClientConnector.Worker.OnDisconnect -= WorkerOnDisconnect;
+            Owner.ClientConnector.OnLostPlayerEntity -= LostPlayerEntity;
         }
 
         private void WorkerOnDisconnect(string reason)

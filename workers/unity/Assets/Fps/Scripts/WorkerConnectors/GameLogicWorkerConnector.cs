@@ -3,7 +3,6 @@ using Fps.Config;
 using Fps.Guns;
 using Fps.Health;
 using Fps.Metrics;
-using Fps.Session;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.PlayerLifecycle;
@@ -55,9 +54,6 @@ namespace Fps.WorkerConnectors
 
             // Shooting
             world.GetOrCreateSystem<ServerShootingSystem>();
-
-            // Session
-            world.GetOrCreateSystem<PlayerStateServerSystem>();
 
             // Metrics
             world.GetOrCreateSystem<MetricSendSystem>();

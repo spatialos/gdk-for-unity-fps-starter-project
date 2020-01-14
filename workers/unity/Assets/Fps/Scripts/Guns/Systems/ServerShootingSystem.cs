@@ -1,4 +1,3 @@
-using Fps.Guns;
 using Improbable.Gdk.Core;
 using Unity.Entities;
 

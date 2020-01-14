@@ -2,8 +2,6 @@ using System;
 using System.Collections;
 using System.Text;
 using Fps.Config;
-using Fps.Session;
-using Fps.WorkerConnectors;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.PlayerLifecycle;
@@ -22,7 +20,6 @@ namespace Fps.WorkerConnectors
         private AdvancedEntityPipeline entityPipeline;
 
         public bool HasConnected => Worker != null;
-        protected bool UseSessionFlow => !string.IsNullOrEmpty(deployment);
 
         public event Action OnLostPlayerEntity;
 
@@ -60,13 +57,7 @@ namespace Fps.WorkerConnectors
             var connectionParams = CreateConnectionParameters(WorkerUtils.UnityClient);
             var workerId = CreateNewWorkerId(WorkerUtils.UnityClient);
 
-            if (UseSessionFlow)
-            {
-                connectionParams.Network.UseExternalIp = true;
-                connectionFlow = new ChosenDeploymentLocatorFlow(deployment,
-                    new SessionConnectionFlowInitializer(new CommandLineConnectionFlowInitializer()));
-            }
-            else if (Application.isEditor)
+            if (Application.isEditor)
             {
                 connectionFlow = new ReceptionistFlow(workerId);
             }
@@ -105,11 +96,6 @@ namespace Fps.WorkerConnectors
 
             // Set the Worker gameObject to the ClientWorker so it can access PlayerCreater reader/writers
             GameObjectCreationHelper.EnableStandardGameObjectCreation(world, entityPipeline, gameObject);
-
-            if (UseSessionFlow)
-            {
-                world.GetOrCreateSystem<TrackPlayerSystem>();
-            }
 
             base.HandleWorkerConnectionEstablished();
         }

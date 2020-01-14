@@ -2,7 +2,6 @@
 using System.Collections;
 using Fps.Animation;
 using Fps.Guns;
-using Fps.Movement;
 using Fps.PlayerControls;
 using Fps.SchemaExtensions;
 using Fps.UI;
@@ -14,7 +13,7 @@ namespace Fps.Movement
 {
     public class FpsDriver : MonoBehaviour
     {
-        [System.Serializable]
+        [Serializable]
         private struct CameraSettings
         {
             public float PitchSpeed;

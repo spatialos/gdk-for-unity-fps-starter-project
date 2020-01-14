@@ -1,13 +1,13 @@
 using System;
-using Fps.StateMachine;
 using Fps.UI;
+using Fps.WorkerConnectors;
 using UnityEngine;
 
 namespace Fps.StateMachine
 {
     public class ConnectionStateMachine : MonoBehaviour
     {
-        public Blackboard Blackboard;
+        public ClientWorkerConnector ClientConnector;
         public State StartState;
 
         public GameObject ClientWorkerConnectorPrefab;
@@ -38,14 +38,7 @@ namespace Fps.StateMachine
 
         private void Start()
         {
-            if (Blackboard.UseSessionBasedFlow)
-            {
-                StartState = new SessionInitState(uiManager, this);
-            }
-            else
-            {
-                StartState = new DefaultInitState(uiManager, this);
-            }
+            StartState = new DefaultInitState(uiManager, this);
 
             currentState = StartState;
             currentState.StartState();

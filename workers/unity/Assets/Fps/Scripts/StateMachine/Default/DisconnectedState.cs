@@ -11,8 +11,8 @@ namespace Fps.StateMachine
 
         public override void StartState()
         {
-            Object.Destroy(Blackboard.ClientConnector.gameObject);
-            Blackboard.ClientConnector = null;
+            Object.Destroy(Owner.ClientConnector.gameObject);
+            Owner.ClientConnector = null;
             ScreenManager.DefaultConnectButton.enabled = true;
             ScreenManager.DefaultConnectButton.onClick.AddListener(Connect);
             Manager.ShowFrontEnd();

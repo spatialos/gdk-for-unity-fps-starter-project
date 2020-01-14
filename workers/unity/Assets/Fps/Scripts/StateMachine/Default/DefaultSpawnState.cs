@@ -15,13 +15,13 @@ namespace Fps.StateMachine
             Animator.SetTrigger("Ready");
             ScreenManager.DefaultConnectButton.onClick.AddListener(SpawnPlayer);
             ScreenManager.DefaultConnectButton.enabled = true;
-            Blackboard.ClientConnector.Worker.OnDisconnect += WorkerOnDisconnect;
+            Owner.ClientConnector.Worker.OnDisconnect += WorkerOnDisconnect;
         }
 
         public override void ExitState()
         {
             ScreenManager.DefaultConnectButton.onClick.RemoveListener(SpawnPlayer);
-            Blackboard.ClientConnector.Worker.OnDisconnect -= WorkerOnDisconnect;
+            Owner.ClientConnector.Worker.OnDisconnect -= WorkerOnDisconnect;
         }
 
         private void OnPlayerResponse(PlayerCreator.CreatePlayer.ReceivedResponse response)
@@ -40,7 +40,7 @@ namespace Fps.StateMachine
         private void SpawnPlayer()
         {
             ScreenManager.DefaultConnectButton.enabled = false;
-            Blackboard.ClientConnector.SpawnPlayer("Local Player", OnPlayerResponse);
+            Owner.ClientConnector.SpawnPlayer("Local Player", OnPlayerResponse);
             Animator.SetTrigger("Connecting");
         }
 
