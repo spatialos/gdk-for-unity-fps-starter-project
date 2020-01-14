@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Breaking Changes
+
+- Removed session-based gameplay and related assets. [#242](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/242)
+
 ### Changed
 
 - Updated the project app identifiers to `io.improbable.gdk.starterproject`. [#244](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/244)
