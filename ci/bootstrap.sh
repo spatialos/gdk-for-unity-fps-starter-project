@@ -76,7 +76,7 @@ if [ "$SKIP_GDK" = false ] ; then
         git fetch --depth 20 origin "${PINNED_BRANCH}"
         git checkout "${PINNED_VERSION}"
         echo "--- Hit init :right-facing_fist::red_button:"
-        ./init.sh
+        ./init.sh $@
     popd
 fi
 
