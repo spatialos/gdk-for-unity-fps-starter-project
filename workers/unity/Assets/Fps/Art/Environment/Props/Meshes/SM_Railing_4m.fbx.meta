@@ -1,35 +1,89 @@
 fileFormatVersion: 2
 guid: f24cc58035b965a47b2d448ebc09539e
 ModelImporter:
-  serializedVersion: 23
-  fileIDToRecycleName:
-    100000: //RootNode
-    100002: _DesignerAssets_
-    100004: _StarterMap_
-    100006: Railing_4m_LOD0
-    100008: Railing_4m_LOD1
-    400000: //RootNode
-    400002: _DesignerAssets_
-    400004: _StarterMap_
-    400006: Railing_4m_LOD0
-    400008: Railing_4m_LOD1
-    2100000: mPlaceholder_Wireframe
-    2100002: lambert6
-    2300000: //RootNode
-    2300002: Railing_4m_LOD0
-    2300004: Railing_4m_LOD1
-    3300000: //RootNode
-    3300002: Railing_4m_LOD0
-    3300004: Railing_4m_LOD1
-    4300000: Railing_4m
-    4300002: Railing_4m_LOD0
-    4300004: Railing_4m_LOD1
-    4300006: SM_Railing_4m
-    6400000: //RootNode
-    6400002: Railing_4m_LOD0
-    6400004: Railing_4m_LOD1
-    20500000: //RootNode
-    2186277476908879412: ImportLogs
+  serializedVersion: 19300
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: //RootNode
+  - first:
+      1: 100002
+    second: _DesignerAssets_
+  - first:
+      1: 100004
+    second: _StarterMap_
+  - first:
+      1: 100006
+    second: Railing_4m_LOD0
+  - first:
+      1: 100008
+    second: Railing_4m_LOD1
+  - first:
+      4: 400000
+    second: //RootNode
+  - first:
+      4: 400002
+    second: _DesignerAssets_
+  - first:
+      4: 400004
+    second: _StarterMap_
+  - first:
+      4: 400006
+    second: Railing_4m_LOD0
+  - first:
+      4: 400008
+    second: Railing_4m_LOD1
+  - first:
+      21: 2100000
+    second: mPlaceholder_Wireframe
+  - first:
+      21: 2100002
+    second: lambert6
+  - first:
+      23: 2300000
+    second: //RootNode
+  - first:
+      23: 2300002
+    second: Railing_4m_LOD0
+  - first:
+      23: 2300004
+    second: Railing_4m_LOD1
+  - first:
+      33: 3300000
+    second: //RootNode
+  - first:
+      33: 3300002
+    second: Railing_4m_LOD0
+  - first:
+      33: 3300004
+    second: Railing_4m_LOD1
+  - first:
+      43: 4300000
+    second: Railing_4m
+  - first:
+      43: 4300002
+    second: Railing_4m_LOD0
+  - first:
+      43: 4300004
+    second: Railing_4m_LOD1
+  - first:
+      43: 4300006
+    second: SM_Railing_4m
+  - first:
+      64: 6400000
+    second: //RootNode
+  - first:
+      64: 6400002
+    second: Railing_4m_LOD0
+  - first:
+      64: 6400004
+    second: Railing_4m_LOD1
+  - first:
+      205: 20500000
+    second: //RootNode
+  - first:
+      41386430: 2186277476908879412
+    second: ImportLogs
   externalObjects:
   - first:
       type: UnityEngine:Material
@@ -47,7 +101,7 @@ ModelImporter:
       name: mPlaceholder_Wireframe
     second: {fileID: 2100000, guid: 78ce621fe637efe45bc4db8f445376ec, type: 2}
   materials:
-    importMaterials: 1
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -81,6 +135,8 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 1
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 0
@@ -88,27 +144,31 @@ ModelImporter:
     swapUVChannels: 0
     generateSecondaryUV: 1
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
     useFileScale: 0
-    previousCalculatedGlobalScale: 1
-    hasPreviousCalculatedGlobalScale: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 0
-  copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -118,13 +178,16 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 0
   humanoidOversampling: 1
+  avatarSetup: 0
   additionalBone: 0
   userData: 
   assetBundleName: 

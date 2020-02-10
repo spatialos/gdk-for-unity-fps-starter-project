@@ -15,6 +15,12 @@ namespace Fps.Editor
         private static readonly string CloudSnapshotPath =
             Path.Combine(Application.dataPath, "../../../snapshots/cloud.snapshot");
 
+        [MenuItem("SpatialOS/Force Update")]
+        private static void A()
+        {
+            AssetDatabase.ForceReserializeAssets();
+        }
+
         [MenuItem("SpatialOS/Generate FPS Snapshot")]
         private static void GenerateFpsSnapshot()
         {
