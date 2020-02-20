@@ -97,7 +97,9 @@ if [[ -n ${BUILDKITE:-} ]]; then
     EXTRA_ARGS="--copy"
 fi
 
-echo $PATH
+[[ "${BUILDKITE_AGENT_META_DATA_OS}" == "darwin" ]]; then
+    PATH="${PATH}:/usr/local/share/dotnet"
+fi
 
 dotnet run -p ./.shared-ci/tools/PackageSymLinker/PackageSymLinker.csproj -- \
     --packages-source-dir "${TARGET_DIRECTORY}/workers/unity/Packages" \
