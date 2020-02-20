@@ -108,7 +108,7 @@ steps:
       BUILD_ENVIRONMENT: "local"
       BUILD_TARGET_FILTER: "ios"
       SCRIPTING_BACKEND: "il2cpp"
-      TARGET_IOS_SDK: "device"
+      TARGET_IOS_SDK: "simulator"
 
   - label: ":windows: ~ build UnityClient mono"
     command: bash -c .shared-ci/scripts/build-worker.sh
