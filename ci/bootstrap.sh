@@ -97,7 +97,7 @@ if [[ -n ${BUILDKITE:-} ]]; then
     EXTRA_ARGS="--copy"
 fi
 
-[[ "${BUILDKITE_AGENT_META_DATA_OS}" == "darwin" ]]; then
+if [[ "${BUILDKITE_AGENT_META_DATA_OS}" == "darwin" ]]; then
     PATH="${PATH}:/usr/local/share/dotnet"
 fi
 
