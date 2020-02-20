@@ -97,6 +97,8 @@ if [[ -n ${BUILDKITE:-} ]]; then
     EXTRA_ARGS="--copy"
 fi
 
+echo $PATH
+
 dotnet run -p ./.shared-ci/tools/PackageSymLinker/PackageSymLinker.csproj -- \
     --packages-source-dir "${TARGET_DIRECTORY}/workers/unity/Packages" \
     --package-target-dir "$(pwd)/workers/unity/Packages" "${EXTRA_ARGS}"
