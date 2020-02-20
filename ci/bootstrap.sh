@@ -45,7 +45,9 @@ popd
 # Clone the GDK for Unity repository
 
 CLONE_URI="git@github.com:spatialos/gdk-for-unity.git"
-TARGET_DIRECTORY="$(realpath $(pwd)/../gdk-for-unity)"
+pushd ../
+    TARGET_DIRECTORY="$(pwd)/gdk-for-unity"
+popd 
 PINNED_BRANCH=$(cat ./gdk.pinned | cut -d' ' -f 1)
 PINNED_VERSION=$(cat ./gdk.pinned | cut -d' ' -f 2)
 SKIP_GDK=false
@@ -93,6 +95,10 @@ EXTRA_ARGS=""
 
 if [[ -n ${BUILDKITE:-} ]]; then
     EXTRA_ARGS="--copy"
+fi
+
+if [[ "${BUILDKITE_AGENT_META_DATA_OS}" == "darwin" ]]; then
+    PATH="${PATH}:/usr/local/share/dotnet"
 fi
 
 dotnet run -p ./.shared-ci/tools/PackageSymLinker/PackageSymLinker.csproj -- \

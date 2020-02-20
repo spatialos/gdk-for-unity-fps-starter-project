@@ -46,20 +46,34 @@ linux: &linux
       - exit_status: -1
         limit: 3
 
+macos: &macos
+  agents:
+    - "capable_of_building=gdk-for-unity"
+    - "environment=production"
+    - "permission_set=builder"
+    - "platform=macos"
+    - "queue=${DARWIN_BUILDER_QUEUE:-v4-1582049359-33db24b626f71fa8}"
+  timeout_in_minutes: 60 # TODO(ENG-548): reduce timeout once agent-cold-start is optimised.
+  retry:
+    automatic:
+        # This is designed to trap and retry failures because agent lost connection. Agent exits with -1 in this case.
+      - exit_status: -1
+        limit: 3
+
 # NOTE: step labels turn into commit-status names like {org}/{repo}/{pipeline}/{step-label}, lower-case and hyphenated.
 # These are then relied on to have stable names by other things, so once named, please beware renaming has consequences.
 
 dag: true
 
 steps:
-  - label: "test"
+  - label: ":windows: ~ test"
     id: "test"
     command: bash -c ci/test.sh
     <<: *common
     artifact_paths:
       - logs/**/*
 
-  - label: "annotate test results :pencil2:"
+  - label: ":debian: ~ annotate test results :pencil2:"
     depends_on: 
       - step: "test"
         allow_failure: true
@@ -73,7 +87,7 @@ steps:
             type: details
     <<: *linux
 
-  - label: "build :android:"
+  - label: ":windows: ~ build :android:"
     command: bash -c .shared-ci/scripts/build-worker.sh
     <<: *common
     artifact_paths:
@@ -84,9 +98,9 @@ steps:
       BUILD_TARGET_FILTER: "android"
       SCRIPTING_BACKEND: "mono"
 
-  - label: "build :ios:"
+  - label: ":darwin: ~ build :ios:"
     command: bash -c .shared-ci/scripts/build-worker.sh
-    <<: *common
+    <<: *macos
     artifact_paths:
       - logs/**/*
     env:
@@ -94,8 +108,9 @@ steps:
       BUILD_ENVIRONMENT: "local"
       BUILD_TARGET_FILTER: "ios"
       SCRIPTING_BACKEND: "il2cpp"
+      TARGET_IOS_SDK: "simulator"
 
-  - label: "build UnityClient mono"
+  - label: ":windows: ~ build UnityClient mono"
     command: bash -c .shared-ci/scripts/build-worker.sh
     <<: *common
     artifact_paths:
@@ -105,7 +120,7 @@ steps:
       BUILD_ENVIRONMENT: "cloud"
       SCRIPTING_BACKEND: "mono"
 
-  - label: "build UnityClient il2cpp"
+  - label: ":windows: ~ build UnityClient il2cpp"
     command: bash -c .shared-ci/scripts/build-worker.sh
     <<: *common
     artifact_paths:
@@ -115,7 +130,7 @@ steps:
       BUILD_ENVIRONMENT: "local"
       SCRIPTING_BACKEND: "il2cpp"
 
-  - label: "build UnityGameLogic mono"
+  - label: ":windows: ~ build UnityGameLogic mono"
     command: bash -c .shared-ci/scripts/build-worker.sh
     <<: *common
     artifact_paths:
@@ -125,7 +140,7 @@ steps:
       BUILD_ENVIRONMENT: "cloud"
       SCRIPTING_BACKEND: "mono"
 
-  - label: "build SimulatedPlayerCoordinator mono"
+  - label: ":windows: ~ build SimulatedPlayerCoordinator mono"
     command: bash -c .shared-ci/scripts/build-worker.sh
     <<: *common
     artifact_paths:
