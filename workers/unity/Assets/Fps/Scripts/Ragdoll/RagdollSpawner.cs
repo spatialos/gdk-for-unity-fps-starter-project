@@ -1,4 +1,4 @@
-﻿using Fps.ObjectPooling;
+using Fps.ObjectPooling;
 using Improbable.Gdk.Subscriptions;
 using UnityEngine;
 

@@ -31,7 +31,8 @@ namespace Fps.Guns
         [SerializeField]
         private float fullLengthShotThreshold = 50f;
 
-        [Tooltip("If false, the BarrelLerpThreshold will not be used.")] [SerializeField]
+        [Tooltip("If false, the BarrelLerpThreshold will not be used.")]
+        [SerializeField]
         private bool barrelSnap = true;
 
         private bool muzzleFlashNeedsRefresh;

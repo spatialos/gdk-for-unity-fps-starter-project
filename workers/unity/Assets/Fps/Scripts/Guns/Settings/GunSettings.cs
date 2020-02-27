@@ -18,7 +18,8 @@ namespace Fps.Guns
 
         [SerializeField] private bool isAutomatic;
 
-        [Tooltip("In 'Shots per second'. If <= 0, there will be no cooldown between shots.")] [SerializeField]
+        [Tooltip("In 'Shots per second'. If <= 0, there will be no cooldown between shots.")]
+        [SerializeField]
         private float rateOfFire;
 
         [SerializeField] [HideInInspector] private float shotCooldown;
@@ -29,16 +30,20 @@ namespace Fps.Guns
         [SerializeField] private float aimFov = 60;
         [SerializeField] private float fovChangeTime = 0.1f;
 
-        [Tooltip("Bullets fired when not aiming will have this spread in meters at 50m range.")] [SerializeField]
+        [Tooltip("Bullets fired when not aiming will have this spread in meters at 50m range.")]
+        [SerializeField]
         private float inaccuracyFromHip;
 
-        [Tooltip("Bullets fired when aiming will have this spread in meters at 50m range.")] [SerializeField]
+        [Tooltip("Bullets fired when aiming will have this spread in meters at 50m range.")]
+        [SerializeField]
         private float inaccuracyWhileAiming;
 
-        [Tooltip("Whilst aiming, override the camera's Pitch Speed with this value.")] [SerializeField]
+        [Tooltip("Whilst aiming, override the camera's Pitch Speed with this value.")]
+        [SerializeField]
         private float aimPitchSpeed = 1;
 
-        [Tooltip("Whilst aiming, override the camera's Yaw Speed with this value.")] [SerializeField]
+        [Tooltip("Whilst aiming, override the camera's Yaw Speed with this value.")]
+        [SerializeField]
         private float aimYawSpeed = 1;
 
 

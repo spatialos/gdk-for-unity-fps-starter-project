@@ -46,13 +46,16 @@ namespace Fps.Movement
     [System.Serializable]
     public struct RotationConstraints
     {
-        [Tooltip("Implement rotation on the X-axis.")] [SerializeField]
+        [Tooltip("Implement rotation on the X-axis.")]
+        [SerializeField]
         public bool XAxisRotation;
 
-        [Tooltip("Implement rotation on the Y-axis.")] [SerializeField]
+        [Tooltip("Implement rotation on the Y-axis.")]
+        [SerializeField]
         public bool YAxisRotation;
 
-        [Tooltip("Implement rotation on the Z-axis.")] [SerializeField]
+        [Tooltip("Implement rotation on the Z-axis.")]
+        [SerializeField]
         public bool ZAxisRotation;
     }
 }

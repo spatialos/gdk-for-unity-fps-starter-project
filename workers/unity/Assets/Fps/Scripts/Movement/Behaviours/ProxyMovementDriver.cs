@@ -12,7 +12,8 @@ namespace Fps.Movement
         [Require] private ClientRotationReader client;
 #pragma warning restore 649
 
-        [SerializeField] private RotationConstraints rotationConstraints = new RotationConstraints
+        [SerializeField]
+        private RotationConstraints rotationConstraints = new RotationConstraints
         {
             XAxisRotation = true,
             YAxisRotation = true,

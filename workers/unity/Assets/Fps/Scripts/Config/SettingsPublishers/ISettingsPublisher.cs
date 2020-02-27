@@ -1,4 +1,4 @@
-﻿namespace Fps.Config
+namespace Fps.Config
 {
     public interface ISettingsPublisher
     {

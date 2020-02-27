@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using Fps.SchemaExtensions;
 using Improbable;
 using Improbable.Gdk.Core;
