@@ -1,4 +1,4 @@
-﻿using Fps.WorldTiles;
+using Fps.WorldTiles;
 using UnityEngine;
 
 namespace Fps.Config

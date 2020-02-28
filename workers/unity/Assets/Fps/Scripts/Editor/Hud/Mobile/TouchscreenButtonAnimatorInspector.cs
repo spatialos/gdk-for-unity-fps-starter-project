@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Fps.UI;
 using UnityEditor;
 using UnityEngine;

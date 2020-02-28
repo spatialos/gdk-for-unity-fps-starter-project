@@ -18,7 +18,8 @@ namespace Fps.Movement
         [SerializeField] [HideInInspector] private float transformUpdateDelta;
         [SerializeField] [HideInInspector] private float rotationUpdateDelta;
 
-        [SerializeField] private MovementSettings movementSettings = new MovementSettings
+        [SerializeField]
+        private MovementSettings movementSettings = new MovementSettings
         {
             MovementSpeed = new MovementSpeedSettings
             {
@@ -35,7 +36,8 @@ namespace Fps.Movement
             InAirDamping = 1.0f
         };
 
-        [SerializeField] private RotationConstraints rotationConstraints = new RotationConstraints
+        [SerializeField]
+        private RotationConstraints rotationConstraints = new RotationConstraints
         {
             XAxisRotation = true,
             YAxisRotation = true,

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 // This class is used by MobileControls in place of a real MobileInterface until a valid ref is found
 namespace Fps.UI
