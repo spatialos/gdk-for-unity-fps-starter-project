@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## Breaking Changes
+
+- The FPS starter project now uses [query-based interest](https://docs.improbable.io/reference/14.4/shared/authority-and-interest/interest/query-based-interest-qbi) instead of [chunk-based interest](https://docs.improbable.io/reference/14.4/shared/authority-and-interest/interest/chunk-based-interest-cbi).
+
 ## `0.3.3` - 2020-02-14
 
 ### Breaking Changes
