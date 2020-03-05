@@ -88,7 +88,7 @@ namespace Fps.Config
             PlayerLifecycleHelper.AddPlayerLifecycleComponents(template, workerId, WorkerUtils.UnityGameLogic);
 
             const int serverRadius = 150;
-            var clientRadius = client.Contains(WorkerUtils.MobileClient) ? 60 : 150;
+            var clientRadius = workerId.Contains(WorkerUtils.MobileClient) ? 60 : 150;
 
             var serverQuery = InterestQuery.Query(Constraint.RelativeCylinder(serverRadius));
             var clientQuery = InterestQuery.Query(Constraint.RelativeCylinder(clientRadius));
