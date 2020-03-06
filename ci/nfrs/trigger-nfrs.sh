@@ -12,7 +12,8 @@ SHA=$(git rev-parse HEAD)
 ASSEMBLY_NAME="$(buildkite-agent meta-data get "assembly_name")"
 RUNTIME_VERSION="$(buildkite-agent meta-data get "runtime_version")"
 
-spatial project history upload "${ASSEMBLY_NAME}" "snapshots/cloud.snapshot" --project_name unity_gdk --tags regisseur
+echo "--- Uploading snapshot"
+spatial project history upload "${ASSEMBLY_NAME}" "snapshots/cloud.snapshot" --project_name unity_gdk
 
 function addTriggerStep() {
     NFR_FILE="${1}"
@@ -36,6 +37,7 @@ function addTriggerStep() {
     echo ""
 }
 
+echo "--- Triggering NFRs"
 for file in ./ci/nfrs/*.yaml; do
     addTriggerStep "${file}" | buildkite-agent pipeline upload --no-interpolation
 done
