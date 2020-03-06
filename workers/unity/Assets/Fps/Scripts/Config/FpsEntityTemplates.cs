@@ -5,6 +5,7 @@ using Fps.SchemaExtensions;
 using Improbable;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.PlayerLifecycle;
+using Improbable.Gdk.QueryBasedInterest;
 
 namespace Fps.Config
 {
@@ -20,6 +21,11 @@ namespace Fps.Config
             template.AddComponent(metadata, WorkerUtils.UnityGameLogic);
             template.AddComponent(new Persistence.Snapshot(), WorkerUtils.UnityGameLogic);
             template.AddComponent(new PlayerCreator.Snapshot(), WorkerUtils.UnityGameLogic);
+
+            var query = InterestQuery.Query(Constraint.RelativeCylinder(150));
+            var interest = InterestTemplate.Create()
+                .AddQueries<Position.Component>(query);
+            template.AddComponent(interest.ToSnapshot(), WorkerUtils.UnityGameLogic);
 
             template.SetReadAccess(WorkerUtils.UnityGameLogic);
             template.SetComponentWriteAccess(EntityAcl.ComponentId, WorkerUtils.UnityGameLogic);
@@ -80,6 +86,17 @@ namespace Fps.Config
             template.AddComponent(healthRegenComponent, WorkerUtils.UnityGameLogic);
 
             PlayerLifecycleHelper.AddPlayerLifecycleComponents(template, workerId, WorkerUtils.UnityGameLogic);
+
+            const int serverRadius = 150;
+            var clientRadius = workerId.Contains(WorkerUtils.MobileClient) ? 60 : 150;
+
+            var serverQuery = InterestQuery.Query(Constraint.RelativeCylinder(serverRadius));
+            var clientQuery = InterestQuery.Query(Constraint.RelativeCylinder(clientRadius));
+
+            var interest = InterestTemplate.Create()
+                .AddQueries<Position.Component>(serverQuery)
+                .AddQueries<ClientMovement.Component>(clientQuery);
+            template.AddComponent(interest.ToSnapshot(), WorkerUtils.UnityGameLogic);
 
             template.SetReadAccess(WorkerUtils.UnityClient, WorkerUtils.UnityGameLogic, WorkerUtils.MobileClient);
             template.SetComponentWriteAccess(EntityAcl.ComponentId, WorkerUtils.UnityGameLogic);
