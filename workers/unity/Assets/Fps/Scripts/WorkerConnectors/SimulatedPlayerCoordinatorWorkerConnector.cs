@@ -16,10 +16,10 @@ namespace Fps.WorkerConnectors
 {
     public class SimulatedPlayerCoordinatorWorkerConnector : WorkerConnectorBase
     {
-        private const string flagDevAuthTokenId = "fps_simulated_players_dev_auth_token_id";
-        private const string flagTargetDeployment = "fps_simulated_players_target_deployment";
-        private const string flagClientCount = "fps_simulated_players_per_coordinator";
-        private const string flagCreationInterval = "fps_simulated_players_creation_interval";
+        private const string FlagDevAuthTokenId = "fps_simulated_players_dev_auth_token_id";
+        private const string FlagTargetDeployment = "fps_simulated_players_target_deployment";
+        private const string FlagClientCount = "fps_simulated_players_per_coordinator";
+        private const string FlagCreationInterval = "fps_simulated_players_creation_interval";
 
         private delegate void UpdateCoordinatorParams(ref int count, ref int interval);
 
@@ -52,8 +52,26 @@ namespace Fps.WorkerConnectors
             }
             else
             {
-                // We are probably in the Editor.
+                // We are either in the Editor or running through regisseur.
                 connectPlayersWithDevAuth = false;
+            }
+
+            // Read overrides for the count & interval from the CLI.
+            if (!connectPlayersWithDevAuth)
+            {
+                var simulatedPlayerCountStr = string.Empty;
+                if (args.TryGetCommandLineValue(FlagClientCount, ref simulatedPlayerCountStr) &&
+                    int.TryParse(simulatedPlayerCountStr, out var simulatedPlayerCount))
+                {
+                    MaxSimulatedPlayerCount = simulatedPlayerCount;
+                }
+
+                var simulatedPlayerIntervalStr = string.Empty;
+                if (args.TryGetCommandLineValue(FlagClientCount, ref simulatedPlayerIntervalStr) &&
+                    int.TryParse(simulatedPlayerIntervalStr, out var simulatedPlayerInterval))
+                {
+                    SimulatedPlayerCreationInterval = simulatedPlayerInterval;
+                }
             }
 
             Application.targetFrameRate = 60;
@@ -103,14 +121,14 @@ namespace Fps.WorkerConnectors
                 // to change the parameters..
                 if (connectPlayersWithDevAuth)
                 {
-                    await WaitForWorkerFlags(flagDevAuthTokenId, flagTargetDeployment, flagClientCount,
-                        flagCreationInterval);
+                    await WaitForWorkerFlags(FlagDevAuthTokenId, FlagTargetDeployment, FlagClientCount,
+                        FlagCreationInterval);
 
-                    var simulatedPlayerDevAuthTokenId = Worker.GetWorkerFlag(flagDevAuthTokenId);
-                    var simulatedPlayerTargetDeployment = Worker.GetWorkerFlag(flagTargetDeployment);
+                    var simulatedPlayerDevAuthTokenId = Worker.GetWorkerFlag(FlagDevAuthTokenId);
+                    var simulatedPlayerTargetDeployment = Worker.GetWorkerFlag(FlagTargetDeployment);
 
-                    int.TryParse(Worker.GetWorkerFlag(flagCreationInterval), out var originalInterval);
-                    int.TryParse(Worker.GetWorkerFlag(flagClientCount), out var originalCount);
+                    int.TryParse(Worker.GetWorkerFlag(FlagCreationInterval), out var originalInterval);
+                    int.TryParse(Worker.GetWorkerFlag(FlagClientCount), out var originalCount);
 
                     using (var workerFlagTracker =
                         new WorkerFlagTracker(Worker.World.GetExistingSystem<WorkerFlagCallbackSystem>()))
@@ -171,13 +189,13 @@ namespace Fps.WorkerConnectors
         // Update worker flags if they have changed.
         private void MonitorWorkerFlags(WorkerFlagTracker tracker, ref int count, ref int interval)
         {
-            if (tracker.TryGetFlagChange(flagCreationInterval, out var intervalStr) &&
+            if (tracker.TryGetFlagChange(FlagCreationInterval, out var intervalStr) &&
                 int.TryParse(intervalStr, out var newInterval))
             {
                 interval = newInterval;
             }
 
-            if (tracker.TryGetFlagChange(flagClientCount, out var newCountStr) &&
+            if (tracker.TryGetFlagChange(FlagClientCount, out var newCountStr) &&
                 int.TryParse(newCountStr, out var newCount))
             {
                 count = newCount;
