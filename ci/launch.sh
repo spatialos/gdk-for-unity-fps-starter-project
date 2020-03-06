@@ -56,3 +56,7 @@ dotnet run -p workers/unity/Packages/io.improbable.gdk.deploymentlauncher/.Deplo
 CONSOLE_URL_SIM_PLAYERS="https://console.improbable.io/projects/${PROJECT_NAME}/deployments/${ASSEMBLY_NAME}_sim_players/overview"
 
 buildkite-agent annotate --style "success" "Simulated Player Deployment URL: ${CONSOLE_URL_SIM_PLAYERS}" --append
+
+# Set meta-data for NFR pipeline
+buildkite-agent meta-data set "assembly_name" "${ASSEMBLY_NAME}"
+buildkite-agent meta-data set "runtime_version" "${RUNTIME_VERSION}"

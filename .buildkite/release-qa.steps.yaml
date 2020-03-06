@@ -104,3 +104,9 @@ steps:
     env:
       ASSEMBLY_PREFIX: "fps"
       PROJECT_NAME: "unity_gdk"
+
+  - block: "Run NFRs :rocket:"
+
+  - label: Trigger NFR pipeline
+    command: bash -c ci/nfrs/trigger-nfrs.sh
+    <<: *common

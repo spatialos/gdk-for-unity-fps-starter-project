@@ -1,0 +1,298 @@
+scenario-type: "state-space-explorer-test"
+nfr-name: "uty_fps_bandwidth"
+target-metric: "bandwidth"
+test-values: "200"
+sse-json: |
+  {
+    "dimensions": [
+      {
+        "name": "numPlayers",
+        "minimum": 200,
+        "maximum": 201,
+        "interval": 1,
+        "description": "Number of players"
+      }
+    ],
+    "mode": "classify",
+    "deployment": {
+      "environment": "staging",
+      "extra_regisseur_flags": [
+        "--grpc_client_rpc_timeout=60s",
+        "--visualizers=file-csv",
+        "--visualizer_output_dir=/app/results/",
+        "--raw_logs_download_at_end_of_deployment=true",
+        "--raw_logs_download_if_scenario_passes=true"
+      ],
+      "scenario": {
+        "identifier": {
+          "name": "uty_fps_bandwidth"
+        },
+        "assembly": {
+          "name": "will_be_overwritten"
+        },
+        "projectId": {
+          "name": "unity_gdk"
+        },
+        "lifetime": {
+          "seconds": "1200"
+        },
+        "initialState": {
+          "taggedSnapshot": {
+            "historyName": "will_be_overwritten",
+            "snapshotTag": "regisseur"
+          }
+        },
+        "launchConfiguration": {
+          "template": "w4_r1000_e10",
+          "world": {
+            "dimensions": {
+              "x_meters": 1800,
+              "z_meters": 1800
+            },
+            "chunkEdgeLengthMeters": 50,
+            "streaming_query_interval": 4,
+            "legacy_flags":[
+              {
+                "name": "load_snapshot_at_startup",
+                "value": "true"
+              },
+              {
+                "name": "enable_chunk_interest",
+                "value": "false"
+              },
+              {
+                "name": "enable_legacy_checkout_all_initially",
+                "value": "false"
+              },
+              {
+                "name": "interest_queries_components_are_filtered_by_component_delivery",
+                "value": "false"
+              },
+              {
+                "name": "logsink_level",
+                "value": "error"
+              }
+            ],
+            "snapshots": {
+              "snapshotWritePeriodSeconds": 0
+            }
+          },
+          "load_balancing": {
+            "layer_configurations": [
+              {
+                "layer": "UnityGameLogic",
+                "rectangle_grid": {
+                  "cols": 1,
+                  "rows": 1
+                }
+              }
+            ]
+          },
+          "workers": [
+            {
+              "worker_type": "UnityClient",
+              "permissions": [
+                {
+                  "all": {}
+                }
+              ],
+              "flags": [
+                {
+                  "name": "world_size",
+                  "value": "24"
+                }
+              ],
+            },
+            {
+              "worker_type": "UnityGameLogicWorker",
+              "flags": [
+                {
+                  "name": "world_size",
+                  "value": "24"
+                }
+              ],
+              "permissions": [
+                {
+                  "all": {}
+                }
+              ]
+            },
+            {
+              "worker_type": "SimulatedPlayerCoordinator",
+              "permissions": [
+                {
+                  "all": {}
+                }
+              ],
+              "flags": [
+                {
+                  "name": "world_size",
+                  "value": "24"
+                }
+              ],
+            },
+          ]
+        },
+        "genericClientNodes": {
+          "number": "${Math.ceil(numPlayers / 10)}",
+          "value": {
+            "name": "${\"sim_player_\" + index}",
+            "size": "double",
+            "config": {
+              "command": {
+                "assemblyZip": "SimulatedPlayerCoordinator@Linux.zip",
+                "path": "./SimulatedPlayerCoordinator@Linux",
+                "args": [
+                    "+workerType",
+                    "SimulatedPlayerCoordinator",
+                    "+workerId",
+                    "${IMPROBABLE_WORKER_ID}",
+                    "+receptionistHost",
+                    "${IMPROBABLE_RECEPTIONIST_HOST}",
+                    "+receptionistPort",
+                    "${IMPROBABLE_RECEPTIONIST_PORT}",
+                    "+linkProtocol",
+                    "Tcp",
+                    "-batchmode",
+                    "-nographics",
+                    "-logfile",
+                    "${IMPROBABLE_LOG_FILE}",
+                    "+fps_simulated_players_per_coordinator",
+                    "${Math.min(numPlayers - (10 * index), 10)}"
+                ]
+              },
+              "instances": 1
+            }
+          }
+        },
+        "metrics": [
+          {
+            "name": "view_lateness_after_5m",
+            "prometheus_expression_template": "avg_over_time(runtime:database::view_lateness_90th_percentile_ms{app='%project%',dpl='%deployment%',source='bridge'}[1m])",
+            "fallback": {
+              "valueFallback": {
+                "value": 0
+              }
+            },
+            "initialDelaySeconds": 300
+          },
+          {
+            "name": "view_lateness_full",
+            "prometheus_expression_template": "avg_over_time(runtime:database::view_lateness_90th_percentile_ms{app='%project%',dpl='%deployment%',source='bridge'}[1m])",
+            "fallback": {
+              "valueFallback": {
+                "value": 0
+              }
+            },
+            "initialDelaySeconds": 30
+          },
+          {
+            "name": "clients_connected",
+            "prometheus_expression_template": "spatialos_worker_connected::sum{project='%project%', dpl='%deployment%', worker_type='UnityClient'}",
+            "fallback": {
+              "valueFallback": {
+                "value": 0
+              }
+            },
+            "initialDelaySeconds": 900
+          },
+          {
+            "name": "min_unityclient_fps",
+            "prometheus_expression_template": "avg_over_time(improbable_engine_metrics::min{project='%project%', dpl='%deployment%', metric='Dynamic.FPS', engine_platform='UnityClient', node_cat!~'.+'}[2m])",
+            "fallback": {
+              "valueFallback": {
+                "value": 0
+              }
+            },
+            "initialDelaySeconds": 600
+          },
+          {
+            "name": "min_unitygamelogic_fps",
+            "prometheus_expression_template": "avg_over_time(improbable_engine_metrics::min{project='%project%', dpl='%deployment%', metric='Dynamic.FPS', engine_platform='UnityGameLogic', node_cat!~'.+'}[2m])",
+            "fallback": {
+              "valueFallback": {
+                "value": 0
+              }
+            },
+            "initialDelaySeconds": 120
+          },
+          {
+            "name": "bandwidth",
+            "prometheus_expression_template": "node_network_transmit_bytes::rate1m_sum{app='%project%', dpl='%deployment%', node_cat=~'master', device='external'}",
+            "fallback": {
+              "valueFallback": {
+                "value": 0
+              }
+            },
+            "initialDelaySeconds": 900
+          },
+          {
+            "name": "player_updates",
+            "prometheus_expression_template": "%(player-updates-prometheus-template)%",
+            "fallback": {
+              "valueFallback": {
+                "value": 0
+              }
+            },
+            "initialDelaySeconds": 900
+          }
+        ],
+        "expectations": [
+          {
+            "name": "view_lateness_is_low_after_5m",
+            "metricExpectation": {
+              "metricName": "view_lateness_after_5m",
+              "maxValue": {
+                "value": 400
+              }
+            }
+          },
+          {
+            "name": "view_lateness_is_never_8s",
+            "metricExpectation": {
+              "metricName": "view_lateness_full",
+              "maxValue": {
+                "value": 8000
+              }
+            }
+          },
+          {
+            "name": "all_clients_stayed_connected",
+            "metricExpectation": {
+              "metricName": "clients_connected",
+              "minValue": {
+                "value": "${numPlayers - 1}"
+              }
+            }
+          },
+          {
+            "name": "unitygamelogic_fps",
+            "metricExpectation": {
+              "metricName": "min_unitygamelogic_fps",
+              "minValue": {
+                "value": 20
+              }
+            }
+          },
+          {
+            "name": "unityclient_fps",
+            "metricExpectation": {
+              "metricName": "min_unityclient_fps",
+              "minValue": {
+                "value": 20
+              }
+            }
+          },
+          {
+            "name": "clients_are_sending_updates",
+            "metricExpectation": {
+              "metricName": "player_updates",
+              "minValue": {
+                "value": "${numPlayers * 10}"
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
