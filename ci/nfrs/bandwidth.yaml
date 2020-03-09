@@ -104,7 +104,7 @@ sse-json: |
               ],
             },
             {
-              "worker_type": "UnityGameLogicWorker",
+              "worker_type": "UnityGameLogic",
               "flags": [
                 {
                   "name": "world_size",
@@ -145,20 +145,14 @@ sse-json: |
                 "args": [
                     "+workerType",
                     "SimulatedPlayerCoordinator",
-                    "+workerId",
-                    "${IMPROBABLE_WORKER_ID}",
                     "+receptionistHost",
-                    "${IMPROBABLE_RECEPTIONIST_HOST}",
-                    "+receptionistPort",
-                    "${IMPROBABLE_RECEPTIONIST_PORT}",
+                    "{receptionist_ip}",
                     "+linkProtocol",
                     "Tcp",
                     "-batchmode",
                     "-nographics",
-                    "-logfile",
-                    "${IMPROBABLE_LOG_FILE}",
                     "+fps_simulated_players_per_coordinator",
-                    "${Math.min(numPlayers - (10 * index), 10)}"
+                    "${\"Math.min(numPlayers - (10 * index), 10)\"}"
                 ]
               },
               "instances": 1
@@ -225,16 +219,6 @@ sse-json: |
               }
             },
             "initialDelaySeconds": 900
-          },
-          {
-            "name": "player_updates",
-            "prometheus_expression_template": "%(player-updates-prometheus-template)%",
-            "fallback": {
-              "valueFallback": {
-                "value": 0
-              }
-            },
-            "initialDelaySeconds": 900
           }
         ],
         "expectations": [
@@ -280,15 +264,6 @@ sse-json: |
               "metricName": "min_unityclient_fps",
               "minValue": {
                 "value": 20
-              }
-            }
-          },
-          {
-            "name": "clients_are_sending_updates",
-            "metricExpectation": {
-              "metricName": "player_updates",
-              "minValue": {
-                "value": "${numPlayers * 10}"
               }
             }
           }
