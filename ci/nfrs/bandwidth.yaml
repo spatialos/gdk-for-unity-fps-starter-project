@@ -15,7 +15,7 @@ sse-json: |
     ],
     "mode": "classify",
     "deployment": {
-      "environment": "staging",
+      "environment": "production",
       "extra_regisseur_flags": [
         "--grpc_client_rpc_timeout=60s",
         "--visualizers=file-csv",

@@ -13,7 +13,7 @@ ASSEMBLY_NAME="$(buildkite-agent meta-data get "assembly_name")"
 RUNTIME_VERSION="$(buildkite-agent meta-data get "runtime_version")"
 
 echo "--- Uploading snapshot"
-spatial project history upload "${ASSEMBLY_NAME}" "snapshots/cloud.snapshot" --project_name unity_gdk
+spatial project history create "${ASSEMBLY_NAME}" "snapshots/cloud.snapshot" --project_name unity_gdk
 SNAPSHOT_HISTORY="${ASSEMBLY_NAME}"
 
 function addTriggerStep() {
