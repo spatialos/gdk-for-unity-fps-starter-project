@@ -191,8 +191,8 @@ sse-json: |
             "initialDelaySeconds": 900
           },
           {
-            "name": "min_unityclient_fps",
-            "prometheus_expression_template": "avg_over_time(improbable_engine_metrics::min{project='%project%', dpl='%deployment%', metric='Dynamic.FPS', engine_platform='UnityClient', node_cat!~'.+'}[2m])",
+            "name": "min_simulatedplayercoordinator_fps",
+            "prometheus_expression_template": "avg_over_time(improbable_engine_metrics::min{project='%project%', dpl='%deployment%', metric='Dynamic.FPS', engine_platform='SimulatedPlayerCoordinator', node_cat!~'.+'}[2m])",
             "fallback": {
               "valueFallback": {
                 "value": 0
@@ -259,11 +259,11 @@ sse-json: |
             }
           },
           {
-            "name": "unityclient_fps",
+            "name": "simulatedplayercoordinator_fps",
             "metricExpectation": {
-              "metricName": "min_unityclient_fps",
+              "metricName": "min_simulatedplayercoordinator_fps",
               "minValue": {
-                "value": 20
+                "value": 30
               }
             }
           }

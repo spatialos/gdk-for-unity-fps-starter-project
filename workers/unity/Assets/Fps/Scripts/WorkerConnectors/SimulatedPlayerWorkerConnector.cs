@@ -59,8 +59,6 @@ namespace Fps.WorkerConnectors
 
             GameObjectCreationHelper.EnableStandardGameObjectCreation(Worker.World,
                 new AdvancedEntityPipeline(Worker, AuthPlayer, NonAuthPlayer));
-
-            Worker.World.GetOrCreateSystem<MetricSendSystem>();
         }
     }
 }
