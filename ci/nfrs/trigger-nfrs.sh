@@ -14,6 +14,7 @@ RUNTIME_VERSION="$(buildkite-agent meta-data get "runtime_version")"
 
 echo "--- Uploading snapshot"
 spatial project history upload "${ASSEMBLY_NAME}" "snapshots/cloud.snapshot" --project_name unity_gdk
+SNAPSHOT_HISTORY="${ASSEMBLY_NAME}"
 
 function addTriggerStep() {
     NFR_FILE="${1}"
