@@ -67,7 +67,7 @@ namespace Fps.WorkerConnectors
                 }
 
                 var simulatedPlayerIntervalStr = string.Empty;
-                if (args.TryGetCommandLineValue(FlagClientCount, ref simulatedPlayerIntervalStr) &&
+                if (args.TryGetCommandLineValue(FlagCreationInterval, ref simulatedPlayerIntervalStr) &&
                     int.TryParse(simulatedPlayerIntervalStr, out var simulatedPlayerInterval))
                 {
                     SimulatedPlayerCreationInterval = simulatedPlayerInterval;
@@ -92,9 +92,7 @@ namespace Fps.WorkerConnectors
             }
             else
             {
-                var flow = new ReceptionistFlow(workerId, new CommandLineConnectionFlowInitializer());
-                flow.WorkerId = workerId;
-                connectionFlow = flow;
+                connectionFlow = new ReceptionistFlow(workerId, new CommandLineConnectionFlowInitializer());
                 connectionParameters = CreateConnectionParameters(WorkerUtils.SimulatedPlayerCoordinator,
                     new CommandLineConnectionParameterInitializer());
             }
@@ -107,6 +105,10 @@ namespace Fps.WorkerConnectors
         protected override async void HandleWorkerConnectionEstablished()
         {
             base.HandleWorkerConnectionEstablished();
+
+            var args = CommandLineArgs.FromCommandLine();
+            Worker.LogDispatcher.HandleLog(LogType.Warning, new LogEvent(args.Dump()));
+            Worker.LogDispatcher.HandleLog(LogType.Warning, new LogEvent($"Sim Player Count {MaxSimulatedPlayerCount} Interval {SimulatedPlayerCreationInterval}"));
 
             Worker.World.GetOrCreateSystem<MetricSendSystem>();
 
