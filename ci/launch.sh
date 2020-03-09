@@ -22,6 +22,12 @@ if [[ -n $"{RUNTIME_VERSION:-}" ]]; then
   export RUNTIME_VERSION="$(cat ../gdk-for-unity/workers/unity/Packages/io.improbable.gdk.tools/runtime.pinned)"
 fi
 
+# Set meta-data for NFR pipeline
+buildkite-agent meta-data set "assembly_name" "${ASSEMBLY_NAME}"
+buildkite-agent meta-data set "runtime_version" "${RUNTIME_VERSION}"
+
+exit 0
+
 echo "--- Launching main deployment :airplane_departure:"
 
 dotnet run -p workers/unity/Packages/io.improbable.gdk.deploymentlauncher/.DeploymentLauncher/DeploymentLauncher.csproj -- \
@@ -56,7 +62,3 @@ dotnet run -p workers/unity/Packages/io.improbable.gdk.deploymentlauncher/.Deplo
 CONSOLE_URL_SIM_PLAYERS="https://console.improbable.io/projects/${PROJECT_NAME}/deployments/${ASSEMBLY_NAME}_sim_players/overview"
 
 buildkite-agent annotate --style "success" "Simulated Player Deployment URL: ${CONSOLE_URL_SIM_PLAYERS}" --append
-
-# Set meta-data for NFR pipeline
-buildkite-agent meta-data set "assembly_name" "${ASSEMBLY_NAME}"
-buildkite-agent meta-data set "runtime_version" "${RUNTIME_VERSION}"
