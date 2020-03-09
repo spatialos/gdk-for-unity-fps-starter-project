@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Text;
 using Fps.Config;
+using Fps.Metrics;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.PlayerLifecycle;
@@ -96,6 +97,8 @@ namespace Fps.WorkerConnectors
 
             // Set the Worker gameObject to the ClientWorker so it can access PlayerCreater reader/writers
             GameObjectCreationHelper.EnableStandardGameObjectCreation(world, entityPipeline, gameObject);
+
+            world.GetOrCreateSystem<MetricSendSystem>();
 
             base.HandleWorkerConnectionEstablished();
         }

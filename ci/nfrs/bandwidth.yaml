@@ -152,7 +152,7 @@ sse-json: |
                     "-batchmode",
                     "-nographics",
                     "+fps_simulated_players_per_coordinator",
-                    "${\"Math.min(numPlayers - (10 * index), 10)\"}"
+                    "${Math.min(numPlayers - (10 * index), 10).toString()}"
                 ]
               },
               "instances": 1
