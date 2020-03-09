@@ -1,6 +1,7 @@
 using System.Text;
 using System.Threading.Tasks;
 using Fps.Config;
+using Fps.Metrics;
 using Fps.WorkerConnectors;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectCreation;
@@ -58,6 +59,8 @@ namespace Fps.WorkerConnectors
 
             GameObjectCreationHelper.EnableStandardGameObjectCreation(Worker.World,
                 new AdvancedEntityPipeline(Worker, AuthPlayer, NonAuthPlayer));
+
+            Worker.World.GetOrCreateSystem<MetricSendSystem>();
         }
     }
 }

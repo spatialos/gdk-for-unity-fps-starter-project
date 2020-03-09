@@ -98,8 +98,6 @@ namespace Fps.WorkerConnectors
             // Set the Worker gameObject to the ClientWorker so it can access PlayerCreater reader/writers
             GameObjectCreationHelper.EnableStandardGameObjectCreation(world, entityPipeline, gameObject);
 
-            world.GetOrCreateSystem<MetricSendSystem>();
-
             base.HandleWorkerConnectionEstablished();
         }
 
