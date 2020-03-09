@@ -92,8 +92,9 @@ namespace Fps.WorkerConnectors
             }
             else
             {
-                connectionFlow = new ReceptionistFlow(workerId, new CommandLineConnectionFlowInitializer());
-                connectionFlow.WorkerId = CreateNewWorkerId(WorkerUtils.UnityClient);
+                var flow = new ReceptionistFlow(workerId, new CommandLineConnectionFlowInitializer());
+                flow.WorkerId = workerId;
+                connectionFlow = flow;
                 connectionParameters = CreateConnectionParameters(WorkerUtils.SimulatedPlayerCoordinator,
                     new CommandLineConnectionParameterInitializer());
             }
