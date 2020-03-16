@@ -27,7 +27,7 @@ namespace Fps.Config
             return template;
         }
 
-        public static EntityTemplate Player(string workerId, byte[] args)
+        public static EntityTemplate Player(EntityId entityId, string workerId, byte[] args)
         {
             var client = EntityTemplate.GetWorkerAccessAttribute(workerId);
 
