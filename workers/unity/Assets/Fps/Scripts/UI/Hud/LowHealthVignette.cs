@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 
@@ -8,16 +8,20 @@ namespace Fps.UI
     [PostProcess(typeof(LowHealthVignetteProcessor), PostProcessEvent.AfterStack, "FPS/Low Health Vignette")]
     public sealed class LowHealthVignette : PostProcessEffectSettings
     {
-        [Range(0f, 1f)] [Tooltip("Health as a decimal.")]
+        [Range(0f, 1f)]
+        [Tooltip("Health as a decimal.")]
         public FloatParameter health = new FloatParameter { value = 0.5f };
 
-        [Range(0f, 360f)] [Tooltip("Yaw of incoming damage, normalised.")]
+        [Range(0f, 360f)]
+        [Tooltip("Yaw of incoming damage, normalised.")]
         public FloatParameter damageYaw = new FloatParameter { value = 0f };
 
-        [Range(0f, 32f)] [Tooltip("Arc angle of the damage effect.")]
+        [Range(0f, 32f)]
+        [Tooltip("Arc angle of the damage effect.")]
         public FloatParameter damageFocus = new FloatParameter { value = 0f };
 
-        [Range(0f, 1f)] [Tooltip("Strength of the damage effect.")]
+        [Range(0f, 1f)]
+        [Tooltip("Strength of the damage effect.")]
         public FloatParameter damageIntensity = new FloatParameter { value = 0f };
 
         [Tooltip("Vignette Mask.")] public TextureParameter VignetteMask = new TextureParameter();

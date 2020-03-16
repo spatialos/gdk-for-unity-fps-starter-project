@@ -1,4 +1,4 @@
-﻿using Fps.Guns;
+using Fps.Guns;
 using UnityEngine;
 
 namespace Fps.Ragdoll

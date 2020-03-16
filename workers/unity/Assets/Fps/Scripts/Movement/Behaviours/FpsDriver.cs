@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using Fps.Animation;
 using Fps.Guns;
@@ -38,7 +38,8 @@ namespace Fps.Movement
         [SerializeField] private Transform pitchTransform;
         [SerializeField] private new Camera camera;
 
-        [SerializeField] private CameraSettings cameraSettings = new CameraSettings
+        [SerializeField]
+        private CameraSettings cameraSettings = new CameraSettings
         {
             PitchSpeed = 1.0f,
             YawSpeed = 1.0f,

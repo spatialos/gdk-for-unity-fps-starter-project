@@ -1,4 +1,4 @@
-﻿using Fps.WorkerConnectors;
+using Fps.WorkerConnectors;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.Subscriptions;
 using UnityEngine;

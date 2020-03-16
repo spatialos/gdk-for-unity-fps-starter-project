@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Fps.Movement;
 using Fps.SchemaExtensions;

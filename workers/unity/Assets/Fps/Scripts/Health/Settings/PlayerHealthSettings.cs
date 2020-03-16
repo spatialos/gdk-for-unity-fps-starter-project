@@ -1,4 +1,4 @@
-﻿namespace Fps.Health
+namespace Fps.Health
 {
     public static class PlayerHealthSettings
     {

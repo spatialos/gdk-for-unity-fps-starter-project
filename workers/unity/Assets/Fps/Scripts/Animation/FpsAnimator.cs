@@ -1,4 +1,4 @@
-﻿using Fps.Movement;
+using Fps.Movement;
 using UnityEngine;
 
 namespace Fps.Animation
@@ -43,7 +43,8 @@ namespace Fps.Animation
             public bool LastValue;
         }
 
-        [SerializeField] private AnimationSettings animationSettings = new AnimationSettings
+        [SerializeField]
+        private AnimationSettings animationSettings = new AnimationSettings
         {
             InterpolatePitchDuration = 0.1f,
             InterpolateMovementDuration = 0.1f,

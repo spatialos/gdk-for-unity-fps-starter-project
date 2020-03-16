@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using Fps.Guns;
 using Fps.Movement;
 using Fps.WorkerConnectors;

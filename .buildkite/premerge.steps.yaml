@@ -7,7 +7,7 @@
 # You may find the example pipeline steps listed here helpful: https://buildkite.com/docs/pipelines/defining-steps#example-pipeline but please
 #  note that the setup is already done, so you should not manually adjust anything through the BuildKite interface.
 #
-common: &common
+windows: &windows
   agents:
     - "capable_of_building=gdk-for-unity"
     - "environment=production"
@@ -46,20 +46,38 @@ linux: &linux
       - exit_status: -1
         limit: 3
 
+macos: &macos
+  agents:
+    - "capable_of_building=gdk-for-unity"
+    - "environment=production"
+    - "permission_set=builder"
+    - "platform=macos"
+    - "queue=${DARWIN_BUILDER_QUEUE:-v4-1582049359-33db24b626f71fa8}"
+  timeout_in_minutes: 60 # TODO(ENG-548): reduce timeout once agent-cold-start is optimised.
+  retry:
+    automatic:
+        # This is designed to trap and retry failures because agent lost connection. Agent exits with -1 in this case.
+      - exit_status: -1
+        limit: 3
+
 # NOTE: step labels turn into commit-status names like {org}/{repo}/{pipeline}/{step-label}, lower-case and hyphenated.
 # These are then relied on to have stable names by other things, so once named, please beware renaming has consequences.
 
 dag: true
 
 steps:
-  - label: "test"
+  - label: ":debian: ~ lint :lint-roller:"
+    command: bash -c ci/lint.sh
+    <<: *linux
+    
+  - label: ":windows: ~ test"
     id: "test"
     command: bash -c ci/test.sh
-    <<: *common
+    <<: *windows
     artifact_paths:
       - logs/**/*
 
-  - label: "annotate test results :pencil2:"
+  - label: ":debian: ~ annotate test results :pencil2:"
     depends_on: 
       - step: "test"
         allow_failure: true
@@ -73,9 +91,9 @@ steps:
             type: details
     <<: *linux
 
-  - label: "build :android:"
+  - label: ":windows: ~ build :android:"
     command: bash -c .shared-ci/scripts/build-worker.sh
-    <<: *common
+    <<: *windows
     artifact_paths:
       - logs/**/*
     env:
@@ -84,9 +102,9 @@ steps:
       BUILD_TARGET_FILTER: "android"
       SCRIPTING_BACKEND: "mono"
 
-  - label: "build :ios:"
+  - label: ":darwin: ~ build :ios:"
     command: bash -c .shared-ci/scripts/build-worker.sh
-    <<: *common
+    <<: *macos
     artifact_paths:
       - logs/**/*
     env:
@@ -94,10 +112,11 @@ steps:
       BUILD_ENVIRONMENT: "local"
       BUILD_TARGET_FILTER: "ios"
       SCRIPTING_BACKEND: "il2cpp"
+      TARGET_IOS_SDK: "simulator"
 
-  - label: "build UnityClient mono"
+  - label: ":windows: ~ build UnityClient mono"
     command: bash -c .shared-ci/scripts/build-worker.sh
-    <<: *common
+    <<: *windows
     artifact_paths:
       - logs/**/*
     env:
@@ -105,9 +124,9 @@ steps:
       BUILD_ENVIRONMENT: "cloud"
       SCRIPTING_BACKEND: "mono"
 
-  - label: "build UnityClient il2cpp"
+  - label: ":windows: ~ build UnityClient il2cpp"
     command: bash -c .shared-ci/scripts/build-worker.sh
-    <<: *common
+    <<: *windows
     artifact_paths:
       - logs/**/*
     env:
@@ -115,9 +134,9 @@ steps:
       BUILD_ENVIRONMENT: "local"
       SCRIPTING_BACKEND: "il2cpp"
 
-  - label: "build UnityGameLogic mono"
+  - label: ":windows: ~ build UnityGameLogic mono"
     command: bash -c .shared-ci/scripts/build-worker.sh
-    <<: *common
+    <<: *windows
     artifact_paths:
       - logs/**/*
     env:
@@ -125,9 +144,9 @@ steps:
       BUILD_ENVIRONMENT: "cloud"
       SCRIPTING_BACKEND: "mono"
 
-  - label: "build SimulatedPlayerCoordinator mono"
+  - label: ":windows: ~ build SimulatedPlayerCoordinator mono"
     command: bash -c .shared-ci/scripts/build-worker.sh
-    <<: *common
+    <<: *windows
     artifact_paths:
       - logs/**/*
     env:
