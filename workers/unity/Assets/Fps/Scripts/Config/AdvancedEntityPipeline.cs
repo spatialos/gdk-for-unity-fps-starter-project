@@ -7,6 +7,7 @@ using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.PlayerLifecycle;
 using Improbable.Gdk.Subscriptions;
+using Unity.Entities;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -35,6 +36,8 @@ namespace Fps.Config
             typeof(Rigidbody)
         };
 
+        public ComponentType[] MinimumComponentTypes { get; }
+
         public AdvancedEntityPipeline(WorkerInWorld worker, string authPlayer, string nonAuthPlayer)
         {
             workerId = worker.WorkerId;
@@ -44,6 +47,11 @@ namespace Fps.Config
             fallback = new GameObjectCreatorFromMetadata(workerType, workerOrigin, worker.LogDispatcher);
             cachedAuthPlayer = Resources.Load<GameObject>(authPlayer);
             cachedNonAuthPlayer = Resources.Load<GameObject>(nonAuthPlayer);
+
+            MinimumComponentTypes = new[]
+            {
+                ComponentType.ReadOnly<Metadata.Component>()
+            };
         }
 
         public void OnEntityCreated(SpatialOSEntity entity, EntityGameObjectLinker linker)
