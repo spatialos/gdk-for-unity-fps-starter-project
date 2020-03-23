@@ -36,7 +36,10 @@ namespace Fps.Config
             typeof(Rigidbody)
         };
 
-        public ComponentType[] MinimumComponentTypes { get; }
+        public ComponentType[] MinimumComponentTypes { get; } =
+        {
+            ComponentType.ReadOnly<Metadata.Component>()
+        };
 
         public AdvancedEntityPipeline(WorkerInWorld worker, string authPlayer, string nonAuthPlayer)
         {
@@ -47,11 +50,6 @@ namespace Fps.Config
             fallback = new GameObjectCreatorFromMetadata(workerType, workerOrigin, worker.LogDispatcher);
             cachedAuthPlayer = Resources.Load<GameObject>(authPlayer);
             cachedNonAuthPlayer = Resources.Load<GameObject>(nonAuthPlayer);
-
-            MinimumComponentTypes = new[]
-            {
-                ComponentType.ReadOnly<Metadata.Component>()
-            };
         }
 
         public void OnEntityCreated(SpatialOSEntity entity, EntityGameObjectLinker linker)
