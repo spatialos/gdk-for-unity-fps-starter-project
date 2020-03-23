@@ -1,6 +1,5 @@
 using System.Collections;
 using Fps.SchemaExtensions;
-using Fps.UI;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.Subscriptions;
 using UnityEngine;
@@ -48,7 +47,10 @@ namespace Fps.UI
             }
 
             var volume = postProcessObject.GetComponent<PostProcessVolume>();
-            volume.profile.TryGetSettings(out damageVolumeSettings);
+            if (!volume.profile.TryGetSettings(out damageVolumeSettings))
+            {
+                Debug.LogError("BREAK");
+            }
         }
 
         private void OnEnable()
@@ -124,7 +126,10 @@ namespace Fps.UI
 
         public void SetHealthEffect(float healthFraction)
         {
-            damageVolumeSettings.health.value = healthFraction;
+            var health = damageVolumeSettings.health;
+            health.value = healthFraction;
+            damageVolumeSettings.health = health;
+
             SetHealthBar(healthFraction);
         }
 

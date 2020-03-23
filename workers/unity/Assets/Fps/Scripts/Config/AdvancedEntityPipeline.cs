@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Fps.Movement;
 using Fps.SchemaExtensions;
 using Improbable;
@@ -7,6 +8,7 @@ using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.PlayerLifecycle;
 using Improbable.Gdk.Subscriptions;
+using Unity.Entities;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -19,21 +21,21 @@ namespace Fps.Config
         private readonly GameObject cachedAuthPlayer;
         private readonly GameObject cachedNonAuthPlayer;
 
-        private readonly GameObjectCreatorFromMetadata fallback;
-
         private readonly string workerId;
         private readonly string workerType;
         private readonly Vector3 workerOrigin;
 
+        private readonly Dictionary<string, GameObject> cachedPrefabs = new Dictionary<string, GameObject>();
         private readonly Dictionary<EntityId, GameObject> gameObjectsCreated = new Dictionary<EntityId, GameObject>();
 
         public event Action OnRemovedAuthoritativePlayer;
 
         private readonly Type[] componentsToAdd =
         {
-            typeof(Transform),
-            typeof(Rigidbody)
+            typeof(Transform), typeof(Rigidbody)
         };
+
+        public ComponentType[] MinimumComponentTypes { get; } = { };
 
         public AdvancedEntityPipeline(WorkerInWorld worker, string authPlayer, string nonAuthPlayer)
         {
@@ -41,25 +43,47 @@ namespace Fps.Config
             workerType = worker.WorkerType;
             workerOrigin = worker.Origin;
 
-            fallback = new GameObjectCreatorFromMetadata(workerType, workerOrigin, worker.LogDispatcher);
             cachedAuthPlayer = Resources.Load<GameObject>(authPlayer);
             cachedNonAuthPlayer = Resources.Load<GameObject>(nonAuthPlayer);
         }
 
+        public void Register(Dictionary<string, EntityTypeRegistration> entityTypeRegistrations)
+        {
+            entityTypeRegistrations.Add(PlayerEntityType, new EntityTypeRegistration(CreatePlayerGameObject,
+                typeof(OwningWorker.Component),
+                typeof(ServerMovement.Component)));
+        }
+
         public void OnEntityCreated(SpatialOSEntity entity, EntityGameObjectLinker linker)
         {
-            if (!entity.TryGetComponent<Metadata.Component>(out var metadata))
+            if (!entity.TryGetComponent<Metadata.Component>(out var metadata) ||
+                !entity.TryGetComponent<Position.Component>(out var spatialOSPosition))
             {
                 return;
             }
 
-            if (metadata.EntityType == PlayerEntityType)
+            var prefabName = metadata.EntityType;
+            var position = spatialOSPosition.Coords.ToUnityVector() + workerOrigin;
+
+            if (!cachedPrefabs.TryGetValue(prefabName, out var prefab))
             {
-                CreatePlayerGameObject(entity, linker);
+                var workerSpecificPath = Path.Combine("Prefabs", workerType, prefabName);
+                var commonPath = Path.Combine("Prefabs", "Common", prefabName);
+
+                prefab = Resources.Load<GameObject>(workerSpecificPath) ?? Resources.Load<GameObject>(commonPath);
+                cachedPrefabs[prefabName] = prefab;
+            }
+
+            if (prefab == null)
+            {
                 return;
             }
 
-            fallback.OnEntityCreated(entity, linker);
+            var gameObject = Object.Instantiate(prefab, position, Quaternion.identity);
+            gameObject.name = $"{prefab.name}(SpatialOS: {entity.SpatialOSEntityId}, Worker: {workerType})";
+
+            gameObjectsCreated.Add(entity.SpatialOSEntityId, gameObject);
+            linker.LinkGameObjectToSpatialOSEntity(entity.SpatialOSEntityId, gameObject, componentsToAdd);
         }
 
         private void CreatePlayerGameObject(SpatialOSEntity entity, EntityGameObjectLinker linker)
@@ -84,7 +108,6 @@ namespace Fps.Config
         {
             if (!gameObjectsCreated.TryGetValue(entityId, out var go))
             {
-                fallback.OnEntityRemoved(entityId);
                 return;
             }
 
