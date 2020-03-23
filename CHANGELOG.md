@@ -2,15 +2,14 @@
 
 ## Unreleased
 
-## `0.3.4` - 2020-03-16
-
-### Changed
-
-- Upgraded to GDK for Unity version `0.3.4`
 ## Breaking Changes
 
 - The FPS starter project now uses [query-based interest](https://docs.improbable.io/reference/14.4/shared/authority-and-interest/interest/query-based-interest-qbi) instead of [chunk-based interest](https://docs.improbable.io/reference/14.4/shared/authority-and-interest/interest/chunk-based-interest-cbi). [#253](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/253)
 - You must now pass in an `EntityId` to create a player `EntityTemplate`. [#254](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/254)
+
+### Changed
+
+- Added the new `MiniumComponentTypes` property and `Register` method required by `IEntityGameObjectCreator` to the `AdvancedEntityPipeline`. [#260](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/260)
 
 ## `0.3.3` - 2020-02-14
 

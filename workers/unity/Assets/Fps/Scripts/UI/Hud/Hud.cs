@@ -47,10 +47,7 @@ namespace Fps.UI
             }
 
             var volume = postProcessObject.GetComponent<PostProcessVolume>();
-            if (!volume.profile.TryGetSettings(out damageVolumeSettings))
-            {
-                Debug.LogError("BREAK");
-            }
+            volume.profile.TryGetSettings(out damageVolumeSettings);
         }
 
         private void OnEnable()
@@ -126,10 +123,7 @@ namespace Fps.UI
 
         public void SetHealthEffect(float healthFraction)
         {
-            var health = damageVolumeSettings.health;
-            health.value = healthFraction;
-            damageVolumeSettings.health = health;
-
+            damageVolumeSettings.health.value = healthFraction;
             SetHealthBar(healthFraction);
         }
 
