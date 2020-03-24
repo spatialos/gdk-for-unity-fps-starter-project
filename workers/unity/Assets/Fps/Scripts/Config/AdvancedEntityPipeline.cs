@@ -31,8 +31,7 @@ namespace Fps.Config
 
         private readonly Type[] componentsToAdd =
         {
-            typeof(Transform),
-            typeof(Rigidbody)
+            typeof(Transform), typeof(Rigidbody)
         };
 
         public AdvancedEntityPipeline(WorkerInWorld worker, string authPlayer, string nonAuthPlayer)
@@ -46,20 +45,30 @@ namespace Fps.Config
             cachedNonAuthPlayer = Resources.Load<GameObject>(nonAuthPlayer);
         }
 
-        public void OnEntityCreated(SpatialOSEntity entity, EntityGameObjectLinker linker)
+        public void PopulateEntityTypeExpectations(EntityTypeExpectations entityTypeExpectations)
         {
-            if (!entity.TryGetComponent<Metadata.Component>(out var metadata))
+            entityTypeExpectations.RegisterEntityType(PlayerEntityType, new[]
             {
-                return;
-            }
+                typeof(OwningWorker.Component), typeof(ServerMovement.Component)
+            });
 
-            if (metadata.EntityType == PlayerEntityType)
+            entityTypeExpectations.RegisterDefault(new[]
             {
-                CreatePlayerGameObject(entity, linker);
-                return;
-            }
+                typeof(Metadata.Component), typeof(Position.Component)
+            });
+        }
 
-            fallback.OnEntityCreated(entity, linker);
+        public void OnEntityCreated(string entityType, SpatialOSEntity entity, EntityGameObjectLinker linker)
+        {
+            switch (entityType)
+            {
+                case PlayerEntityType:
+                    CreatePlayerGameObject(entity, linker);
+                    break;
+                default:
+                    fallback.OnEntityCreated(entityType, entity, linker);
+                    break;
+            }
         }
 
         private void CreatePlayerGameObject(SpatialOSEntity entity, EntityGameObjectLinker linker)
