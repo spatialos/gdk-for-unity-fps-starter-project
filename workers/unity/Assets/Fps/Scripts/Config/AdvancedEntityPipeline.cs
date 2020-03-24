@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Fps.Movement;
 using Fps.SchemaExtensions;
-using Improbable;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.PlayerLifecycle;
@@ -31,8 +30,7 @@ namespace Fps.Config
 
         private readonly Type[] componentsToAdd =
         {
-            typeof(Transform),
-            typeof(Rigidbody)
+            typeof(Transform), typeof(Rigidbody)
         };
 
         public AdvancedEntityPipeline(WorkerInWorld worker, string authPlayer, string nonAuthPlayer)
@@ -46,30 +44,34 @@ namespace Fps.Config
             cachedNonAuthPlayer = Resources.Load<GameObject>(nonAuthPlayer);
         }
 
-        public void OnEntityCreated(SpatialOSEntity entity, EntityGameObjectLinker linker)
+        public void PopulateEntityTypeExpectations(EntityTypeExpectations entityTypeExpectations)
         {
-            if (!entity.TryGetComponent<Metadata.Component>(out var metadata))
+            entityTypeExpectations.RegisterEntityType(PlayerEntityType, new[]
             {
-                return;
-            }
+                typeof(OwningWorker.Component), typeof(ServerMovement.Component)
+            });
 
-            if (metadata.EntityType == PlayerEntityType)
+            fallback.PopulateEntityTypeExpectations(entityTypeExpectations);
+        }
+
+        public void OnEntityCreated(string entityType, SpatialOSEntity entity, EntityGameObjectLinker linker)
+        {
+            switch (entityType)
             {
-                CreatePlayerGameObject(entity, linker);
-                return;
+                case PlayerEntityType:
+                    CreatePlayerGameObject(entity, linker);
+                    break;
+                default:
+                    fallback.OnEntityCreated(entityType, entity, linker);
+                    break;
             }
-
-            fallback.OnEntityCreated(entity, linker);
         }
 
         private void CreatePlayerGameObject(SpatialOSEntity entity, EntityGameObjectLinker linker)
         {
-            if (!entity.TryGetComponent<OwningWorker.Component>(out var owningWorker))
-            {
-                throw new InvalidOperationException("Player entity does not have the OwningWorker component");
-            }
-
+            var owningWorker = entity.GetComponent<OwningWorker.Component>();
             var serverPosition = entity.GetComponent<ServerMovement.Component>();
+
             var position = serverPosition.Latest.Position.ToVector3() + workerOrigin;
 
             var prefab = owningWorker.WorkerId == workerId ? cachedAuthPlayer : cachedNonAuthPlayer;
