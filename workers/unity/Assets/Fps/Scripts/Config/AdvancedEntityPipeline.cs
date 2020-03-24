@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Fps.Movement;
 using Fps.SchemaExtensions;
-using Improbable;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.PlayerLifecycle;
@@ -52,10 +51,7 @@ namespace Fps.Config
                 typeof(OwningWorker.Component), typeof(ServerMovement.Component)
             });
 
-            entityTypeExpectations.RegisterDefault(new[]
-            {
-                typeof(Metadata.Component), typeof(Position.Component)
-            });
+            fallback.PopulateEntityTypeExpectations(entityTypeExpectations);
         }
 
         public void OnEntityCreated(string entityType, SpatialOSEntity entity, EntityGameObjectLinker linker)
@@ -73,12 +69,9 @@ namespace Fps.Config
 
         private void CreatePlayerGameObject(SpatialOSEntity entity, EntityGameObjectLinker linker)
         {
-            if (!entity.TryGetComponent<OwningWorker.Component>(out var owningWorker))
-            {
-                throw new InvalidOperationException("Player entity does not have the OwningWorker component");
-            }
-
+            var owningWorker = entity.GetComponent<OwningWorker.Component>();
             var serverPosition = entity.GetComponent<ServerMovement.Component>();
+
             var position = serverPosition.Latest.Position.ToVector3() + workerOrigin;
 
             var prefab = owningWorker.WorkerId == workerId ? cachedAuthPlayer : cachedNonAuthPlayer;
