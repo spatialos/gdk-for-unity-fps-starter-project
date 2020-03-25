@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## `0.3.4` - 2020-03-25
+
+### Changed
+
+- Upgraded to GDK for Unity version `0.3.4`
 ## Breaking Changes
 
 - The FPS starter project now uses [query-based interest](https://docs.improbable.io/reference/14.4/shared/authority-and-interest/interest/query-based-interest-qbi) instead of [chunk-based interest](https://docs.improbable.io/reference/14.4/shared/authority-and-interest/interest/chunk-based-interest-cbi). [#253](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/253)
