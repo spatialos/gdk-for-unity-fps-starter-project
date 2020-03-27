@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using Fps.Guns;
 using Fps.Health;
 using Fps.Respawning;
@@ -22,12 +23,6 @@ namespace Fps.Config
             template.AddComponent(new Persistence.Snapshot(), WorkerUtils.UnityGameLogic);
             template.AddComponent(new PlayerCreator.Snapshot(), WorkerUtils.UnityGameLogic);
 
-            var query = InterestQuery.Query(Constraint.RelativeCylinder(150));
-            var interest = InterestTemplate.Create()
-                .AddQueries<Position.Component>(query);
-            template.AddComponent(interest.ToSnapshot(), WorkerUtils.UnityGameLogic);
-
-            template.SetReadAccess(WorkerUtils.UnityGameLogic);
             template.SetComponentWriteAccess(EntityAcl.ComponentId, WorkerUtils.UnityGameLogic);
 
             return template;
@@ -90,12 +85,35 @@ namespace Fps.Config
             const int serverRadius = 150;
             var clientRadius = workerId.Contains(WorkerUtils.MobileClient) ? 60 : 150;
 
-            var serverQuery = InterestQuery.Query(Constraint.RelativeCylinder(serverRadius));
-            var clientQuery = InterestQuery.Query(Constraint.RelativeCylinder(clientRadius));
+            var clientSelfInterest = InterestQuery.Query(Constraint.EntityId(entityId)).FilterResults(new[]
+            {
+                Position.ComponentId, Metadata.ComponentId, OwningWorker.ComponentId,
+                ServerMovement.ComponentId, HealthComponent.ComponentId, GunComponent.ComponentId
+            });
+
+            var clientRangeInterest = InterestQuery.Query(Constraint.RelativeCylinder(clientRadius)).FilterResults(new[]
+            {
+                Position.ComponentId, Metadata.ComponentId, OwningWorker.ComponentId,
+                ServerMovement.ComponentId, ClientRotation.ComponentId, HealthComponent.ComponentId,
+                GunComponent.ComponentId, GunStateComponent.ComponentId, ShootingComponent.ComponentId
+            });
+
+            var serverSelfInterest = InterestQuery.Query(Constraint.EntityId(entityId)).FilterResults(new[]
+            {
+                ClientMovement.ComponentId, ShootingComponent.ComponentId
+            });
+
+            var serverRangeInterest = InterestQuery.Query(Constraint.RelativeCylinder(serverRadius)).FilterResults(new[]
+            {
+                Position.ComponentId, Metadata.ComponentId, OwningWorker.ComponentId,
+                ServerMovement.ComponentId, ClientRotation.ComponentId, HealthComponent.ComponentId,
+                ShootingComponent.ComponentId
+            });
 
             var interest = InterestTemplate.Create()
-                .AddQueries<Position.Component>(serverQuery)
-                .AddQueries<ClientMovement.Component>(clientQuery);
+                .AddQueries<ClientMovement.Component>(clientSelfInterest, clientRangeInterest)
+                .AddQueries<ServerMovement.Component>(serverSelfInterest, serverRangeInterest);
+
             template.AddComponent(interest.ToSnapshot(), WorkerUtils.UnityGameLogic);
 
             template.SetReadAccess(WorkerUtils.UnityClient, WorkerUtils.UnityGameLogic, WorkerUtils.MobileClient);
