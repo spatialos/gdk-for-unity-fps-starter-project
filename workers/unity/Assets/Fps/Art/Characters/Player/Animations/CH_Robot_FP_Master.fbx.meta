@@ -1,144 +1,410 @@
 fileFormatVersion: 2
 guid: 5ce6c41978b7fa742953d5f1b25e2ea4
 ModelImporter:
-  serializedVersion: 23
-  fileIDToRecycleName:
-    100000: back
-    100002: //RootNode
-    100004: Chest
-    100006: Gun_Transform
-    100008: Head
-    100010: Hips
-    100012: improbable_TrajectorySHJnt
-    100014: Jaw
-    100016: JawEnd
-    100018: LeftEye
-    100020: LeftFoot
-    100022: LeftHand
-    100024: LeftIndexDistal
-    100026: LeftIndexIntermediate
-    100028: LeftIndexProximal
-    100030: LeftLittleDistal
-    100032: LeftLittleIntermediate
-    100034: LeftLittleProximal
-    100036: LeftLowerArm1
-    100038: LeftLowerLeg
-    100040: LeftMiddleDistal
-    100042: LeftMiddleIntermediate
-    100044: LeftMiddleProximal
-    100046: LeftRingDistal
-    100048: LeftRingIntermediate
-    100050: LeftRingProximal
-    100052: LeftShoulder
-    100054: LeftThumbDistal
-    100056: LeftThumbIntermediate
-    100058: LeftThumbProximal
-    100060: LeftToes
-    100062: LeftToesEnd
-    100064: LeftUpperArm
-    100066: LeftUpperLeg
-    100068: Neck
-    100070: Neck1
-    100072: RightEye
-    100074: RightFoot
-    100076: RightHand
-    100078: RightIndexDistal
-    100080: RightIndexIntermediate
-    100082: RightIndexProximal
-    100084: RightLittleDistal
-    100086: RightLittleIntermediate
-    100088: RightLittleProximal
-    100090: RightLowerArm1
-    100092: RightLowerLeg
-    100094: RightMiddleDistal
-    100096: RightMiddleIntermediate
-    100098: RightMiddleProximal
-    100100: RightRingDistal
-    100102: RightRingIntermediate
-    100104: RightRingProximal
-    100106: RightShoulder
-    100108: RightThumbDistal
-    100110: RightThumbIntermediate
-    100112: RightThumbProximal
-    100114: RightToes
-    100116: RightToesEnd
-    100118: RightUpperArm
-    100120: RightUpperLeg
-    100122: Spine1
-    100124: Spine2
-    400000: back
-    400002: //RootNode
-    400004: Chest
-    400006: Gun_Transform
-    400008: Head
-    400010: Hips
-    400012: improbable_TrajectorySHJnt
-    400014: Jaw
-    400016: JawEnd
-    400018: LeftEye
-    400020: LeftFoot
-    400022: LeftHand
-    400024: LeftIndexDistal
-    400026: LeftIndexIntermediate
-    400028: LeftIndexProximal
-    400030: LeftLittleDistal
-    400032: LeftLittleIntermediate
-    400034: LeftLittleProximal
-    400036: LeftLowerArm1
-    400038: LeftLowerLeg
-    400040: LeftMiddleDistal
-    400042: LeftMiddleIntermediate
-    400044: LeftMiddleProximal
-    400046: LeftRingDistal
-    400048: LeftRingIntermediate
-    400050: LeftRingProximal
-    400052: LeftShoulder
-    400054: LeftThumbDistal
-    400056: LeftThumbIntermediate
-    400058: LeftThumbProximal
-    400060: LeftToes
-    400062: LeftToesEnd
-    400064: LeftUpperArm
-    400066: LeftUpperLeg
-    400068: Neck
-    400070: Neck1
-    400072: RightEye
-    400074: RightFoot
-    400076: RightHand
-    400078: RightIndexDistal
-    400080: RightIndexIntermediate
-    400082: RightIndexProximal
-    400084: RightLittleDistal
-    400086: RightLittleIntermediate
-    400088: RightLittleProximal
-    400090: RightLowerArm1
-    400092: RightLowerLeg
-    400094: RightMiddleDistal
-    400096: RightMiddleIntermediate
-    400098: RightMiddleProximal
-    400100: RightRingDistal
-    400102: RightRingIntermediate
-    400104: RightRingProximal
-    400106: RightShoulder
-    400108: RightThumbDistal
-    400110: RightThumbIntermediate
-    400112: RightThumbProximal
-    400114: RightToes
-    400116: RightToesEnd
-    400118: RightUpperArm
-    400120: RightUpperLeg
-    400122: Spine1
-    400124: Spine2
-    2000000: back
-    7400000: FP_Idle
-    7400002: FP_Jog
-    7400004: FP_Sprint
-    7400006: FP_ADS
-    9500000: //RootNode
-    2186277476908879412: ImportLogs
+  serializedVersion: 19300
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: back
+  - first:
+      1: 100002
+    second: //RootNode
+  - first:
+      1: 100004
+    second: Chest
+  - first:
+      1: 100006
+    second: Gun_Transform
+  - first:
+      1: 100008
+    second: Head
+  - first:
+      1: 100010
+    second: Hips
+  - first:
+      1: 100012
+    second: improbable_TrajectorySHJnt
+  - first:
+      1: 100014
+    second: Jaw
+  - first:
+      1: 100016
+    second: JawEnd
+  - first:
+      1: 100018
+    second: LeftEye
+  - first:
+      1: 100020
+    second: LeftFoot
+  - first:
+      1: 100022
+    second: LeftHand
+  - first:
+      1: 100024
+    second: LeftIndexDistal
+  - first:
+      1: 100026
+    second: LeftIndexIntermediate
+  - first:
+      1: 100028
+    second: LeftIndexProximal
+  - first:
+      1: 100030
+    second: LeftLittleDistal
+  - first:
+      1: 100032
+    second: LeftLittleIntermediate
+  - first:
+      1: 100034
+    second: LeftLittleProximal
+  - first:
+      1: 100036
+    second: LeftLowerArm1
+  - first:
+      1: 100038
+    second: LeftLowerLeg
+  - first:
+      1: 100040
+    second: LeftMiddleDistal
+  - first:
+      1: 100042
+    second: LeftMiddleIntermediate
+  - first:
+      1: 100044
+    second: LeftMiddleProximal
+  - first:
+      1: 100046
+    second: LeftRingDistal
+  - first:
+      1: 100048
+    second: LeftRingIntermediate
+  - first:
+      1: 100050
+    second: LeftRingProximal
+  - first:
+      1: 100052
+    second: LeftShoulder
+  - first:
+      1: 100054
+    second: LeftThumbDistal
+  - first:
+      1: 100056
+    second: LeftThumbIntermediate
+  - first:
+      1: 100058
+    second: LeftThumbProximal
+  - first:
+      1: 100060
+    second: LeftToes
+  - first:
+      1: 100062
+    second: LeftToesEnd
+  - first:
+      1: 100064
+    second: LeftUpperArm
+  - first:
+      1: 100066
+    second: LeftUpperLeg
+  - first:
+      1: 100068
+    second: Neck
+  - first:
+      1: 100070
+    second: Neck1
+  - first:
+      1: 100072
+    second: RightEye
+  - first:
+      1: 100074
+    second: RightFoot
+  - first:
+      1: 100076
+    second: RightHand
+  - first:
+      1: 100078
+    second: RightIndexDistal
+  - first:
+      1: 100080
+    second: RightIndexIntermediate
+  - first:
+      1: 100082
+    second: RightIndexProximal
+  - first:
+      1: 100084
+    second: RightLittleDistal
+  - first:
+      1: 100086
+    second: RightLittleIntermediate
+  - first:
+      1: 100088
+    second: RightLittleProximal
+  - first:
+      1: 100090
+    second: RightLowerArm1
+  - first:
+      1: 100092
+    second: RightLowerLeg
+  - first:
+      1: 100094
+    second: RightMiddleDistal
+  - first:
+      1: 100096
+    second: RightMiddleIntermediate
+  - first:
+      1: 100098
+    second: RightMiddleProximal
+  - first:
+      1: 100100
+    second: RightRingDistal
+  - first:
+      1: 100102
+    second: RightRingIntermediate
+  - first:
+      1: 100104
+    second: RightRingProximal
+  - first:
+      1: 100106
+    second: RightShoulder
+  - first:
+      1: 100108
+    second: RightThumbDistal
+  - first:
+      1: 100110
+    second: RightThumbIntermediate
+  - first:
+      1: 100112
+    second: RightThumbProximal
+  - first:
+      1: 100114
+    second: RightToes
+  - first:
+      1: 100116
+    second: RightToesEnd
+  - first:
+      1: 100118
+    second: RightUpperArm
+  - first:
+      1: 100120
+    second: RightUpperLeg
+  - first:
+      1: 100122
+    second: Spine1
+  - first:
+      1: 100124
+    second: Spine2
+  - first:
+      4: 400000
+    second: back
+  - first:
+      4: 400002
+    second: //RootNode
+  - first:
+      4: 400004
+    second: Chest
+  - first:
+      4: 400006
+    second: Gun_Transform
+  - first:
+      4: 400008
+    second: Head
+  - first:
+      4: 400010
+    second: Hips
+  - first:
+      4: 400012
+    second: improbable_TrajectorySHJnt
+  - first:
+      4: 400014
+    second: Jaw
+  - first:
+      4: 400016
+    second: JawEnd
+  - first:
+      4: 400018
+    second: LeftEye
+  - first:
+      4: 400020
+    second: LeftFoot
+  - first:
+      4: 400022
+    second: LeftHand
+  - first:
+      4: 400024
+    second: LeftIndexDistal
+  - first:
+      4: 400026
+    second: LeftIndexIntermediate
+  - first:
+      4: 400028
+    second: LeftIndexProximal
+  - first:
+      4: 400030
+    second: LeftLittleDistal
+  - first:
+      4: 400032
+    second: LeftLittleIntermediate
+  - first:
+      4: 400034
+    second: LeftLittleProximal
+  - first:
+      4: 400036
+    second: LeftLowerArm1
+  - first:
+      4: 400038
+    second: LeftLowerLeg
+  - first:
+      4: 400040
+    second: LeftMiddleDistal
+  - first:
+      4: 400042
+    second: LeftMiddleIntermediate
+  - first:
+      4: 400044
+    second: LeftMiddleProximal
+  - first:
+      4: 400046
+    second: LeftRingDistal
+  - first:
+      4: 400048
+    second: LeftRingIntermediate
+  - first:
+      4: 400050
+    second: LeftRingProximal
+  - first:
+      4: 400052
+    second: LeftShoulder
+  - first:
+      4: 400054
+    second: LeftThumbDistal
+  - first:
+      4: 400056
+    second: LeftThumbIntermediate
+  - first:
+      4: 400058
+    second: LeftThumbProximal
+  - first:
+      4: 400060
+    second: LeftToes
+  - first:
+      4: 400062
+    second: LeftToesEnd
+  - first:
+      4: 400064
+    second: LeftUpperArm
+  - first:
+      4: 400066
+    second: LeftUpperLeg
+  - first:
+      4: 400068
+    second: Neck
+  - first:
+      4: 400070
+    second: Neck1
+  - first:
+      4: 400072
+    second: RightEye
+  - first:
+      4: 400074
+    second: RightFoot
+  - first:
+      4: 400076
+    second: RightHand
+  - first:
+      4: 400078
+    second: RightIndexDistal
+  - first:
+      4: 400080
+    second: RightIndexIntermediate
+  - first:
+      4: 400082
+    second: RightIndexProximal
+  - first:
+      4: 400084
+    second: RightLittleDistal
+  - first:
+      4: 400086
+    second: RightLittleIntermediate
+  - first:
+      4: 400088
+    second: RightLittleProximal
+  - first:
+      4: 400090
+    second: RightLowerArm1
+  - first:
+      4: 400092
+    second: RightLowerLeg
+  - first:
+      4: 400094
+    second: RightMiddleDistal
+  - first:
+      4: 400096
+    second: RightMiddleIntermediate
+  - first:
+      4: 400098
+    second: RightMiddleProximal
+  - first:
+      4: 400100
+    second: RightRingDistal
+  - first:
+      4: 400102
+    second: RightRingIntermediate
+  - first:
+      4: 400104
+    second: RightRingProximal
+  - first:
+      4: 400106
+    second: RightShoulder
+  - first:
+      4: 400108
+    second: RightThumbDistal
+  - first:
+      4: 400110
+    second: RightThumbIntermediate
+  - first:
+      4: 400112
+    second: RightThumbProximal
+  - first:
+      4: 400114
+    second: RightToes
+  - first:
+      4: 400116
+    second: RightToesEnd
+  - first:
+      4: 400118
+    second: RightUpperArm
+  - first:
+      4: 400120
+    second: RightUpperLeg
+  - first:
+      4: 400122
+    second: Spine1
+  - first:
+      4: 400124
+    second: Spine2
+  - first:
+      20: 2000000
+    second: back
+  - first:
+      74: 7400000
+    second: FP_Idle
+  - first:
+      74: 7400002
+    second: FP_Jog
+  - first:
+      74: 7400004
+    second: FP_Sprint
+  - first:
+      74: 7400006
+    second: FP_ADS
+  - first:
+      95: 9500000
+    second: //RootNode
+  - first:
+      41386430: 2186277476908879412
+    second: ImportLogs
   externalObjects: {}
   materials:
-    importMaterials: 1
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -170,6 +436,7 @@ ModelImporter:
     - serializedVersion: 16
       name: FP_Idle
       takeName: FP_Idle
+      internalID: 0
       firstFrame: 0
       lastFrame: 150
       wrapMode: 0
@@ -198,6 +465,7 @@ ModelImporter:
     - serializedVersion: 16
       name: FP_Jog
       takeName: FP_Jog
+      internalID: 0
       firstFrame: 200
       lastFrame: 224
       wrapMode: 0
@@ -226,6 +494,7 @@ ModelImporter:
     - serializedVersion: 16
       name: FP_Sprint
       takeName: FP_Sprint
+      internalID: 0
       firstFrame: 250
       lastFrame: 268
       wrapMode: 0
@@ -254,6 +523,7 @@ ModelImporter:
     - serializedVersion: 16
       name: FP_ADS
       takeName: FP_ADS
+      internalID: 0
       firstFrame: 300
       lastFrame: 310
       wrapMode: 0
@@ -286,6 +556,7 @@ ModelImporter:
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
@@ -293,18 +564,19 @@ ModelImporter:
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
     useFileScale: 1
-    previousCalculatedGlobalScale: 0.01
-    hasPreviousCalculatedGlobalScale: 1
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
@@ -313,10 +585,10 @@ ModelImporter:
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 1
-  copyAvatar: 1
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human:
     - boneName: Hips
       humanName: Hips
@@ -961,14 +1233,17 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 1
     hasExtraRoot: 1
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 1738ceb3bbac87b4f826a8bfacf80e2a,
     type: 3}
+  autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 3
   humanoidOversampling: 1
+  avatarSetup: 2
   additionalBone: 0
   userData: 
   assetBundleName: 

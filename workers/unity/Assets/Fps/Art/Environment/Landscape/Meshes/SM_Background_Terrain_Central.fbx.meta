@@ -1,49 +1,131 @@
 fileFormatVersion: 2
 guid: 8ede1d58e8677cd4abe6363bdbc84db6
 ModelImporter:
-  serializedVersion: 23
-  fileIDToRecycleName:
-    100000: //RootNode
-    100002: central_terrain_L0
-    100004: central_terrain_L1
-    100006: central_terrain_LOD0
-    100008: central_terrain_LOD1
-    100010: SM_Background_Terrain_Central_LOD0
-    100012: SM_Background_Terrain_Central_LOD1
-    400000: //RootNode
-    400002: central_terrain_L0
-    400004: central_terrain_L1
-    400006: central_terrain_LOD0
-    400008: central_terrain_LOD1
-    400010: SM_Background_Terrain_Central_LOD0
-    400012: SM_Background_Terrain_Central_LOD1
-    2100000: lambert1
-    2100002: heightmap_low2
-    2100004: lambert5
-    2100006: lambert2
-    2300000: //RootNode
-    2300002: central_terrain_L0
-    2300004: central_terrain_L1
-    2300006: central_terrain_LOD0
-    2300008: central_terrain_LOD1
-    2300010: SM_Background_Terrain_Central_LOD0
-    2300012: SM_Background_Terrain_Central_LOD1
-    3300000: //RootNode
-    3300002: central_terrain_L0
-    3300004: central_terrain_L1
-    3300006: central_terrain_LOD0
-    3300008: central_terrain_LOD1
-    3300010: SM_Background_Terrain_Central_LOD0
-    3300012: SM_Background_Terrain_Central_LOD1
-    4300000: heightmap_low2
-    4300002: central_terrain_L0
-    4300004: central_terrain_L1
-    4300006: central_terrain_LOD0
-    4300008: central_terrain_LOD1
-    4300010: SM_Background_Terrain_Central_LOD0
-    4300012: SM_Background_Terrain_Central_LOD1
-    9500000: //RootNode
-    20500000: //RootNode
+  serializedVersion: 19300
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: //RootNode
+  - first:
+      1: 100002
+    second: central_terrain_L0
+  - first:
+      1: 100004
+    second: central_terrain_L1
+  - first:
+      1: 100006
+    second: central_terrain_LOD0
+  - first:
+      1: 100008
+    second: central_terrain_LOD1
+  - first:
+      1: 100010
+    second: SM_Background_Terrain_Central_LOD0
+  - first:
+      1: 100012
+    second: SM_Background_Terrain_Central_LOD1
+  - first:
+      4: 400000
+    second: //RootNode
+  - first:
+      4: 400002
+    second: central_terrain_L0
+  - first:
+      4: 400004
+    second: central_terrain_L1
+  - first:
+      4: 400006
+    second: central_terrain_LOD0
+  - first:
+      4: 400008
+    second: central_terrain_LOD1
+  - first:
+      4: 400010
+    second: SM_Background_Terrain_Central_LOD0
+  - first:
+      4: 400012
+    second: SM_Background_Terrain_Central_LOD1
+  - first:
+      21: 2100000
+    second: lambert1
+  - first:
+      21: 2100002
+    second: heightmap_low2
+  - first:
+      21: 2100004
+    second: lambert5
+  - first:
+      21: 2100006
+    second: lambert2
+  - first:
+      23: 2300000
+    second: //RootNode
+  - first:
+      23: 2300002
+    second: central_terrain_L0
+  - first:
+      23: 2300004
+    second: central_terrain_L1
+  - first:
+      23: 2300006
+    second: central_terrain_LOD0
+  - first:
+      23: 2300008
+    second: central_terrain_LOD1
+  - first:
+      23: 2300010
+    second: SM_Background_Terrain_Central_LOD0
+  - first:
+      23: 2300012
+    second: SM_Background_Terrain_Central_LOD1
+  - first:
+      33: 3300000
+    second: //RootNode
+  - first:
+      33: 3300002
+    second: central_terrain_L0
+  - first:
+      33: 3300004
+    second: central_terrain_L1
+  - first:
+      33: 3300006
+    second: central_terrain_LOD0
+  - first:
+      33: 3300008
+    second: central_terrain_LOD1
+  - first:
+      33: 3300010
+    second: SM_Background_Terrain_Central_LOD0
+  - first:
+      33: 3300012
+    second: SM_Background_Terrain_Central_LOD1
+  - first:
+      43: 4300000
+    second: heightmap_low2
+  - first:
+      43: 4300002
+    second: central_terrain_L0
+  - first:
+      43: 4300004
+    second: central_terrain_L1
+  - first:
+      43: 4300006
+    second: central_terrain_LOD0
+  - first:
+      43: 4300008
+    second: central_terrain_LOD1
+  - first:
+      43: 4300010
+    second: SM_Background_Terrain_Central_LOD0
+  - first:
+      43: 4300012
+    second: SM_Background_Terrain_Central_LOD1
+  - first:
+      95: 9500000
+    second: //RootNode
+  - first:
+      205: 20500000
+    second: //RootNode
   externalObjects:
   - first:
       type: UnityEngine:Material
@@ -51,7 +133,7 @@ ModelImporter:
       name: lambert1
     second: {fileID: 2100000, guid: bf6d108a01e559745b0f2ab72a411f4d, type: 2}
   materials:
-    importMaterials: 1
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -85,6 +167,8 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
@@ -92,27 +176,31 @@ ModelImporter:
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
     useFileScale: 0
-    previousCalculatedGlobalScale: 1
-    hasPreviousCalculatedGlobalScale: 1
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 0
-  copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -122,13 +210,16 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 1
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 0
   humanoidOversampling: 1
+  avatarSetup: 0
   additionalBone: 0
   userData: 
   assetBundleName: 
