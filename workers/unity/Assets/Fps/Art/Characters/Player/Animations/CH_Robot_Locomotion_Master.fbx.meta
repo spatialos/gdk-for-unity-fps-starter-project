@@ -1,164 +1,470 @@
 fileFormatVersion: 2
 guid: 6bdd01a692ef4754ea172ecbee5b55f8
 ModelImporter:
-  serializedVersion: 23
-  fileIDToRecycleName:
-    100000: //RootNode
-    100002: Chest
-    100004: Gun_Transform
-    100006: Head
-    100008: Hips
-    100010: improbable_TrajectorySHJnt
-    100012: Jaw
-    100014: JawEnd
-    100016: LeftEye
-    100018: LeftFoot
-    100020: LeftHand
-    100022: LeftIndexDistal
-    100024: LeftIndexIntermediate
-    100026: LeftIndexProximal
-    100028: LeftLittleDistal
-    100030: LeftLittleIntermediate
-    100032: LeftLittleProximal
-    100034: LeftLowerArm1
-    100036: LeftLowerLeg
-    100038: LeftMiddleDistal
-    100040: LeftMiddleIntermediate
-    100042: LeftMiddleProximal
-    100044: LeftRingDistal
-    100046: LeftRingIntermediate
-    100048: LeftRingProximal
-    100050: LeftShoulder
-    100052: LeftThumbDistal
-    100054: LeftThumbIntermediate
-    100056: LeftThumbProximal
-    100058: LeftToes
-    100060: LeftToesEnd
-    100062: LeftUpperArm
-    100064: LeftUpperLeg
-    100066: Neck
-    100068: Neck1
-    100070: RightEye
-    100072: RightFoot
-    100074: RightHand
-    100076: RightIndexDistal
-    100078: RightIndexIntermediate
-    100080: RightIndexProximal
-    100082: RightLittleDistal
-    100084: RightLittleIntermediate
-    100086: RightLittleProximal
-    100088: RightLowerArm1
-    100090: RightLowerLeg
-    100092: RightMiddleDistal
-    100094: RightMiddleIntermediate
-    100096: RightMiddleProximal
-    100098: RightRingDistal
-    100100: RightRingIntermediate
-    100102: RightRingProximal
-    100104: RightShoulder
-    100106: RightThumbDistal
-    100108: RightThumbIntermediate
-    100110: RightThumbProximal
-    100112: RightToes
-    100114: RightToesEnd
-    100116: RightUpperArm
-    100118: RightUpperLeg
-    100120: Spine1
-    100122: Spine2
-    400000: //RootNode
-    400002: Chest
-    400004: Gun_Transform
-    400006: Head
-    400008: Hips
-    400010: improbable_TrajectorySHJnt
-    400012: Jaw
-    400014: JawEnd
-    400016: LeftEye
-    400018: LeftFoot
-    400020: LeftHand
-    400022: LeftIndexDistal
-    400024: LeftIndexIntermediate
-    400026: LeftIndexProximal
-    400028: LeftLittleDistal
-    400030: LeftLittleIntermediate
-    400032: LeftLittleProximal
-    400034: LeftLowerArm1
-    400036: LeftLowerLeg
-    400038: LeftMiddleDistal
-    400040: LeftMiddleIntermediate
-    400042: LeftMiddleProximal
-    400044: LeftRingDistal
-    400046: LeftRingIntermediate
-    400048: LeftRingProximal
-    400050: LeftShoulder
-    400052: LeftThumbDistal
-    400054: LeftThumbIntermediate
-    400056: LeftThumbProximal
-    400058: LeftToes
-    400060: LeftToesEnd
-    400062: LeftUpperArm
-    400064: LeftUpperLeg
-    400066: Neck
-    400068: Neck1
-    400070: RightEye
-    400072: RightFoot
-    400074: RightHand
-    400076: RightIndexDistal
-    400078: RightIndexIntermediate
-    400080: RightIndexProximal
-    400082: RightLittleDistal
-    400084: RightLittleIntermediate
-    400086: RightLittleProximal
-    400088: RightLowerArm1
-    400090: RightLowerLeg
-    400092: RightMiddleDistal
-    400094: RightMiddleIntermediate
-    400096: RightMiddleProximal
-    400098: RightRingDistal
-    400100: RightRingIntermediate
-    400102: RightRingProximal
-    400104: RightShoulder
-    400106: RightThumbDistal
-    400108: RightThumbIntermediate
-    400110: RightThumbProximal
-    400112: RightToes
-    400114: RightToesEnd
-    400116: RightUpperArm
-    400118: RightUpperLeg
-    400120: Spine1
-    400122: Spine2
-    7400000: Jog_Fwd
-    7400002: Jog_R45
-    7400004: Jog_L45
-    7400006: Jog_R135
-    7400008: Jog_L135
-    7400010: Jog_Bwd
-    7400012: Jog_R90
-    7400014: Jog_L90
-    7400016: Sprint_Fwd
-    7400018: Sprint_L45
-    7400020: Sprint_R45
-    7400022: Walk_Fwd
-    7400024: Walk_L45
-    7400026: Walk_R45
-    7400028: Walk_Fwd_ADS
-    7400030: Walk_L45_ADS
-    7400032: Walk_R45_ADS
-    7400034: Walk_Bwd
-    7400036: Walk_R135
-    7400038: Walk_L135
-    7400040: Walk_Bwd_ADS
-    7400042: Walk_R135_ADS
-    7400044: Walk_L135_ADS
-    7400046: Walk_L90
-    7400048: Walk_L90_ADS
-    7400050: Walk_R90
-    7400052: Walk_R90_ADS
-    9500000: //RootNode
-    2186277476908879412: ImportLogs
+  serializedVersion: 19300
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: //RootNode
+  - first:
+      1: 100002
+    second: Chest
+  - first:
+      1: 100004
+    second: Gun_Transform
+  - first:
+      1: 100006
+    second: Head
+  - first:
+      1: 100008
+    second: Hips
+  - first:
+      1: 100010
+    second: improbable_TrajectorySHJnt
+  - first:
+      1: 100012
+    second: Jaw
+  - first:
+      1: 100014
+    second: JawEnd
+  - first:
+      1: 100016
+    second: LeftEye
+  - first:
+      1: 100018
+    second: LeftFoot
+  - first:
+      1: 100020
+    second: LeftHand
+  - first:
+      1: 100022
+    second: LeftIndexDistal
+  - first:
+      1: 100024
+    second: LeftIndexIntermediate
+  - first:
+      1: 100026
+    second: LeftIndexProximal
+  - first:
+      1: 100028
+    second: LeftLittleDistal
+  - first:
+      1: 100030
+    second: LeftLittleIntermediate
+  - first:
+      1: 100032
+    second: LeftLittleProximal
+  - first:
+      1: 100034
+    second: LeftLowerArm1
+  - first:
+      1: 100036
+    second: LeftLowerLeg
+  - first:
+      1: 100038
+    second: LeftMiddleDistal
+  - first:
+      1: 100040
+    second: LeftMiddleIntermediate
+  - first:
+      1: 100042
+    second: LeftMiddleProximal
+  - first:
+      1: 100044
+    second: LeftRingDistal
+  - first:
+      1: 100046
+    second: LeftRingIntermediate
+  - first:
+      1: 100048
+    second: LeftRingProximal
+  - first:
+      1: 100050
+    second: LeftShoulder
+  - first:
+      1: 100052
+    second: LeftThumbDistal
+  - first:
+      1: 100054
+    second: LeftThumbIntermediate
+  - first:
+      1: 100056
+    second: LeftThumbProximal
+  - first:
+      1: 100058
+    second: LeftToes
+  - first:
+      1: 100060
+    second: LeftToesEnd
+  - first:
+      1: 100062
+    second: LeftUpperArm
+  - first:
+      1: 100064
+    second: LeftUpperLeg
+  - first:
+      1: 100066
+    second: Neck
+  - first:
+      1: 100068
+    second: Neck1
+  - first:
+      1: 100070
+    second: RightEye
+  - first:
+      1: 100072
+    second: RightFoot
+  - first:
+      1: 100074
+    second: RightHand
+  - first:
+      1: 100076
+    second: RightIndexDistal
+  - first:
+      1: 100078
+    second: RightIndexIntermediate
+  - first:
+      1: 100080
+    second: RightIndexProximal
+  - first:
+      1: 100082
+    second: RightLittleDistal
+  - first:
+      1: 100084
+    second: RightLittleIntermediate
+  - first:
+      1: 100086
+    second: RightLittleProximal
+  - first:
+      1: 100088
+    second: RightLowerArm1
+  - first:
+      1: 100090
+    second: RightLowerLeg
+  - first:
+      1: 100092
+    second: RightMiddleDistal
+  - first:
+      1: 100094
+    second: RightMiddleIntermediate
+  - first:
+      1: 100096
+    second: RightMiddleProximal
+  - first:
+      1: 100098
+    second: RightRingDistal
+  - first:
+      1: 100100
+    second: RightRingIntermediate
+  - first:
+      1: 100102
+    second: RightRingProximal
+  - first:
+      1: 100104
+    second: RightShoulder
+  - first:
+      1: 100106
+    second: RightThumbDistal
+  - first:
+      1: 100108
+    second: RightThumbIntermediate
+  - first:
+      1: 100110
+    second: RightThumbProximal
+  - first:
+      1: 100112
+    second: RightToes
+  - first:
+      1: 100114
+    second: RightToesEnd
+  - first:
+      1: 100116
+    second: RightUpperArm
+  - first:
+      1: 100118
+    second: RightUpperLeg
+  - first:
+      1: 100120
+    second: Spine1
+  - first:
+      1: 100122
+    second: Spine2
+  - first:
+      4: 400000
+    second: //RootNode
+  - first:
+      4: 400002
+    second: Chest
+  - first:
+      4: 400004
+    second: Gun_Transform
+  - first:
+      4: 400006
+    second: Head
+  - first:
+      4: 400008
+    second: Hips
+  - first:
+      4: 400010
+    second: improbable_TrajectorySHJnt
+  - first:
+      4: 400012
+    second: Jaw
+  - first:
+      4: 400014
+    second: JawEnd
+  - first:
+      4: 400016
+    second: LeftEye
+  - first:
+      4: 400018
+    second: LeftFoot
+  - first:
+      4: 400020
+    second: LeftHand
+  - first:
+      4: 400022
+    second: LeftIndexDistal
+  - first:
+      4: 400024
+    second: LeftIndexIntermediate
+  - first:
+      4: 400026
+    second: LeftIndexProximal
+  - first:
+      4: 400028
+    second: LeftLittleDistal
+  - first:
+      4: 400030
+    second: LeftLittleIntermediate
+  - first:
+      4: 400032
+    second: LeftLittleProximal
+  - first:
+      4: 400034
+    second: LeftLowerArm1
+  - first:
+      4: 400036
+    second: LeftLowerLeg
+  - first:
+      4: 400038
+    second: LeftMiddleDistal
+  - first:
+      4: 400040
+    second: LeftMiddleIntermediate
+  - first:
+      4: 400042
+    second: LeftMiddleProximal
+  - first:
+      4: 400044
+    second: LeftRingDistal
+  - first:
+      4: 400046
+    second: LeftRingIntermediate
+  - first:
+      4: 400048
+    second: LeftRingProximal
+  - first:
+      4: 400050
+    second: LeftShoulder
+  - first:
+      4: 400052
+    second: LeftThumbDistal
+  - first:
+      4: 400054
+    second: LeftThumbIntermediate
+  - first:
+      4: 400056
+    second: LeftThumbProximal
+  - first:
+      4: 400058
+    second: LeftToes
+  - first:
+      4: 400060
+    second: LeftToesEnd
+  - first:
+      4: 400062
+    second: LeftUpperArm
+  - first:
+      4: 400064
+    second: LeftUpperLeg
+  - first:
+      4: 400066
+    second: Neck
+  - first:
+      4: 400068
+    second: Neck1
+  - first:
+      4: 400070
+    second: RightEye
+  - first:
+      4: 400072
+    second: RightFoot
+  - first:
+      4: 400074
+    second: RightHand
+  - first:
+      4: 400076
+    second: RightIndexDistal
+  - first:
+      4: 400078
+    second: RightIndexIntermediate
+  - first:
+      4: 400080
+    second: RightIndexProximal
+  - first:
+      4: 400082
+    second: RightLittleDistal
+  - first:
+      4: 400084
+    second: RightLittleIntermediate
+  - first:
+      4: 400086
+    second: RightLittleProximal
+  - first:
+      4: 400088
+    second: RightLowerArm1
+  - first:
+      4: 400090
+    second: RightLowerLeg
+  - first:
+      4: 400092
+    second: RightMiddleDistal
+  - first:
+      4: 400094
+    second: RightMiddleIntermediate
+  - first:
+      4: 400096
+    second: RightMiddleProximal
+  - first:
+      4: 400098
+    second: RightRingDistal
+  - first:
+      4: 400100
+    second: RightRingIntermediate
+  - first:
+      4: 400102
+    second: RightRingProximal
+  - first:
+      4: 400104
+    second: RightShoulder
+  - first:
+      4: 400106
+    second: RightThumbDistal
+  - first:
+      4: 400108
+    second: RightThumbIntermediate
+  - first:
+      4: 400110
+    second: RightThumbProximal
+  - first:
+      4: 400112
+    second: RightToes
+  - first:
+      4: 400114
+    second: RightToesEnd
+  - first:
+      4: 400116
+    second: RightUpperArm
+  - first:
+      4: 400118
+    second: RightUpperLeg
+  - first:
+      4: 400120
+    second: Spine1
+  - first:
+      4: 400122
+    second: Spine2
+  - first:
+      74: 7400000
+    second: Jog_Fwd
+  - first:
+      74: 7400002
+    second: Jog_R45
+  - first:
+      74: 7400004
+    second: Jog_L45
+  - first:
+      74: 7400006
+    second: Jog_R135
+  - first:
+      74: 7400008
+    second: Jog_L135
+  - first:
+      74: 7400010
+    second: Jog_Bwd
+  - first:
+      74: 7400012
+    second: Jog_R90
+  - first:
+      74: 7400014
+    second: Jog_L90
+  - first:
+      74: 7400016
+    second: Sprint_Fwd
+  - first:
+      74: 7400018
+    second: Sprint_L45
+  - first:
+      74: 7400020
+    second: Sprint_R45
+  - first:
+      74: 7400022
+    second: Walk_Fwd
+  - first:
+      74: 7400024
+    second: Walk_L45
+  - first:
+      74: 7400026
+    second: Walk_R45
+  - first:
+      74: 7400028
+    second: Walk_Fwd_ADS
+  - first:
+      74: 7400030
+    second: Walk_L45_ADS
+  - first:
+      74: 7400032
+    second: Walk_R45_ADS
+  - first:
+      74: 7400034
+    second: Walk_Bwd
+  - first:
+      74: 7400036
+    second: Walk_R135
+  - first:
+      74: 7400038
+    second: Walk_L135
+  - first:
+      74: 7400040
+    second: Walk_Bwd_ADS
+  - first:
+      74: 7400042
+    second: Walk_R135_ADS
+  - first:
+      74: 7400044
+    second: Walk_L135_ADS
+  - first:
+      74: 7400046
+    second: Walk_L90
+  - first:
+      74: 7400048
+    second: Walk_L90_ADS
+  - first:
+      74: 7400050
+    second: Walk_R90
+  - first:
+      74: 7400052
+    second: Walk_R90_ADS
+  - first:
+      95: 9500000
+    second: //RootNode
+  - first:
+      41386430: 2186277476908879412
+    second: ImportLogs
   externalObjects: {}
   materials:
-    importMaterials: 1
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -171,201 +477,10 @@ ModelImporter:
     rigImportErrors: 
     rigImportWarnings: "Copied Avatar Rig Configuration mis-match. Bone length in
       copied configuration does not match position in animation file:\n\t'Spine1'
-      : position error = 3.468242 mm\n\t'Spine2' : position error = 4.422227 mm\n\t'Chest'
-      : position error = 2.601937 mm\n"
+      : position error = 3.415451 mm\n\t'Spine2' : position error = 4.354915 mm\n\t'Chest'
+      : position error = 2.562332 mm\n"
     animationImportErrors: 
-    animationImportWarnings: "\nClip 'Jog_Fwd' has import animation warnings that
-      might lower retargeting quality:\nNote: Activate translation DOF on avatar to
-      improve retargeting quality.\n\t'Hips' has translation animation that will be
-      discarded.\n\t'Hips' is inbetween humanoid transforms and has rotation animation
-      that will be discarded.\n\t'LeftLowerLeg' has translation animation that will
-      be discarded.\n\t'LeftFoot' has translation animation that will be discarded.\n\t'Spine1'
-      has translation animation that will be discarded.\n\t'Spine2' has translation
-      animation that will be discarded.\n\t'Chest' has translation animation that
-      will be discarded.\n\nClip 'Jog_R45' has import animation warnings that might
-      lower retargeting quality:\nNote: Activate translation DOF on avatar to improve
-      retargeting quality.\n\t'Hips' has translation animation that will be discarded.\n\t'Hips'
-      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\t'Spine1'
-      has translation animation that will be discarded.\n\t'Spine2' has translation
-      animation that will be discarded.\n\t'Chest' has translation animation that
-      will be discarded.\n\nClip 'Jog_L45' has import animation warnings that might
-      lower retargeting quality:\nNote: Activate translation DOF on avatar to improve
-      retargeting quality.\n\t'Hips' has translation animation that will be discarded.\n\t'Hips'
-      is inbetween humanoid transforms and has rotation animation that will be discarded.\n\t'LeftLowerLeg'
-      has translation animation that will be discarded.\n\t'LeftFoot' has translation
-      animation that will be discarded.\n\t'Spine1' has translation animation that
-      will be discarded.\n\t'Spine2' has translation animation that will be discarded.\n\t'Chest'
-      has translation animation that will be discarded.\n\nClip 'Jog_R135' has import
-      animation warnings that might lower retargeting quality:\nNote: Activate translation
-      DOF on avatar to improve retargeting quality.\n\t'Hips' has translation animation
-      that will be discarded.\n\t'Hips' is inbetween humanoid transforms and has rotation
-      animation that will be discarded.\n\t'Spine1' has translation animation that
-      will be discarded.\n\t'Spine2' has translation animation that will be discarded.\n\t'Chest'
-      has translation animation that will be discarded.\n\nClip 'Jog_L135' has import
-      animation warnings that might lower retargeting quality:\nNote: Activate translation
-      DOF on avatar to improve retargeting quality.\n\t'Hips' has translation animation
-      that will be discarded.\n\t'Hips' is inbetween humanoid transforms and has rotation
-      animation that will be discarded.\n\t'Spine1' has translation animation that
-      will be discarded.\n\t'Spine2' has translation animation that will be discarded.\n\t'Chest'
-      has translation animation that will be discarded.\n\nClip 'Jog_Bwd' has import
-      animation warnings that might lower retargeting quality:\nNote: Activate translation
-      DOF on avatar to improve retargeting quality.\n\t'Hips' has translation animation
-      that will be discarded.\n\t'Hips' is inbetween humanoid transforms and has rotation
-      animation that will be discarded.\n\t'Spine1' has translation animation that
-      will be discarded.\n\t'Spine2' has translation animation that will be discarded.\n\t'Chest'
-      has translation animation that will be discarded.\n\nClip 'Jog_R90' has import
-      animation warnings that might lower retargeting quality:\nNote: Activate translation
-      DOF on avatar to improve retargeting quality.\n\t'Hips' has translation animation
-      that will be discarded.\n\t'Hips' is inbetween humanoid transforms and has rotation
-      animation that will be discarded.\n\t'Spine1' has translation animation that
-      will be discarded.\n\t'Spine2' has translation animation that will be discarded.\n\t'Chest'
-      has translation animation that will be discarded.\n\nClip 'Jog_L90' has import
-      animation warnings that might lower retargeting quality:\nNote: Activate translation
-      DOF on avatar to improve retargeting quality.\n\t'Hips' has translation animation
-      that will be discarded.\n\t'Hips' is inbetween humanoid transforms and has rotation
-      animation that will be discarded.\n\t'Spine1' has translation animation that
-      will be discarded.\n\t'Spine2' has translation animation that will be discarded.\n\t'Chest'
-      has translation animation that will be discarded.\n\nClip 'Sprint_Fwd' has import
-      animation warnings that might lower retargeting quality:\nNote: Activate translation
-      DOF on avatar to improve retargeting quality.\n\t'Hips' has translation animation
-      that will be discarded.\n\t'Hips' is inbetween humanoid transforms and has rotation
-      animation that will be discarded.\n\t'LeftLowerLeg' has translation animation
-      that will be discarded.\n\t'LeftFoot' has translation animation that will be
-      discarded.\n\t'RightLowerLeg' has translation animation that will be discarded.\n\t'RightFoot'
-      has translation animation that will be discarded.\n\t'Spine1' has translation
-      animation that will be discarded.\n\t'Spine2' has translation animation that
-      will be discarded.\n\t'Chest' has translation animation that will be discarded.\n\nClip
-      'Sprint_L45' has import animation warnings that might lower retargeting quality:\nNote:
-      Activate translation DOF on avatar to improve retargeting quality.\n\t'Hips'
-      has translation animation that will be discarded.\n\t'Hips' is inbetween humanoid
-      transforms and has rotation animation that will be discarded.\n\t'LeftLowerLeg'
-      has translation animation that will be discarded.\n\t'LeftFoot' has translation
-      animation that will be discarded.\n\t'RightLowerLeg' has translation animation
-      that will be discarded.\n\t'RightFoot' has translation animation that will be
-      discarded.\n\t'Spine1' has translation animation that will be discarded.\n\t'Spine2'
-      has translation animation that will be discarded.\n\t'Chest' has translation
-      animation that will be discarded.\n\nClip 'Sprint_R45' has import animation
-      warnings that might lower retargeting quality:\nNote: Activate translation DOF
-      on avatar to improve retargeting quality.\n\t'Hips' has translation animation
-      that will be discarded.\n\t'Hips' is inbetween humanoid transforms and has rotation
-      animation that will be discarded.\n\t'LeftLowerLeg' has translation animation
-      that will be discarded.\n\t'LeftFoot' has translation animation that will be
-      discarded.\n\t'RightLowerLeg' has translation animation that will be discarded.\n\t'RightFoot'
-      has translation animation that will be discarded.\n\t'Spine1' has translation
-      animation that will be discarded.\n\t'Spine2' has translation animation that
-      will be discarded.\n\t'Chest' has translation animation that will be discarded.\n\nClip
-      'Walk_Fwd' has import animation warnings that might lower retargeting quality:\nNote:
-      Activate translation DOF on avatar to improve retargeting quality.\n\t'Hips'
-      has translation animation that will be discarded.\n\t'Hips' is inbetween humanoid
-      transforms and has rotation animation that will be discarded.\n\t'Spine1' has
-      translation animation that will be discarded.\n\t'Spine2' has translation animation
-      that will be discarded.\n\t'Chest' has translation animation that will be discarded.\n\t'RightUpperArm'
-      has translation animation that will be discarded.\n\nClip 'Walk_L45' has import
-      animation warnings that might lower retargeting quality:\nNote: Activate translation
-      DOF on avatar to improve retargeting quality.\n\t'Hips' has translation animation
-      that will be discarded.\n\t'Hips' is inbetween humanoid transforms and has rotation
-      animation that will be discarded.\n\t'Spine1' has translation animation that
-      will be discarded.\n\t'Spine2' has translation animation that will be discarded.\n\t'Chest'
-      has translation animation that will be discarded.\n\t'RightUpperArm' has translation
-      animation that will be discarded.\n\nClip 'Walk_R45' has import animation warnings
-      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
-      to improve retargeting quality.\n\t'Hips' has translation animation that will
-      be discarded.\n\t'Hips' is inbetween humanoid transforms and has rotation animation
-      that will be discarded.\n\t'Spine1' has translation animation that will be discarded.\n\t'Spine2'
-      has translation animation that will be discarded.\n\t'Chest' has translation
-      animation that will be discarded.\n\t'RightUpperArm' has translation animation
-      that will be discarded.\n\nClip 'Walk_Fwd_ADS' has import animation warnings
-      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
-      to improve retargeting quality.\n\t'Hips' has translation animation that will
-      be discarded.\n\t'Hips' is inbetween humanoid transforms and has rotation animation
-      that will be discarded.\n\t'Spine1' has translation animation that will be discarded.\n\t'Spine2'
-      has translation animation that will be discarded.\n\t'Chest' has translation
-      animation that will be discarded.\n\t'RightUpperArm' has translation animation
-      that will be discarded.\n\nClip 'Walk_L45_ADS' has import animation warnings
-      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
-      to improve retargeting quality.\n\t'Hips' has translation animation that will
-      be discarded.\n\t'Hips' is inbetween humanoid transforms and has rotation animation
-      that will be discarded.\n\t'Spine1' has translation animation that will be discarded.\n\t'Spine2'
-      has translation animation that will be discarded.\n\t'Chest' has translation
-      animation that will be discarded.\n\t'RightUpperArm' has translation animation
-      that will be discarded.\n\nClip 'Walk_R45_ADS' has import animation warnings
-      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
-      to improve retargeting quality.\n\t'Hips' has translation animation that will
-      be discarded.\n\t'Hips' is inbetween humanoid transforms and has rotation animation
-      that will be discarded.\n\t'Spine1' has translation animation that will be discarded.\n\t'Spine2'
-      has translation animation that will be discarded.\n\t'Chest' has translation
-      animation that will be discarded.\n\t'RightUpperArm' has translation animation
-      that will be discarded.\n\nClip 'Walk_Bwd' has import animation warnings that
-      might lower retargeting quality:\nNote: Activate translation DOF on avatar to
-      improve retargeting quality.\n\t'Hips' has translation animation that will be
-      discarded.\n\t'Hips' is inbetween humanoid transforms and has rotation animation
-      that will be discarded.\n\t'Spine1' has translation animation that will be discarded.\n\t'Spine2'
-      has translation animation that will be discarded.\n\t'Chest' has translation
-      animation that will be discarded.\n\t'RightUpperArm' has translation animation
-      that will be discarded.\n\nClip 'Walk_R135' has import animation warnings that
-      might lower retargeting quality:\nNote: Activate translation DOF on avatar to
-      improve retargeting quality.\n\t'Hips' has translation animation that will be
-      discarded.\n\t'Hips' is inbetween humanoid transforms and has rotation animation
-      that will be discarded.\n\t'Spine1' has translation animation that will be discarded.\n\t'Spine2'
-      has translation animation that will be discarded.\n\t'Chest' has translation
-      animation that will be discarded.\n\t'RightUpperArm' has translation animation
-      that will be discarded.\n\nClip 'Walk_L135' has import animation warnings that
-      might lower retargeting quality:\nNote: Activate translation DOF on avatar to
-      improve retargeting quality.\n\t'Hips' has translation animation that will be
-      discarded.\n\t'Hips' is inbetween humanoid transforms and has rotation animation
-      that will be discarded.\n\t'Spine1' has translation animation that will be discarded.\n\t'Spine2'
-      has translation animation that will be discarded.\n\t'Chest' has translation
-      animation that will be discarded.\n\t'RightUpperArm' has translation animation
-      that will be discarded.\n\nClip 'Walk_Bwd_ADS' has import animation warnings
-      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
-      to improve retargeting quality.\n\t'Hips' has translation animation that will
-      be discarded.\n\t'Hips' is inbetween humanoid transforms and has rotation animation
-      that will be discarded.\n\t'Spine1' has translation animation that will be discarded.\n\t'Spine2'
-      has translation animation that will be discarded.\n\t'Chest' has translation
-      animation that will be discarded.\n\t'RightUpperArm' has translation animation
-      that will be discarded.\n\nClip 'Walk_R135_ADS' has import animation warnings
-      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
-      to improve retargeting quality.\n\t'Hips' has translation animation that will
-      be discarded.\n\t'Hips' is inbetween humanoid transforms and has rotation animation
-      that will be discarded.\n\t'Spine1' has translation animation that will be discarded.\n\t'Spine2'
-      has translation animation that will be discarded.\n\t'Chest' has translation
-      animation that will be discarded.\n\t'RightUpperArm' has translation animation
-      that will be discarded.\n\nClip 'Walk_L135_ADS' has import animation warnings
-      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
-      to improve retargeting quality.\n\t'Hips' has translation animation that will
-      be discarded.\n\t'Hips' is inbetween humanoid transforms and has rotation animation
-      that will be discarded.\n\t'Spine1' has translation animation that will be discarded.\n\t'Spine2'
-      has translation animation that will be discarded.\n\t'Chest' has translation
-      animation that will be discarded.\n\t'RightUpperArm' has translation animation
-      that will be discarded.\n\nClip 'Walk_L90' has import animation warnings that
-      might lower retargeting quality:\nNote: Activate translation DOF on avatar to
-      improve retargeting quality.\n\t'Hips' has translation animation that will be
-      discarded.\n\t'Hips' is inbetween humanoid transforms and has rotation animation
-      that will be discarded.\n\t'Spine1' has translation animation that will be discarded.\n\t'Spine2'
-      has translation animation that will be discarded.\n\t'Chest' has translation
-      animation that will be discarded.\n\t'RightUpperArm' has translation animation
-      that will be discarded.\n\nClip 'Walk_L90_ADS' has import animation warnings
-      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
-      to improve retargeting quality.\n\t'Hips' has translation animation that will
-      be discarded.\n\t'Hips' is inbetween humanoid transforms and has rotation animation
-      that will be discarded.\n\t'Spine1' has translation animation that will be discarded.\n\t'Spine2'
-      has translation animation that will be discarded.\n\t'Chest' has translation
-      animation that will be discarded.\n\t'RightUpperArm' has translation animation
-      that will be discarded.\n\nClip 'Walk_R90' has import animation warnings that
-      might lower retargeting quality:\nNote: Activate translation DOF on avatar to
-      improve retargeting quality.\n\t'Hips' has translation animation that will be
-      discarded.\n\t'Hips' is inbetween humanoid transforms and has rotation animation
-      that will be discarded.\n\t'Spine1' has translation animation that will be discarded.\n\t'Spine2'
-      has translation animation that will be discarded.\n\t'Chest' has translation
-      animation that will be discarded.\n\t'RightUpperArm' has translation animation
-      that will be discarded.\n\nClip 'Walk_R90_ADS' has import animation warnings
-      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
-      to improve retargeting quality.\n\t'Hips' has translation animation that will
-      be discarded.\n\t'Hips' is inbetween humanoid transforms and has rotation animation
-      that will be discarded.\n\t'Spine1' has translation animation that will be discarded.\n\t'Spine2'
-      has translation animation that will be discarded.\n\t'Chest' has translation
-      animation that will be discarded.\n\t'RightUpperArm' has translation animation
-      that will be discarded.\n"
+    animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
@@ -381,6 +496,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Jog_Fwd
       takeName: Jog_Fwd
+      internalID: 0
       firstFrame: 0
       lastFrame: 21
       wrapMode: 0
@@ -409,6 +525,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Jog_R45
       takeName: Jog_R45
+      internalID: 0
       firstFrame: 42
       lastFrame: 63
       wrapMode: 0
@@ -437,6 +554,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Jog_L45
       takeName: Jog_L45
+      internalID: 0
       firstFrame: 84
       lastFrame: 105
       wrapMode: 0
@@ -465,6 +583,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Jog_R135
       takeName: Jog_R135
+      internalID: 0
       firstFrame: 126
       lastFrame: 147
       wrapMode: 0
@@ -493,6 +612,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Jog_L135
       takeName: Jog_L135
+      internalID: 0
       firstFrame: 168
       lastFrame: 189
       wrapMode: 0
@@ -521,6 +641,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Jog_Bwd
       takeName: Jog_Bwd
+      internalID: 0
       firstFrame: 210
       lastFrame: 231
       wrapMode: 0
@@ -549,6 +670,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Jog_R90
       takeName: Jog_R90
+      internalID: 0
       firstFrame: 252
       lastFrame: 273
       wrapMode: 0
@@ -577,6 +699,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Jog_L90
       takeName: Jog_L90
+      internalID: 0
       firstFrame: 294
       lastFrame: 315
       wrapMode: 0
@@ -605,6 +728,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Sprint_Fwd
       takeName: Sprint_Fwd
+      internalID: 0
       firstFrame: 333
       lastFrame: 351
       wrapMode: 0
@@ -633,6 +757,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Sprint_L45
       takeName: Sprint_L45
+      internalID: 0
       firstFrame: 369
       lastFrame: 387
       wrapMode: 0
@@ -661,6 +786,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Sprint_R45
       takeName: Sprint_R45
+      internalID: 0
       firstFrame: 405
       lastFrame: 423
       wrapMode: 0
@@ -689,6 +815,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Walk_Fwd
       takeName: Walk_Fwd
+      internalID: 0
       firstFrame: 447
       lastFrame: 471
       wrapMode: 0
@@ -717,6 +844,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Walk_L45
       takeName: Walk_L45
+      internalID: 0
       firstFrame: 495
       lastFrame: 519
       wrapMode: 0
@@ -745,6 +873,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Walk_R45
       takeName: Walk_R45
+      internalID: 0
       firstFrame: 543
       lastFrame: 567
       wrapMode: 0
@@ -773,6 +902,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Walk_Fwd_ADS
       takeName: Walk_Fwd_ADS
+      internalID: 0
       firstFrame: 591
       lastFrame: 615
       wrapMode: 0
@@ -801,6 +931,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Walk_L45_ADS
       takeName: Walk_L45_ADS
+      internalID: 0
       firstFrame: 639
       lastFrame: 663
       wrapMode: 0
@@ -829,6 +960,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Walk_R45_ADS
       takeName: Walk_R45_ADS
+      internalID: 0
       firstFrame: 687
       lastFrame: 711
       wrapMode: 0
@@ -857,6 +989,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Walk_Bwd
       takeName: Walk_Bwd
+      internalID: 0
       firstFrame: 734
       lastFrame: 758
       wrapMode: 0
@@ -885,6 +1018,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Walk_R135
       takeName: Walk_R135
+      internalID: 0
       firstFrame: 782
       lastFrame: 806
       wrapMode: 0
@@ -913,6 +1047,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Walk_L135
       takeName: Walk_L135
+      internalID: 0
       firstFrame: 830
       lastFrame: 854
       wrapMode: 0
@@ -941,6 +1076,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Walk_Bwd_ADS
       takeName: Walk_Bwd_ADS
+      internalID: 0
       firstFrame: 878
       lastFrame: 902
       wrapMode: 0
@@ -969,6 +1105,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Walk_R135_ADS
       takeName: Walk_R135_ADS
+      internalID: 0
       firstFrame: 926
       lastFrame: 950
       wrapMode: 0
@@ -997,6 +1134,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Walk_L135_ADS
       takeName: Walk_L135_ADS
+      internalID: 0
       firstFrame: 974
       lastFrame: 998
       wrapMode: 0
@@ -1025,6 +1163,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Walk_L90
       takeName: Walk_L90
+      internalID: 0
       firstFrame: 1022
       lastFrame: 1046
       wrapMode: 0
@@ -1053,6 +1192,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Walk_L90_ADS
       takeName: Walk_L90_ADS
+      internalID: 0
       firstFrame: 1070
       lastFrame: 1094
       wrapMode: 0
@@ -1081,6 +1221,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Walk_R90
       takeName: Walk_R90
+      internalID: 0
       firstFrame: 1118
       lastFrame: 1142
       wrapMode: 0
@@ -1109,6 +1250,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Walk_R90_ADS
       takeName: Walk_R90_ADS
+      internalID: 0
       firstFrame: 1166
       lastFrame: 1190
       wrapMode: 0
@@ -1141,6 +1283,7 @@ ModelImporter:
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
@@ -1148,18 +1291,19 @@ ModelImporter:
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
     useFileScale: 1
-    previousCalculatedGlobalScale: 0.01
-    hasPreviousCalculatedGlobalScale: 1
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
@@ -1168,10 +1312,10 @@ ModelImporter:
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 1
-  copyAvatar: 1
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human:
     - boneName: Hips
       humanName: Hips
@@ -1816,14 +1960,17 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 1
     hasExtraRoot: 1
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 1738ceb3bbac87b4f826a8bfacf80e2a,
     type: 3}
+  autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 3
   humanoidOversampling: 1
+  avatarSetup: 2
   additionalBone: 0
   userData: 
   assetBundleName: 

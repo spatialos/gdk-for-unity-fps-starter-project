@@ -96,6 +96,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
+    m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
   m_UseShadowmask: 1
 --- !u!196 &4
@@ -326,8 +327,9 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1352389042}
   m_Enabled: 1
-  serializedVersion: 9
+  serializedVersion: 10
   m_Type: 1
+  m_Shape: 0
   m_Color: {r: 1, g: 0.97048783, b: 0.89, a: 1}
   m_Intensity: 1
   m_Range: 10
@@ -490,13 +492,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f8c7189676e488cbadd0180cc51fa57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Blackboard:
-    UseSessionBasedFlow: 0
-    PlayerName: 
-    DevAuthToken: 
-    PlayerIdentityToken: 
-    Deployment: 
-    ClientConnector: {fileID: 0}
+  ClientConnector: {fileID: 0}
   ClientWorkerConnectorPrefab: {fileID: 1638104666241782, guid: 075c14fd6c4ad514581b6aaabc0711bb,
     type: 3}
   uiManager: {fileID: 1345553513}

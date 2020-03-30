@@ -1,25 +1,59 @@
 fileFormatVersion: 2
 guid: d0da7190507aafb4bb1e6f0c3ff77243
 ModelImporter:
-  serializedVersion: 23
-  fileIDToRecycleName:
-    100000: _DesignerAssets_
-    100002: _StarterMap_
-    100004: Ramp
-    100006: //RootNode
-    400000: _DesignerAssets_
-    400002: _StarterMap_
-    400004: Ramp
-    400006: //RootNode
-    2100000: lambert1
-    2100002: lambert4
-    2300000: Ramp
-    2300002: //RootNode
-    3300000: Ramp
-    3300002: //RootNode
-    4300000: Ramp
-    4300002: SM_Ramp_1m
-    6400000: //RootNode
+  serializedVersion: 19300
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: _DesignerAssets_
+  - first:
+      1: 100002
+    second: _StarterMap_
+  - first:
+      1: 100004
+    second: Ramp
+  - first:
+      1: 100006
+    second: //RootNode
+  - first:
+      4: 400000
+    second: _DesignerAssets_
+  - first:
+      4: 400002
+    second: _StarterMap_
+  - first:
+      4: 400004
+    second: Ramp
+  - first:
+      4: 400006
+    second: //RootNode
+  - first:
+      21: 2100000
+    second: lambert1
+  - first:
+      21: 2100002
+    second: lambert4
+  - first:
+      23: 2300000
+    second: Ramp
+  - first:
+      23: 2300002
+    second: //RootNode
+  - first:
+      33: 3300000
+    second: Ramp
+  - first:
+      33: 3300002
+    second: //RootNode
+  - first:
+      43: 4300000
+    second: Ramp
+  - first:
+      43: 4300002
+    second: SM_Ramp_1m
+  - first:
+      64: 6400000
+    second: //RootNode
   externalObjects:
   - first:
       type: UnityEngine:Material
@@ -32,7 +66,7 @@ ModelImporter:
       name: lambert4
     second: {fileID: 2100000, guid: 0eaa540306a85a743ae6f026c45abf60, type: 2}
   materials:
-    importMaterials: 1
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -64,6 +98,8 @@ ModelImporter:
     globalScale: 0.01
     meshCompression: 0
     addColliders: 1
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 0
@@ -71,27 +107,31 @@ ModelImporter:
     swapUVChannels: 0
     generateSecondaryUV: 1
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
     useFileScale: 0
-    previousCalculatedGlobalScale: 1
-    hasPreviousCalculatedGlobalScale: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 1
-  copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -101,13 +141,16 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 0.01
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 0
   humanoidOversampling: 1
+  avatarSetup: 0
   additionalBone: 0
   userData: 
   assetBundleName: 

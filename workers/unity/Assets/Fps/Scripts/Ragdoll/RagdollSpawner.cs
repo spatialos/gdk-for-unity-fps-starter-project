@@ -19,6 +19,8 @@ namespace Fps.Ragdoll
 
         private void OnEnable()
         {
+            ValidateRagdollPrefab(ragdollPrefab);
+
             health.OnHealthModifiedEvent += OnHealthModified;
             pool = ObjectPooler.GetOrCreateObjectPool<PoolableRagdoll>(ragdollPrefab, 2);
         }
@@ -48,16 +50,12 @@ namespace Fps.Ragdoll
             ragdoll.LaunchRagdoll(deathDetails);
         }
 
-        private void OnValidate()
-        {
-            ValidateRagdollPrefab(ragdollPrefab);
-        }
-
         private void ValidateRagdollPrefab(GameObject prefab)
         {
             if (prefab.GetComponent<PoolableRagdoll>() == null)
             {
                 Debug.LogError($"The Ragdoll prefab '{prefab.name}' is missing a PoolableRagdoll script.");
+                enabled = false;
             }
 
             if (prefab.GetComponentInChildren<Rigidbody>() == null)
@@ -65,6 +63,7 @@ namespace Fps.Ragdoll
                 Debug.LogError(
                     $"The Ragdoll prefab '{prefab.name}' does not contain any Rigidbodies. "
                     + "The prefab will therefore not ragdoll, or be launched.");
+                enabled = false;
             }
         }
     }

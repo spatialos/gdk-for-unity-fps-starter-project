@@ -438,11 +438,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4323650176391204}
     m_Modifications:
-    - target: {fileID: 896626365763983101, guid: 2a8d33357edd45e48a205097b34fc6e0,
-        type: 3}
-      propertyPath: m_Name
-      value: FirstPersonCamera
-      objectReference: {fileID: 0}
     - target: {fileID: 893921381858113093, guid: 2a8d33357edd45e48a205097b34fc6e0,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -498,6 +493,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 896626365763983101, guid: 2a8d33357edd45e48a205097b34fc6e0,
+        type: 3}
+      propertyPath: m_Name
+      value: FirstPersonCamera
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2a8d33357edd45e48a205097b34fc6e0, type: 3}
 --- !u!4 &4532771127299994 stripped
@@ -519,11 +519,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4620716434285874}
     m_Modifications:
-    - target: {fileID: 1620896566736479575, guid: 99c1c836e4262284d9b458f03442a4f6,
-        type: 3}
-      propertyPath: m_Name
-      value: FirstPersonModel
-      objectReference: {fileID: 0}
     - target: {fileID: 1371366245061083600, guid: 99c1c836e4262284d9b458f03442a4f6,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -578,6 +573,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1620896566736479575, guid: 99c1c836e4262284d9b458f03442a4f6,
+        type: 3}
+      propertyPath: m_Name
+      value: FirstPersonModel
       objectReference: {fileID: 0}
     - target: {fileID: 6108130638274169511, guid: 99c1c836e4262284d9b458f03442a4f6,
         type: 3}

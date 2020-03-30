@@ -1,33 +1,83 @@
 fileFormatVersion: 2
 guid: ab9d647ca5e164743acf47d1ea52413b
 ModelImporter:
-  serializedVersion: 23
-  fileIDToRecycleName:
-    100000: assault_rifle_LOD0
-    100002: assault_rifle_LOD1
-    100004: assault_rifle_LOD2
-    100006: assault_rifle_LOD3
-    100008: //RootNode
-    400000: assault_rifle_LOD0
-    400002: assault_rifle_LOD1
-    400004: assault_rifle_LOD2
-    400006: assault_rifle_LOD3
-    400008: //RootNode
-    2100000: glass
-    2100002: base_material
-    2300000: assault_rifle_LOD0
-    2300002: assault_rifle_LOD1
-    2300004: assault_rifle_LOD2
-    2300006: assault_rifle_LOD3
-    3300000: assault_rifle_LOD0
-    3300002: assault_rifle_LOD1
-    3300004: assault_rifle_LOD2
-    3300006: assault_rifle_LOD3
-    4300000: assault_rifle_LOD0
-    4300002: assault_rifle_LOD1
-    4300004: assault_rifle_LOD2
-    4300006: assault_rifle_LOD3
-    20500000: //RootNode
+  serializedVersion: 19300
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: assault_rifle_LOD0
+  - first:
+      1: 100002
+    second: assault_rifle_LOD1
+  - first:
+      1: 100004
+    second: assault_rifle_LOD2
+  - first:
+      1: 100006
+    second: assault_rifle_LOD3
+  - first:
+      1: 100008
+    second: //RootNode
+  - first:
+      4: 400000
+    second: assault_rifle_LOD0
+  - first:
+      4: 400002
+    second: assault_rifle_LOD1
+  - first:
+      4: 400004
+    second: assault_rifle_LOD2
+  - first:
+      4: 400006
+    second: assault_rifle_LOD3
+  - first:
+      4: 400008
+    second: //RootNode
+  - first:
+      21: 2100000
+    second: glass
+  - first:
+      21: 2100002
+    second: base_material
+  - first:
+      23: 2300000
+    second: assault_rifle_LOD0
+  - first:
+      23: 2300002
+    second: assault_rifle_LOD1
+  - first:
+      23: 2300004
+    second: assault_rifle_LOD2
+  - first:
+      23: 2300006
+    second: assault_rifle_LOD3
+  - first:
+      33: 3300000
+    second: assault_rifle_LOD0
+  - first:
+      33: 3300002
+    second: assault_rifle_LOD1
+  - first:
+      33: 3300004
+    second: assault_rifle_LOD2
+  - first:
+      33: 3300006
+    second: assault_rifle_LOD3
+  - first:
+      43: 4300000
+    second: assault_rifle_LOD0
+  - first:
+      43: 4300002
+    second: assault_rifle_LOD1
+  - first:
+      43: 4300004
+    second: assault_rifle_LOD2
+  - first:
+      43: 4300006
+    second: assault_rifle_LOD3
+  - first:
+      205: 20500000
+    second: //RootNode
   externalObjects:
   - first:
       type: UnityEngine:Material
@@ -40,7 +90,7 @@ ModelImporter:
       name: glass
     second: {fileID: 2100000, guid: 0d6e5697201f0e14786769fea82a6753, type: 2}
   materials:
-    importMaterials: 1
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -76,6 +126,8 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
@@ -83,27 +135,31 @@ ModelImporter:
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
     useFileScale: 0
-    previousCalculatedGlobalScale: 1
-    hasPreviousCalculatedGlobalScale: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 1
-  copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -113,13 +169,16 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 0
   humanoidOversampling: 1
+  avatarSetup: 0
   additionalBone: 0
   userData: 
   assetBundleName: 
