@@ -4,7 +4,7 @@
 
 ## Breaking Changes
 
-- The FPS Starter Project now requires Unity 2019.3 [#263](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/263)
+- The FPS Starter Project now requires Unity 2019.3. [#263](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/263)
 
 ## `0.3.4` - 2020-03-25
 
@@ -15,7 +15,7 @@
 
 ## Changed
 
-- Upgraded to GDK for Unity version `0.3.4`
+- Upgraded to GDK for Unity version `0.3.4`.
 - Added the new `PopulateEntityTypeExpectations` method required by `IEntityGameObjectCreator` to the `AdvancedEntityPipeline`. [#261](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/261)
 
 ## `0.3.3` - 2020-02-14
