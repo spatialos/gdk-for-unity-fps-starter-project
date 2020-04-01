@@ -56,7 +56,7 @@ namespace Fps.WorkerConnectors
                 connectPlayersWithDevAuth = false;
             }
 
-            Application.targetFrameRate = 60;
+            // Application.targetFrameRate = 10;
             await AttemptConnect();
         }
 

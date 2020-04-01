@@ -14,25 +14,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AssemblyConfig:
     ProjectName: unity_gdk
-    AssemblyName: myassembly
+    AssemblyName: fpsdebug_0401_1610_nofilter
     ShouldForceUpload: 0
   DeploymentConfigs:
   - ProjectName: unity_gdk
-    AssemblyName: myassembly
+    AssemblyName: fpsdebug_0401_1610_nofilter
     Deployment:
-      Name: my_deployment
+      Name: fpsdebug_0401_1610_nofilter
       SnapshotPath: snapshots/cloud.snapshot
       LaunchJson: cloud_launch_large.json
       Region: 1
       Tags:
       - dev_login
+      - nofilter
+      - debug
     SimulatedPlayerDeploymentConfigs:
-    - Name: my_deployment_sim1
+    - Name: fpsdebug_0401_1610_nofilter_sim1
       SnapshotPath: 
       LaunchJson: cloud_launch_large_sim_players.json
       Region: 1
-      Tags: []
-      TargetDeploymentName: my_deployment
+      Tags:
+      - nofilter
+      - debug
+      TargetDeploymentName: fpsdebug_0401_1610_nofilter
       FlagPrefix: fps
       WorkerType: SimulatedPlayerCoordinator
       WorkerTypeId: 1

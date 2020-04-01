@@ -13,8 +13,8 @@ namespace Fps.Movement
         [Require] private ServerMovementReader server;
 #pragma warning restore 649
 
-        [SerializeField] private float transformUpdateHz = 15.0f;
-        [SerializeField] private float rotationUpdateHz = 15.0f;
+        [SerializeField] private float transformUpdateHz = 5.0f;
+        [SerializeField] private float rotationUpdateHz = 5.0f;
         [SerializeField] [HideInInspector] private float transformUpdateDelta;
         [SerializeField] [HideInInspector] private float rotationUpdateDelta;
 
