@@ -6,6 +6,14 @@
 
 - The FPS Starter Project now requires Unity 2019.3. [#263](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/263)
 
+## Added
+
+- Added component result type filters to QBI queries. [#264](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/264)
+
+## Changed
+
+- Updated project to support `com.unity.entities` package upgrade. [#264](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/264)
+
 ## `0.3.4` - 2020-03-25
 
 ## Breaking Changes

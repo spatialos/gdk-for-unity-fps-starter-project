@@ -22,8 +22,6 @@ namespace Fps.Config
             template.AddComponent(new Persistence.Snapshot(), WorkerUtils.UnityGameLogic);
             template.AddComponent(new PlayerCreator.Snapshot(), WorkerUtils.UnityGameLogic);
 
-            template.SetComponentWriteAccess(EntityAcl.ComponentId, WorkerUtils.UnityGameLogic);
-
             return template;
         }
 
@@ -113,10 +111,9 @@ namespace Fps.Config
                 .AddQueries<ClientMovement.Component>(clientSelfInterest, clientRangeInterest)
                 .AddQueries<ServerMovement.Component>(serverSelfInterest, serverRangeInterest);
 
-            template.AddComponent(interest.ToSnapshot(), WorkerUtils.UnityGameLogic);
+            template.AddComponent(interest.ToSnapshot());
 
             template.SetReadAccess(WorkerUtils.UnityClient, WorkerUtils.UnityGameLogic, WorkerUtils.MobileClient);
-            template.SetComponentWriteAccess(EntityAcl.ComponentId, WorkerUtils.UnityGameLogic);
 
             return template;
         }
