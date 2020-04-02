@@ -1,4 +1,3 @@
-using System.Runtime.InteropServices;
 using Fps.Guns;
 using Fps.Health;
 using Fps.Respawning;
