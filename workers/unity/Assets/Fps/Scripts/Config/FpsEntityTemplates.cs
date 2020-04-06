@@ -82,12 +82,20 @@ namespace Fps.Config
             const int serverRadius = 150;
             var clientRadius = workerId.Contains(WorkerUtils.MobileClient) ? 60 : 150;
 
+            // Position, Metadata, OwningWorker and ServerMovement are included in all queries, since these
+            // components are required by the GameObject creator.
+
+            // HealthComponent is needed by the LookAtRagdoll script for respawn behaviour.
+            // GunComponent is needed by the GunManager script.
             var clientSelfInterest = InterestQuery.Query(Constraint.EntityId(entityId)).FilterResults(new[]
             {
                 Position.ComponentId, Metadata.ComponentId, OwningWorker.ComponentId,
                 ServerMovement.ComponentId, HealthComponent.ComponentId, GunComponent.ComponentId
             });
 
+            // ClientRotation is used for rendering other players.
+            // GunComponent is required by the GunManager script.
+            // GunStateComponent and ShootingComponent are needed for rendering other players' shots.
             var clientRangeInterest = InterestQuery.Query(Constraint.RelativeCylinder(clientRadius)).FilterResults(new[]
             {
                 Position.ComponentId, Metadata.ComponentId, OwningWorker.ComponentId,
@@ -95,11 +103,16 @@ namespace Fps.Config
                 GunComponent.ComponentId, GunStateComponent.ComponentId, ShootingComponent.ComponentId
             });
 
+            // ClientMovement is used by the ServerMovementDriver script.
+            // ShootingComponent is used by the ServerShootingSystem.
             var serverSelfInterest = InterestQuery.Query(Constraint.EntityId(entityId)).FilterResults(new[]
             {
                 ClientMovement.ComponentId, ShootingComponent.ComponentId
             });
 
+            // ClientRotation is used for driving player proxies.
+            // HealthComponent is required by the VisiblityAndCollision script.
+            // ShootingComponent is used by the ServerShootingSystem.
             var serverRangeInterest = InterestQuery.Query(Constraint.RelativeCylinder(serverRadius)).FilterResults(new[]
             {
                 Position.ComponentId, Metadata.ComponentId, OwningWorker.ComponentId,
