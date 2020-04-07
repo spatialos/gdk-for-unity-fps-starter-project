@@ -36,7 +36,7 @@ namespace Fps.Metrics
                 ? DefaultTargetFrameRate
                 : Application.targetFrameRate;
 
-            lastFrameCount = Time.frameCount;
+            lastFrameCount = UnityEngine.Time.frameCount;
             calculatedFps = targetFps;
 
             timeOfLastUpdate = DateTime.Now;
@@ -69,8 +69,8 @@ namespace Fps.Metrics
 
         private void CalculateFps()
         {
-            var frameCount = Time.frameCount - lastFrameCount;
-            lastFrameCount = Time.frameCount;
+            var frameCount = UnityEngine.Time.frameCount - lastFrameCount;
+            lastFrameCount = UnityEngine.Time.frameCount;
             var rawFps = frameCount / (DateTime.Now - timeOfLastUpdate).TotalSeconds;
             calculatedFps = (rawFps * (1 - smoothing)) + (calculatedFps * smoothing);
         }

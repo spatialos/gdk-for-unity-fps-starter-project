@@ -22,14 +22,6 @@ namespace Fps.Config
             template.AddComponent(new Persistence.Snapshot(), WorkerUtils.UnityGameLogic);
             template.AddComponent(new PlayerCreator.Snapshot(), WorkerUtils.UnityGameLogic);
 
-            var query = InterestQuery.Query(Constraint.RelativeCylinder(150));
-            var interest = InterestTemplate.Create()
-                .AddQueries<Position.Component>(query);
-            template.AddComponent(interest.ToSnapshot(), WorkerUtils.UnityGameLogic);
-
-            template.SetReadAccess(WorkerUtils.UnityGameLogic);
-            template.SetComponentWriteAccess(EntityAcl.ComponentId, WorkerUtils.UnityGameLogic);
-
             return template;
         }
 
@@ -90,16 +82,51 @@ namespace Fps.Config
             const int serverRadius = 150;
             var clientRadius = workerId.Contains(WorkerUtils.MobileClient) ? 60 : 150;
 
-            var serverQuery = InterestQuery.Query(Constraint.RelativeCylinder(serverRadius));
-            var clientQuery = InterestQuery.Query(Constraint.RelativeCylinder(clientRadius));
+            // Position, Metadata, OwningWorker and ServerMovement are included in all queries, since these
+            // components are required by the GameObject creator.
+
+            // HealthComponent is needed by the LookAtRagdoll script for respawn behaviour.
+            // GunComponent is needed by the GunManager script.
+            var clientSelfInterest = InterestQuery.Query(Constraint.EntityId(entityId)).FilterResults(new[]
+            {
+                Position.ComponentId, Metadata.ComponentId, OwningWorker.ComponentId,
+                ServerMovement.ComponentId, HealthComponent.ComponentId, GunComponent.ComponentId
+            });
+
+            // ClientRotation is used for rendering other players.
+            // GunComponent is required by the GunManager script.
+            // GunStateComponent and ShootingComponent are needed for rendering other players' shots.
+            var clientRangeInterest = InterestQuery.Query(Constraint.RelativeCylinder(clientRadius)).FilterResults(new[]
+            {
+                Position.ComponentId, Metadata.ComponentId, OwningWorker.ComponentId,
+                ServerMovement.ComponentId, ClientRotation.ComponentId, HealthComponent.ComponentId,
+                GunComponent.ComponentId, GunStateComponent.ComponentId, ShootingComponent.ComponentId
+            });
+
+            // ClientMovement is used by the ServerMovementDriver script.
+            // ShootingComponent is used by the ServerShootingSystem.
+            var serverSelfInterest = InterestQuery.Query(Constraint.EntityId(entityId)).FilterResults(new[]
+            {
+                ClientMovement.ComponentId, ShootingComponent.ComponentId
+            });
+
+            // ClientRotation is used for driving player proxies.
+            // HealthComponent is required by the VisiblityAndCollision script.
+            // ShootingComponent is used by the ServerShootingSystem.
+            var serverRangeInterest = InterestQuery.Query(Constraint.RelativeCylinder(serverRadius)).FilterResults(new[]
+            {
+                Position.ComponentId, Metadata.ComponentId, OwningWorker.ComponentId,
+                ServerMovement.ComponentId, ClientRotation.ComponentId, HealthComponent.ComponentId,
+                ShootingComponent.ComponentId
+            });
 
             var interest = InterestTemplate.Create()
-                .AddQueries<Position.Component>(serverQuery)
-                .AddQueries<ClientMovement.Component>(clientQuery);
-            template.AddComponent(interest.ToSnapshot(), WorkerUtils.UnityGameLogic);
+                .AddQueries<ClientMovement.Component>(clientSelfInterest, clientRangeInterest)
+                .AddQueries<ServerMovement.Component>(serverSelfInterest, serverRangeInterest);
+
+            template.AddComponent(interest.ToSnapshot());
 
             template.SetReadAccess(WorkerUtils.UnityClient, WorkerUtils.UnityGameLogic, WorkerUtils.MobileClient);
-            template.SetComponentWriteAccess(EntityAcl.ComponentId, WorkerUtils.UnityGameLogic);
 
             return template;
         }
