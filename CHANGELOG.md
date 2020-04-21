@@ -12,7 +12,7 @@
 
 ## Changed
 
-- Updated project to support `com.unity.entities` package upgrade. [#264](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/264)
+- Updated project to support `com.unity.entities` package upgrade for version `0.9.1`. [#266](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/266)
 
 ## `0.3.4` - 2020-03-25
 
