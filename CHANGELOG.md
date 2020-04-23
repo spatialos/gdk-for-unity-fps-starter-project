@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## `0.3.5` - 2020-04-23
+
+### Changed
+
+- Upgraded to GDK for Unity version `0.3.5`
 ## Breaking Changes
 
 - The FPS Starter Project now requires Unity 2019.3. [#263](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/263)
