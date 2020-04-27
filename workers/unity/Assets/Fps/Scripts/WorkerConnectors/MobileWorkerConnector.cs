@@ -28,16 +28,7 @@ namespace Fps.WorkerConnectors
         {
             var connParams = CreateConnectionParameters(WorkerUtils.MobileClient);
             connParams.Network.UseExternalIp = true;
-            connParams.Network.ConnectionType = NetworkConnectionType.Kcp;
-            connParams.Network.Kcp = new KcpNetworkParameters
-            {
-                // These are the last tested values
-                Heartbeat = new HeartbeatParameters
-                {
-                    IntervalMillis = 5000,
-                    TimeoutMillis = 10000
-                }
-            };
+            connParams.Network.ConnectionType = NetworkConnectionType.ModularKcp;
 
             var initializer = new MobileConnectionFlowInitializer(
                 new MobileConnectionFlowInitializer.CommandLineSettingsProvider(),
