@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Changed
+
+- `MobileClient` now uses the `ModularKcp` networking type rather than `Kcp`. [#268](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/268).
+
 ## `0.3.5` - 2020-04-23
 
 ### Changed
