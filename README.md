@@ -22,6 +22,16 @@
   </h4>
 </div>
 
+## About
+
+The GDK for Unity First-Person Shooter (FPS) Starter Project is an example implementation of a FPS-genre game on top of the [SpatialOS GDK for Unity](https://github.com/spatialos/gdk-for-unity). It features:
+
+* Basic player spawning, movement, and shooting systems.
+* An implementation of simulated players for load-testing.
+* Variable-sized map generation.
+
+> Note: The FPS Starter Project is _not_ production ready. For example, the shooting and movement systems are client-side authoritative. If you shipped a game based on the FPS Starter Project without hardening these systems, these systems would be vulnerabilities that a bad actor could exploit.
+
 ## Contributions
 
 We are not currently accepting public contributions - see our [contributions](https://documentation.improbable.io/gdk-for-unity/docs/contribution-policy-on-github) policy. However, we are accepting issues and will gratefully appreciate your feedback.
