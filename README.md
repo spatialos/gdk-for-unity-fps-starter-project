@@ -4,7 +4,7 @@
   <h1>The GDK for Unity FPS Starter Project</h1>
 
   <p>
-    <strong>An example implementation of a FPS game on the <a href="https://github.com/spatialos/gdk-for-unity">GDK for Unity</a></strong>
+    <strong>An example implementation of an FPS game on the <a href="https://github.com/spatialos/gdk-for-unity">GDK for Unity</a></strong>
   </p>
 
   <p>
@@ -24,7 +24,7 @@
 
 ## About
 
-The GDK for Unity First-Person Shooter (FPS) Starter Project is an example implementation of a FPS-genre game on top of the [SpatialOS GDK for Unity](https://github.com/spatialos/gdk-for-unity). It features:
+The GDK for Unity First-Person Shooter (FPS) Starter Project is an example implementation of an FPS-genre game on top of the [SpatialOS GDK for Unity](https://github.com/spatialos/gdk-for-unity). It features:
 
 * Basic player spawning, movement, and shooting systems.
 * An implementation of simulated players for load-testing.
