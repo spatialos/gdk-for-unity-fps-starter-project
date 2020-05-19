@@ -30,6 +30,8 @@ namespace Fps.WorkerConnectors
         public int MaxSimulatedPlayerCount = 1;
         public int SimulatedPlayerCreationInterval = 5;
 
+        public Bounds Bounds { get; set; }
+
         private readonly Dictionary<EntityId, List<GameObject>> proxies = new Dictionary<EntityId, List<GameObject>>();
         private readonly List<EntityId> localSimulatedPlayers = new List<EntityId>();
 
@@ -65,6 +67,8 @@ namespace Fps.WorkerConnectors
                 return;
             }
 
+            Bounds = await GetWorldBounds();
+
             await ConnectSimulatedPlayers();
         }
 
@@ -78,7 +82,7 @@ namespace Fps.WorkerConnectors
                 // to change the parameters..
                 if (connectPlayersWithDevAuth)
                 {
-                    await WaitForWorkerFlags(flagDevAuthTokenId, flagTargetDeployment, flagClientCount,
+                    await WaitForWorkerFlags(tokenSource.Token, flagDevAuthTokenId, flagTargetDeployment, flagClientCount,
                         flagCreationInterval);
 
                     var simulatedPlayerDevAuthTokenId = Worker.GetWorkerFlag(flagDevAuthTokenId);
@@ -153,23 +157,6 @@ namespace Fps.WorkerConnectors
             tokenSource = null;
 
             base.Dispose();
-        }
-
-        // Wait for a number of worker flags to be present for this worker. Will spin forever otherwise.
-        private async Task WaitForWorkerFlags(params string[] flagKeys)
-        {
-            var token = tokenSource.Token;
-
-            while (flagKeys.Any(key => string.IsNullOrEmpty(Worker.GetWorkerFlag(key))))
-            {
-                if (token.IsCancellationRequested)
-                {
-                    throw new TaskCanceledException();
-                }
-
-                Worker.LogDispatcher.HandleLog(LogType.Log, new LogEvent("Waiting for required worker flags.."));
-                await Task.Delay(TimeSpan.FromSeconds(TimeBetweenCycleSecs), token);
-            }
         }
 
         // Update worker flags if they have changed.
@@ -321,9 +308,9 @@ namespace Fps.WorkerConnectors
             }
         }
 
-        public Bounds GetWorldBounds()
+        public async Task<Bounds> GetWorldBounds()
         {
-            var worldSize = GetWorldSize();
+            var worldSize = await GetWorldSize();
             return new Bounds(Worker.Origin, MapBuilder.GetWorldDimensions(worldSize));
         }
 

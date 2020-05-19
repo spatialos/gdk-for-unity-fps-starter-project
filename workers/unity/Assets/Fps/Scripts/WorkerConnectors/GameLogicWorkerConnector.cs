@@ -20,7 +20,15 @@ namespace Fps.WorkerConnectors
             Application.targetFrameRate = 60;
 
             await Connect(GetConnectionHandlerBuilder(), new ForwardingDispatcher());
-            StartCoroutine(LoadWorld());
+            await LoadWorld();
+
+            if (DisableRenderers)
+            {
+                foreach (var childRenderer in LevelInstance.GetComponentsInChildren<Renderer>())
+                {
+                    childRenderer.enabled = false;
+                }
+            }
         }
 
         private IConnectionHandlerBuilder GetConnectionHandlerBuilder()
@@ -63,19 +71,6 @@ namespace Fps.WorkerConnectors
             // Health
             world.GetOrCreateSystem<ServerHealthModifierSystem>();
             world.GetOrCreateSystem<HealthRegenSystem>();
-        }
-
-        protected override IEnumerator LoadWorld()
-        {
-            yield return base.LoadWorld();
-
-            if (DisableRenderers)
-            {
-                foreach (var childRenderer in LevelInstance.GetComponentsInChildren<Renderer>())
-                {
-                    childRenderer.enabled = false;
-                }
-            }
         }
     }
 }

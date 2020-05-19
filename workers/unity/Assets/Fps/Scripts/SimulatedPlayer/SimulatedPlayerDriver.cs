@@ -62,7 +62,7 @@ namespace Fps.SimulatedPlayer
             agent.updateUpAxis = false;
             agent.Warp(transform.position);
             anchorPoint = transform.position;
-            worldBounds = coordinator.GetWorldBounds();
+            worldBounds = coordinator.Bounds;
         }
 
         private void OnEnable()

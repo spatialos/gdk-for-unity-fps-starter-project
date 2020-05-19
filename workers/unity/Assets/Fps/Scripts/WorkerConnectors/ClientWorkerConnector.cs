@@ -30,10 +30,13 @@ namespace Fps.WorkerConnectors
             try
             {
                 await Connect(GetConnectionHandlerBuilder(), new ForwardingDispatcher());
+                await LoadWorld();
+                isReadyToSpawn = true;
             }
             catch (Exception e)
             {
                 Debug.LogException(e);
+                Dispose();
                 Destroy(gameObject);
             }
         }
@@ -100,20 +103,12 @@ namespace Fps.WorkerConnectors
 
             // Set the Worker gameObject to the ClientWorker so it can access PlayerCreater reader/writers
             GameObjectCreationHelper.EnableStandardGameObjectCreation(world, entityPipeline, gameObject);
-
-            StartCoroutine(LoadWorld());
         }
 
         private void RemovingAuthoritativePlayer()
         {
-            Debug.LogError($"Player entity got removed while still being connected. Disconnecting...");
+            Debug.LogWarning($"Player entity got removed while still being connected. Disconnecting...");
             OnLostPlayerEntity?.Invoke();
-        }
-
-        protected override IEnumerator LoadWorld()
-        {
-            yield return base.LoadWorld();
-            isReadyToSpawn = true;
         }
 
         private void Update()
