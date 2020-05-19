@@ -30,7 +30,7 @@ namespace Fps.WorkerConnectors
         public int MaxSimulatedPlayerCount = 1;
         public int SimulatedPlayerCreationInterval = 5;
 
-        public Bounds Bounds { get; set; }
+        public Bounds Bounds { get; private set; }
 
         private readonly Dictionary<EntityId, List<GameObject>> proxies = new Dictionary<EntityId, List<GameObject>>();
         private readonly List<EntityId> localSimulatedPlayers = new List<EntityId>();
