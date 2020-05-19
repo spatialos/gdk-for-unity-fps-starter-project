@@ -40,10 +40,11 @@ namespace Fps.WorkerConnectors
         private CancellationTokenSource tokenSource;
         private int TimeBetweenCycleSecs = 2;
 
-        protected override async void Start()
+        protected async void Start()
         {
-            var args = CommandLineArgs.FromCommandLine();
+            Application.targetFrameRate = 60;
 
+            var args = CommandLineArgs.FromCommandLine();
             var deploymentName = string.Empty;
 
             if (args.TryGetCommandLineValue(DeploymentNameFlag, ref deploymentName))
@@ -56,45 +57,19 @@ namespace Fps.WorkerConnectors
                 connectPlayersWithDevAuth = false;
             }
 
-            Application.targetFrameRate = 60;
-            await AttemptConnect();
-        }
-
-        protected override IConnectionHandlerBuilder GetConnectionHandlerBuilder()
-        {
-            IConnectionFlow connectionFlow;
-            ConnectionParameters connectionParameters;
-
-            var workerId = CreateNewWorkerId(WorkerUtils.SimulatedPlayerCoordinator);
-
-            if (Application.isEditor)
-            {
-                connectionFlow = new ReceptionistFlow(workerId);
-                connectionParameters = CreateConnectionParameters(WorkerUtils.SimulatedPlayerCoordinator);
-            }
-            else
-            {
-                connectionFlow = new ReceptionistFlow(workerId, new CommandLineConnectionFlowInitializer());
-                connectionParameters = CreateConnectionParameters(WorkerUtils.SimulatedPlayerCoordinator,
-                    new CommandLineConnectionParameterInitializer());
-            }
-
-            return new SpatialOSConnectionHandlerBuilder()
-                .SetConnectionFlow(connectionFlow)
-                .SetConnectionParameters(connectionParameters);
-        }
-
-        protected override async void HandleWorkerConnectionEstablished()
-        {
-            base.HandleWorkerConnectionEstablished();
-
-            Worker.World.GetOrCreateSystem<MetricSendSystem>();
+            await Connect(GetConnectionHandlerBuilder(), new ForwardingDispatcher());
 
             if (SimulatedPlayerWorkerConnector == null)
             {
+                Worker.LogDispatcher.HandleLog(LogType.Error, new LogEvent("Did not find a SimulatedPlayerWorkerConnector GameObject."));
                 return;
             }
 
+            await ConnectSimulatedPlayers();
+        }
+
+        private async Task ConnectSimulatedPlayers()
+        {
             tokenSource = new CancellationTokenSource();
 
             try
@@ -140,6 +115,35 @@ namespace Fps.WorkerConnectors
             {
                 // This is fine. Means we have triggered a cancel via Dispose().
             }
+        }
+
+        private IConnectionHandlerBuilder GetConnectionHandlerBuilder()
+        {
+            IConnectionFlow connectionFlow;
+            ConnectionParameters connectionParameters;
+
+            var workerId = CreateNewWorkerId(WorkerUtils.SimulatedPlayerCoordinator);
+
+            if (Application.isEditor)
+            {
+                connectionFlow = new ReceptionistFlow(workerId);
+                connectionParameters = CreateConnectionParameters(WorkerUtils.SimulatedPlayerCoordinator);
+            }
+            else
+            {
+                connectionFlow = new ReceptionistFlow(workerId, new CommandLineConnectionFlowInitializer());
+                connectionParameters = CreateConnectionParameters(WorkerUtils.SimulatedPlayerCoordinator,
+                    new CommandLineConnectionParameterInitializer());
+            }
+
+            return new SpatialOSConnectionHandlerBuilder()
+                .SetConnectionFlow(connectionFlow)
+                .SetConnectionParameters(connectionParameters);
+        }
+
+        protected override void HandleWorkerConnectionEstablished()
+        {
+            Worker.World.GetOrCreateSystem<MetricSendSystem>();
         }
 
         public override void Dispose()
@@ -221,7 +225,17 @@ namespace Fps.WorkerConnectors
             var simPlayer = Instantiate(SimulatedPlayerWorkerConnector, transform.position, transform.rotation);
             var connector = simPlayer.GetComponent<SimulatedPlayerWorkerConnector>();
 
-            await connectMethod(connector);
+            try
+            {
+                await connectMethod(connector);
+            }
+            catch (Exception e)
+            {
+                Worker.LogDispatcher.HandleLog(LogType.Exception, new LogEvent("Failed to connect simulated player").WithException(e));
+                Destroy(simPlayer);
+                return;
+            }
+
             connector.SpawnPlayer(simulatedPlayerConnectors.Count);
 
             simulatedPlayerConnectors.Add(simPlayer);

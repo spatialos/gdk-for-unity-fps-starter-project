@@ -9,28 +9,9 @@ namespace Fps.WorkerConnectors
 {
     public abstract class WorkerConnectorBase : WorkerConnector
     {
-        public int TargetFrameRate = 60;
-
         [SerializeField] protected MapTemplate mapTemplate;
 
         [NonSerialized] internal GameObject LevelInstance;
-
-        protected abstract IConnectionHandlerBuilder GetConnectionHandlerBuilder();
-
-        protected virtual void Start()
-        {
-            Application.targetFrameRate = TargetFrameRate;
-        }
-
-        protected async Task AttemptConnect()
-        {
-            await Connect(GetConnectionHandlerBuilder(), new ForwardingDispatcher()).ConfigureAwait(false);
-        }
-
-        protected override void HandleWorkerConnectionEstablished()
-        {
-            StartCoroutine(LoadWorld());
-        }
 
         public override void Dispose()
         {

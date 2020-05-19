@@ -15,13 +15,15 @@ namespace Fps.WorkerConnectors
     {
         public bool DisableRenderers = true;
 
-        protected override async void Start()
+        protected async void Start()
         {
-            base.Start();
-            await AttemptConnect();
+            Application.targetFrameRate = 60;
+
+            await Connect(GetConnectionHandlerBuilder(), new ForwardingDispatcher());
+            StartCoroutine(LoadWorld());
         }
 
-        protected override IConnectionHandlerBuilder GetConnectionHandlerBuilder()
+        private IConnectionHandlerBuilder GetConnectionHandlerBuilder()
         {
             IConnectionFlow connectionFlow;
             ConnectionParameters connectionParameters;
@@ -61,8 +63,6 @@ namespace Fps.WorkerConnectors
             // Health
             world.GetOrCreateSystem<ServerHealthModifierSystem>();
             world.GetOrCreateSystem<HealthRegenSystem>();
-
-            base.HandleWorkerConnectionEstablished();
         }
 
         protected override IEnumerator LoadWorld()
