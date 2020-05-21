@@ -30,6 +30,8 @@ namespace Fps.WorkerConnectors
         public int MaxSimulatedPlayerCount = 1;
         public int SimulatedPlayerCreationInterval = 5;
 
+        public Bounds Bounds { get; private set; }
+
         private readonly Dictionary<EntityId, List<GameObject>> proxies = new Dictionary<EntityId, List<GameObject>>();
         private readonly List<EntityId> localSimulatedPlayers = new List<EntityId>();
 
@@ -40,10 +42,11 @@ namespace Fps.WorkerConnectors
         private CancellationTokenSource tokenSource;
         private int TimeBetweenCycleSecs = 2;
 
-        protected override async void Start()
+        protected async void Start()
         {
-            var args = CommandLineArgs.FromCommandLine();
+            Application.targetFrameRate = 60;
 
+            var args = CommandLineArgs.FromCommandLine();
             var deploymentName = string.Empty;
 
             if (args.TryGetCommandLineValue(DeploymentNameFlag, ref deploymentName))
@@ -56,45 +59,22 @@ namespace Fps.WorkerConnectors
                 connectPlayersWithDevAuth = false;
             }
 
-            Application.targetFrameRate = 60;
-            await AttemptConnect();
-        }
-
-        protected override IConnectionHandlerBuilder GetConnectionHandlerBuilder()
-        {
-            IConnectionFlow connectionFlow;
-            ConnectionParameters connectionParameters;
-
-            var workerId = CreateNewWorkerId(WorkerUtils.SimulatedPlayerCoordinator);
-
-            if (Application.isEditor)
-            {
-                connectionFlow = new ReceptionistFlow(workerId);
-                connectionParameters = CreateConnectionParameters(WorkerUtils.SimulatedPlayerCoordinator);
-            }
-            else
-            {
-                connectionFlow = new ReceptionistFlow(workerId, new CommandLineConnectionFlowInitializer());
-                connectionParameters = CreateConnectionParameters(WorkerUtils.SimulatedPlayerCoordinator,
-                    new CommandLineConnectionParameterInitializer());
-            }
-
-            return new SpatialOSConnectionHandlerBuilder()
-                .SetConnectionFlow(connectionFlow)
-                .SetConnectionParameters(connectionParameters);
-        }
-
-        protected override async void HandleWorkerConnectionEstablished()
-        {
-            base.HandleWorkerConnectionEstablished();
-
-            Worker.World.GetOrCreateSystem<MetricSendSystem>();
+            await Connect(GetConnectionHandlerBuilder(), new ForwardingDispatcher());
 
             if (SimulatedPlayerWorkerConnector == null)
             {
+                Worker.LogDispatcher.HandleLog(LogType.Error, new LogEvent("Did not find a SimulatedPlayerWorkerConnector GameObject."));
                 return;
             }
 
+            Bounds = await GetWorldBounds();
+
+            await LoadWorld();
+            await ConnectSimulatedPlayers();
+        }
+
+        private async Task ConnectSimulatedPlayers()
+        {
             tokenSource = new CancellationTokenSource();
 
             try
@@ -103,7 +83,7 @@ namespace Fps.WorkerConnectors
                 // to change the parameters..
                 if (connectPlayersWithDevAuth)
                 {
-                    await WaitForWorkerFlags(flagDevAuthTokenId, flagTargetDeployment, flagClientCount,
+                    await WaitForWorkerFlags(tokenSource.Token, flagDevAuthTokenId, flagTargetDeployment, flagClientCount,
                         flagCreationInterval);
 
                     var simulatedPlayerDevAuthTokenId = Worker.GetWorkerFlag(flagDevAuthTokenId);
@@ -142,6 +122,35 @@ namespace Fps.WorkerConnectors
             }
         }
 
+        private IConnectionHandlerBuilder GetConnectionHandlerBuilder()
+        {
+            IConnectionFlow connectionFlow;
+            ConnectionParameters connectionParameters;
+
+            var workerId = CreateNewWorkerId(WorkerUtils.SimulatedPlayerCoordinator);
+
+            if (Application.isEditor)
+            {
+                connectionFlow = new ReceptionistFlow(workerId);
+                connectionParameters = CreateConnectionParameters(WorkerUtils.SimulatedPlayerCoordinator);
+            }
+            else
+            {
+                connectionFlow = new ReceptionistFlow(workerId, new CommandLineConnectionFlowInitializer());
+                connectionParameters = CreateConnectionParameters(WorkerUtils.SimulatedPlayerCoordinator,
+                    new CommandLineConnectionParameterInitializer());
+            }
+
+            return new SpatialOSConnectionHandlerBuilder()
+                .SetConnectionFlow(connectionFlow)
+                .SetConnectionParameters(connectionParameters);
+        }
+
+        protected override void HandleWorkerConnectionEstablished()
+        {
+            Worker.World.GetOrCreateSystem<MetricSendSystem>();
+        }
+
         public override void Dispose()
         {
             tokenSource?.Cancel();
@@ -149,23 +158,6 @@ namespace Fps.WorkerConnectors
             tokenSource = null;
 
             base.Dispose();
-        }
-
-        // Wait for a number of worker flags to be present for this worker. Will spin forever otherwise.
-        private async Task WaitForWorkerFlags(params string[] flagKeys)
-        {
-            var token = tokenSource.Token;
-
-            while (flagKeys.Any(key => string.IsNullOrEmpty(Worker.GetWorkerFlag(key))))
-            {
-                if (token.IsCancellationRequested)
-                {
-                    throw new TaskCanceledException();
-                }
-
-                Worker.LogDispatcher.HandleLog(LogType.Log, new LogEvent("Waiting for required worker flags.."));
-                await Task.Delay(TimeSpan.FromSeconds(TimeBetweenCycleSecs), token);
-            }
         }
 
         // Update worker flags if they have changed.
@@ -221,7 +213,17 @@ namespace Fps.WorkerConnectors
             var simPlayer = Instantiate(SimulatedPlayerWorkerConnector, transform.position, transform.rotation);
             var connector = simPlayer.GetComponent<SimulatedPlayerWorkerConnector>();
 
-            await connectMethod(connector);
+            try
+            {
+                await connectMethod(connector);
+            }
+            catch (Exception e)
+            {
+                Worker.LogDispatcher.HandleLog(LogType.Exception, new LogEvent("Failed to connect simulated player").WithException(e));
+                Destroy(simPlayer);
+                return;
+            }
+
             connector.SpawnPlayer(simulatedPlayerConnectors.Count);
 
             simulatedPlayerConnectors.Add(simPlayer);
@@ -307,9 +309,9 @@ namespace Fps.WorkerConnectors
             }
         }
 
-        public Bounds GetWorldBounds()
+        public async Task<Bounds> GetWorldBounds()
         {
-            var worldSize = GetWorldSize();
+            var worldSize = await GetWorldSize();
             return new Bounds(Worker.Origin, MapBuilder.GetWorldDimensions(worldSize));
         }
 

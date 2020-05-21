@@ -11,22 +11,34 @@ namespace Fps.WorkerConnectors
 {
     public class ClientWorkerConnector : WorkerConnectorBase
     {
-        protected string deployment;
-
         private string playerName;
         private bool isReadyToSpawn;
         private bool wantsSpawn;
         private Action<PlayerCreator.CreatePlayer.ReceivedResponse> onPlayerResponse;
-        private AdvancedEntityPipeline entityPipeline;
 
         public bool HasConnected => Worker != null;
 
         public event Action OnLostPlayerEntity;
 
-        public async void Connect(string deployment = "")
+        public void Start()
         {
-            this.deployment = deployment.Trim();
-            await AttemptConnect();
+            Application.targetFrameRate = 60;
+        }
+
+        public async void Connect()
+        {
+            try
+            {
+                await Connect(GetConnectionHandlerBuilder(), new ForwardingDispatcher());
+                await LoadWorld();
+                isReadyToSpawn = true;
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+                Dispose();
+                Destroy(gameObject);
+            }
         }
 
         public void SpawnPlayer(string playerName, Action<PlayerCreator.CreatePlayer.ReceivedResponse> onPlayerResponse)
@@ -34,11 +46,6 @@ namespace Fps.WorkerConnectors
             this.onPlayerResponse = onPlayerResponse;
             this.playerName = playerName;
             wantsSpawn = true;
-        }
-
-        public void DisconnectPlayer()
-        {
-            StartCoroutine(PrepareDestroy());
         }
 
         protected virtual string GetAuthPlayerPrefabPath()
@@ -51,7 +58,7 @@ namespace Fps.WorkerConnectors
             return "Prefabs/UnityClient/NonAuthoritative/Player";
         }
 
-        protected override IConnectionHandlerBuilder GetConnectionHandlerBuilder()
+        protected virtual IConnectionHandlerBuilder GetConnectionHandlerBuilder()
         {
             IConnectionFlow connectionFlow;
             var connectionParams = CreateConnectionParameters(WorkerUtils.UnityClient);
@@ -91,31 +98,17 @@ namespace Fps.WorkerConnectors
             PlayerLifecycleHelper.AddClientSystems(world, autoRequestPlayerCreation: false);
             PlayerLifecycleConfig.MaxPlayerCreationRetries = 0;
 
-            entityPipeline = new AdvancedEntityPipeline(Worker, GetAuthPlayerPrefabPath(), GetNonAuthPlayerPrefabPath());
+            var entityPipeline = new AdvancedEntityPipeline(Worker, GetAuthPlayerPrefabPath(), GetNonAuthPlayerPrefabPath());
             entityPipeline.OnRemovedAuthoritativePlayer += RemovingAuthoritativePlayer;
 
             // Set the Worker gameObject to the ClientWorker so it can access PlayerCreater reader/writers
             GameObjectCreationHelper.EnableStandardGameObjectCreation(world, entityPipeline, gameObject);
-
-            base.HandleWorkerConnectionEstablished();
         }
 
         private void RemovingAuthoritativePlayer()
         {
-            Debug.LogError($"Player entity got removed while still being connected. Disconnecting...");
+            Debug.LogWarning($"Player entity got removed while still being connected. Disconnecting...");
             OnLostPlayerEntity?.Invoke();
-        }
-
-        protected override void HandleWorkerConnectionFailure(string errorMessage)
-        {
-            Debug.LogError($"Connection failed: {errorMessage}");
-            Destroy(gameObject);
-        }
-
-        protected override IEnumerator LoadWorld()
-        {
-            yield return base.LoadWorld();
-            isReadyToSpawn = true;
         }
 
         private void Update()
@@ -125,22 +118,6 @@ namespace Fps.WorkerConnectors
                 wantsSpawn = false;
                 SendRequest();
             }
-        }
-
-        public override void Dispose()
-        {
-            if (entityPipeline != null)
-            {
-                entityPipeline.OnRemovedAuthoritativePlayer -= RemovingAuthoritativePlayer;
-            }
-
-            base.Dispose();
-        }
-
-        private IEnumerator PrepareDestroy()
-        {
-            yield return DeferredDisposeWorker();
-            Destroy(gameObject);
         }
 
         private void SendRequest()

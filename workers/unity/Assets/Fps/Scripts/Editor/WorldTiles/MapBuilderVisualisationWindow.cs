@@ -70,7 +70,7 @@ namespace Fps.Editor
                         SetupMapBuilder();
                     }
 
-                    UnwindCoroutine(mapBuilder.CleanAndBuild(layerCount, seed));
+                    mapBuilder.CleanAndBuild(layerCount, seed).Wait();
                 }
             }
 
@@ -98,17 +98,6 @@ namespace Fps.Editor
         private int GetTotalTilesFromLayers(int layers)
         {
             return Mathf.RoundToInt(Mathf.Pow(layers * 2, 2));
-        }
-
-        private void UnwindCoroutine(IEnumerator enumerator)
-        {
-            while (enumerator.MoveNext())
-            {
-                if (enumerator.Current is IEnumerator nestedEnumerator)
-                {
-                    UnwindCoroutine(nestedEnumerator);
-                }
-            }
         }
     }
 }

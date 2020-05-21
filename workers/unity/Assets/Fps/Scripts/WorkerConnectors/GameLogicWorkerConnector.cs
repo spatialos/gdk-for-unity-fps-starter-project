@@ -15,13 +15,23 @@ namespace Fps.WorkerConnectors
     {
         public bool DisableRenderers = true;
 
-        protected override async void Start()
+        protected async void Start()
         {
-            base.Start();
-            await AttemptConnect();
+            Application.targetFrameRate = 60;
+
+            await Connect(GetConnectionHandlerBuilder(), new ForwardingDispatcher());
+            await LoadWorld();
+
+            if (DisableRenderers)
+            {
+                foreach (var childRenderer in LevelInstance.GetComponentsInChildren<Renderer>())
+                {
+                    childRenderer.enabled = false;
+                }
+            }
         }
 
-        protected override IConnectionHandlerBuilder GetConnectionHandlerBuilder()
+        private IConnectionHandlerBuilder GetConnectionHandlerBuilder()
         {
             IConnectionFlow connectionFlow;
             ConnectionParameters connectionParameters;
@@ -61,21 +71,6 @@ namespace Fps.WorkerConnectors
             // Health
             world.GetOrCreateSystem<ServerHealthModifierSystem>();
             world.GetOrCreateSystem<HealthRegenSystem>();
-
-            base.HandleWorkerConnectionEstablished();
-        }
-
-        protected override IEnumerator LoadWorld()
-        {
-            yield return base.LoadWorld();
-
-            if (DisableRenderers)
-            {
-                foreach (var childRenderer in LevelInstance.GetComponentsInChildren<Renderer>())
-                {
-                    childRenderer.enabled = false;
-                }
-            }
         }
     }
 }

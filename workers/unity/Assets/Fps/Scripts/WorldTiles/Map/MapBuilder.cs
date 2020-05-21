@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Fps.Respawning;
 using Fps.WorkerConnectors;
 using Improbable.Gdk.Core;
@@ -58,12 +59,11 @@ namespace Fps.WorldTiles
             this.parentGameObject = parentGameObject;
         }
 
-        public IEnumerator CleanAndBuild(int worldLayers = 4, string seed = "SpatialOS GDK for Unity")
+        public async Task CleanAndBuild(int worldLayers = 4, string seed = "SpatialOS GDK for Unity")
         {
             if (mapTemplate == null)
             {
-                Debug.LogError("MapTemplate has not been set.");
-                yield break;
+                throw new ArgumentException("Map template has not been set.");
             }
 
             layers = worldLayers;
@@ -75,10 +75,14 @@ namespace Fps.WorldTiles
                 mainScene = SceneManager.GetActiveScene();
             }
 
-            if (!TryLoadResources())
+            var loadedSuccessfully = TryLoadResource(GroundTilePath, out groundTile)
+                && TryLoadResource(GroundEdgePath, out groundEdge)
+                && TryLoadResource(WallStraightPath, out wallStraight)
+                && TryLoadResource(WallCornerPath, out wallCorner);
+
+            if (!loadedSuccessfully)
             {
-                Debug.LogError("Generation aborted (See previous message)");
-                yield break;
+                return;
             }
 
             Clean();
@@ -100,7 +104,7 @@ namespace Fps.WorldTiles
                 parentGameObject.transform.position = Vector3.zero;
                 parentGameObject.transform.rotation = Quaternion.identity;
 
-                yield return PlaceTiles();
+                await PlaceTiles();
 
                 PlaceGround();
                 FillSurround();
@@ -139,14 +143,6 @@ namespace Fps.WorldTiles
             surroundParentTransform = MakeChildGroup(SurroundParentName);
 
             tileParentTransform = MakeChildGroup(TileParentName);
-        }
-
-        private bool TryLoadResources()
-        {
-            return TryLoadResource(GroundTilePath, out groundTile)
-                && TryLoadResource(GroundEdgePath, out groundEdge)
-                && TryLoadResource(WallStraightPath, out wallStraight)
-                && TryLoadResource(WallCornerPath, out wallCorner);
         }
 
         private bool TryLoadResource(string resourcePath, out GameObject resource)
@@ -272,7 +268,7 @@ namespace Fps.WorldTiles
                 surroundParentTransform);
         }
 
-        private IEnumerator PlaceTiles()
+        private async Task PlaceTiles()
         {
             var tileCoord = new Vector2Int(0, 0);
             var diff = new Vector2Int(0, -1);
@@ -307,7 +303,7 @@ namespace Fps.WorldTiles
                 {
                     using (new SceneScope(mainScene))
                     {
-                        yield return null;
+                        await Task.Yield();
                         timeStart = DateTime.UtcNow;
                     }
                 }
@@ -427,12 +423,11 @@ namespace Fps.WorldTiles
         }
 
         // Get the world size from the config, and use it to generate the correct-sized level
-        public static IEnumerator GenerateMap(
+        public static async Task<GameObject> GenerateMap(
             MapTemplate mapTemplate,
             int mapSize,
             Transform parentTransform,
-            string workerType,
-            WorkerConnectorBase worker)
+            string workerType)
         {
             var levelInstance = new GameObject($"FPS-Level_{mapSize}({workerType})");
             levelInstance.transform.position = parentTransform.position;
@@ -440,9 +435,9 @@ namespace Fps.WorldTiles
 
             var mapBuilder = new MapBuilder(mapTemplate, levelInstance);
 
-            yield return mapBuilder.CleanAndBuild(mapSize);
+            await mapBuilder.CleanAndBuild(mapSize);
 
-            worker.LevelInstance = levelInstance;
+            return levelInstance;
         }
 
         private class SceneScope : IDisposable
