@@ -69,6 +69,7 @@ namespace Fps.WorkerConnectors
 
             Bounds = await GetWorldBounds();
 
+            await LoadWorld();
             await ConnectSimulatedPlayers();
         }
 
