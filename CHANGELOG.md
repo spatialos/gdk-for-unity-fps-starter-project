@@ -2,8 +2,11 @@
 
 ## Unreleased
 
+## `0.3.6` - 2020-05-26
+
 ### Changed
 
+- Upgraded to GDK for Unity version `0.3.6`
 - `MobileClient` now uses the `ModularKcp` networking type rather than `Kcp`. [#268](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/268).
 - The `MapBuilder` is now using a `Task` based API instead of a coroutine based one. [#271](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/271)
 - The `WorkerConnector` implementations have been refactored and simplified. [#271](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/271)
