@@ -10,7 +10,7 @@ cd "$(dirname "$0")/../"
 
 source .shared-ci/scripts/pinned-tools.sh
 
-ACCELERATOR_ARGS=${ACCELERATOR_ENDPOINT:+-enableCacheServer -cacheServerEndpoint "${ACCELERATOR_ENDPOINT}"}
+ACCELERATOR_ARGS=$(getAcceleratorArgs)
 
 PROJECT_DIR="$(pwd)"
 mkdir -p "${PROJECT_DIR}/logs/"
