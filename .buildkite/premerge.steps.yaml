@@ -30,6 +30,8 @@ windows: &windows
         # Workaround for flaky Git clones, likely due to - https://github.com/PowerShell/Win32-OpenSSH/issues/1322
       - exit_status: 128
         limit: 3
+  env: &windows-env
+    ACCELERATOR_ENDPOINT: "unity-accelerator.production-intinf-eu1.i8e.io"
 
 linux: &linux
   agents:
@@ -59,6 +61,8 @@ macos: &macos
         # This is designed to trap and retry failures because agent lost connection. Agent exits with -1 in this case.
       - exit_status: -1
         limit: 3
+  env: &macos-env
+    ACCELERATOR_ENDPOINT: "172.16.100.150"
 
 # NOTE: step labels turn into commit-status names like {org}/{repo}/{pipeline}/{step-label}, lower-case and hyphenated.
 # These are then relied on to have stable names by other things, so once named, please beware renaming has consequences.
@@ -76,8 +80,6 @@ steps:
     <<: *windows
     artifact_paths:
       - logs/**/*
-    env:
-      ACCELERATOR_ENDPOINT: "unity-accelerator.production-intinf-eu1.i8e.io"
 
   - label: ":debian: ~ annotate test results :pencil2:"
     depends_on:
@@ -99,11 +101,11 @@ steps:
     artifact_paths:
       - logs/**/*
     env:
+      <<: *windows-env
       WORKER_TYPE: "MobileClient"
       BUILD_ENVIRONMENT: "local"
       BUILD_TARGET_FILTER: "android"
       SCRIPTING_BACKEND: "mono"
-      ACCELERATOR_ENDPOINT: "unity-accelerator.production-intinf-eu1.i8e.io"
 
   - label: ":darwin: ~ build :ios:"
     command: bash -c .shared-ci/scripts/build-worker.sh
@@ -111,12 +113,12 @@ steps:
     artifact_paths:
       - logs/**/*
     env:
+      <<: *macos-env
       WORKER_TYPE: "MobileClient"
       BUILD_ENVIRONMENT: "local"
       BUILD_TARGET_FILTER: "ios"
       SCRIPTING_BACKEND: "il2cpp"
       TARGET_IOS_SDK: "simulator"
-      ACCELERATOR_ENDPOINT: "172.16.100.150"
 
   - label: ":windows: ~ build UnityClient mono"
     command: bash -c .shared-ci/scripts/build-worker.sh
@@ -124,10 +126,10 @@ steps:
     artifact_paths:
       - logs/**/*
     env:
+      <<: *windows-env
       WORKER_TYPE: "UnityClient"
       BUILD_ENVIRONMENT: "cloud"
       SCRIPTING_BACKEND: "mono"
-      ACCELERATOR_ENDPOINT: "unity-accelerator.production-intinf-eu1.i8e.io"
 
   - label: ":windows: ~ build UnityClient il2cpp"
     command: bash -c .shared-ci/scripts/build-worker.sh
@@ -135,10 +137,10 @@ steps:
     artifact_paths:
       - logs/**/*
     env:
+      <<: *windows-env
       WORKER_TYPE: "UnityClient"
       BUILD_ENVIRONMENT: "local"
       SCRIPTING_BACKEND: "il2cpp"
-      ACCELERATOR_ENDPOINT: "unity-accelerator.production-intinf-eu1.i8e.io"
 
   - label: ":windows: ~ build UnityGameLogic mono"
     command: bash -c .shared-ci/scripts/build-worker.sh
@@ -146,10 +148,10 @@ steps:
     artifact_paths:
       - logs/**/*
     env:
+      <<: *windows-env
       WORKER_TYPE: "UnityGameLogic"
       BUILD_ENVIRONMENT: "cloud"
       SCRIPTING_BACKEND: "mono"
-      ACCELERATOR_ENDPOINT: "unity-accelerator.production-intinf-eu1.i8e.io"
 
   - label: ":windows: ~ build SimulatedPlayerCoordinator mono"
     command: bash -c .shared-ci/scripts/build-worker.sh
@@ -157,7 +159,7 @@ steps:
     artifact_paths:
       - logs/**/*
     env:
+      <<: *windows-env
       WORKER_TYPE: "SimulatedPlayerCoordinator"
       BUILD_ENVIRONMENT: "cloud"
       SCRIPTING_BACKEND: "mono"
-      ACCELERATOR_ENDPOINT: "unity-accelerator.production-intinf-eu1.i8e.io"
