@@ -10,6 +10,8 @@ cd "$(dirname "$0")/../"
 
 source .shared-ci/scripts/pinned-tools.sh
 
+ACCELERATOR_ARGS=$(getAcceleratorArgs)
+
 PROJECT_DIR="$(pwd)"
 mkdir -p "${PROJECT_DIR}/logs/"
 
@@ -24,5 +26,6 @@ pushd "workers/unity"
         -runEditorTests \
         -logfile "${PROJECT_DIR}/logs/unity-editmode-test-run.log" \
         -editorTestsResultFile "${EDITMODE_TEST_RESULTS_FILE}" \
-        -editorTestsFilter Fps
+        -editorTestsFilter Fps \
+        "${ACCELERATOR_ARGS}"
 popd
