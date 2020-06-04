@@ -1,9 +1,9 @@
-using System.Collections;
 using Fps.Config;
 using Fps.Guns;
 using Fps.Health;
 using Fps.Metrics;
 using Improbable.Gdk.Core;
+using Improbable.Gdk.Core.Representation;
 using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.PlayerLifecycle;
 using Improbable.Worker.CInterop;
@@ -14,6 +14,7 @@ namespace Fps.WorkerConnectors
     public class GameLogicWorkerConnector : WorkerConnectorBase
     {
         public bool DisableRenderers = true;
+        [SerializeField] private EntityLinkerDatabase entityLinkerDatabase;
 
         protected async void Start()
         {
@@ -60,7 +61,7 @@ namespace Fps.WorkerConnectors
             var world = Worker.World;
 
             PlayerLifecycleHelper.AddServerSystems(world);
-            GameObjectCreationHelper.EnableStandardGameObjectCreation(world);
+            GameObjectCreationHelper.EnableStandardGameObjectCreation(world, entityLinkerDatabase);
 
             // Shooting
             world.GetOrCreateSystem<ServerShootingSystem>();

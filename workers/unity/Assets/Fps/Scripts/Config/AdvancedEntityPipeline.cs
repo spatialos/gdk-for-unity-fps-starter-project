@@ -2,12 +2,13 @@ using System;
 using System.Collections.Generic;
 using Fps.Movement;
 using Fps.SchemaExtensions;
+using Improbable;
 using Improbable.Gdk.Core;
+using Improbable.Gdk.Core.Representation;
 using Improbable.Gdk.GameObjectCreation;
-using Improbable.Gdk.PlayerLifecycle;
 using Improbable.Gdk.Subscriptions;
+using Unity.Entities;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace Fps.Config
 {
@@ -15,12 +16,6 @@ namespace Fps.Config
     {
         private const string PlayerEntityType = "Player";
 
-        private readonly GameObject cachedAuthPlayer;
-        private readonly GameObject cachedNonAuthPlayer;
-
-        private readonly GameObjectCreatorFromMetadata fallback;
-
-        private readonly string workerId;
         private readonly string workerType;
         private readonly Vector3 workerOrigin;
 
@@ -33,71 +28,63 @@ namespace Fps.Config
             typeof(Transform), typeof(Rigidbody)
         };
 
-        public AdvancedEntityPipeline(WorkerInWorld worker, string authPlayer, string nonAuthPlayer)
+        public AdvancedEntityPipeline(WorkerInWorld worker)
         {
-            workerId = worker.WorkerId;
             workerType = worker.WorkerType;
             workerOrigin = worker.Origin;
-
-            fallback = new GameObjectCreatorFromMetadata(workerType, workerOrigin, worker.LogDispatcher);
-            cachedAuthPlayer = Resources.Load<GameObject>(authPlayer);
-            cachedNonAuthPlayer = Resources.Load<GameObject>(nonAuthPlayer);
         }
 
         public void PopulateEntityTypeExpectations(EntityTypeExpectations entityTypeExpectations)
         {
-            entityTypeExpectations.RegisterEntityType(PlayerEntityType, new[]
+            entityTypeExpectations.RegisterDefault(new[]
             {
-                typeof(OwningWorker.Component), typeof(ServerMovement.Component)
+                typeof(Position.Component)
             });
 
-            fallback.PopulateEntityTypeExpectations(entityTypeExpectations);
+            entityTypeExpectations.RegisterEntityType(PlayerEntityType, new[]
+            {
+                typeof(ServerMovement.Component)
+            });
         }
 
-        public void OnEntityCreated(string entityType, SpatialOSEntity entity, EntityGameObjectLinker linker)
+        public void OnEntityCreated(SpatialOSEntityInfo entityInfo, GameObject prefab, EntityManager entityManager,
+            EntityGameObjectLinker linker)
         {
-            switch (entityType)
+            Vector3 spawnPosition;
+            switch (entityInfo.EntityType)
             {
                 case PlayerEntityType:
-                    CreatePlayerGameObject(entity, linker);
+                    spawnPosition = entityManager.GetComponentData<ServerMovement.Component>(entityInfo.Entity)
+                        .Latest.Position.ToVector3();
                     break;
                 default:
-                    fallback.OnEntityCreated(entityType, entity, linker);
+                    spawnPosition = entityManager.GetComponentData<Position.Component>(entityInfo.Entity)
+                        .Coords.ToUnityVector();
                     break;
             }
-        }
 
-        private void CreatePlayerGameObject(SpatialOSEntity entity, EntityGameObjectLinker linker)
-        {
-            var owningWorker = entity.GetComponent<OwningWorker.Component>();
-            var serverPosition = entity.GetComponent<ServerMovement.Component>();
+            var gameObject = UnityEngine.Object.Instantiate(prefab, spawnPosition + workerOrigin, Quaternion.identity);
 
-            var position = serverPosition.Latest.Position.ToVector3() + workerOrigin;
-
-            var prefab = owningWorker.WorkerId == workerId ? cachedAuthPlayer : cachedNonAuthPlayer;
-            var gameObject = Object.Instantiate(prefab, position, Quaternion.identity);
-
-            gameObjectsCreated.Add(entity.SpatialOSEntityId, gameObject);
-            gameObject.name = $"{prefab.name}(SpatialOS {entity.SpatialOSEntityId}, Worker: {workerType})";
-            linker.LinkGameObjectToSpatialOSEntity(entity.SpatialOSEntityId, gameObject, componentsToAdd);
+            gameObjectsCreated.Add(entityInfo.SpatialOSEntityId, gameObject);
+            gameObject.name = $"{prefab.name}(SpatialOS: {entityInfo.SpatialOSEntityId}, Worker: {workerType})";
+            linker.LinkGameObjectToSpatialOSEntity(entityInfo.SpatialOSEntityId, gameObject, componentsToAdd);
         }
 
         public void OnEntityRemoved(EntityId entityId)
         {
-            if (!gameObjectsCreated.TryGetValue(entityId, out var go))
+            if (!gameObjectsCreated.TryGetValue(entityId, out var gameObject))
             {
-                fallback.OnEntityRemoved(entityId);
                 return;
             }
 
             // Trigger a callback when authoritative player gets removed
-            if (go.GetComponent<FpsDriver>() != null)
+            if (gameObject.GetComponent<FpsDriver>() != null)
             {
                 OnRemovedAuthoritativePlayer?.Invoke();
             }
 
             gameObjectsCreated.Remove(entityId);
-            Object.Destroy(go);
+            UnityEngine.Object.Destroy(gameObject);
         }
     }
 }

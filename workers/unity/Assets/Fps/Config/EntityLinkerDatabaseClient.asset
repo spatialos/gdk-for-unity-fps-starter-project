@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0598980a22146e5bb63df7b024cf2b0, type: 3}
+  m_Name: EntityLinkerDatabaseClient
+  m_EditorClassIdentifier: 
+  EntityRepresentationResolvers:
+  - id: 0
+  references:
+    version: 1
+    00000000:
+      type: {class: OwningWorkerEntityLink, ns: Improbable.Gdk.PlayerLifecycle.Representation.Types,
+        asm: Improbable.Gdk.PlayerLifecycle}
+      data:
+        entityType: Player
+        OwnedPrefab: {fileID: 1627949407420470, guid: b6af319831f5fe74eb2e117f9173ff14,
+          type: 3}
+        UnownedPrefab: {fileID: 1807652507279196, guid: fdfee44fbe3bb214693dc1e6ec7ef5b2,
+          type: 3}
+        requiredComponents: 
