@@ -19,9 +19,10 @@ function isWindows() {
 
 cd "$(dirname "$0")/../"
 
-traceStart "Bootstrapping :boot:"
+echo "## imp-ci group-start Bootstrapping :boot:"
 
 ./ci/get-shared-ci.sh
+source ".shared-ci/scripts/pinned-tools.sh"
 
 # Clone the GDK for Unity repository
 
@@ -87,4 +88,4 @@ traceStart "Symlinking packages :link::package:"
     fi
 traceEnd
 
-traceEnd
+echo "## imp-ci group-end Bootstrapping :boot:"
