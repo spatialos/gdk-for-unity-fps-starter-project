@@ -70,22 +70,25 @@ traceStart "Symlinking packages :link::package:"
     if isWindows; then
         if [[ -z ${BUILDKITE:-} ]]; then
             powershell Start-Process -Verb RunAs -WindowStyle Hidden -Wait -FilePath dotnet.exe -ArgumentList "run", "-p", "$(pwd)/.shared-ci/tools/PackageSymLinker/PackageSymLinker.csproj", "\-\-", "--packages-source-dir", "${TARGET_DIRECTORY}/workers/unity/Packages", "--package-target-dir", "$(pwd)/workers/unity/Packages"
+            traceEnd
+            echo "## imp-ci group-end Bootstrapping :boot:"
+            exit 0
         fi
-    else
-        EXTRA_ARGS=""
-
-        if [[ -n ${BUILDKITE:-} ]]; then
-            EXTRA_ARGS="--copy"
-        fi
-
-        if [[ "${BUILDKITE_AGENT_META_DATA_OS:-}" == "darwin" ]]; then
-            PATH="${PATH}:/usr/local/share/dotnet"
-        fi
-
-        dotnet run -p ./.shared-ci/tools/PackageSymLinker/PackageSymLinker.csproj -- \
-            --packages-source-dir "${TARGET_DIRECTORY}/workers/unity/Packages" \
-            --package-target-dir "$(pwd)/workers/unity/Packages" "${EXTRA_ARGS}"
     fi
+
+    EXTRA_ARGS=""
+
+    if [[ -n ${BUILDKITE:-} ]]; then
+        EXTRA_ARGS="--copy"
+    fi
+
+    if [[ "${BUILDKITE_AGENT_META_DATA_OS:-}" == "darwin" ]]; then
+        PATH="${PATH}:/usr/local/share/dotnet"
+    fi
+
+    dotnet run -p ./.shared-ci/tools/PackageSymLinker/PackageSymLinker.csproj -- \
+        --packages-source-dir "${TARGET_DIRECTORY}/workers/unity/Packages" \
+        --package-target-dir "$(pwd)/workers/unity/Packages" "${EXTRA_ARGS}"
 traceEnd
 
 echo "## imp-ci group-end Bootstrapping :boot:"
