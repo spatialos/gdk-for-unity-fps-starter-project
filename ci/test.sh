@@ -21,6 +21,7 @@ traceStart "Testing Unity: Editmode :writing_hand:"
     pushd "workers/unity"
         dotnet run -p "${PROJECT_DIR}/.shared-ci/tools/RunUnity/RunUnity.csproj" -- \
             -batchmode \
+            -nographics \
             -projectPath "${PROJECT_DIR}/workers/unity" \
             -runEditorTests \
             -logfile "${PROJECT_DIR}/logs/unity-editmode-test-run.log" \
