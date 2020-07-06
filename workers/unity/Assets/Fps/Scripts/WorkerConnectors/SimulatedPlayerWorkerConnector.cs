@@ -11,7 +11,7 @@ namespace Fps.WorkerConnectors
 {
     public class SimulatedPlayerWorkerConnector : WorkerConnector
     {
-        [SerializeField] private EntityLinkerDatabase entityLinkerDatabase;
+        [SerializeField] private EntityRepresentationMapping entityRepresentationMapping;
 
         public async Task ConnectSimulatedPlayer(string simulatedPlayerDevAuthToken,
             string simulatedPlayerTargetDeployment)
@@ -57,7 +57,7 @@ namespace Fps.WorkerConnectors
             PlayerLifecycleHelper.AddClientSystems(Worker.World, false);
 
             GameObjectCreationHelper.EnableStandardGameObjectCreation(Worker.World,
-                new AdvancedEntityPipeline(Worker), entityLinkerDatabase);
+                new AdvancedEntityPipeline(Worker), entityRepresentationMapping);
         }
     }
 }

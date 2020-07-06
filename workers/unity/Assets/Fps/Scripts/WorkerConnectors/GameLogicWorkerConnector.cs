@@ -14,7 +14,7 @@ namespace Fps.WorkerConnectors
     public class GameLogicWorkerConnector : WorkerConnectorBase
     {
         public bool DisableRenderers = true;
-        [SerializeField] private EntityLinkerDatabase entityLinkerDatabase;
+        [SerializeField] private EntityRepresentationMapping entityRepresentationMapping;
 
         protected async void Start()
         {
@@ -61,7 +61,7 @@ namespace Fps.WorkerConnectors
             var world = Worker.World;
 
             PlayerLifecycleHelper.AddServerSystems(world);
-            GameObjectCreationHelper.EnableStandardGameObjectCreation(world, entityLinkerDatabase);
+            GameObjectCreationHelper.EnableStandardGameObjectCreation(world, entityRepresentationMapping);
 
             // Shooting
             world.GetOrCreateSystem<ServerShootingSystem>();

@@ -12,7 +12,7 @@ namespace Fps.WorkerConnectors
 {
     public class ClientWorkerConnector : WorkerConnectorBase
     {
-        [SerializeField] private EntityLinkerDatabase entityLinkerDatabase;
+        [SerializeField] private EntityRepresentationMapping entityRepresentationMapping;
 
         private string playerName;
         private bool isReadyToSpawn;
@@ -95,7 +95,7 @@ namespace Fps.WorkerConnectors
             entityPipeline.OnRemovedAuthoritativePlayer += RemovingAuthoritativePlayer;
 
             // Set the Worker gameObject to the ClientWorker so it can access PlayerCreater reader/writers
-            GameObjectCreationHelper.EnableStandardGameObjectCreation(world, entityPipeline, entityLinkerDatabase, gameObject);
+            GameObjectCreationHelper.EnableStandardGameObjectCreation(world, entityPipeline, entityRepresentationMapping, gameObject);
         }
 
         private void RemovingAuthoritativePlayer()
