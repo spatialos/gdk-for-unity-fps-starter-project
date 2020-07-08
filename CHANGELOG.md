@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Changed
+
+- `spatialos.json` sdk and standard library version updated to `14.6.1`. [#281](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/281)
+
 ## `0.3.7` - 2020-06-22
 
 ### Changed
