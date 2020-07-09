@@ -1,17 +1,17 @@
 using System.Text;
 using System.Threading.Tasks;
 using Fps.Config;
-using Fps.WorkerConnectors;
 using Improbable.Gdk.Core;
+using Improbable.Gdk.Core.Representation;
 using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.PlayerLifecycle;
+using UnityEngine;
 
 namespace Fps.WorkerConnectors
 {
     public class SimulatedPlayerWorkerConnector : WorkerConnector
     {
-        private const string AuthPlayer = "Prefabs/SimulatedPlayer/SimulatedPlayer";
-        private const string NonAuthPlayer = "Prefabs/SimulatedPlayer/SimulatedPlayerProxy";
+        [SerializeField] private EntityRepresentationMapping entityRepresentationMapping;
 
         public async Task ConnectSimulatedPlayer(string simulatedPlayerDevAuthToken,
             string simulatedPlayerTargetDeployment)
@@ -57,7 +57,7 @@ namespace Fps.WorkerConnectors
             PlayerLifecycleHelper.AddClientSystems(Worker.World, false);
 
             GameObjectCreationHelper.EnableStandardGameObjectCreation(Worker.World,
-                new AdvancedEntityPipeline(Worker, AuthPlayer, NonAuthPlayer));
+                new AdvancedEntityPipeline(Worker), entityRepresentationMapping);
         }
     }
 }

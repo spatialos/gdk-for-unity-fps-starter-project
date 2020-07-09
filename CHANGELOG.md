@@ -2,11 +2,16 @@
 
 ## Unreleased
 
+### Changed
+
+- Updated project to use Entity Representation assets. [#282](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/282)
+
 ## `0.3.7` - 2020-06-22
 
 ### Changed
 
 - Upgraded to GDK for Unity version `0.3.7`
+
 ## `0.3.6` - 2020-05-26
 
 ### Changed
@@ -25,6 +30,7 @@
 ### Changed
 
 - Upgraded to GDK for Unity version `0.3.5`
+
 ## Breaking Changes
 
 - The FPS Starter Project now requires Unity 2019.3. [#263](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/263)
@@ -65,11 +71,13 @@
 ### Changed
 
 - Upgraded to GDK for Unity version `0.3.2`
+
 ## `0.3.1` - 2019-11-25
 
 ### Changed
 
 - Upgraded to GDK for Unity version `0.3.1`
+
 ## `0.3.0` - 2019-11-11
 
 ### Breaking Changes
