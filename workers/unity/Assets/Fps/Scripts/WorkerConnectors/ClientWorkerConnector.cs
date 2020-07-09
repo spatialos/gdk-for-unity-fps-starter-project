@@ -3,6 +3,7 @@ using System.Collections;
 using System.Text;
 using Fps.Config;
 using Improbable.Gdk.Core;
+using Improbable.Gdk.Core.Representation;
 using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.PlayerLifecycle;
 using UnityEngine;
@@ -11,6 +12,8 @@ namespace Fps.WorkerConnectors
 {
     public class ClientWorkerConnector : WorkerConnectorBase
     {
+        [SerializeField] private EntityRepresentationMapping entityRepresentationMapping;
+
         private string playerName;
         private bool isReadyToSpawn;
         private bool wantsSpawn;
@@ -46,16 +49,6 @@ namespace Fps.WorkerConnectors
             this.onPlayerResponse = onPlayerResponse;
             this.playerName = playerName;
             wantsSpawn = true;
-        }
-
-        protected virtual string GetAuthPlayerPrefabPath()
-        {
-            return "Prefabs/UnityClient/Authoritative/Player";
-        }
-
-        protected virtual string GetNonAuthPlayerPrefabPath()
-        {
-            return "Prefabs/UnityClient/NonAuthoritative/Player";
         }
 
         protected virtual IConnectionHandlerBuilder GetConnectionHandlerBuilder()
@@ -98,11 +91,11 @@ namespace Fps.WorkerConnectors
             PlayerLifecycleHelper.AddClientSystems(world, autoRequestPlayerCreation: false);
             PlayerLifecycleConfig.MaxPlayerCreationRetries = 0;
 
-            var entityPipeline = new AdvancedEntityPipeline(Worker, GetAuthPlayerPrefabPath(), GetNonAuthPlayerPrefabPath());
+            var entityPipeline = new AdvancedEntityPipeline(Worker);
             entityPipeline.OnRemovedAuthoritativePlayer += RemovingAuthoritativePlayer;
 
             // Set the Worker gameObject to the ClientWorker so it can access PlayerCreater reader/writers
-            GameObjectCreationHelper.EnableStandardGameObjectCreation(world, entityPipeline, gameObject);
+            GameObjectCreationHelper.EnableStandardGameObjectCreation(world, entityPipeline, entityRepresentationMapping, gameObject);
         }
 
         private void RemovingAuthoritativePlayer()
