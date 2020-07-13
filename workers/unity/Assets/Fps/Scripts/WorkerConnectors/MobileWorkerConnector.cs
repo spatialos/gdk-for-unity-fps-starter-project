@@ -14,16 +14,6 @@ namespace Fps.WorkerConnectors
         [SerializeField] private string IpAddress;
 #pragma warning restore 649
 
-        protected override string GetAuthPlayerPrefabPath()
-        {
-            return "Prefabs/MobileClient/Authoritative/Player";
-        }
-
-        protected override string GetNonAuthPlayerPrefabPath()
-        {
-            return "Prefabs/MobileClient/NonAuthoritative/Player";
-        }
-
         protected override IConnectionHandlerBuilder GetConnectionHandlerBuilder()
         {
             var connParams = CreateConnectionParameters(WorkerUtils.MobileClient);

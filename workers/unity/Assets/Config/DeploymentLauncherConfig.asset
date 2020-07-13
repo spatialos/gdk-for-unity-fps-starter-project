@@ -24,6 +24,8 @@ MonoBehaviour:
       SnapshotPath: snapshots/cloud.snapshot
       LaunchJson: cloud_launch_large.json
       Region: 1
+      Cluster: 
+      DeploymentLocationType: 0
       Tags:
       - dev_login
     SimulatedPlayerDeploymentConfigs:
@@ -31,6 +33,8 @@ MonoBehaviour:
       SnapshotPath: 
       LaunchJson: cloud_launch_large_sim_players.json
       Region: 1
+      Cluster: 
+      DeploymentLocationType: 0
       Tags: []
       TargetDeploymentName: my_deployment
       FlagPrefix: fps
