@@ -2,8 +2,11 @@
 
 ## Unreleased
 
+## `0.3.8` - 2020-07-20
+
 ### Changed
 
+- Upgraded to GDK for Unity version `0.3.8`
 - Updated project to use Entity Representation assets. [#282](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/282)
 
 ## `0.3.7` - 2020-06-22
