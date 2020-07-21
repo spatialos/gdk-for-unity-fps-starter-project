@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Changed
+
+- Upgrade to Worker SDK v14.7.0. [#285](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/285)
+
 ## `0.3.8` - 2020-07-20
 
 ### Changed
