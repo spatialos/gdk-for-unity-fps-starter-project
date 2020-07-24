@@ -2,8 +2,11 @@
 
 ## Unreleased
 
+## `0.3.9` - 2020-07-24
+
 ### Changed
 
+- Upgraded to GDK for Unity version `0.3.9`
 - Upgrade to Worker SDK v14.7.0. [#285](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/285)
 
 ## `0.3.8` - 2020-07-20
