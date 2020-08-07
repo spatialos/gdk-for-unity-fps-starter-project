@@ -53,7 +53,7 @@ namespace Fps.Movement
 
         private void OnServerUpdate(ServerResponse movement)
         {
-            if (server.Authority != Authority.NotAuthoritative)
+            if (server.HasAuthority)
             {
                 return;
             }

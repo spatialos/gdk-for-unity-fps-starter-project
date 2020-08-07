@@ -83,11 +83,12 @@ namespace Fps.Health
                 return;
             }
 
+            var healthAuthority = GetComponentDataFromEntity<HealthComponent.HasAuthority>();
             for (var i = 0; i < healthModifiedEvents.Count; ++i)
             {
                 ref readonly var healthEvent = ref healthModifiedEvents[i];
-                if (componentUpdateSystem.GetAuthority(healthEvent.EntityId, HealthComponent.ComponentId) ==
-                    Authority.NotAuthoritative)
+                var entity = workerSystem.GetEntity(healthEvent.EntityId);
+                if (!healthAuthority.Exists(entity))
                 {
                     continue;
                 }
