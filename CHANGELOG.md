@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Changed
+
+- Tooling has been updated to use .NET Core SDK v3.1.3xx [#287](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/287)
+
 ## `0.3.9` - 2020-07-24
 
 ### Changed
