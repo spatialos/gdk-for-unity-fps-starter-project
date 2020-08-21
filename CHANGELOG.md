@@ -2,10 +2,14 @@
 
 ## Unreleased
 
-## Added
+### Added
 
 - Added `com.unity.quicksearch` package for easy search. [#292](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/292)
   - Includes adding modules for `UIElements` and `AssetBundles`.
+  
+### Changed
+
+- Migrated launch configurations to latest game templates. [#290](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/290)
 
 ## `0.3.10` - 2020-08-18
 
