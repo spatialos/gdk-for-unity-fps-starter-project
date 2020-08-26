@@ -88,7 +88,7 @@ namespace Fps.Health
             {
                 ref readonly var healthEvent = ref healthModifiedEvents[i];
                 var entity = workerSystem.GetEntity(healthEvent.EntityId);
-                if (!healthAuthority.Exists(entity))
+                if (!healthAuthority.HasComponent(entity))
                 {
                     continue;
                 }

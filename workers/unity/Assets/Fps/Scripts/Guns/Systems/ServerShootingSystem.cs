@@ -44,7 +44,7 @@ namespace Fps.Guns
                     continue;
                 }
 
-                if (!gunDataForEntity.Exists(shooterEntity))
+                if (!gunDataForEntity.HasComponent(shooterEntity))
                 {
                     continue;
                 }
