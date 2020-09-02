@@ -10,6 +10,7 @@
 ### Changed
 
 - Migrated launch configurations to latest game templates. [#290](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/290)
+- Enabled Burst by default. [#294](https://github.com/spatialos/gdk-for-unity-fps-starter-project/pull/294)
 
 ## `0.3.10` - 2020-08-18
 
