@@ -18,7 +18,7 @@ namespace Fps.WorkerConnectors
         {
             var connParams = CreateConnectionParameters(WorkerUtils.MobileClient);
             connParams.Network.UseExternalIp = true;
-            connParams.Network.ConnectionType = NetworkConnectionType.ModularKcp;
+            connParams.Network.ConnectionType = NetworkConnectionType.Kcp;
 
             var initializer = new MobileConnectionFlowInitializer(
                 new MobileConnectionFlowInitializer.CommandLineSettingsProvider(),

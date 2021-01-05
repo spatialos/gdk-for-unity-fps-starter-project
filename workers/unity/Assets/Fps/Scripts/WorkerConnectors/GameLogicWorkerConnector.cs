@@ -7,6 +7,7 @@ using Improbable.Gdk.Core.Representation;
 using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.PlayerLifecycle;
 using Improbable.Worker.CInterop;
+using Playground.LoadBalancing;
 using UnityEngine;
 
 namespace Fps.WorkerConnectors
@@ -43,6 +44,7 @@ namespace Fps.WorkerConnectors
             {
                 connectionFlow = new ReceptionistFlow(workerId);
                 connectionParameters = CreateConnectionParameters(WorkerUtils.UnityGameLogic);
+                connectionParameters.Network.Kcp.SecurityType = NetworkSecurityType.Insecure;
             }
             else
             {
@@ -61,7 +63,7 @@ namespace Fps.WorkerConnectors
             var world = Worker.World;
 
             PlayerLifecycleHelper.AddServerSystems(world);
-            GameObjectCreationHelper.EnableStandardGameObjectCreation(world, entityRepresentationMapping);
+            GameObjectCreationHelper.EnableStandardGameObjectCreation(world, entityRepresentationMapping, gameObject);
 
             // Shooting
             world.GetOrCreateSystem<ServerShootingSystem>();
@@ -72,6 +74,10 @@ namespace Fps.WorkerConnectors
             // Health
             world.GetOrCreateSystem<ServerHealthModifierSystem>();
             world.GetOrCreateSystem<HealthRegenSystem>();
+
+            // Load balancing
+            world.GetOrCreateSystem<ClientPartitionsSystem>();
+            world.GetOrCreateSystem<AssignEntitiesSystem>();
         }
     }
 }

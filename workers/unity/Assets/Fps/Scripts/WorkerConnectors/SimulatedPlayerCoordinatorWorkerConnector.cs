@@ -133,6 +133,7 @@ namespace Fps.WorkerConnectors
             {
                 connectionFlow = new ReceptionistFlow(workerId);
                 connectionParameters = CreateConnectionParameters(WorkerUtils.SimulatedPlayerCoordinator);
+                connectionParameters.Network.Kcp.SecurityType = NetworkSecurityType.Insecure;
             }
             else
             {

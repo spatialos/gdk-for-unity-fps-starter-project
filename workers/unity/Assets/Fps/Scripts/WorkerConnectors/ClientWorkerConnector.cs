@@ -6,6 +6,7 @@ using Improbable.Gdk.Core;
 using Improbable.Gdk.Core.Representation;
 using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.PlayerLifecycle;
+using Improbable.Worker.CInterop;
 using UnityEngine;
 
 namespace Fps.WorkerConnectors
@@ -60,6 +61,7 @@ namespace Fps.WorkerConnectors
             if (Application.isEditor)
             {
                 connectionFlow = new ReceptionistFlow(workerId);
+                connectionParams.Network.Kcp.SecurityType = NetworkSecurityType.Insecure;
             }
             else
             {
