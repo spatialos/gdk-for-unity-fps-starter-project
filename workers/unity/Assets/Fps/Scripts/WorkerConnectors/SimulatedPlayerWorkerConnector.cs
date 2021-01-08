@@ -37,6 +37,7 @@ namespace Fps.WorkerConnectors
             if (Application.isEditor)
             {
                 connectionParams.Network.Kcp.SecurityType = NetworkSecurityType.Insecure;
+                connectionParams.Network.Tcp.SecurityType = NetworkSecurityType.Insecure;
             }
 
             // Force the Worker ID back to the generated one otherwise it will take the coordinator's worker ID.

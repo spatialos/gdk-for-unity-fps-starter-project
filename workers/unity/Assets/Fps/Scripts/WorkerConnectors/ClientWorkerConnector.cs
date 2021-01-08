@@ -62,6 +62,7 @@ namespace Fps.WorkerConnectors
             {
                 connectionFlow = new ReceptionistFlow(workerId);
                 connectionParams.Network.Kcp.SecurityType = NetworkSecurityType.Insecure;
+                connectionParams.Network.Tcp.SecurityType = NetworkSecurityType.Insecure;
             }
             else
             {
@@ -70,6 +71,8 @@ namespace Fps.WorkerConnectors
                 switch (initializer.GetConnectionService())
                 {
                     case ConnectionService.Receptionist:
+                        connectionParams.Network.Kcp.SecurityType = NetworkSecurityType.Insecure;
+                        connectionParams.Network.Tcp.SecurityType = NetworkSecurityType.Insecure;
                         connectionFlow = new ReceptionistFlow(workerId, initializer);
                         break;
                     case ConnectionService.Locator:

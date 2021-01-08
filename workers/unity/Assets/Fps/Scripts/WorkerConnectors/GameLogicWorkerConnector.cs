@@ -45,6 +45,7 @@ namespace Fps.WorkerConnectors
                 connectionFlow = new ReceptionistFlow(workerId);
                 connectionParameters = CreateConnectionParameters(WorkerUtils.UnityGameLogic);
                 connectionParameters.Network.Kcp.SecurityType = NetworkSecurityType.Insecure;
+                connectionParameters.Network.Tcp.SecurityType = NetworkSecurityType.Insecure;
             }
             else
             {
