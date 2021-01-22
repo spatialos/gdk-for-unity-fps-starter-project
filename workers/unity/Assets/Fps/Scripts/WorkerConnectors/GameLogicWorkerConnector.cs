@@ -75,7 +75,7 @@ namespace Fps.WorkerConnectors
                 configure.AddClientLoadBalancing("Player", ComponentSets.PlayerClientSet);
 
                 var loadBalancingMap = new EntityLoadBalancingMap(ComponentSets.DefaultServerSet)
-                    .AddOverride("Player", ComponentSets.PlayerClientSet);
+                    .AddOverride("Player", ComponentSets.PlayerServerSet);
 
                 configure.SetSingletonLoadBalancing(WorkerUtils.UnityGameLogic, loadBalancingMap);
             });
