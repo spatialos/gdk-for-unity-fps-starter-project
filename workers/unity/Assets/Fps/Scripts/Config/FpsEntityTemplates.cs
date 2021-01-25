@@ -13,6 +13,9 @@ namespace Fps.Config
 {
     public static class FpsEntityTemplates
     {
+        public static readonly EntityId LoadBalancerPartitionEntityId = new EntityId(1);
+        public static readonly EntityId PlayerCreatorEntityId = new EntityId(2);
+
         public static EntityTemplate Spawner(Coordinates spawnerCoordinates)
         {
             var template = BaseTemplate();
@@ -121,7 +124,7 @@ namespace Fps.Config
             var template = new EntityTemplate();
             template.AddComponent(new AuthorityDelegation.Snapshot(new Dictionary<uint, long>
             {
-                { ComponentSets.AuthorityDelegationSet.ComponentSetId, 1 }
+                { ComponentSets.AuthorityDelegationSet.ComponentSetId, LoadBalancerPartitionEntityId.Id }
             }));
             return template;
         }
