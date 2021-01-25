@@ -1,0 +1,50 @@
+package fps;
+
+import "fps/gun.schema";
+import "fps/health-regen.schema";
+import "fps/health.schema";
+import "fps/movement.schema";
+import "fps/shooting.schema";
+
+import "improbable/gdk/player_lifecycle/player_heartbeat.schema";
+import "improbable/gdk/player_lifecycle/player_creator.schema";
+import "improbable/gdk/player_lifecycle/owning_worker.schema";
+import "improbable/standard_library.schema";
+
+component_set PlayerClientSet {
+    id = 70001;
+
+    components = [
+        improbable.gdk.player_lifecycle.PlayerHeartbeatClient,
+        fps.ClientMovement,
+        fps.ClientRotation,
+        fps.ShootingComponent,
+        fps.GunStateComponent
+    ];
+}
+
+component_set PlayerServerSet {
+    id = 70002;
+
+    components = [
+        improbable.Position,
+        improbable.Metadata,
+        improbable.Interest,
+        improbable.gdk.player_lifecycle.PlayerHeartbeatServer,
+        improbable.gdk.player_lifecycle.OwningWorker,
+        fps.ServerMovement,
+        fps.GunComponent,
+        fps.HealthComponent,
+        fps.HealthRegenComponent
+    ];
+}
+
+component_set DefaultServerSet {
+    id = 70003;
+
+    components = [
+        improbable.Position,
+        improbable.Metadata,
+        improbable.gdk.player_lifecycle.PlayerCreator,
+    ];
+}

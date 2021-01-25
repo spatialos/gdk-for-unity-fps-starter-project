@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Fps.Guns;
 using Fps.Health;
 using Fps.Respawning;
@@ -6,29 +7,28 @@ using Improbable;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.PlayerLifecycle;
 using Improbable.Gdk.QueryBasedInterest;
+using Improbable.Generated;
 
 namespace Fps.Config
 {
     public static class FpsEntityTemplates
     {
+        public static readonly EntityId LoadBalancerPartitionEntityId = new EntityId(1);
+        public static readonly EntityId PlayerCreatorEntityId = new EntityId(2);
+
         public static EntityTemplate Spawner(Coordinates spawnerCoordinates)
         {
-            var position = new Position.Snapshot(spawnerCoordinates);
-            var metadata = new Metadata.Snapshot("PlayerCreator");
-
-            var template = new EntityTemplate();
-            template.AddComponent(position, WorkerUtils.UnityGameLogic);
-            template.AddComponent(metadata, WorkerUtils.UnityGameLogic);
-            template.AddComponent(new Persistence.Snapshot(), WorkerUtils.UnityGameLogic);
-            template.AddComponent(new PlayerCreator.Snapshot(), WorkerUtils.UnityGameLogic);
+            var template = BaseTemplate();
+            template.AddComponent(new Position.Snapshot(spawnerCoordinates));
+            template.AddComponent(new Metadata.Snapshot("PlayerCreator"));
+            template.AddComponent(new Persistence.Snapshot());
+            template.AddComponent(new PlayerCreator.Snapshot());
 
             return template;
         }
 
-        public static EntityTemplate Player(EntityId entityId, string workerId, byte[] args)
+        public static EntityTemplate Player(EntityId entityId, EntityId clientEntityId, byte[] args)
         {
-            var client = EntityTemplate.GetWorkerAccessAttribute(workerId);
-
             var (spawnPosition, spawnYaw, spawnPitch) = SpawnPoints.GetRandomSpawnPoint();
 
             var serverResponse = new ServerResponse
@@ -65,22 +65,18 @@ namespace Fps.Config
                 RegenPauseTime = 0,
             };
 
-            var template = new EntityTemplate();
-            template.AddComponent(pos, WorkerUtils.UnityGameLogic);
-            template.AddComponent(new Metadata.Snapshot { EntityType = "Player" }, WorkerUtils.UnityGameLogic);
-            template.AddComponent(serverMovement, WorkerUtils.UnityGameLogic);
-            template.AddComponent(clientMovement, client);
-            template.AddComponent(clientRotation, client);
-            template.AddComponent(shootingComponent, client);
-            template.AddComponent(gunComponent, WorkerUtils.UnityGameLogic);
-            template.AddComponent(gunStateComponent, client);
-            template.AddComponent(healthComponent, WorkerUtils.UnityGameLogic);
-            template.AddComponent(healthRegenComponent, WorkerUtils.UnityGameLogic);
-
-            PlayerLifecycleHelper.AddPlayerLifecycleComponents(template, workerId, WorkerUtils.UnityGameLogic);
-
-            const int serverRadius = 150;
-            var clientRadius = workerId.Contains(WorkerUtils.MobileClient) ? 60 : 150;
+            var template = BaseTemplate();
+            template.AddComponent(pos);
+            template.AddComponent(new Metadata.Snapshot("Player"));
+            template.AddComponent(serverMovement);
+            template.AddComponent(clientMovement);
+            template.AddComponent(clientRotation);
+            template.AddComponent(shootingComponent);
+            template.AddComponent(gunComponent);
+            template.AddComponent(gunStateComponent);
+            template.AddComponent(healthComponent);
+            template.AddComponent(healthRegenComponent);
+            template.AddPlayerLifecycleComponents(clientEntityId);
 
             // Position, Metadata, OwningWorker and ServerMovement are included in all queries, since these
             // components are required by the GameObject creator.
@@ -96,38 +92,40 @@ namespace Fps.Config
             // ClientRotation is used for rendering other players.
             // GunComponent is required by the GunManager script.
             // GunStateComponent and ShootingComponent are needed for rendering other players' shots.
-            var clientRangeInterest = InterestQuery.Query(Constraint.RelativeCylinder(clientRadius)).FilterResults(new[]
+            var clientRangeInterest = InterestQuery.Query(Constraint.RelativeCylinder(150)).FilterResults(new[]
             {
                 Position.ComponentId, Metadata.ComponentId, OwningWorker.ComponentId,
                 ServerMovement.ComponentId, ClientRotation.ComponentId, HealthComponent.ComponentId,
                 GunComponent.ComponentId, GunStateComponent.ComponentId, ShootingComponent.ComponentId
             });
 
-            // ClientMovement is used by the ServerMovementDriver script.
-            // ShootingComponent is used by the ServerShootingSystem.
-            var serverSelfInterest = InterestQuery.Query(Constraint.EntityId(entityId)).FilterResults(new[]
-            {
-                ClientMovement.ComponentId, ShootingComponent.ComponentId
-            });
-
-            // ClientRotation is used for driving player proxies.
-            // HealthComponent is required by the VisiblityAndCollision script.
-            // ShootingComponent is used by the ServerShootingSystem.
-            var serverRangeInterest = InterestQuery.Query(Constraint.RelativeCylinder(serverRadius)).FilterResults(new[]
-            {
-                Position.ComponentId, Metadata.ComponentId, OwningWorker.ComponentId,
-                ServerMovement.ComponentId, ClientRotation.ComponentId, HealthComponent.ComponentId,
-                ShootingComponent.ComponentId
-            });
-
             var interest = InterestTemplate.Create()
-                .AddQueries<ClientMovement.Component>(clientSelfInterest, clientRangeInterest)
-                .AddQueries<ServerMovement.Component>(serverSelfInterest, serverRangeInterest);
+                .AddQueries(ComponentSets.PlayerClientSet, clientSelfInterest, clientRangeInterest);
 
             template.AddComponent(interest.ToSnapshot());
 
-            template.SetReadAccess(WorkerUtils.UnityClient, WorkerUtils.UnityGameLogic, WorkerUtils.MobileClient);
+            return template;
+        }
 
+        public static EntityTemplate CreateLoadBalancingPartition()
+        {
+            var template = BaseTemplate();
+            template.AddComponent(new Position.Snapshot());
+            template.AddComponent(new Metadata.Snapshot("LB Partition"));
+
+            var query = InterestQuery.Query(Constraint.Component<Position.Component>());
+            var interest = InterestTemplate.Create().AddQueries(ComponentSets.AuthorityDelegationSet, query);
+            template.AddComponent(interest.ToSnapshot());
+            return template;
+        }
+
+        private static EntityTemplate BaseTemplate()
+        {
+            var template = new EntityTemplate();
+            template.AddComponent(new AuthorityDelegation.Snapshot(new Dictionary<uint, long>
+            {
+                { ComponentSets.AuthorityDelegationSet.ComponentSetId, LoadBalancerPartitionEntityId.Id }
+            }));
             return template;
         }
     }

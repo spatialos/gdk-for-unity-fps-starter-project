@@ -22,6 +22,7 @@ namespace Fps.Config
             // Setup template to use for player on connecting client
             PlayerLifecycleConfig.CreatePlayerEntityTemplate = FpsEntityTemplates.Player;
             PlayerLifecycleConfig.MaxNumFailedPlayerHeartbeats = 5;
+            PlayerLifecycleConfig.PlayerCreatorEntityId = FpsEntityTemplates.PlayerCreatorEntityId;
         }
     }
 }

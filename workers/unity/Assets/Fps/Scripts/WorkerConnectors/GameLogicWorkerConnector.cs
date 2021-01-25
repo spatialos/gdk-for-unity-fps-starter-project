@@ -5,8 +5,12 @@ using Fps.Metrics;
 using Improbable.Gdk.Core;
 using Improbable.Gdk.Core.Representation;
 using Improbable.Gdk.GameObjectCreation;
+using Improbable.Gdk.LoadBalancing;
 using Improbable.Gdk.PlayerLifecycle;
+using Improbable.Generated;
 using Improbable.Worker.CInterop;
+using Playground.LoadBalancing;
+using Unity.Entities;
 using UnityEngine;
 
 namespace Fps.WorkerConnectors
@@ -43,6 +47,8 @@ namespace Fps.WorkerConnectors
             {
                 connectionFlow = new ReceptionistFlow(workerId);
                 connectionParameters = CreateConnectionParameters(WorkerUtils.UnityGameLogic);
+                connectionParameters.Network.Kcp.SecurityType = NetworkSecurityType.Insecure;
+                connectionParameters.Network.Tcp.SecurityType = NetworkSecurityType.Insecure;
             }
             else
             {
@@ -61,7 +67,18 @@ namespace Fps.WorkerConnectors
             var world = Worker.World;
 
             PlayerLifecycleHelper.AddServerSystems(world);
-            GameObjectCreationHelper.EnableStandardGameObjectCreation(world, entityRepresentationMapping);
+            GameObjectCreationHelper.EnableStandardGameObjectCreation(world, entityRepresentationMapping, gameObject);
+
+            Worker.AddLoadBalancingSystems(configure =>
+            {
+                configure.AddPartitionManagement(WorkerUtils.UnityGameLogic, WorkerUtils.MobileClient, WorkerUtils.UnityClient);
+                configure.AddClientLoadBalancing("Player", ComponentSets.PlayerClientSet);
+
+                var loadBalancingMap = new EntityLoadBalancingMap(ComponentSets.DefaultServerSet)
+                    .AddOverride("Player", ComponentSets.PlayerServerSet);
+
+                configure.SetSingletonLoadBalancing(WorkerUtils.UnityGameLogic, loadBalancingMap);
+            });
 
             // Shooting
             world.GetOrCreateSystem<ServerShootingSystem>();

@@ -18,7 +18,6 @@ namespace Fps.WorkerConnectors
         {
             var connParams = CreateConnectionParameters(WorkerUtils.MobileClient);
             connParams.Network.UseExternalIp = true;
-            connParams.Network.ConnectionType = NetworkConnectionType.ModularKcp;
 
             var initializer = new MobileConnectionFlowInitializer(
                 new MobileConnectionFlowInitializer.CommandLineSettingsProvider(),
@@ -31,6 +30,8 @@ namespace Fps.WorkerConnectors
             switch (initializer.GetConnectionService())
             {
                 case ConnectionService.Receptionist:
+                    connParams.Network.Kcp.SecurityType = NetworkSecurityType.Insecure;
+                    connParams.Network.Tcp.SecurityType = NetworkSecurityType.Insecure;
                     builder.SetConnectionFlow(new ReceptionistFlow(CreateNewWorkerId(WorkerUtils.MobileClient),
                         initializer));
                     break;

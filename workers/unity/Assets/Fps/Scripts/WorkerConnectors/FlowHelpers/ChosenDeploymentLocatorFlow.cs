@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Improbable.Gdk.Core;
-using Improbable.Worker.CInterop.Alpha;
+using Improbable.Worker.CInterop;
 
 namespace Fps.WorkerConnectors
 {

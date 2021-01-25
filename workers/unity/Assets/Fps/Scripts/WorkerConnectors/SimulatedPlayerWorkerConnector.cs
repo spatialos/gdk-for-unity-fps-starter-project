@@ -5,6 +5,7 @@ using Improbable.Gdk.Core;
 using Improbable.Gdk.Core.Representation;
 using Improbable.Gdk.GameObjectCreation;
 using Improbable.Gdk.PlayerLifecycle;
+using Improbable.Worker.CInterop;
 using UnityEngine;
 
 namespace Fps.WorkerConnectors
@@ -32,6 +33,12 @@ namespace Fps.WorkerConnectors
         public async Task ConnectSimulatedPlayer()
         {
             var connectionParams = CreateConnectionParameters(WorkerUtils.UnityClient);
+
+            if (Application.isEditor)
+            {
+                connectionParams.Network.Kcp.SecurityType = NetworkSecurityType.Insecure;
+                connectionParams.Network.Tcp.SecurityType = NetworkSecurityType.Insecure;
+            }
 
             // Force the Worker ID back to the generated one otherwise it will take the coordinator's worker ID.
             var workerId = CreateNewWorkerId(WorkerUtils.UnityClient);

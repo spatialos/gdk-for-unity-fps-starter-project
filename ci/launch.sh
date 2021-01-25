@@ -47,6 +47,7 @@ traceStart "Launching sim player deployment :robot_face:"
         --assembly_name "${ASSEMBLY_NAME}" \
         --deployment_name "${ASSEMBLY_NAME}_sim_players" \
         --launch_json_path cloud_launch_large_sim_players.json \
+        --snapshot_path snapshots/cloud.snapshot \
         --region EU \
         --runtime_version="${RUNTIME_VERSION}" \
         --target_deployment "${ASSEMBLY_NAME}" \
